@@ -22,3 +22,10 @@ require COREPATH.'bootstrap.php';
 
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
+
+// Execute bootstrap for each auto loaded module.
+foreach(Module::loaded() as $module => $path) {
+	if(File::exists($path. "bootstrap.php")){
+		include_once($path. "bootstrap.php");
+	}
+}

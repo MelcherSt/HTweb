@@ -4,18 +4,21 @@
 	<meta charset="utf-8">
 	<title><?php echo $title; ?></title>
 	
-	<?php echo Asset::css('bootstrap.css'); ?>
-	<?php echo Asset::css('font-awesome.css'); ?>
+	<?php 
+	echo Asset::css(array(
+		'bootstrap.css',
+		'font-awesome.css',
+		'styles.css'
+		)); 
 	
-	<?php echo Asset::js(array(
+	echo Asset::js(array(
 		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
 		'bootstrap.js',
-	)); ?>
+	)); 
+	?>
 		
 </head>
 <body>
-
-	
 	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
@@ -87,7 +90,7 @@
 					</div>
 				<?php endif; ?>
 			</div>
-			<div class="col-md-12">
+			<div class="col-md-12">				
 				<?php echo $content; ?>
 			</div>
 		</div>
