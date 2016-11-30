@@ -27,7 +27,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">My Site</a>
+				<a class="navbar-brand" href="#"><span class="fa fa-bank"></span> Het Tribunaal <small>web</small></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
@@ -35,7 +35,7 @@
 						<?php echo Html::anchor('', 'Dashboard') ?>
 					</li>
 
-					<?php
+					<?php					
 					/*
 						$files = new GlobIterator(APPPATH.'classes/controller/admin/*.php');
 						foreach($files as $file)
@@ -53,7 +53,7 @@
 				<ul class="nav navbar-nav pull-right">
 					<?php if (isset($current_user)){ ?>
 					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $current_user->username ?> <b class="caret"></b></a>
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->username ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><?php echo Html::anchor('gate/logout', 'Logout') ?></li>
 						</ul>
@@ -98,8 +98,9 @@
 		<footer>
 			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>
 			<p>
-				<a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.<br>
-				<small>Version: <?php echo e(Fuel::VERSION); ?></small>
+				HTweb on 
+				<?php echo Request::forge('devtool/branch')->execute(); ?><br>
+				<small>using FUELPhp Version: <?php echo e(Fuel::VERSION); ?></small>
 			</p>
 		</footer>
 	</div>
