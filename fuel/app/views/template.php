@@ -5,8 +5,9 @@
 	<title><?php echo $title; ?></title>
 	<?php echo Asset::css('bootstrap.css'); ?>
 	<?php echo Asset::css('font-awesome.css'); ?>
+	
 	<style>
-		body { margin: 50px; }
+		body { margin: 60px; }
 	</style>
 	<?php echo Asset::js(array(
 		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
@@ -19,7 +20,7 @@
 <body>
 
 	
-	<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -27,7 +28,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#"><span class="fa fa-bank"></span> Het Tribunaal <small>web</small></a>
+				<a class="navbar-brand" href="#"><span class="fa fa-bank"></span> Het Tribunaal <small>Web</small></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
@@ -73,32 +74,31 @@
 			<div class="col-md-12">
 				<h1><?php echo $title; ?></h1>
 				<hr>
-<?php if (Session::get_flash('success')): ?>
-				<div class="alert alert-success alert-dismissable">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<?php if (Session::get_flash('success')): ?>
+				<div class="alert alert-success alert-dismissable fade in">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="Close">&times;</button>
 					<p>
 					<?php echo implode('</p><p>', (array) Session::get_flash('success')); ?>
 					</p>
 				</div>
-<?php endif; ?>
-<?php if (Session::get_flash('error')): ?>
-				<div class="alert alert-danger alert-dismissable">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-					<p>
-					<?php echo implode('</p><p>', (array) Session::get_flash('error')); ?>
-					</p>
-				</div>
-<?php endif; ?>
+				<?php endif; ?>
+				<?php if (Session::get_flash('error')): ?>
+					<div class="alert alert-danger alert-dismissable fade in">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="Close">&times;</button>
+						<p>
+						<?php echo implode('</p><p>', (array) Session::get_flash('error')); ?>
+						</p>
+					</div>
+				<?php endif; ?>
 			</div>
 			<div class="col-md-12">
-<?php echo $content; ?>
+				<?php echo $content; ?>
 			</div>
 		</div>
 		<hr/>
 		<footer>
 			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>
-			<p>
-				HTweb on 
+			<p>HTWeb on 
 				<?php echo Request::forge('devtool/branch')->execute(); ?><br>
 				<small>using FUELPhp Version: <?php echo e(Fuel::VERSION); ?></small>
 			</p>
