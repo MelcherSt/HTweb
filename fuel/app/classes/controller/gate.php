@@ -6,7 +6,7 @@
 class Controller_Gate extends Controller_Base
 {
 
-	public function action_index() {
+	public function action_index($arg=null) {
 		// Nothing to see here. This class only acts as a login gate.
 		Response::redirect_back();
 	}
@@ -18,7 +18,7 @@ class Controller_Gate extends Controller_Base
 		{
 			if (!Auth::check())
 			{
-				// No user is logged, redirect to login
+				// No user is logged in, redirect to login
 				Response::redirect('gate/login');
 			}
 		}
@@ -27,7 +27,6 @@ class Controller_Gate extends Controller_Base
 	public function action_login() {
 		// Already logged in
 		Auth::check() and Response::redirect('gate');
-
 		$val = Validation::forge();
 
 		if (Input::method() == 'POST')
@@ -44,8 +43,7 @@ class Controller_Gate extends Controller_Base
 							// Find user
 							$current_user = Model\Auth_User::find($id[1]);
 							Session::set_flash('success', e('Welcome, '.$current_user->username));
-							
-							
+											
 							// Does the user want to be remembered?
 							if(Input::post('rememberme', false)) {
 								Auth::remember_me();
