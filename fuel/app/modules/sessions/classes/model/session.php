@@ -4,6 +4,8 @@ namespace Sessions;
 class Model_Session extends \Orm\Model
 {
 	const DEADLINE_TIME = '16:00';
+	const MAX_COOKS = 2;
+	const MAX_DISHWASHER = 2;
 	
 	protected static $_properties = array(
 		'id',

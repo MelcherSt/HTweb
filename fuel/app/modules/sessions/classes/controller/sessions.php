@@ -61,7 +61,11 @@ class Controller_Sessions extends \Controller_Gate {
 		}	
 	}
 	
-	
+	/**
+	 * Responsible for creation and updating session and enrollments
+	 * @param type $date
+	 * @throws \HttpNotFoundException
+	 */
 	public function post_enroll($date=null) {
 		// Delegate deletes because DELETE is not well supported
 		if(\Input::post('method') == 'delete') {
@@ -80,37 +84,54 @@ class Controller_Sessions extends \Controller_Gate {
 					\Session::set_flash('error', e('Unable to join non-existant session.'));
 					throw new \HttpNotFoundException();
 				} 
-				
-				if(!$session->can_enroll()) {
-					// User should not be able to enroll.
-					\Session::set_flash('error', e('You cannot join a session past its deadline.'));
-					\Response::redirect('/sessions/view/'.$date);
-				}
-				
+								
 				$enrollment = $session->current_enrollment();
 				
 				if(!$enrollment) {
 					// Create one
 					$enrollment = Model_Enrollment_Session::forge();
 					$enrollment->user_id = \Auth::get_user()->id;
-					$enrollment->session_id = $session->id;
-					
-					
+					$enrollment->session_id = $session->id;	
 				}
 				
-				//TODO: Set values from input
-				$enrollment->dishwasher = false;
-				$enrollment->cook = true;
-				$enrollment->paid = false;
-				$enrollment->guests = 0;
-				$enrollment->save();
+				if(!$session->can_enroll()) {
+					// Dishwashers can only enroll untill the end of the day
+					if ($session->count_dishwashers() < Model_Session::MAX_DISHWASHER && (strtotime(date('Y-m-d H:i:s')) < strtotime($session->date . ' +1 day'))) {
+						$dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
+						$enrollment->dishwasher = $dishwasher;
+						$enrollment->save();
+					} else {
+						\Session::set_flash('error', e('Cannot add dishwasher.'));
+					}
+					
+					\Response::redirect('/sessions/view/'.$date);
+				}
+					
+				$cook = \Input::post('cook', false) == 'on' ? true : false;	
+				$notes = \Input::post('notes', null);
 				
-				\Session::set_flash('success', e('Successfully joined session'));
+				if($enrollment->cook) {
+					$session->notes = $notes;
+					$session->save();
+				}
+				
+				$enrollment->dishwasher = false;
+				$enrollment->cook = $cook;
+				$enrollment->paid = \Input::post('paid', false);
+				$enrollment->guests = \Input::post('guests', 0);
+				$enrollment->save();
+ 				
+				//\Session::set_flash('success', e('Successfully joined session'));
 				\Response::redirect('/sessions/view/'.$date);
 			}
 		}
 	}
 	
+	/**
+	 * Responsible for deletion of enrollments
+	 * @param type $date
+	 * @throws \HttpNotFoundException
+	 */
 	public function delete_enroll($date=null) {
 		if(isset($date)) {
 			if ($this->valid_date($date)) {
@@ -142,8 +163,6 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 		}
 	}
-	
-	
 	
 	/**
 	 * Check if given string can be date formatted Y-m-d
