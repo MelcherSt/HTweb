@@ -45,9 +45,8 @@ class Controller_Sessions extends \Controller_Gate {
 					$session->save();
 				}
 
-
 				$data['left_content'] = \View::forge('sessionstate', ["session"=>$session]);
-				$data['right_content'] = 'right';
+				$data['right_content'] = \View::forge('sessionparticipants', ["session"=>$session]);
 				
 				//TODO: use presenters for views
 				$this->template->subtitle = date('l j F Y', strtotime($date));
