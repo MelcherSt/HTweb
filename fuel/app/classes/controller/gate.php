@@ -5,19 +5,12 @@
  */
 class Controller_Gate extends Controller_Base
 {
-
-	public function action_index($arg=null) {
-		// Nothing to see here. This class only acts as a login gate.
-		Response::redirect_back();
-	}
 	
 	public function before() {
 		parent::before();
 
-		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout')))
-		{
-			if (!Auth::check())
-			{
+		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout'))) {
+			if (!Auth::check()) {
 				// No user is logged in, redirect to login
 				Response::redirect('gate/login');
 			}
@@ -27,15 +20,17 @@ class Controller_Gate extends Controller_Base
 	public function action_login() {
 		// Already logged in
 		Auth::check() and Response::redirect('gate');
+		
 		$val = Validation::forge();
 
-		if (Input::method() == 'POST')
-		{
+		if (Input::method() == 'POST') {
+			// Create validator rules			
 			$val->add('email', 'Email or Username')
 			    ->add_rule('required');
 			$val->add('password', 'Password')
 			    ->add_rule('required');
 
+			// Run validator
 			if ($val->run()) {
 				if (!Auth::check()) {
 					if (Auth::login(Input::post('email'), Input::post('password'))) {

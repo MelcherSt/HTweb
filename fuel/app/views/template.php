@@ -27,17 +27,31 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#"><span class="fa fa-bank"></span> Het Tribunaal <small>Web</small></a>
+				<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> Het Tribunaal <small>Web</small></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
+					<!--<li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
 						<?php echo Html::anchor('', 'Dashboard') ?>
-					</li>
+					</li>-->
 
 					<?php					
-					/*
-						$files = new GlobIterator(APPPATH.'classes/controller/admin/*.php');
+
+						//$files = new GlobIterator(APPPATH.'classes/controller/admin/*.php');
+						$menu_items = array('dashboard', 'sessions');
+					
+						
+						foreach($menu_items as $item) {
+							$section_segment = $item;
+							$section_title = Inflector::humanize($section_segment);
+							?>
+							<li class="<?php echo Uri::segment(1) == $section_segment ? 'active' : '' ?>">
+								<?php echo Html::anchor($section_segment, $section_title) ?>
+							</li>
+							<?php
+						}
+					
+						/*
 						foreach($files as $file)
 						{
 							$section_segment = $file->getBasename('.php');
@@ -71,7 +85,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<h1><?php echo $title; ?></h1>
+				<h1><?=$title?> <small><?php if(isset($subtitle)) { echo $subtitle; } ?></small></h1>
 				<hr>
 				<?php if (Session::get_flash('success')): ?>
 				<div class="alert alert-success alert-dismissable fade in">

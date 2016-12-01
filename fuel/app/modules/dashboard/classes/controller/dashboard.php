@@ -4,8 +4,7 @@ namespace Dashboard;
 
 class Controller_Dashboard extends \Controller_Gate {
 	
-	function action_index() {		
-		
+	function action_index() {				
 		$widgets = new \Data();
 		\Event::trigger('gather_widgets', $widgets);
 		

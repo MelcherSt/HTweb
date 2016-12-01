@@ -1,6 +1,6 @@
 <?php
 
-namespace Session;
+namespace Sessions;
 
 class Controller_Widget extends \Controller_Widget_Base {
 	
@@ -11,7 +11,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 		$this->template->icon = 'fa-cutlery';
 		$this->template->message = 'Are already eating today';
 		$this->template->detail = 'Care to joy them?';
-		$this->template->link = 'session/today';
+		$this->template->link = 'sessions/today';
 	}
 }
 
