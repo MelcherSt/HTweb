@@ -31,9 +31,13 @@ class Model_Enrollment_Session extends \Orm\Model {
 	
 	protected static $_belongs_to = array(
 		'user' => array(
-			'model_to' => '\Model_Auth_User',
+			'key_from' => 'user_id',
+			'key_to' => 'id',
+			'model_to' => 'Auth\Model\Auth_User',
 		)
 		,'session' => array(
+			'key_from' => 'session_id',
+			'key_to' => 'id',
 			'model_to' => '\Sessions\Model_Session'
 		)
 	);

@@ -61,6 +61,43 @@ class Controller_Sessions extends \Controller_Gate {
 		}	
 	}
 	
+	
+	public function post_view($date=null) {
+		if(isset($date)) {
+			if ($this->valid_date($date)) {
+				// Get model, if exists.
+				$session = Model_Session::find('first', array(
+					'where' => array(
+						array('date', $date))
+				));
+				
+				if(!$session) {
+					//TODO: wow, this shouldn't happen. handle?
+					throw new \HttpNotFoundException();
+				} 
+				
+				$enrollment = $session->current_enrollment();
+				
+				if(!$enrollment) {
+					// Create one
+					$enrollment = Model_Enrollment_Session::forge();
+					$enrollment->user_id = \Auth::get_user()->id;
+					$enrollment->session_id = $session->id;
+					$enrollment->dishwasher = false;
+					
+				}
+				
+				// Set values from input
+				$enrollment->cook = false;
+				$enrollment->paid = false;
+				$enrollment->guests = 0;
+				$enrollment->save();
+				
+				\Response::redirect('/sessions/view/'.$date);
+			}
+		}
+	}
+	
 	/**
 	 * Check if given string can be date formatted Y-m-d
 	 * @param type $date

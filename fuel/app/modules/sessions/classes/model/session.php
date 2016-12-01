@@ -40,6 +40,12 @@ class Model_Session extends \Orm\Model
 	
 	
 	/* Below this line you will find custom methods for session trieval etc. */
+	
+	/**
+	 * Determine if the given user is enrolled
+	 * @param type $user_id
+	 * @return boolean
+	 */
 	public function is_enrolled($user_id=0){
 		$user = \Auth::get_user($user_id);
 		
@@ -51,6 +57,37 @@ class Model_Session extends \Orm\Model
 		return false;	
 	}
 	
+	/**
+	 * Retrieve the enrollment (if any) for the current user
+	 * @return \Sessions\Model_Enrollment_Session
+	 */
+	public function current_enrollment() {
+		$user = \Auth::get_user();
+		
+		$enrollment = Model_Enrollment_Session::find('first', array(
+					'where' => array(
+						array('user_id', $user->id), array('session_id', $this->id))
+				));
+
+		return $enrollment;
+	}
+	
+	/**
+	 * Determine if session is open for enrollment
+	 * @return boolean
+	 */
+	public function can_enroll() {
+		$now_time = strtotime(date('Y-m-d H:i:s'));
+		$expiry_time = strtotime(date('Y-m-d H:i:s', strtotime($this->deadline)));
+		
+		// Deadline should be later than now
+		if ($expiry_time > $now_time) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	 
 	
 	
 	public static function get_by_date($date) {
