@@ -46,22 +46,23 @@ class Model_Session extends \Orm\Model
 	 * @param type $user_id
 	 * @return boolean
 	 */
-	public function is_enrolled($user_id=0){
+	public function is_enrolled($user_id) {
 		$user = \Auth::get_user($user_id);
 		
-		foreach($this->enrollments as $enrollment){
-			if ($enrollment->user->id == $user->id)
-				return true;
-		}
-		
-		return false;	
+		$enrollment = Model_Enrollment_Session::find('first', array(
+					'where' => array(
+						array('user_id', $user->id), array('session_id', $this->id))
+				));
+
+		return isset($enrollment);
 	}
 	
 	/**
-	 * Retrieve the enrollment (if any) for the current user
+	 * Retrieve the enrollment (if any) for the given user
+	 * @param int $user_id
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
-	public function current_enrollment() {
+	public function get_enrollment($user_id) {
 		$user = \Auth::get_user();
 		
 		$enrollment = Model_Enrollment_Session::find('first', array(
@@ -70,6 +71,15 @@ class Model_Session extends \Orm\Model
 				));
 
 		return $enrollment;
+	}
+	
+	/**
+	 * Retrieve the enrollment (if any) for the current user
+	 * @return \Sessions\Model_Enrollment_Session
+	 */
+	public function current_enrollment() {
+		$user = \Auth::get_user();
+		return $this->get_enrollment($user->id);
 	}
 	
 	/**
@@ -87,16 +97,60 @@ class Model_Session extends \Orm\Model
 			return false;
 		}
 	}
-	 
 	
-	
-	public static function get_by_date($date) {
-		$query = \DB::select('*')
-				->from(static::$_table_name)
-				->where(array('date', $date))
-				->execute();
+	/**
+	 * Get the number of cooks enrolled in this session
+	 * @return int
+	 */
+	public function count_cooks() {
+		// TODO: optimze
+		$enrollments = Model_Enrollment_Session::find('all', array(
+			'where' => array(
+				array('cook', 1), array('session_id', $this->id)),
+		));
 		
-		return $query;
+		return sizeof($enrollments);
 	}
-
+	
+	/**
+	 * Get the number of dishwashers enrolled in this session
+	 * @return int
+	 */
+	public function count_dishwashers() {
+		// TODO: optimze
+		$enrollments = Model_Enrollment_Session::find('all', array(
+			'where' => array(
+				array('dishwasher', 1), array('session_id', $this->id)),
+		));
+		
+		return sizeof($enrollments);
+	}
+	
+	/**
+	 * Get the enrollments for all cooks enrolled in this session
+	 * @return type
+	 */
+	public function get_cook_enrollments() {
+		// TODO: optimze
+		$enrollments = Model_Enrollment_Session::find('all', array(
+			'where' => array(
+				array('cook', 1), array('session_id', $this->id)),
+		));
+		
+		return $enrollments;
+	}
+	
+		/**
+	 * Get the enrollments for all cooks enrolled in this session
+	 * @return type
+	 */
+	public function get_dishwasher_enrollments() {
+		// TODO: optimze
+		$enrollments = Model_Enrollment_Session::find('all', array(
+			'where' => array(
+				array('dishwasher', 1), array('session_id', $this->id)),
+		));
+		
+		return $enrollments;
+	}
 }

@@ -62,7 +62,12 @@ class Controller_Sessions extends \Controller_Gate {
 	}
 	
 	
-	public function post_view($date=null) {
+	public function post_enroll($date=null) {
+		// Delegate deletes because DELETE is not well supported
+		if(\Input::post('method') == 'delete') {
+			$this->delete_enroll($date);
+		}
+		
 		if(isset($date)) {
 			if ($this->valid_date($date)) {
 				// Get model, if exists.
@@ -72,9 +77,15 @@ class Controller_Sessions extends \Controller_Gate {
 				));
 				
 				if(!$session) {
-					//TODO: wow, this shouldn't happen. handle?
+					\Session::set_flash('error', e('Unable to join non-existant session.'));
 					throw new \HttpNotFoundException();
 				} 
+				
+				if(!$session->can_enroll()) {
+					// User should not be able to enroll.
+					\Session::set_flash('error', e('You cannot join a session past its deadline.'));
+					\Response::redirect('/sessions/view/'.$date);
+				}
 				
 				$enrollment = $session->current_enrollment();
 				
@@ -83,20 +94,56 @@ class Controller_Sessions extends \Controller_Gate {
 					$enrollment = Model_Enrollment_Session::forge();
 					$enrollment->user_id = \Auth::get_user()->id;
 					$enrollment->session_id = $session->id;
-					$enrollment->dishwasher = false;
+					
 					
 				}
 				
-				// Set values from input
-				$enrollment->cook = false;
+				//TODO: Set values from input
+				$enrollment->dishwasher = false;
+				$enrollment->cook = true;
 				$enrollment->paid = false;
 				$enrollment->guests = 0;
 				$enrollment->save();
 				
+				\Session::set_flash('success', e('Successfully joined session'));
 				\Response::redirect('/sessions/view/'.$date);
 			}
 		}
 	}
+	
+	public function delete_enroll($date=null) {
+		if(isset($date)) {
+			if ($this->valid_date($date)) {
+				// Get model, if exists.
+				$session = Model_Session::find('first', array(
+					'where' => array(
+						array('date', $date))
+				));
+				
+				if(!$session) {
+					\Session::set_flash('error', e('Unable to leave non-existant session.'));
+					throw new \HttpNotFoundException();
+				} 
+				
+				if(!$session->can_enroll()) {
+					// User should not be able to enroll.
+					\Session::set_flash('error', e('You cannot leave a session past its deadline.'));
+					\Response::redirect('/sessions/view/'.$date);
+				}
+				
+				$enrollment = $session->current_enrollment();
+				
+				if($enrollment) {
+					$enrollment->delete();
+				}
+				
+				\Session::set_flash('success', e('Successfully left session'));
+				\Response::redirect('/sessions/view/'.$date);
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Check if given string can be date formatted Y-m-d
