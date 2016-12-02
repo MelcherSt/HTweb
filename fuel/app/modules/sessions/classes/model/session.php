@@ -4,8 +4,13 @@ namespace Sessions;
 class Model_Session extends \Orm\Model
 {
 	const DEADLINE_TIME = '16:00';
-	const MAX_COOKS = 2;
+	const MAX_COOKS = 1;
 	const MAX_DISHWASHER = 2;
+	
+	/* Grace variables */
+	const ENROLLMENT_GRACE = '+5days';
+	const COST_GRACE = '+5days';
+	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
 	
 	protected static $_properties = array(
 		'id',
@@ -100,12 +105,24 @@ class Model_Session extends \Orm\Model
 		}
 	}
 	
-	public function can_enroll_dishwasher() {
+	/**
+	 * Determine whether dishwashers may enroll
+	 * @return type
+	 */
+	public function can_enroll_dishwashers() {
 		// Deadline should be past due + diswasher count should be less than max.
-		if(!can_enroll() && (count_diswashers() < static::MAX_DISHWASHER)) {
+		if(!$this->can_enroll() && ($this->count_dishwashers() < static::MAX_DISHWASHER)) {
 			// Dishwashers have untill the end of the day to enroll.
-			return strtotime(date('Y-m-d H:i:s')) < strtotime($session->date . ' +1 day');
+			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DISHWASHER_ENROLLMENT_GRACE);
 		}
+	}
+	
+	/**
+	 * Determine whether cooks may enroll
+	 * @return type
+	 */
+	public function can_enroll_cooks() {
+		return ($this->can_enroll() && ($this->count_cooks() < static::MAX_COOKS)); 
 	}
 	
 	/**
@@ -113,11 +130,11 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_cooks() {
-		return \DB::select(\DB::expr('COUNT(*)'))
+		return array_values(\DB::select(\DB::expr('COUNT(*)'))
 				->from('enrollment_sessions')
 				->where('cook', 1)
 				->and_where('session_id', $this->id)
-				->execute()[0];
+				->execute()[0])[0];
 	}
 	
 	/**
@@ -125,11 +142,11 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_dishwashers() {
-		return \DB::select(\DB::expr('COUNT(*)'))
+		return array_values(\DB::select(\DB::expr('COUNT(*)'))
 				->from('enrollment_sessions')
-				->where('diswasher', 1)
+				->where('dishwasher', 1)
 				->and_where('session_id', $this->id)
-				->execute()[0];
+				->execute()[0])[0];
 	}
 	
 	/**
@@ -146,7 +163,7 @@ class Model_Session extends \Orm\Model
 		return $enrollments;
 	}
 	
-		/**
+	/**
 	 * Get the enrollments for all cooks enrolled in this session
 	 * @return type
 	 */
