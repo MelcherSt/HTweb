@@ -45,6 +45,18 @@ class Model_Session extends \Orm\Model
 		),
 	);
 	
+	/**
+	 * Retrieve session from database by date
+	 * @param string $date
+	 * @return Model_Session
+	 */
+	public static function get_by_date($date) {
+		return Model_Session::find('first', array(
+					'where' => array(
+						array('date', $date))
+				));
+	}
+	
 	
 	/* Below this line you will find custom methods for session trieval etc. */
 	
@@ -76,7 +88,6 @@ class Model_Session extends \Orm\Model
 					'where' => array(
 						array('user_id', $user->id), array('session_id', $this->id))
 				));
-
 		return $enrollment;
 	}
 	
@@ -95,8 +106,7 @@ class Model_Session extends \Orm\Model
 	 */
 	public function can_enroll() {
 		$now_time = strtotime(date('Y-m-d H:i:s'));
-		$expiry_time = strtotime(date('Y-m-d H:i:s', strtotime($this->deadline)));
-		
+		$expiry_time = strtotime(date('Y-m-d H:i:s', strtotime($this->deadline)));	
 		// Deadline should be later than now
 		if ($expiry_time > $now_time) {
 			return true;
@@ -147,6 +157,37 @@ class Model_Session extends \Orm\Model
 				->where('dishwasher', 1)
 				->and_where('session_id', $this->id)
 				->execute()[0])[0];
+	}
+	
+	/**
+	 * Get the total amount of guests for this session
+	 * @return int
+	 */
+	public function count_guests() {
+		return array_values(\DB::select(\DB::expr('SUM(guests)'))
+				->from('enrollment_sessions')
+				->where('session_id', $this->id)
+				->execute()[0])[0];
+	}
+	
+	/**
+	 * Get the amount of enrollments 
+	 * including cooks and dishwashers, but excluding guests
+	 * @return int
+	 */
+	public function count_participants() {
+		return array_values(\DB::select(\DB::expr('COUNT(*)'))
+				->from('enrollment_sessions')
+				->where('session_id', $this->id)
+				->execute()[0])[0];
+	}
+	
+	/**
+	 * Get the total amount of participants (all enrollments and their guests)
+	 * @return type
+	 */
+	public function count_total_participants() {
+		return $this->count_participants() + $this->count_guests();
 	}
 	
 	/**

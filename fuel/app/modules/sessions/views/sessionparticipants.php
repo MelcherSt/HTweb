@@ -1,7 +1,6 @@
 <?php
 
 $enrollments = $session->enrollments; 
-$participant_count = 0;
 
 ?>
 
@@ -22,10 +21,10 @@ $participant_count = 0;
 				echo '<td>'.$enrollment->user->username.'</td>';
 				echo '<td>'.$enrollment->guests.'</td>';
 				echo '</tr>';
-				$participant_count += 1 + $enrollment->guests;
 			}
 		?>
 		</tbody>
 	</table>
 </div>
-<p class="pull-right">Total participants: <?=$participant_count?> </p>
+<p class="pull-right">Total participants <?=$session->count_total_participants()?> 
+	of which <?=$session->count_guests()?> are guests.</p>

@@ -22,7 +22,10 @@ class Controller_Sessions extends \Controller_Gate {
 		\Response::redirect('sessions/view/'.date('Y-m-d', strtotime('+1 day')));
 	}
 	
-	/* View a session or all sessions */
+	/**
+	 * Show a list of session or a single one
+	 * @param type $date
+	 */
 	public function action_view($date=null) {
 		$this->template->title = 'Sessions';
 		
@@ -45,17 +48,17 @@ class Controller_Sessions extends \Controller_Gate {
 					$session->save();
 				}
 
+				// Assign sub-views
 				$data['left_content'] = \View::forge('sessionstate', ["session"=>$session]);
 				$data['right_content'] = \View::forge('sessionparticipants', ["session"=>$session]);
 				
-				//TODO: use presenters for views
 				$this->template->subtitle = date('l j F Y', strtotime($date));
 				$this->template->content = \View::forge('layout/splitview', $data);
 			} else {
 				$this->handle_error('Date not set or invalid date format.');
 			}	
 		} else {
-			// Show a list of sessions
+			// TODO: Show a list of sessions
 			$this->template->content = 'All sessions you participated in.';
 		}	
 	}
@@ -74,10 +77,7 @@ class Controller_Sessions extends \Controller_Gate {
 		if(isset($date)) {
 			if ($this->valid_date($date)) {
 				// Get model, if exists.
-				$session = Model_Session::find('first', array(
-					'where' => array(
-						array('date', $date))
-				));
+				$session = Model_Session::get_by_date($date);
 				
 				if(!$session) {
 					// There is no session
@@ -96,7 +96,9 @@ class Controller_Sessions extends \Controller_Gate {
 								
 				if ($session->can_enroll()) {
 					if($enrollment->cook) {
-						$notes = \Input::post('notes', null);
+						$notes = \Input::post('notes', '');
+						$deadline = \Input::posts('deadline', Model_Session::DEADLINE_TIME);
+						
 						$session->notes = $notes;
 						$session->save();
 					}
