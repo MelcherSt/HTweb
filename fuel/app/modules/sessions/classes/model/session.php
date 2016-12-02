@@ -100,18 +100,24 @@ class Model_Session extends \Orm\Model
 		}
 	}
 	
+	public function can_enroll_dishwasher() {
+		// Deadline should be past due + diswasher count should be less than max.
+		if(!can_enroll() && (count_diswashers() < static::MAX_DISHWASHER)) {
+			// Dishwashers have untill the end of the day to enroll.
+			return strtotime(date('Y-m-d H:i:s')) < strtotime($session->date . ' +1 day');
+		}
+	}
+	
 	/**
 	 * Get the number of cooks enrolled in this session
 	 * @return int
 	 */
 	public function count_cooks() {
-		// TODO: optimze
-		$enrollments = Model_Enrollment_Session::find('all', array(
-			'where' => array(
-				array('cook', 1), array('session_id', $this->id)),
-		));
-		
-		return sizeof($enrollments);
+		return \DB::select(\DB::expr('COUNT(*)'))
+				->from('enrollment_sessions')
+				->where('cook', 1)
+				->and_where('session_id', $this->id)
+				->execute()[0];
 	}
 	
 	/**
@@ -119,13 +125,11 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_dishwashers() {
-		// TODO: optimze
-		$enrollments = Model_Enrollment_Session::find('all', array(
-			'where' => array(
-				array('dishwasher', 1), array('session_id', $this->id)),
-		));
-		
-		return sizeof($enrollments);
+		return \DB::select(\DB::expr('COUNT(*)'))
+				->from('enrollment_sessions')
+				->where('diswasher', 1)
+				->and_where('session_id', $this->id)
+				->execute()[0];
 	}
 	
 	/**

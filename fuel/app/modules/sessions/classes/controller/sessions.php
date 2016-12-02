@@ -80,11 +80,15 @@ class Controller_Sessions extends \Controller_Gate {
 				));
 				
 				if(!$session) {
-					\Session::set_flash('error', e('Unable to join non-existant session.'));
-					throw new \HttpNotFoundException();
+					handle_error('Unable to join non-existant session.');
 				} 
 								
 				$enrollment = $session->current_enrollment();
+				
+				
+				
+				
+				
 				
 				if(!$enrollment) {
 					// Create one
@@ -95,7 +99,7 @@ class Controller_Sessions extends \Controller_Gate {
 				
 				if(!$session->can_enroll()) {
 					// Dishwashers can only enroll untill the end of the day
-					if ($session->count_dishwashers() < Model_Session::MAX_DISHWASHER && (strtotime(date('Y-m-d H:i:s')) < strtotime($session->date . ' +1 day'))) {
+					if ($session->can_enroll_dishwashers()) {
 						$dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
 						$enrollment->dishwasher = $dishwasher;
 						$enrollment->save();
@@ -122,8 +126,10 @@ class Controller_Sessions extends \Controller_Gate {
  				
 				//\Session::set_flash('success', e('Successfully joined session'));
 				\Response::redirect('/sessions/view/'.$date);
-			}
+			} 
 		}
+		
+		handle_error('Date not set or invalid date format.');
 	}
 	
 	/**
@@ -141,8 +147,7 @@ class Controller_Sessions extends \Controller_Gate {
 				));
 				
 				if(!$session) {
-					\Session::set_flash('error', e('Unable to leave non-existant session.'));
-					throw new \HttpNotFoundException();
+					handle_error('Unable to leave non-existant session.');
 				} 
 				
 				if(!$session->can_enroll()) {
@@ -161,7 +166,25 @@ class Controller_Sessions extends \Controller_Gate {
 				\Response::redirect('/sessions/view/'.$date);
 			}
 		}
+		
+		handle_error('Date not set or invalid date format.');
 	}
+	
+	/**
+	 * Redirect to 404 with given message
+	 * @param type $message
+	 * @throws \HttpNotFoundException
+	 */
+	function handle_error($message=null) {
+		if(isset($message)) {
+			\Session::set_flash('error', e($message));
+		}
+		
+		$this->template->content = '';
+		
+		throw new \HttpNotFoundException();
+	} 
+	
 	
 	/**
 	 * Check if given string can be date formatted Y-m-d
@@ -171,6 +194,6 @@ class Controller_Sessions extends \Controller_Gate {
 	function valid_date($date) {
 		$d = \DateTime::createFromFormat('Y-m-d', $date);
 		return $d && $d->format('Y-m-d') === $date;
-}
+	}
 }
 

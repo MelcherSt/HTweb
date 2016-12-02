@@ -4,7 +4,7 @@ namespace Sessions;
 
 class Controller_Widget extends \Controller_Widget_Base {
 	
-	public function action_index() {
+	public function action_index() {	
 		$this->template->style = 'panel-green';
 		$this->template->count = '6';
 		$this->template->kind = 'people';

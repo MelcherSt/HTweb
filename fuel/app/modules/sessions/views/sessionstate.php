@@ -78,11 +78,10 @@ if(!$session->can_enroll()) {
 	
 	<?php
 		
-	if ($session->count_dishwashers() < Sessions\Model_Session::MAX_DISHWASHER && (strtotime(date('Y-m-d H:i:s')) < strtotime($session->date . ' +1 day'))) { ?>
-		
+	if ($session->can_enroll_dishwashers()) { ?>
 		<form action="/sessions/enroll/<?=$session->date?>" method="post" >
 			<input name="dishwasher" type="hidden" value="on"/>
-			<button class="btn btn-primary" type="submit" ><span class="fa fa-sign-in"></span> I did the dishes</button>
+			<button class="btn btn-primary" type="submit" ><span class="fa fa-tint"></span> I did the dishes</button>
 		</form>
 	<?php
 	}
