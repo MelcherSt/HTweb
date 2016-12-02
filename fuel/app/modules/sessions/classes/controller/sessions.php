@@ -52,7 +52,7 @@ class Controller_Sessions extends \Controller_Gate {
 				$this->template->subtitle = date('l j F Y', strtotime($date));
 				$this->template->content = \View::forge('layout/splitview', $data);
 			} else {
-				//throw new \HttpNotFoundException();
+				$this->handle_error('Date not set or invalid date format.');
 			}	
 		} else {
 			// Show a list of sessions
@@ -80,60 +80,52 @@ class Controller_Sessions extends \Controller_Gate {
 				));
 				
 				if(!$session) {
-					handle_error('Unable to join non-existant session.');
-				} 
+					// There is no session
+					$this->handle_error('Unable to join non-existant session.');
+				}
 								
 				$enrollment = $session->current_enrollment();
 				
-				
-				
-				
-				
-				
-				if(!$enrollment) {
-					// Create one
+				if(!isset($enrollment)) {
+					// Create enrollment with defaults
 					$enrollment = Model_Enrollment_Session::forge();
 					$enrollment->user_id = \Auth::get_user()->id;
 					$enrollment->session_id = $session->id;	
+					$enrollment->dishwasher = false;
 				}
-				
-				if(!$session->can_enroll()) {
-					// Dishwashers can only enroll untill the end of the day
-					if ($session->can_enroll_dishwashers()) {
-						$dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
-						$enrollment->dishwasher = $dishwasher;
-						$enrollment->save();
-					} else {
-						\Session::set_flash('error', e('Cannot add dishwasher.'));
+								
+				if ($session->can_enroll()) {
+					if($enrollment->cook) {
+						$notes = \Input::post('notes', null);
+						$session->notes = $notes;
+						$session->save();
 					}
+
+					$enrollment->cook = \Input::post('cook', false) == 'on' ? true : false;	
+					$enrollment->paid = \Input::post('paid', false);
+					$enrollment->guests = \Input::post('guests', 0);
 					
-					\Response::redirect('/sessions/view/'.$date);
+				} else {
+					\Session::set_flash('error', e('Cannot change enrollment of session past its deadline.'));			
 				}
-					
-				$cook = \Input::post('cook', false) == 'on' ? true : false;	
-				$notes = \Input::post('notes', null);
+						
+				if ($session->can_enroll_dishwashers()) {
+					$dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
+					$enrollment->dishwasher = $dishwasher;					
+					\Session::delete_flash('error'); // Remove any errors
+				} 
 				
-				if($enrollment->cook) {
-					$session->notes = $notes;
-					$session->save();
-				}
-				
-				$enrollment->dishwasher = false;
-				$enrollment->cook = $cook;
-				$enrollment->paid = \Input::post('paid', false);
-				$enrollment->guests = \Input::post('guests', 0);
+				// Save changes and redirect
 				$enrollment->save();
- 				
-				//\Session::set_flash('success', e('Successfully joined session'));
 				\Response::redirect('/sessions/view/'.$date);
 			} 
 		}
 		
-		handle_error('Date not set or invalid date format.');
+		$this->handle_error('Date not set or invalid date format.');
 	}
 	
 	/**
-	 * Responsible for deletion of enrollments
+	 * Deletes the user's enrollment for given session
 	 * @param type $date
 	 * @throws \HttpNotFoundException
 	 */
@@ -167,7 +159,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 		}
 		
-		handle_error('Date not set or invalid date format.');
+		$this->handle_error('Date not set or invalid date format.');
 	}
 	
 	/**
@@ -178,10 +170,7 @@ class Controller_Sessions extends \Controller_Gate {
 	function handle_error($message=null) {
 		if(isset($message)) {
 			\Session::set_flash('error', e($message));
-		}
-		
-		$this->template->content = '';
-		
+		}		
 		throw new \HttpNotFoundException();
 	} 
 	
