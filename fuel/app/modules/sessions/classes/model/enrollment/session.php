@@ -33,7 +33,7 @@ class Model_Enrollment_Session extends \Orm\Model {
 		'user' => array(
 			'key_from' => 'user_id',
 			'key_to' => 'id',
-			'model_to' => 'Auth\Model\Auth_User',
+			'model_to' => '\Model_User',
 		)
 		,'session' => array(
 			'key_from' => 'session_id',

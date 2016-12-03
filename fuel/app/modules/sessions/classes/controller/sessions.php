@@ -50,7 +50,7 @@ class Controller_Sessions extends \Controller_Gate {
 				$this->template->subtitle = date('l j F Y', strtotime($date));
 				$this->template->content = \View::forge('layout/splitview', $data);
 			} else {
-				$this->handle_error('Date not set or invalid date format.');
+				$this->handle_irrecoverable_error('Date not set or invalid date format.');
 			}	
 		} else {
 			// TODO: Show a list of sessions
@@ -75,7 +75,7 @@ class Controller_Sessions extends \Controller_Gate {
 				$session = Model_Session::get_by_date($date);
 				
 				if(!$session) {
-					$this->handle_error('Session does not exist.');
+					$this->handle_irrecoverable_error('Session does not exist.');
 				}
 								
 				$enrollment = $session->current_enrollment();
@@ -101,8 +101,16 @@ class Controller_Sessions extends \Controller_Gate {
 					if($session->can_enroll()) {
 						$notes = \Input::post('notes', '');		
 						$session->notes = $notes;
-					}		
-					$session->save();
+					}
+					
+					try {
+						$session->save();
+					} catch (\Database_Exception $ex) {
+						\Session::set_flash('error', e('An error ocurred while updating the session. Please check your input.'));
+						\Response::redirect('/sessions/view/'.$date);
+						
+					}
+					
 				}	
 								
 				if($session->can_enroll()) {
@@ -125,7 +133,7 @@ class Controller_Sessions extends \Controller_Gate {
 			} 
 		}
 		
-		$this->handle_error('Date not set or invalid date format.');
+		$this->handle_irrecoverable_error('Date not set or invalid date format.');
 	}
 	
 	/**
@@ -163,7 +171,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 		}
 		
-		$this->handle_error('Date not set or invalid date format.');
+		$this->handle_irrecoverable_error('Date not set or invalid date format.');
 	}
 	
 	/**
@@ -171,13 +179,12 @@ class Controller_Sessions extends \Controller_Gate {
 	 * @param type $message
 	 * @throws \HttpNotFoundException
 	 */
-	function handle_error($message=null) {
+	function handle_irrecoverable_error($message=null) {
 		if(isset($message)) {
 			\Session::set_flash('error', e($message));
 		}		
 		throw new \HttpNotFoundException();
-	} 
-	
+	} 	
 	
 	/**
 	 * Check if given string can be date formatted Y-m-d

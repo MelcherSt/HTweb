@@ -5,6 +5,10 @@
  */
 class Controller_Gate extends Controller_Base
 {
+	public function action_index() {
+		$this->template->title = 'Gate';
+		$this->template->content = View::forge('gate/gate');
+	}
 	
 	public function before() {
 		parent::before();

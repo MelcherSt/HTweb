@@ -1,7 +1,5 @@
 <?php
-/**
- * Inject information about the logged in user
- */
+
 class Controller_Base extends Controller_Template
 {
 	public function before()

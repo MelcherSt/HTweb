@@ -8,8 +8,7 @@ $enrollments = $session->enrollments;
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>Id</th>
-				<th>Username</th>
+				<th>Name</th>
 				<th>Guests</th>
 			</tr>
 		</thead>
@@ -17,8 +16,7 @@ $enrollments = $session->enrollments;
 		<?php 
 			foreach($enrollments as $enrollment) {
 				echo '<tr>';
-				echo '<td>'.$enrollment->user->id.'</td>';
-				echo '<td>'.$enrollment->user->username.'</td>';
+				echo '<td>'.$enrollment->user->name. ' ' . $enrollment->user->surname . '</td>';
 				echo '<td>'.$enrollment->guests.'</td>';
 				echo '</tr>';
 			}
