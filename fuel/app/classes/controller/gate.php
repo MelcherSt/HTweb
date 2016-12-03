@@ -40,11 +40,11 @@ class Controller_Gate extends Controller_Base
 					if (Auth::login(Input::post('email'), Input::post('password'))) {
 						if (($id = Auth::get_user_id()) !== false) {
 							// Find user
-							$current_user = Model\Auth_User::find($id[1]);
-							Session::set_flash('success', e('Welcome, '.$current_user->username));
+							$current_user = \Model_User::find($id[1]);
+							Session::set_flash('success', e('Welcome, '.$current_user->name . '!'));
 											
 							// Does the user want to be remembered?
-							if(Input::post('rememberme', false)) {
+							if(Input::post('rememberme', false) == 'on' ? true : false) {
 								Auth::remember_me();
 							} else {
 								Auth::dont_remember_me();

@@ -69,7 +69,7 @@
 				<ul class="nav navbar-nav pull-right">
 					<?php if (isset($current_user)){ ?>
 					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->username ?> <b class="caret"></b></a>
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->name . ' ' . $current_user->surname; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><?php echo Html::anchor('gate/logout', 'Logout') ?></li>
 						</ul>
