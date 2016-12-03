@@ -95,7 +95,7 @@ class Controller_Sessions extends \Controller_Gate {
 						$session->cost = $cost;		
 					}		
 					if($session->can_change_deadline()) {
-						$deadline = date('Y-m-d') . ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME);
+						$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
 						$session->deadline = $deadline;
 					}	
 					if($session->can_enroll()) {

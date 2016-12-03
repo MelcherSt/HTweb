@@ -4,16 +4,20 @@
 	<meta charset="utf-8">
 	<title><?php echo $title; ?></title>
 	
+	<link rel="stylesheet" href="">
+	
 	<?php 
 	echo Asset::css(array(
 		'bootstrap.css',
 		'font-awesome.css',
-		'styles.css'
+		'styles.css',
+		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css'
 		)); 
 	
 	echo Asset::js(array(
 		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
 		'bootstrap.js',
+		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js',	
 	)); 
 	?>
 		

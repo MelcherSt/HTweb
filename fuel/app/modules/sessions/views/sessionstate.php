@@ -1,5 +1,6 @@
 <?php
 $enrollment = $session->current_enrollment();
+$deadline = date('H:i', strtotime($session->deadline));
 
 // Gotta love the debbuging
 /*echo 'DBG cooks: ' . $session->count_cooks();
@@ -8,8 +9,8 @@ echo 'DBG dishwashers: ' . $session->count_dishwashers();
 */
 
 if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline))) { ?>
-	<div class="alert alert-warning">
-		<strong>Notice</strong> This session's deadline has been changed! The deadline is: <?=$session->deadline?>
+	<div class="alert alert-info">
+		<strong>Attention</strong> This session's deadline has been changed! The deadline is: <strong><?=$deadline?></strong>
 	</div>
 <?php }
 
@@ -35,10 +36,9 @@ if(isset($enrollment)) {
 			<textarea name="notes" class="form-control" rows="3"><?=$session->notes?></textarea>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group pull-right">
 			<label for="deadline">Deadline </label>
-			<input name="deadline" type="time" value="<?=$session->deadline?>:00" required/>
-			
+			<input class="timepicker" name="deadline" type="text" id="deadline" value="<?=$deadline?>"required/>
 		</div>	
 		
 		<?php } ?>
@@ -69,8 +69,32 @@ if(isset($enrollment)) {
 	<div class="alert alert-info">
 		<strong>Heads up!</strong> This session can only be edited by cooks since it's past its enrollment deadline.
 	</div>
-	
-	<?php
+
+		<?php
+		if($enrollment->cook) { ?>
+		<form action="/sessions/enroll/<?=$session->date?>" method="post" > 
+			
+			<?php if($session->can_change_deadline()) { ?>
+			<div class="form-group pull-right">
+				<label for="deadline">Deadline </label>
+				<input class="timepicker" name="deadline" type="text" id="deadline" value="<?=$deadline?>"required/>
+			</div>
+			<?php }
+			
+			if ($session->can_change_cost()) { ?>
+			<div class="form-group pull-right">
+				<label for="deadline">Cost </label>
+				<input name="cost" type="number" step="0.1" max="100" min="0" value="<?=$session->cost?>"required/>
+			</div>
+			
+			<?php
+			}
+			?>
+			
+			<button class="btn btn-success" type="submit" ><span class="fa fa-sign-in"></span> Update session</button>
+		</form> 		
+		<?php
+		}
 	}
 	
 	if ($session->can_enroll_dishwashers()) { ?>
@@ -126,9 +150,27 @@ if(isset($enrollment)) {
 		<strong>Heads up!</strong> This session is past its enrollment deadline. You are no longer able to join this session.
 	</div>
 	
+	<button type="button" class="btn btn-success disabled" ><span class="fa fa-sign-in"></span> Join session</button>
+	
 	<?php
 	}
-}
+}?>
+
+<!-- TODO: externalize -->
+<script>
+$(document).ready(function(){
+	$('input.timepicker').timepicker({
+		timeFormat: 'H:mm',
+		interval: 30,
+		minTime: '16:00',
+		maxTime: '20:00',
+		startTime: '16:00',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true
+	});
+});
+</script>
 
 
 
