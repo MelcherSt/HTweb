@@ -31,13 +31,8 @@ class Controller_Sessions extends \Controller_Gate {
 		
 		if(isset($date)) {
 			if ($this->valid_date($date)) {
-				// Get model, if exists.
-				$session = Model_Session::find('first', array(
-					'where' => array(
-						array('date', $date))
-				));
+				$session = Model_Session::get_by_date($date);
 
-				// Or create it
 				if(!$session) {
 					$session = Model_Session::forge();
 					$session->notes = '';
@@ -80,8 +75,7 @@ class Controller_Sessions extends \Controller_Gate {
 				$session = Model_Session::get_by_date($date);
 				
 				if(!$session) {
-					// There is no session
-					$this->handle_error('Unable to join non-existant session.');
+					$this->handle_error('Session does not exist.');
 				}
 								
 				$enrollment = $session->current_enrollment();
@@ -93,30 +87,38 @@ class Controller_Sessions extends \Controller_Gate {
 					$enrollment->session_id = $session->id;	
 					$enrollment->dishwasher = false;
 				}
-								
-				if ($session->can_enroll()) {
-					if($enrollment->cook) {
-						$notes = \Input::post('notes', '');
-						$deadline = \Input::posts('deadline', Model_Session::DEADLINE_TIME);
-						
+				
+				if ($enrollment->cook) {
+					// Update session		
+					if($session->can_change_cost()) {
+						$cost = \Input::post('cost', 0.0);
+						$session->cost = $cost;		
+					}		
+					if($session->can_change_deadline()) {
+						$deadline = date('Y-m-d') . ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME);
+						$session->deadline = $deadline;
+					}	
+					if($session->can_enroll()) {
+						$notes = \Input::post('notes', '');		
 						$session->notes = $notes;
-						$session->save();
-					}
-
+					}		
+					$session->save();
+				}	
+								
+				if($session->can_enroll()) {
 					$enrollment->cook = \Input::post('cook', false) == 'on' ? true : false;	
 					$enrollment->paid = \Input::post('paid', false);
-					$enrollment->guests = \Input::post('guests', 0);
-					
-				} else {
+					$enrollment->guests = \Input::post('guests', 0);			
+				} else if(!$enrollment->cook) {
 					\Session::set_flash('error', e('Cannot change enrollment of session past its deadline.'));			
 				}
 						
-				if ($session->can_enroll_dishwashers()) {
+				if($session->can_enroll_dishwashers()) {
 					$dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
 					$enrollment->dishwasher = $dishwasher;					
 					\Session::delete_flash('error'); // Remove any errors
-				} 
-				
+				}
+							
 				// Save changes and redirect
 				$enrollment->save();
 				\Response::redirect('/sessions/view/'.$date);

@@ -1,0 +1,24 @@
+<?php
+
+namespace Fuel\Migrations;
+
+class Extend_Users
+{
+	public function up() {
+		\DBUtil::add_fields('users', array(
+			'name' => array('constraint' => 50, 'type' => 'varchar'),
+			'surname' => array('constraint' => 50, 'type' => 'varchar'),
+			'phone' => array('constraint' => 20, 'type' => 'varchar'),
+			'active' => array('type' => 'boolean'),
+			'start_year' => array('constraint' => 4, 'type' => 'int'),
+			'end_year' => array('constraint' => 4, 'type' => 'int'),
+			'points' => array('constraint' => 5, 'type' => 'int'),
+			'balance' => array('constraint' => '10,2', 'type' => 'decimal'),
+		));
+	}
+
+	public function down() {
+		\DBUtil::drop_fields('users', array('name', 'surname', 'phone', 
+			'active', 'start_year', 'end_year', 'points', 'balance'));
+	}
+}

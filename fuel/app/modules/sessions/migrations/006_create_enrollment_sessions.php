@@ -41,7 +41,7 @@ class Create_Enrollment_Sessions
 					'column' => 'id',
 				),
 				'on_update' => 'CASCADE',
-				'on_delete' => 'RESTRICT'
+				'on_delete' => 'CASCADE'
 		));
 	}
 

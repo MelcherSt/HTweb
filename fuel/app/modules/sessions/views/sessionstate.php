@@ -2,10 +2,16 @@
 $enrollment = $session->current_enrollment();
 
 // Gotta love the debbuging
-echo 'DBG cooks: ' . $session->count_cooks();
+/*echo 'DBG cooks: ' . $session->count_cooks();
 echo '<br>';
 echo 'DBG dishwashers: ' . $session->count_dishwashers();
+*/
 
+if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline))) { ?>
+	<div class="alert alert-warning">
+		<strong>Notice</strong> This session's deadline has been changed! The deadline is: <?=$session->deadline?>
+	</div>
+<?php }
 
 if(isset($enrollment)) {
 	// User is enrolled
@@ -28,11 +34,18 @@ if(isset($enrollment)) {
 			<label for="comment">Notes</label>
 			<textarea name="notes" class="form-control" rows="3"><?=$session->notes?></textarea>
 		</div>
+		
+		<div class="form-group">
+			<label for="deadline">Deadline </label>
+			<input name="deadline" type="time" value="<?=$session->deadline?>:00" required/>
+			
+		</div>	
+		
 		<?php } ?>
 		
 		<div class="form-group">
-			<label for="email">I'm bringing guests </label>
-			<input name="guests" type="int" step="1" max="10" min="0" value="<?=$enrollment->guests?>"/>
+			<label for="guests">I'm bringing guests </label>
+			<input name="guests" type="number" step="1" max="10" min="0" value="<?=$enrollment->guests?>"/>
 			
 			<?php if ($session->can_enroll_cooks() || $enrollment->cook) { ?>
 			<div class="checkbox">
@@ -116,4 +129,8 @@ if(isset($enrollment)) {
 	<?php
 	}
 }
+
+
+
+
 

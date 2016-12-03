@@ -8,6 +8,7 @@ class Model_Session extends \Orm\Model
 	const MAX_DISHWASHER = 2;
 	
 	/* Grace variables */
+	const DEADLINE_GRACE = '+1hour';
 	const ENROLLMENT_GRACE = '+5days';
 	const COST_GRACE = '+5days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
@@ -52,13 +53,13 @@ class Model_Session extends \Orm\Model
 	 */
 	public static function get_by_date($date) {
 		return Model_Session::find('first', array(
-					'where' => array(
-						array('date', $date))
-				));
+			'where' => array(
+				array('date', $date))
+		));
 	}
 	
 	
-	/* Below this line you will find custom methods for session trieval etc. */
+	/* Below this line you will find instance methods */
 	
 	/**
 	 * Determine if the given user is enrolled
@@ -117,22 +118,51 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether dishwashers may enroll
-	 * @return type
+	 * @return boolean
 	 */
 	public function can_enroll_dishwashers() {
 		// Deadline should be past due + diswasher count should be less than max.
 		if(!$this->can_enroll() && ($this->count_dishwashers() < static::MAX_DISHWASHER)) {
 			// Dishwashers have untill the end of the day to enroll.
 			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DISHWASHER_ENROLLMENT_GRACE);
+		} else {
+			return false;
 		}
 	}
 	
 	/**
-	 * Determine whether cooks may enroll
+	 * Determine whether the cost of this session may be changed by the cooks
+	 * @return boolean
+	 */
+	public function can_change_cost() {
+		return !$this->can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::COST_GRACE));
+	}
+	
+	/**
+	 * Determine whether the enrollments of this session may be altered by the cooks
+	 * @return boolean
+	 */
+	public function can_change_enrollments() {
+		return !$this->can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::ENROLLMENT_GRACE));
+	}
+	
+	/**
+	 * Determine whether the deadline of this session may changed
 	 * @return type
 	 */
+	public function can_change_deadline() {
+		if ($this->can_enroll()) { 
+			return true;
+		}
+		return strtotime(date('Y-m-d H:i:s')) < strtotime(date('Y-m-d') . $this->deadline . static::DEADLINE_GRACE);
+	}
+	
+	/**
+	 * Determine whether cooks may enroll
+	 * @return boolean
+	 */
 	public function can_enroll_cooks() {
-		return ($this->can_enroll() && ($this->count_cooks() < static::MAX_COOKS)); 
+		return $this->can_enroll() && ($this->count_cooks() < static::MAX_COOKS); 
 	}
 	
 	/**
@@ -184,7 +214,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the total amount of participants (all enrollments and their guests)
-	 * @return type
+	 * @return boolean
 	 */
 	public function count_total_participants() {
 		return $this->count_participants() + $this->count_guests();
@@ -192,10 +222,9 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the enrollments for all cooks enrolled in this session
-	 * @return type
+	 * @return [\Sessions\Model_Enrollment_Session]
 	 */
 	public function get_cook_enrollments() {
-		// TODO: optimze
 		$enrollments = Model_Enrollment_Session::find('all', array(
 			'where' => array(
 				array('cook', 1), array('session_id', $this->id)),
@@ -206,10 +235,9 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the enrollments for all cooks enrolled in this session
-	 * @return type
+	 * @return [\Sessions\Model_Enrollment_Session]
 	 */
 	public function get_dishwasher_enrollments() {
-		// TODO: optimze
 		$enrollments = Model_Enrollment_Session::find('all', array(
 			'where' => array(
 				array('dishwasher', 1), array('session_id', $this->id)),
