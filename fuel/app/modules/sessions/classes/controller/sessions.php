@@ -105,9 +105,7 @@ class Controller_Sessions extends \Controller_Gate {
 						$session->notes = $notes;
 					}
 					
-					try {
-						$session->save();
-					} catch (\Database_Exception $ex) {
+					if(!$session->save()) {
 						\Session::set_flash('error', e('An error ocurred while updating the session. Please check your input.'));
 						\Response::redirect('/sessions/view/'.$date);	
 					}

@@ -19,10 +19,8 @@ class Controller_Admin_Users extends Controller_Admin
 
 	}
 
-	public function action_create()
-	{
-		if (Input::method() == 'POST')
-		{
+	public function action_create() {
+		if (Input::method() == 'POST') {
 			$val = \Model_User::validate('create');
 
 			if ($val->run())
@@ -32,9 +30,9 @@ class Controller_Admin_Users extends Controller_Admin
 					'surname' => Input::post('surname'),
 					'name' => Input::post('name'),
 					'phone' => Input::post('phone', ''),
-					'active' => Input::post('active', true),
+					'active' => Input::post('active'),
 					'start_year' => Input::post('start_year'),
-					'end_year' => Input::post('end_year', 0),
+					'end_year' => Input::post('end_year'),
 					'points' => Input::post('points', 0),
 					'balance' => Input::post('balance', 0.0),
 					'password' => Auth::instance()->hash_password(Input::post('password')),

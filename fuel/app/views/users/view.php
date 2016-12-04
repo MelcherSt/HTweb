@@ -26,7 +26,9 @@
 <?php 
 
 if($user->id == Auth::get_user_id()[1]) {
-	echo Html::anchor('users/edit/'.$user->id, 'Edit');
+	echo '<a href="/users/edit"> <span class="fa fa-pencil"></span> Edit </a>';
+	
+	//echo Html::anchor('users/edit/'.$user->id, 'Edit');
 }
 
 ?>

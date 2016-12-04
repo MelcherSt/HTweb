@@ -1,7 +1,7 @@
 <h2>Editing User</h2>
 <br>
 
-<?php echo render('admin/users/_form'); ?>
+<?php echo render('users/_form'); ?>
 <p>
-	<?php echo Html::anchor('admin/users/view/'.$user->id, 'View'); ?> |
-	<?php echo Html::anchor('admin/users', 'Back'); ?></p>
+	<?php echo Html::anchor('users/view/'.$user->id, 'View'); ?> |
+	<?php echo Html::anchor('users', 'Back'); ?></p>

@@ -3,19 +3,33 @@
  * Extension of the standard Auth_User model class including 
  * extended properties
  */
-class Model_User extends \Auth\Model\Auth_User
-{
+class Model_User extends \Auth\Model\Auth_User {
 	protected static $_properties = array(
 		'id',
 		'username',
 		'surname',
 		'name',
-		'phone',
-		'active',
+		'phone' => array(
+			'default'     => '',
+			'null'        => true,
+		),
+		'active' => array(
+			'default'     => 1,
+			'null'        => false,
+		),
 		'start_year',
-		'end_year',
-		'points',
-		'balance',
+		'end_year' => array(
+			'default'     => 0,
+			'null'        => false,
+		),
+		'points' => array(
+			'default'     => 0,
+			'null'        => false,
+		),
+		'balance' => array(
+			'default'     => 0.0,
+			'null'        => false,
+		),
 		'password',
 		'group_id',
 		'email',
@@ -57,20 +71,9 @@ class Model_User extends \Auth\Model\Auth_User
 		),
 	);
 
-	public static function validate($factory)
-	{
+	public static function validate($factory) {
 		$val = Validation::forge($factory);
-		$val->add_field('username', 'Username', 'required|max_length[255]');
-		$val->add_field('surname', 'Surname', 'required|max_length[50]');
-		$val->add_field('name', 'Name', 'required|max_length[50]');
-		$val->add_field('phone', 'Phone', 'required|max_length[20]');
-		$val->add_field('active', 'Active', 'required');
-		$val->add_field('start_year', 'Start Year', 'required|valid_string[numeric]');
-		$val->add_field('end_year', 'End Year', 'valid_string[numeric]');
-		$val->add_field('points', 'Point Count', 'required|valid_string[numeric]');
-		$val->add_field('balance', 'Balance', 'required');
-		$val->add_field('password', 'Password', 'required|max_length[255]');
-		$val->add_field('group_id', 'Group', 'required|valid_string[numeric]');
+		$val->add_field('phone', 'Phone', 'max_length[20]');
 		$val->add_field('email', 'Email', 'required|valid_email|max_length[255]');
 
 		return $val;
