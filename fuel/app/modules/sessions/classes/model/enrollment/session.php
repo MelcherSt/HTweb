@@ -11,7 +11,6 @@ class Model_Enrollment_Session extends \Orm\Model {
 		'guests',
 		'cook',
 		'dishwasher',
-		'paid',
 		'created_at',
 		'updated_at',
 	);

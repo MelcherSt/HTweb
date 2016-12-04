@@ -37,6 +37,7 @@ class Controller_Sessions extends \Controller_Gate {
 					$session = Model_Session::forge();
 					$session->notes = '';
 					$session->cost = '0.0';
+					$session->paid_by = 0;
 					$session->deadline = date($date. ' ' . Model_Session::DEADLINE_TIME);
 					$session->date = date($date);
 					$session->settled = false;
@@ -114,7 +115,6 @@ class Controller_Sessions extends \Controller_Gate {
 								
 				if($session->can_enroll()) {
 					$enrollment->cook = \Input::post('cook', false) == 'on' ? true : false;	
-					$enrollment->paid = \Input::post('paid', false);
 					$enrollment->guests = \Input::post('guests', 0);			
 				} else if(!$enrollment->cook) {
 					\Session::set_flash('error', e('Cannot change enrollment of session past its deadline.'));			

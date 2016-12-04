@@ -20,6 +20,7 @@ class Model_Session extends \Orm\Model
 		),
 		'notes',
 		'cost',
+		'paid_by',
 		'deadline',
 		'settled',
 		'created_at',
