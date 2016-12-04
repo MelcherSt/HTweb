@@ -30,7 +30,7 @@ if(isset($enrollment)) {
 		
 		<div class="form-group pull-right">
 			<label for="deadline">Deadline </label>
-			<input class="timepicker" name="deadline" type="text" id="deadline" value="<?=$deadline?>"required/>
+			<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="10" value="<?=$deadline?>"required/>
 		</div>	
 		<?php endif; ?>
 		
@@ -63,11 +63,12 @@ if(isset($enrollment)) {
 		</div>
 	
 		<form action="/sessions/enroll/<?=$session->date?>" method="post" > 
-			
+			<input type="hidden" name="guests" value="<?=$enrollment->guests?>"/>
+			<input type="hidden" name="cook" value="on"/>
 			<?php if($session->can_change_deadline()): ?>
 			<div class="form-group pull-right">
-				<label for="deadline">Deadline </label>
-				<input class="timepicker" name="deadline" type="text" id="deadline" value="<?=$deadline?>"required/>
+				<label for="deadline">Deadline</label>
+				<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="10" value="<?=$deadline?>"required/>
 			</div>
 			<?php endif;
 			if ($session->can_change_cost()): ?>
@@ -89,11 +90,13 @@ if(isset($enrollment)) {
 	}
 	
 	if ($session->can_enroll_dishwashers()) { ?>
+		<br>
 		<div class="alert alert-warning">
 			<strong>Hey you!</strong> Did you do the dishes? Click the button to join the dishwashers for this session.
 		</div>
 	
 		<form action="/sessions/enroll/<?=$session->date?>" method="post" >
+			<input type="hidden" value="dishwasher" name="method"/>
 			<?php if($enrollment->dishwasher) { ?>
 			<button class="btn btn-danger" type="submit" ><span class="fa fa-tint"></span> Actually, I did not do the dishes</button>
 			<?php } else { ?>

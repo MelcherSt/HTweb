@@ -88,7 +88,8 @@ class Controller_Sessions extends \Controller_Gate {
 					$enrollment->dishwasher = false;
 				}
 				
-				if ($enrollment->cook) {
+				if ($enrollment->cook && !(\Input::post('method') == 'dishwasher')) {
+					// Don't update unposted values when enrolling for dishwasher
 					// Update session		
 					if($session->can_change_cost()) {
 						$cost = \Input::post('cost', 0.0);
@@ -107,10 +108,8 @@ class Controller_Sessions extends \Controller_Gate {
 						$session->save();
 					} catch (\Database_Exception $ex) {
 						\Session::set_flash('error', e('An error ocurred while updating the session. Please check your input.'));
-						\Response::redirect('/sessions/view/'.$date);
-						
+						\Response::redirect('/sessions/view/'.$date);	
 					}
-					
 				}	
 								
 				if($session->can_enroll()) {

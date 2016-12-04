@@ -1,4 +1,8 @@
 <?php
+/**
+ * Extension of the standard Auth_User model class including 
+ * extended properties
+ */
 class Model_User extends \Auth\Model\Auth_User
 {
 	protected static $_properties = array(
@@ -70,6 +74,10 @@ class Model_User extends \Auth\Model\Auth_User
 		$val->add_field('email', 'Email', 'required|valid_email|max_length[255]');
 
 		return $val;
+	}
+	
+	public function get_fullname() {
+		return $this->name . ' ' . $this->surname;
 	}
 
 }

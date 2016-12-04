@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Base controller injecting user information in the $current_user variable
+ */
 class Controller_Base extends Controller_Template
 {
 	public function before()

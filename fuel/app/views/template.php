@@ -71,7 +71,8 @@
 					<li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->name . ' ' . $current_user->surname; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><?php echo Html::anchor('gate/logout', 'Logout') ?></li>
+							<li><a href="/users/me"><span class="fa fa-cogs"></span> Settings</a></li>
+							<li><a href="/gate/logout"><span class="fa fa-sign-out"></span> Logout</a></li>
 						</ul>
 					</li>
 					<?php } else { ?>

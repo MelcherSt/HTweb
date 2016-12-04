@@ -8,7 +8,7 @@ class Model_Session extends \Orm\Model
 	const MAX_DISHWASHER = 2;
 	
 	/* Grace variables */
-	const DEADLINE_GRACE = '+1hour';
+	const DEADLINE_GRACE = '+1day';
 	const ENROLLMENT_GRACE = '+5days';
 	const COST_GRACE = '+5days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
@@ -153,8 +153,10 @@ class Model_Session extends \Orm\Model
 	public function can_change_deadline() {
 		if ($this->can_enroll()) { 
 			return true;
+		} else {
+			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DEADLINE_GRACE);
 		}
-		return strtotime(date('Y-m-d H:i:s')) < strtotime(date('Y-m-d') . $this->deadline . static::DEADLINE_GRACE);
+		
 	}
 	
 	/**

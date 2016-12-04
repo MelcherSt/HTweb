@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Base controller for widgets controlling the look 'n feel of a widget.
+ */
 class Controller_Widget_Base extends \Controller {
 	
 	private $base_template = 'dashboard/widget';
@@ -22,8 +24,7 @@ class Controller_Widget_Base extends \Controller {
 		$this->template->message = 'Placeholder message';
 		$this->template->detail = 'View details';
 		$this->template->details = true;
-		$this->template->link = '#';
-		
+		$this->template->link = '#';		
 	}
 	
 	public function after($response) {
