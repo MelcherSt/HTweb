@@ -55,7 +55,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}	
 		} else {
 			// TODO: Show a list of sessions
-			$this->template->content = 'All sessions you participated in.';
+			$this->template->content = \View::forge('index');
 		}	
 	}
 	
