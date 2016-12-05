@@ -3,14 +3,22 @@
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $title; ?></title>
-	<?php echo Asset::css('bootstrap.css'); ?>
-	<style>
-		body { margin: 50px; }
-	</style>
-	<?php echo Asset::js(array(
-		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
-		'bootstrap.js',
-	)); ?>
+	
+	<?php 
+	echo Asset::css(array(
+		'bootstrap.min.css',
+		'font-awesome.css',
+		'styles.css',
+		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css'
+		)); 
+	
+	echo Asset::js(array(
+		'jquery-3.1.1.min.js',
+		'bootstrap.min.js',
+		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js',	
+	)); 
+	?>
+	
 	<script>
 		$(function(){ $('.topbar').dropdown(); });
 	</script>

@@ -8,15 +8,15 @@
 	
 	<?php 
 	echo Asset::css(array(
-		'bootstrap.css',
+		'bootstrap.min.css',
 		'font-awesome.css',
 		'styles.css',
 		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css'
 		)); 
 	
 	echo Asset::js(array(
-		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
-		'bootstrap.js',
+		'jquery-3.1.1.min.js',
+		'bootstrap.min.js',
 		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js',	
 	)); 
 	?>
