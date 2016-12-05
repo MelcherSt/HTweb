@@ -45,7 +45,7 @@ if(isset($enrollment)) {
 			<?php endif; ?>
 		</div>
 		
-		<button class="btn btn-success" type="submit" ><span class="fa fa-sign-in"></span> Update session</button>
+		<button class="btn btn-success" type="submit" ><span class="fa fa-pencil-square-o"></span> Update session</button>
 	</form> 
 	<br>
 	<form action="/sessions/enroll/<?=$session->date?>" method="post" >
