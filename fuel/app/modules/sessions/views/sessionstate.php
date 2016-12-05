@@ -48,8 +48,7 @@ if(isset($enrollment)) {
 		<button class="btn btn-success" type="submit" ><span class="fa fa-pencil-square-o"></span> Update session</button>
 	</form> 
 	<br>
-	<form action="/sessions/enroll/<?=$session->date?>" method="post" >
-		<input type="hidden" name="method" value="delete"/>
+	<form action="/sessions/enrollments/delete/<?=$session->date?>" method="post" >
 		<button class="btn btn-danger" type="submit"><span class="fa fa-sign-out"></span> Leave session</button>
 	</form> 
 

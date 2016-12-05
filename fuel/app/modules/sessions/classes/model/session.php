@@ -57,8 +57,7 @@ class Model_Session extends \Orm\Model
 			'where' => array(
 				array('date', $date))
 		));
-	}
-	
+	}	
 	
 	/* Below this line you will find instance methods */
 	
@@ -83,12 +82,10 @@ class Model_Session extends \Orm\Model
 	 * @param int $user_id
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
-	public function get_enrollment($user_id) {
-		$user = \Auth::get_user();
-		
+	public function get_enrollment($user_id) {		
 		$enrollment = Model_Enrollment_Session::find('first', array(
 					'where' => array(
-						array('user_id', $user->id), array('session_id', $this->id))
+						array('user_id', $user_id), array('session_id', $this->id))
 				));
 		return $enrollment;
 	}

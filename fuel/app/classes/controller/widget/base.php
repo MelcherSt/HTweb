@@ -11,6 +11,7 @@ class Controller_Widget_Base extends \Controller {
 	}
 	
 	public function before() {
+		parent::before();
 		// Widgets should be requested via HMVC only
 		if (!\Request::is_hmvc()) {
 			throw new HttpNotFoundException();
@@ -27,7 +28,8 @@ class Controller_Widget_Base extends \Controller {
 		$this->template->link = '#';		
 	}
 	
-	public function after($response) {
+	public function after($response) {		
+		if($response) return $response;
 		return \Response::forge(\View::forge($this->base_template, get_object_vars($this->template))->render());
 	}
 }
