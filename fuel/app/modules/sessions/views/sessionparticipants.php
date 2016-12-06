@@ -15,12 +15,7 @@ $cur_enrollment = $session->current_enrollment();
 			</tr>
 		</thead>
 		<tbody>
-		<?php 
-			if (sizeof($enrollments) == 0) {
-				$session->deadline = $session->date . ' 18:00'; 
-				$session->save();
-			}
-			
+		<?php 			
 			foreach($enrollments as $enrollment): ?>
 			<tr>
 				<td><?=$enrollment->user->get_fullname()?>  
