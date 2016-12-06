@@ -8,6 +8,10 @@ class Controller_Enrollments extends \Controller_Gate {
 		return \Response::forge('Nothing to see here');
 	}
 	
+	/**
+	 * Handle enrollment creation
+	 * @param type $date
+	 */
 	public function post_create($date=null) {
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
@@ -20,11 +24,12 @@ class Controller_Enrollments extends \Controller_Gate {
 			$cur_enrollment = $session->current_enrollment();
 			
 			if(!isset($cur_enrollment)) {
-				$user_id = \Auth::get_user()->id;
-				$user = \Model_User::find($user_id);
 				if (!$session->can_enroll()) {
 					\Utils::handle_recoverable_error('Cannot enroll user outside enrollment boundaries', '/sessions/view/'.$date);
 				}
+				
+				$user_id = \Auth::get_user()->id;
+				$user = \Model_User::find($user_id);	
 			} else {
 				$user = \Model_User::find($user_id);
 				
@@ -56,7 +61,10 @@ class Controller_Enrollments extends \Controller_Gate {
 		\Utils::handle_irrecoverable_error('Invalid date format or no date parameter.');
 	}
 	
-		
+	/**
+	 * Handle enrollment updates
+	 * @param type $date
+	 */
 	public function post_update($date=null) {
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
@@ -127,7 +135,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	}
 	
 	/**
-	 * Handle session un-enrolling
+	 * Handle enrollment deletion
 	 * @param type $date
 	 */
 	public function post_delete($date=null) {
