@@ -20,7 +20,7 @@ if(isset($enrollment)) {
 	// When able to enroll, show form
 	if($session->can_enroll()) { ?>
 
-	<form action="/sessions/enroll/<?=$session->date?>" method="post" >
+	<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
 		
 		<?php if($enrollment->cook): ?>
 		<div class="form-group">
@@ -61,7 +61,7 @@ if(isset($enrollment)) {
 			the deadline if you feel this is necessary. 		
 		</div>
 	
-		<form action="/sessions/enroll/<?=$session->date?>" method="post" > 
+		<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" > 
 			<input type="hidden" name="guests" value="<?=$enrollment->guests?>"/>
 			<input type="hidden" name="cook" value="on"/>
 			<?php if($session->can_change_deadline()): ?>
@@ -94,7 +94,7 @@ if(isset($enrollment)) {
 			<strong>Hey you!</strong> Did you do the dishes? Click the button to join the dishwashers for this session.
 		</div>
 	
-		<form action="/sessions/enroll/<?=$session->date?>" method="post" >
+		<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
 			<input type="hidden" value="dishwasher" name="method"/>
 			<?php if($enrollment->dishwasher) { ?>
 			<button class="btn btn-danger" type="submit" ><span class="fa fa-tint"></span> Actually, I did not do the dishes</button>
@@ -115,7 +115,7 @@ if(isset($enrollment)) {
 		// Show enrollment form
 	?>
 
-	<form action="/sessions/enroll/<?=$session->date?>" method="post" >
+	<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
 		<div class="form-group">
 			<label for="email">I'm bringing guests </label>
 			<input name="guests" type="int" step="1" max="10" min="0" value="0"/>

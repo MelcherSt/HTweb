@@ -100,7 +100,7 @@ class Model_Session extends \Orm\Model
 	}
 	
 	/**
-	 * Determine if session is open for enrollment
+	 * Determine if session is open for normal enrollment
 	 * @return boolean
 	 */
 	public function can_enroll() {

@@ -16,6 +16,11 @@ $cur_enrollment = $session->current_enrollment();
 		</thead>
 		<tbody>
 		<?php 
+			if (sizeof($enrollments) == 0) {
+				$session->deadline = $session->date . ' 18:00'; 
+				$session->save();
+			}
+			
 			foreach($enrollments as $enrollment): ?>
 			<tr>
 				<td><?=$enrollment->user->get_fullname()?>  
@@ -62,7 +67,7 @@ padding-right: 0px !important;
 					<h4 class="modal-title">Delete enrollment</h4>
 				</div>
 				<div class="modal-body">
-					<p>Are you sure you want to delete <strong><span id="delete-user-name"></span></strong> from this session??</p>
+					<p>Are you sure you want to delete <strong><span id="delete-user-name"></span></strong> from this session?</p>
 					<!--  insert form elements here -->
 					<div class="form-group">
 						<input id="delete-user-id" type="hidden" class="form-control" name="user_id">
@@ -82,7 +87,7 @@ padding-right: 0px !important;
 <div id="edit-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="#" method="POST">
+			<form id="remove-package" action="/sessions/enrollments/update/<?=$session->date?>" method="POST">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -92,7 +97,7 @@ padding-right: 0px !important;
 					<p>You are editing the enrollment of <strong><span id="edit-user-name"></span></strong></p>
 					<!--  insert form elements here -->
 					<div class="form-group">
-						<input id="edit-user-id" type="hidden" class="form-control" name="user-id">
+						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
 						<label for="edit-guests">Guests </label>
 						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
 					</div>
