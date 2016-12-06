@@ -43,14 +43,6 @@ $cur_enrollment = $session->current_enrollment();
 <p class="pull-right">Total participants <?=$session->count_total_participants()?> 
 	of which <?=$session->count_guests()?> are guests.</p>
 
-
-
-<style>
-.modal-open[style] {
-padding-right: 0px !important;
-}
-</style>
-
 <!-- Modal dialog for enrollment deletion -->
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
@@ -92,7 +84,7 @@ padding-right: 0px !important;
 					<p>You are editing the enrollment of <strong><span id="edit-user-name"></span></strong></p>
 					<!--  insert form elements here -->
 					<div class="form-group">
-						<input id="edit-user-id" type="hidden" class="form-control" name="user-id">
+						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
 						<label for="edit-guests">Guests </label>
 						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
 					</div>
