@@ -115,7 +115,7 @@ if(isset($enrollment)) {
 		// Show enrollment form
 	?>
 
-	<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
+	<form action="/sessions/enrollments/create/<?=$session->date?>" method="post" >
 		<div class="form-group">
 			<label for="email">I'm bringing guests </label>
 			<input name="guests" type="int" step="1" max="10" min="0" value="0"/>

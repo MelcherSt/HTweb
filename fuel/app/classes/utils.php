@@ -13,6 +13,16 @@ class Utils {
 		throw new \HttpNotFoundException();
 	} 	
 	
+	
+	public static function handle_recoverable_error($message=null, $redirect=null) {
+		if(isset($message)) {
+			\Session::set_flash('error', e($message));
+		}
+		if (isset($redirect)) {
+			return \Response::redirect($redirect);
+		}
+	}
+	
 	/**
 	 * Check if given string can be date formatted Y-m-d
 	 * @param type $date
