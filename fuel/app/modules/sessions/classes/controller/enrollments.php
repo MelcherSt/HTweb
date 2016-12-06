@@ -45,7 +45,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$enrollment = Model_Enrollment_Session::forge(array(
 				'user_id' => $user->id,
 				'session_id' => $session->id,
-				'dishwasher' => false,
+				'dishwasher' => \Input::post('dishwasher', false) == 'on' ? true : false,
 				'cook' => \Input::post('cook', false) == 'on' ? true : false,
 				'guests' => \Input::post('guests', 0),
 			));

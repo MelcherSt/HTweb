@@ -79,8 +79,25 @@ class Model_User extends \Auth\Model\Auth_User {
 		return $val;
 	}
 	
+	/**
+	 * Retrieve the full formatted name of this user (name + surname)
+	 * @return type
+	 */
 	public function get_fullname() {
 		return $this->name . ' ' . $this->surname;
+	}
+	
+	/**
+	 * Get a list of user by their bootstate (default is active)
+	 * @param type $active
+	 * @return type
+	 */
+	public static function get_by_state($active=true) {
+		return Model_User::find('all', array(
+			'where' => array(
+				array('active', $active),
+			)
+		));
 	}
 
 }

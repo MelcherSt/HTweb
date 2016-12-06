@@ -91,7 +91,7 @@ if(isset($enrollment)) {
 	if ($session->can_enroll_dishwashers()) { ?>
 		<br>
 		<div class="alert alert-warning">
-			<strong>Hey you!</strong> Did you do the dishes? Click the button to join the dishwashers for this session.
+			<strong>Hey you!</strong> Did you do the dishes? Click the button to (un)enroll as dishwasher for this session.
 		</div>
 	
 		<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
@@ -117,8 +117,8 @@ if(isset($enrollment)) {
 
 	<form action="/sessions/enrollments/create/<?=$session->date?>" method="post" >
 		<div class="form-group">
-			<label for="email">I'm bringing guests </label>
-			<input name="guests" type="int" step="1" max="10" min="0" value="0"/>
+			<label for="guests">I'm bringing guests </label>
+			<input name="guests" type="number" step="1" max="10" min="0" value="0"/>
 			<?php if ($session->can_enroll_cooks()) { ?>
 			<div class="checkbox">
 				<label><input name="cook" type="checkbox"> I feel like cooking</label>
