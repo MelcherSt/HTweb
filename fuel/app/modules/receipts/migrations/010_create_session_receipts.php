@@ -16,19 +16,6 @@ class Create_Session_Receipts {
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 		), array('id'));
 		
-		\DBUtil::create_index('session_receipts', array('session_id', 'receipt_id'), 'enrollment', 'UNIQUE');	
-		
-		\DBUtil::add_foreign_key('session_receipts', array(
-			'constraint' => 'fk_session_id_sr',
-			'key' => 'session_id',
-			'reference' => array(
-				'table' => 'sessions',
-				'column' => 'id',
-			),
-			'on_update' => 'CASCADE',
-			'on_delete' => 'RESTRICT'
-		));
-		
 		\DBUtil::add_foreign_key('session_receipts', array(
 				'constraint' => 'fk_receipt_id_sr',
 				'key' => 'receipt_id',
@@ -39,12 +26,14 @@ class Create_Session_Receipts {
 				'on_update' => 'CASCADE',
 				'on_delete' => 'CASCADE'
 		));
+				
+		\DBUtil::create_index('session_receipts', array('session_id', 'receipt_id'), 'enrollment', 'UNIQUE');	
+		
 	}
 
 	public function down() {
 		\DBUtil::drop_table('session_receipts');
 		\DBUtil::drop_index('session_receipts', 'enrollment');
 		\DBUtil::drop_foreign_key('session_receipts', 'fk_user_id_sr');
-		\DBUtil::drop_foreign_key('session_receipts', 'fk_session_id_sr');
 	}
 }
