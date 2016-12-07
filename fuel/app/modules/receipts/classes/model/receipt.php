@@ -9,7 +9,6 @@ class Model_Receipt extends \Orm\Model
 			'validation' => array('required', 'valid_date'),
 		),
 		'notes',
-		'schema',
 		'created_at',
 		'updated_at',
 	);

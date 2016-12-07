@@ -4,8 +4,6 @@ namespace Receipts;
 
 class Controller_Admin extends \Controller_Admin {
 	
-	
-	
 	public function action_index() {
 		$this->template->title = 'Receipts';
 		
@@ -14,21 +12,6 @@ class Controller_Admin extends \Controller_Admin {
 		$this->template->content = \View::forge('admin/index', $data);
 	}
 
-
-	public function action_view($id) {
-		if (isset($id)) {
-			$receipt = Model_Receipt::find($id);
-			if (!$receipt) {
-				\Utils::handle_irrecoverable_error("No receipt with id " . $id);
-			}
-			
-			$data['receipt'] = $receipt;
-			$this->template->title = 'Receipt';
-			$this->template->subtitle = date('l j F Y', strtotime($receipt->date));
-			$this->template->content = \View::forge('admin/view', $data);
-		} 
-	}
-	
 	public function post_create() {
 		$receipt = \Receipts\Model_Receipt::forge();
 		$receipt->notes = \Input::post('notes', '');
