@@ -17,7 +17,6 @@ class Create_Enrollment_Sessions {
 			'dishwasher' => array('type' => 'boolean'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
-
 		), array('id'));
 		
 		
