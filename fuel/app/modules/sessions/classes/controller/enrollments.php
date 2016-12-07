@@ -4,10 +4,6 @@ namespace Sessions;
 
 class Controller_Enrollments extends \Controller_Gate {
 	
-	public function action_index() {
-		return \Response::forge('Nothing to see here');
-	}
-	
 	/**
 	 * Handle enrollment creation
 	 * @param type $date
@@ -93,8 +89,14 @@ class Controller_Enrollments extends \Controller_Gate {
 			if ($enrollment->cook && !$dishwasher_only && !isset($user_id)) {
 				// Actually we're updating the session here 	
 				if($session->can_change_cost()) {
-						$cost = \Input::post('cost', 0.0);
-						$session->cost = $cost;		
+						$new_cost = \Input::post('cost', 0.0);
+						$cur_cost = $session->cost;
+						
+						if ($new_cost != $cur_cost) {
+							// Cost has been updated by this cook. Set him as payer.
+							$session->paid_by = $enrollment->user->id;
+							$session->cost = $new_cost;	
+						}		
 					}		
 					if($session->can_change_deadline()) {
 						$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
@@ -127,7 +129,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			if($enrollment->save()) {
 				//\Session::set_flash('success', ('<strong>'. $name . '</strong> has been enrolled.'));
 			} else {
-				\Session::set_flash('error', ('Could not enroll <strong>' . $name . '</strong>'));	
+				\Session::set_flash('error', ('Could not update enrollment for <strong>' . $name . '</strong>'));	
 			}
 			\Response::redirect('/sessions/view/'.$date);
 		}
