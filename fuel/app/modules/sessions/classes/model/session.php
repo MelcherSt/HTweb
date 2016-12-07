@@ -57,7 +57,19 @@ class Model_Session extends \Orm\Model
 			'where' => array(
 				array('date', $date))
 		));
-	}	
+	}
+
+	/**
+	 * Retrieve all session older than 5 days
+	 * @return [\Sessions\Model_Session]
+	 */
+	public static function get_ready_for_settlement() {
+		return Model_Session::find('all', array(
+			'where' => array(
+				array(\DB::expr('DATE_ADD(date, INTERVAL 5 DAY)'), '<', \DB::expr('"'. date('Y-m-d'). '"'))
+			)
+		));
+	}
 	
 	/* Below this line you will find instance methods */
 	

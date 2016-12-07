@@ -2,7 +2,7 @@
 
 namespace Fuel\Migrations;
 
-class Extend_Users
+class Extend_Users 
 {
 	public function up() {
 		\DBUtil::add_fields('users', array(

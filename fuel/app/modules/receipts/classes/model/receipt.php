@@ -28,11 +28,11 @@ class Model_Receipt extends \Orm\Model
 	
 	protected static $_has_many = array(
 		'sessions' => array(
-			'model_to' => 'Sessions\Model_User_Receipt',
+			'model_to' => '\Receipts\Model_Session_Receipt',
 			'cascade_delete' => true,
 		),
 		'users' => array(
-			'model_to' => 'Sessions\Model_User',
+			'model_to' => '\Receipts\Model_User_Receipt',
 			'cascade_delete' => false,
 		),
 	);

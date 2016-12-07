@@ -12,6 +12,10 @@ class Model_User_Receipt extends \Orm\Model {
 			'default'     => 0.0,
 			'null'        => false,
 		),
+		'points' => array(
+			'default'     => 0,
+			'null'        => false,
+		),
 		'created_at',
 		'updated_at',
 	);
@@ -41,6 +45,15 @@ class Model_User_Receipt extends \Orm\Model {
 			'model_to' => '\Receipts\Model_Receipt'
 		)
 	);
+	
+	public static function get_by_user($user_id, $receipt_id) {
+		return \Receipts\Model_User_Receipt::find('first', array(
+			'where' => array(
+				array('user_id', $user_id),
+				array('receipt_id', $receipt_id),
+			)
+		));
+	}
 }
 
 
