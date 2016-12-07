@@ -47,11 +47,13 @@ class Controller_Enrollments extends \Controller_Gate {
 			));
 			
 			// Save
-			if($enrollment->save()) {
+			try {
+				$enrollment->save();
 				\Session::set_flash('success', ('<strong>'. $user->name . '</strong> has been enrolled.'));
-			} else {
-				\Session::set_flash('error', ('Could not enroll <strong>' . $username . '</strong>'));	
+			} catch (\Database_Exception $ex) {
+				\Session::set_flash('error', ('Could not enroll <strong>' . $user->name . '</strong>'));	
 			}
+			
 			\Response::redirect('/sessions/view/'.$date);
 		}
 		\Utils::handle_irrecoverable_error('Invalid date format or no date parameter.');
@@ -126,10 +128,14 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Session::delete_flash('error'); // Remove any errors
 			}
 			
-			if($enrollment->save()) {
-				//\Session::set_flash('success', ('<strong>'. $name . '</strong> has been enrolled.'));
-			} else {
-				\Session::set_flash('error', ('Could not update enrollment for <strong>' . $name . '</strong>'));	
+			$user = $enrollment->user;
+			
+			// Save
+			try {
+				$enrollment->save();
+				\Session::set_flash('success', ('Enrollment for <strong>'. $user->name . '</strong> has been updated.'));
+			} catch (\Database_Exception $ex) {
+				\Session::set_flash('error', ('Could not update enrollment for <strong>' . $user->name . '</strong>'));	
 			}
 			\Response::redirect('/sessions/view/'.$date);
 		}
