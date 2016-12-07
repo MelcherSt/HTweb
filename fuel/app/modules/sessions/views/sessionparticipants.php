@@ -40,7 +40,6 @@ $cur_enrollment = $session->current_enrollment();
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-	
 </div>
 <div class="row">
 	<?php if (isset($cur_enrollment) && $cur_enrollment->cook && $session->can_change_enrollments()): ?>

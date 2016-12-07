@@ -60,13 +60,14 @@ class Model_Session extends \Orm\Model
 	}
 
 	/**
-	 * Retrieve all session older than 5 days
+	 * Retrieve all session older than 5 days that have not been settled yet
 	 * @return [\Sessions\Model_Session]
 	 */
 	public static function get_ready_for_settlement() {
 		return Model_Session::find('all', array(
 			'where' => array(
-				array(\DB::expr('DATE_ADD(date, INTERVAL 5 DAY)'), '<', \DB::expr('"'. date('Y-m-d'). '"'))
+				array(\DB::expr('DATE_ADD(date, INTERVAL 5 DAY)'), '<', \DB::expr('"'. date('Y-m-d'). '"')),
+				array('settled', 0)
 			)
 		));
 	}

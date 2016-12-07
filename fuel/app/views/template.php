@@ -4,8 +4,6 @@
 	<meta charset="utf-8">
 	<title><?php echo $title; ?></title>
 	
-	<link rel="stylesheet" href="">
-	
 	<?php 
 	echo Asset::css(array(
 		'bootstrap.min.css',
