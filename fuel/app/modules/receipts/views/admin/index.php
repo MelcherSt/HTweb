@@ -9,7 +9,9 @@ In princple a receipt can be made undone.
 				<th>Id</th>
 				<th>Date</th>
 				<th>Notes</th>
-				<th>Total participants</th>
+				<th>Participants</th>
+				<th>Cooks</th>
+				<th>Dishwashers</th>
 				<th>Cost</th>
 			</tr>
 		</thead>
@@ -20,7 +22,9 @@ In princple a receipt can be made undone.
 				<td><?=$session->id?></td>
 				<td><?=$session->date?></td>
 				<td><?=$session->notes?></td>
-				<td><?=$session->count_total_paritipants()?></td>
+				<td><?=$session->count_total_participants()?></td>
+				<td><?=$session->count_cooks()?></td>
+				<td><?=$session->count_dishwashers()?></td>
 				<td><?=$session->cost?></td>
 			</tr>
 			<?php endforeach; ?>
@@ -28,7 +32,7 @@ In princple a receipt can be made undone.
 	</table>
 </div>
 	
-<form method="post" action="/receipts/create">
+<form method="post" action="/receipts/admin/create">
 	<div class="form-group">
 		<input name="sessions" type="hidden" value="<?php foreach($sessions as $session):
 	echo $session->id. ',';

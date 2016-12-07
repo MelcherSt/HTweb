@@ -43,7 +43,7 @@ $cur_enrollment = $session->current_enrollment();
 </div>
 <div class="row">
 	<?php if (isset($cur_enrollment) && $cur_enrollment->cook && $session->can_change_enrollments()): ?>
-		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel()"><span class="fa fa-plus"></span> Enroll new user</button>
+		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel()"><span class="fa fa-user-plus"></span> Enroll new user</button>
 		<?php endif; ?>
 
 	<p class="pull-left">There are <?=$session->count_total_participants()?> participants in total

@@ -11,7 +11,7 @@ class Add_User_Receipt_Points {
 	}
 	
 	public function down() {
-		\DBUtil::add_fields('user_receipts', array(
+		\DBUtil::drop_fields('user_receipts', array(
 			'points'
 		));
 	}

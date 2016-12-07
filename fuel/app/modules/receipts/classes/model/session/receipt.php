@@ -23,10 +23,10 @@ class Model_Session_Receipt extends \Orm\Model {
 		),
 	);
 	
-	protected static $_table_name = 'user_receipts';
+	protected static $_table_name = 'session_receipts';
 	
 	protected static $_belongs_to = array(
-		'user' => array(
+		'session' => array(
 			'key_from' => 'session_id',
 			'key_to' => 'id',
 			'model_to' => '\Sessions\Model_Session',

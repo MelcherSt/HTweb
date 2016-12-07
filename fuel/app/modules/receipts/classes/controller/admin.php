@@ -12,7 +12,22 @@ class Controller_Admin extends \Controller_Admin {
 		$data['sessions'] = \Sessions\Model_Session::get_ready_for_settlement();
 		
 		$this->template->content = \View::forge('admin/index', $data);
-	}	
+	}
+
+
+	public function action_view($id) {
+		if (isset($id)) {
+			$receipt = Model_Receipt::find($id);
+			if (!$receipt) {
+				\Utils::handle_irrecoverable_error("No receipt with id " . $id);
+			}
+			
+			$data['receipt'] = $receipt;
+			$this->template->title = 'Receipt';
+			$this->template->subtitle = date('l j F Y', strtotime($receipt->date));
+			$this->template->content = \View::forge('admin/view', $data);
+		} 
+	}
 	
 	public function post_create() {
 		$receipt = \Receipts\Model_Receipt::forge();
@@ -26,7 +41,7 @@ class Controller_Admin extends \Controller_Admin {
 		$this->handle_sessions($session_ids, $receipt);
 		
 		// TODO: handle products
-		
+				
 		\Response::redirect('/receipts/admin');
 	}
 	
@@ -69,6 +84,14 @@ class Controller_Admin extends \Controller_Admin {
 			} else {
 				$avg_cost = $session->cost / $total_count;
 			}
+			
+			// Create a session receipt to relate the session to this receipt
+			$session_receipt = Model_Session_Receipt::forge(array(
+					'session_id' => $session->id,
+					'receipt_id' => $receipt->id
+				));
+			$session_receipt->save();
+			
 		
 			// Create a receipt for each user in the session
 			foreach($session->enrollments as $enrollment) {

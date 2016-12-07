@@ -39,7 +39,7 @@
 
 					<?php					
 						//$files = new GlobIterator(APPPATH.'classes/controller/admin/*.php');
-						$menu_items = array('dashboard', 'sessions');
+						$menu_items = array('dashboard', 'sessions', 'receipts');
 					
 						foreach($menu_items as $item) {
 							$section_segment = $item;
