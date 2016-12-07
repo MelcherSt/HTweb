@@ -26,7 +26,7 @@ class Create_Session_Receipts {
 				'on_update' => 'CASCADE',
 				'on_delete' => 'CASCADE'
 		));
-				
+		
 		\DBUtil::create_index('session_receipts', array('session_id', 'receipt_id'), 'enrollment', 'UNIQUE');	
 		
 	}

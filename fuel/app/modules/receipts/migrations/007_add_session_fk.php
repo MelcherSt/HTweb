@@ -5,7 +5,7 @@ namespace Fuel\Migrations;
 /**
  * Migration for user <-> receipts relation 
  */
-class Add_Session_Id_Fk {
+class Add_Session_Fk {
 	
 	public function up() {
 		\DBUtil::add_foreign_key('session_receipts', array(
