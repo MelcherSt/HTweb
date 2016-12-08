@@ -99,7 +99,7 @@ class Controller_Admin extends \Controller_Admin {
 				if (!isset($user_receipt)) {
 					// Create new one
 					$user_receipt = \Receipts\Model_User_Receipt::forge(array(
-						'user_id' => $enrollment->user->id,
+						'user_id' => $user_id,
 						'receipt_id' => $receipt->id,
 						'balance' => round($temp_balance),
 						'points' => round($temp_points),
@@ -110,6 +110,11 @@ class Controller_Admin extends \Controller_Admin {
 					$user_receipt->points += round($temp_points);
 				}
 				$user_receipt->save();	
+				
+				// Apply points delta to actual user 
+				$user = \Model_User::find($user_id);
+				$user->points += round($temp_points);
+				$user->save();
 			}
 		}
 	}

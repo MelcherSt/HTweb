@@ -7,7 +7,7 @@ class Controller_Receipts extends \Controller_Gate {
 	public function action_index() {
 		$this->template->title = 'Receipts';
 		
-		$data['sessions'] = \Sessions\Model_Session::get_ready_for_settlement();
+		$data['receipts'] = Model_Receipt::get_by_user(\Auth::get_user_id()[1]);
 		
 		$this->template->content = \View::forge('index', $data);
 	}

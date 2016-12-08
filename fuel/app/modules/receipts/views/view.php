@@ -7,7 +7,7 @@
 <div class="row">
 	<h2>Cost and points distrubution</h2>
 	<p>A receipt shows the distribution of cost and points over an interval. 
-		This means that only the points gained or lost in the given period
+		This means that only the points gained or lost in the given interval
 		will be shown in the chart and table below.</p>
 	<div id="distr-bar-chart" style="height: 250px;"></div>
 	
@@ -28,7 +28,7 @@
 				$balance_checksum = 0;
 				
 				
-				foreach($receipt->users as $user_receipt): 
+				foreach($receipt->get_users_sorted() as $user_receipt): 
 					
 					$point_checksum += $user_receipt->points;
 					$balance_checksum += $user_receipt->balance;
@@ -121,7 +121,7 @@
 	Morris.Bar({
 		element: 'distr-bar-chart',
 		data: [
-			<?php foreach($receipt->users as $user_receipt): ?>
+			<?php foreach($receipt->get_users_sorted() as $user_receipt): ?>
 			{
 				y: '<?=$user_receipt->user->get_fullname()?>',
 				a: '<?=$user_receipt->points?>',
@@ -131,7 +131,7 @@
 		],
 		xkey: 'y',
 		ykeys: ['a', 'b'],
-		labels: ['Points', 'Balance in €']
+		labels: ['Points', 'Balance']
 	  });
     
 });

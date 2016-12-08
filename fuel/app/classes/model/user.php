@@ -26,10 +26,6 @@ class Model_User extends \Auth\Model\Auth_User {
 			'default'     => 0,
 			'null'        => false,
 		),
-		'balance' => array(
-			'default'     => 0.0,
-			'null'        => false,
-		),
 		'password',
 		'group_id',
 		'email',

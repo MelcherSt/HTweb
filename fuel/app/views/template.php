@@ -15,6 +15,7 @@
 	echo Asset::js(array(
 		'jquery-3.1.1.min.js',
 		'bootstrap.min.js',
+		'script.js',
 		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js',	
 	)); 
 	?>

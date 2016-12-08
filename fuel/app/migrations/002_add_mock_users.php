@@ -11,6 +11,12 @@ class Add_Mock_Users {
 		$pass = \Auth::instance()->hash_password('dev');
 		$timestamp = \Date::forge()->get_timestamp();
 		
+		$admin = \Model_User::find(1);
+		$admin->name = 'Addy';
+		$admin->surname = 'Ministrator';
+		$admin->phone = '';
+		$admin->save();		
+		
 		$u1 = \Model_User::forge(array(
 			'username' => 'demo1',
 			'surname' => 'Demo',

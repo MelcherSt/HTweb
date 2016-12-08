@@ -2,6 +2,9 @@
 
 namespace Fuel\Migrations;
 
+/**
+ * Extend the users table initially created by the Auth package with some extra columns.
+ */
 class Extend_Users 
 {
 	public function up() {

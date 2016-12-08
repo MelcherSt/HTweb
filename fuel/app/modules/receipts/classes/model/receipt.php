@@ -38,6 +38,31 @@ class Model_Receipt extends \Orm\Model
 	);
 	
 	/**
+	 * Retrieve all receipts related to the given user
+	 * @param int $user_id
+	 * @return [\Receipts\Model_Receipt]
+	 */
+	public static function get_by_user($user_id) {
+		return Model_Receipt::query()->related('users', array(
+			'where' => array(
+				array('user_id', $user_id),
+			)
+		))->get();
+	}
+	
+	/**
+	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
+	 * @return [\Receipts\Model_User_Receipt]
+	 */
+	public function get_users_sorted() {
+		return Model_User_Receipt::query()
+			->related('user')
+			->order_by('user.name', 'asc')
+			->where('receipt_id', $this->id)
+			->get();
+	}
+	
+	/**
 	 * Retrieve a list of all people with a positive balance sorted highest credit first
 	 * @return [Model_User_Receipt]
 	 */
