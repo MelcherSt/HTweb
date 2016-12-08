@@ -101,13 +101,13 @@ class Controller_Admin extends \Controller_Admin {
 					$user_receipt = \Receipts\Model_User_Receipt::forge(array(
 						'user_id' => $enrollment->user->id,
 						'receipt_id' => $receipt->id,
-						'balance' => $temp_balance,
-						'points' => $temp_points,
+						'balance' => round($temp_balance),
+						'points' => round($temp_points),
 					));	
 				} else {
 					// Update values if receipt already exists
-					$user_receipt->balance += $temp_balance;
-					$user_receipt->points += $temp_points;
+					$user_receipt->balance += round($temp_balance);
+					$user_receipt->points += round($temp_points);
 				}
 				$user_receipt->save();	
 			}
