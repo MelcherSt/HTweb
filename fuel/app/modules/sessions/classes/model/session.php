@@ -239,7 +239,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the total amount of participants (all enrollments and their guests)
-	 * @return boolean
+	 * @return int
 	 */
 	public function count_total_participants() {
 		return $this->count_participants() + $this->count_guests();
