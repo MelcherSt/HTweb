@@ -5,6 +5,16 @@
 body { 
 	margin: 60px; 
 }
+
+.modal-open[style] {		
+	padding-right: 0px !important;		
+}	
+
+.clickable-row {
+	cursor: pointer;
+}
+
+
 .huge { 
 	font-size: 40px; 
 }

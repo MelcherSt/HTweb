@@ -2,7 +2,10 @@
 
 namespace Fuel\Migrations;
 
-class Extend_Users
+/**
+ * Extend the users table initially created by the Auth package with some extra columns.
+ */
+class Extend_Users 
 {
 	public function up() {
 		\DBUtil::add_fields('users', array(

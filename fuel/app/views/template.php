@@ -2,9 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $title; ?></title>
-	
-	<link rel="stylesheet" href="">
+	<title><?php echo $title; ?> | Het Tribunaal Web</title>
 	
 	<?php 
 	echo Asset::css(array(
@@ -17,6 +15,7 @@
 	echo Asset::js(array(
 		'jquery-3.1.1.min.js',
 		'bootstrap.min.js',
+		'script.js',
 		'http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js',	
 	)); 
 	?>
@@ -41,7 +40,7 @@
 
 					<?php					
 						//$files = new GlobIterator(APPPATH.'classes/controller/admin/*.php');
-						$menu_items = array('dashboard', 'sessions');
+						$menu_items = array('dashboard', 'sessions', 'receipts');
 					
 						foreach($menu_items as $item) {
 							$section_segment = $item;

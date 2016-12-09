@@ -16,7 +16,6 @@ class Create_sessions
 			'settled' => array('type' => 'boolean'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
-
 		), array('id'));
 		
 		\DBUtil::create_index('sessions', array('date'), 'date', 'UNIQUE');
