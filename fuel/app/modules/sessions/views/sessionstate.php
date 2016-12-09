@@ -57,8 +57,7 @@ if(isset($enrollment)) {
 		if($enrollment->cook) { ?>
 		<div class="alert alert-info">
 			<strong>Heads up!</strong> The deadline has passed. For a limited amout of time you will be able to 
-			change the participation of users in this session and enter the cost. Additionally, you may change
-			the deadline if you feel this is necessary. 		
+			change the enrollments users in this session and enter the cost.
 		</div>
 	
 		<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" > 

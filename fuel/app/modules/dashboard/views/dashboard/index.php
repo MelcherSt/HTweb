@@ -1,4 +1,11 @@
 
+<div class="jumbotron">
+	<h1>Welcome!</h1>
+	<p>This is your dashboard. Here you'll find all information about Het Tribunaal Web you'll need.</p>
+	<p><a class="btn btn-success btn-lg" href="#">Read more</a></p>
+</div>
+
+
 <!-- Widget row -->
 <div class="row">
 <?php foreach($widgets as $widget) {
@@ -11,5 +18,4 @@
 	<strong>Note!</strong> Het Tribunaal Web is currently in its early alpha stages and should be used for testing purposes only. 
 	Expect things to break in all possible ways and not work like they should. If you spot any weird errors or mistakes, please notify Melcher.
 	Feature request are very welcome, but the core features (sessions, receipts and the dashboard) have priority over others.
-	
 </div>

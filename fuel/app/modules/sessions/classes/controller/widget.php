@@ -7,9 +7,9 @@ class Controller_Widget extends \Controller_Widget_Base {
 	public function action_index() {	
 		$session = Model_Session::get_by_date(date('Y-m-d'));		
 		$style = 'panel-green';
+		$icon = 'fa-cutlery';
 		$notice = '';
-		$message = ' Are enrolled. ';
-		$detail = 'Click here to view';
+		$detail = 'Are you enrolled yet?';
 		$link = '/sessions/today';
 		
 		if(isset($session)) {
@@ -17,7 +17,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 	
 			if(!$session->can_enroll()) {
 				$style = 'panel-grey';
-				$message = 'Deadline past due.';
+				$notice = 'Deadline past due.';
 				$detail = 'Enroll tomorrow?';
 				$link = '/sessions/tomorrow';
 			} else {
@@ -33,11 +33,16 @@ class Controller_Widget extends \Controller_Widget_Base {
 			$count = 0;
 		}
 		
+		if(date('w') == 2) {
+			$icon = 'fa-users';
+			$notice = 'It\'s kring time today.';
+		}
+		
 		$this->template->style = $style;
 		$this->template->count = $count;
 		$this->template->kind = $count == 1 ? 'person' : 'people';
-		$this->template->icon = 'fa-cutlery';
-		$this->template->message =  $message . $notice;
+		$this->template->icon = $icon;
+		$this->template->message =  ($count == 1 ? 'is' : 'are') . ' enrolled. '. $notice;
 		$this->template->detail = $detail;
 		$this->template->link = $link;
 	}
