@@ -76,10 +76,10 @@ class Model_User extends \Auth\Model\Auth_User {
 
 	public static function validate($factory) {
 		$val = Validation::forge($factory);
+		$val->add_callable('CustomRules');
 		$val->add_field('phone', 'Phone', 'max_length[20]');
 		$val->add_field('email', 'Email', 'required|valid_email|max_length[255]');
-		$val->add_field('iban', 'IBAN', '\Utils::valid_iban');
-
+		$val->add_field('iban', 'IBAN', 'max_length[30]|valid_iban');
 		return $val;
 	}
 	

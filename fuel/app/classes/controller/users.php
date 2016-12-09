@@ -26,25 +26,22 @@ class Controller_Users extends Controller_Gate
 
 	public function action_edit()	{
 		$user = \Model_User::find(\Auth::get_user_id()[1]);
-		$val = \Model_User::validate('edit');
-
+		$val = \Model_User::validate('edit');		
+		$val->add('password', 'new password')->add_rule('min_length', 5);
+		$val->add('password2', 're-type Password')->add_rule('match_field', 'password');
+		
 		if ($val->run()) {		
 			$user->phone = Input::post('phone', '');
 			$user->active = Input::post('active', 1);
 			$user->email = Input::post('email', '');
-			$user->iban = Input::post('iban', '');
+			$user->iban = Input::post('iban', null);
 
 			$cur_pass = Input::post('old_password');
 			$pass = Input::post('password');
-			$pass2 = Input::post('password2');
 			
-			if(isset($pass) && (trim($pass) != '')) {
-				if($pass != $pass2) {
-					Session::set_flash('error', e('Password remains unchanged. Given passwords do not match.'));
-				} else {
-					if (!Auth::change_password($cur_pass, $pass)){
-						Session::set_flash('error', e('Password remains unchanged. Wrong current password.'));
-					}
+			if(isset($pass)) {
+				if (!Auth::change_password($cur_pass, $pass)){
+					Session::set_flash('error', e('Current password is incorrect'));
 				}
 			}
 			
@@ -71,6 +68,5 @@ class Controller_Users extends Controller_Gate
 		$this->template->title = "Edit User";
 		$this->template->subtitle = $user->get_fullname();
 		$this->template->content = View::forge('users/edit');
-
 	}
 }
