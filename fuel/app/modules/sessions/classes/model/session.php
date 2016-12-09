@@ -58,6 +58,18 @@ class Model_Session extends \Orm\Model
 				array('date', $date))
 		));
 	}
+	
+	/**
+	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
+	 * @return [\Receipts\Model_User_Receipt]
+	 */
+	public function get_enrollments_sorted() {
+		return Model_Enrollment_Session::query()
+			->related('user')
+			->order_by('user.name', 'asc')
+			->where('session_id', $this->id)
+			->get();
+	}
 
 	/**
 	 * Retrieve all session older than 5 days that have not been settled yet

@@ -8,4 +8,9 @@ $(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
+	
+	// Fade in all alerts
+	$(".alert").addClass("in");
+	// Fade out success alerts
+	$("#alert-success").delay(3000).fadeOut("slow", function () { $(this).remove(); });	
 });

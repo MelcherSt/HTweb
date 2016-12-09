@@ -90,7 +90,7 @@
 				<h1><?=$title?> <small><?php if(isset($subtitle)) { echo $subtitle; } ?></small></h1>
 				<hr>
 				<?php if (Session::get_flash('success')): ?>
-				<div class="alert alert-success alert-dismissable fade in" data-dismiss="alert">
+				<div class="alert alert-success alert-dismissable fade" id="alert-success" data-dismiss="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="Close">&times;</button>
 					<p>
 					<?php echo implode('</p><p>', (array) Session::get_flash('success')); ?>
@@ -98,7 +98,7 @@
 				</div>
 				<?php endif; ?>
 				<?php if (Session::get_flash('error')): ?>
-					<div class="alert alert-danger alert-dismissable fade in" data-dismiss="alert"> 
+					<div class="alert alert-danger alert-dismissable fade" id="alert-error" data-dismiss="alert"> 
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="Close">&times;</button>
 						<p>
 						<?php echo implode('</p><p>', (array) Session::get_flash('error')); ?>

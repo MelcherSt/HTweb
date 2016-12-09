@@ -1,6 +1,6 @@
 <?php
 
-$enrollments = $session->enrollments; 
+$enrollments = $session->get_enrollments_sorted(); 
 $cur_enrollment = $session->current_enrollment();
 ?>
 <div class="table-responsive">
@@ -28,8 +28,7 @@ $cur_enrollment = $session->current_enrollment();
 				</td>
 				<td><?=$enrollment->guests?></td>
 				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
-				<td>
-									
+				<td>			
 					<a href="#" onclick="showEditModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', '<?=$enrollment->guests?>', '<?=$enrollment->cook?>', '<?=$enrollment->dishwasher?>')"><span class="fa fa-pencil"></span> Edit</a>  
 					<?php if ($cur_enrollment->user_id != $enrollment->user_id): ?> |
 					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> Remove</a>
