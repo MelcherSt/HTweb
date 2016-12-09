@@ -6,7 +6,7 @@ class Controller_Admin extends \Controller_Admin {
 	
 	public function action_create() {
 		$this->template->title = 'Receipts';
-		$this->template->subtitle = 'Create';
+		$this->template->subtitle = 'create';
 		$data['sessions'] = \Sessions\Model_Session::get_ready_for_settlement();
 		$this->template->content = \View::forge('admin/create', $data);
 	}
@@ -20,18 +20,20 @@ class Controller_Admin extends \Controller_Admin {
 	}
 
 	public function post_create() {
+		$session_ids = \Input::post('sessions', array());
+		
+		if(sizeof($session_ids) == 0) {
+			\Utils::handle_recoverable_error('A receipt should at least settle one or more sessions/products.', '/receipts/admin/create');
+		}
+		
 		$receipt = \Receipts\Model_Receipt::forge();
 		$receipt->notes = \Input::post('notes', '');
 		$receipt->date = date('Y-m-d');
 		$receipt->save();
-		
-		// handle sessions
-		$session_string = rtrim(\Input::post('sessions', ''), ',');
-		$session_ids = explode(',', $session_string);
+
+		$session_ids = \Input::post('sessions', array());
 		$this->handle_sessions($session_ids, $receipt);
 		
-		// TODO: handle products
-				
 		\Response::redirect('/receipts/admin');
 	}
 	
@@ -137,25 +139,26 @@ class Controller_Admin extends \Controller_Admin {
 				}
 				
 				$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt->id);
+				$precision = 2;
 				
 				if (!isset($user_receipt)) {
 					// Create new one
 					$user_receipt = \Receipts\Model_User_Receipt::forge(array(
 						'user_id' => $user_id,
 						'receipt_id' => $receipt->id,
-						'balance' => round($temp_balance),
-						'points' => round($temp_points),
+						'balance' => round($temp_balance, $precision),
+						'points' => round($temp_points, $precision),
 					));	
 				} else {
 					// Update values if receipt already exists
-					$user_receipt->balance += round($temp_balance);
-					$user_receipt->points += round($temp_points);
+					$user_receipt->balance += round($temp_balance, $precision);
+					$user_receipt->points += round($temp_points, $precision);
 				}
 				$user_receipt->save();	
 				
 				// Apply points delta to actual user 
 				$user = \Model_User::find($user_id);
-				$user->points += round($temp_points);
+				$user->points += round($temp_points, $precision);
 				$user->save();
 			}
 		}

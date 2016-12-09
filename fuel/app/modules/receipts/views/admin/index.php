@@ -1,6 +1,12 @@
 <div class="row">
 	<p>List of all receipts in the system.</p>
-		<div class="table-responsive">
+	<a href="/receipts/admin/create" class="btn btn-primary pull-right" role="button"><span class="fa fa-plus"></span> Create receipt</a>
+	
+</div>
+
+
+<div class="row">
+	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -11,9 +17,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach($receipts as $receipt):
-					echo var_dump($receipt->validate_points());
-					?>
+				<?php foreach($receipts as $receipt): ?>
 				<tr>
 					<td><?=$receipt->id?></td>
 					<td><?=$receipt->date?></td>
