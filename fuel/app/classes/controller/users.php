@@ -1,14 +1,24 @@
 <?php
 class Controller_Users extends Controller_Gate
 {
+	public function action_index() {
+		$data['users'] = Model_User::get_by_state();
+		$this->template->title = "Users";
+		$this->template->content = View::forge('users/index', $data);
+	}
+	
 	public function action_me() {
 		\Response::redirect('users/view/' . \Auth::get_user_id()[1]);
 	}
 
 	public function action_view($id = null)	{	
 		$user = \Model_User::find($id);
-		$data['user'] = $user;	
 		
+		if(!isset($user)) {
+			\Utils::handle_irrecoverable_error('No user with the given id exsits.');
+		}
+		
+		$data['user'] = $user;	
 		$this->template->title = "User";
 		$this->template->subtitle = $user->get_fullname();
 		$this->template->content = View::forge('users/view', $data);
@@ -58,7 +68,8 @@ class Controller_Users extends Controller_Gate
 			$this->template->set_global('user', $user, false);
 		}
 
-		$this->template->title = "Users";
+		$this->template->title = "Edit User";
+		$this->template->subtitle = $user->get_fullname();
 		$this->template->content = View::forge('users/edit');
 
 	}

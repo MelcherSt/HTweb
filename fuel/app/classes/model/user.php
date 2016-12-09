@@ -78,6 +78,7 @@ class Model_User extends \Auth\Model\Auth_User {
 		$val = Validation::forge($factory);
 		$val->add_field('phone', 'Phone', 'max_length[20]');
 		$val->add_field('email', 'Email', 'required|valid_email|max_length[255]');
+		$val->add_field('iban', 'IBAN', '\Utils::valid_iban');
 
 		return $val;
 	}
@@ -91,7 +92,7 @@ class Model_User extends \Auth\Model\Auth_User {
 	}
 	
 	/**
-	 * Get a list of user by their bootstate (default is active)
+	 * Get a list of user by their state (default is active)
 	 * @param type $active
 	 * @return type
 	 */
