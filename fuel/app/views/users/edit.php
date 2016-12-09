@@ -3,5 +3,5 @@
 
 <?php echo render('users/_form'); ?>
 <p>
-	<?php echo Html::anchor('users/view/'.$enrollment->id, 'View'); ?> |
+	<?php echo Html::anchor('users/view/'.$user->id, 'View'); ?> |
 	<?php echo Html::anchor('users', 'Back'); ?></p>

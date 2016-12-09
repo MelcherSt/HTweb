@@ -5,13 +5,13 @@
 			<div class="form-group">
 				<?php echo Form::label('Email', 'email', array('class'=>'control-label')); ?>
 
-					<?php echo Form::input('email', Input::post('email', isset($enrollment) ? $enrollment->email : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Email')); ?>
+					<?php echo Form::input('email', Input::post('email', isset($user) ? $user->email : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Email')); ?>
 
 			</div>
 			<div class="form-group">
 				<?php echo Form::label('Phone', 'phone', array('class'=>'control-label')); ?>
 
-					<?php echo Form::input('phone', Input::post('phone', isset($enrollment) ? $enrollment->phone : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Phone')); ?>
+					<?php echo Form::input('phone', Input::post('phone', isset($user) ? $user->phone : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Phone')); ?>
 
 			</div>
 		</div>
