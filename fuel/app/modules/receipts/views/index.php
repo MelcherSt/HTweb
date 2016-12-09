@@ -1,5 +1,3 @@
-<a class="pull-right" href="/receipts/admin" ><span class="fa fa-lock"></span> Administration</a>
-
 <div class="row">
 	<p>Here you find all your receipts.</p>
 		<div class="table-responsive">

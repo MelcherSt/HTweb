@@ -21,7 +21,8 @@ class Controller_Users extends Controller_Gate
 		if ($val->run()) {		
 			$user->phone = Input::post('phone', '');
 			$user->active = Input::post('active', 1);
-			$user->email = Input::post('email');
+			$user->email = Input::post('email', '');
+			$user->iban = Input::post('iban', '');
 
 			$cur_pass = Input::post('old_password');
 			$pass = Input::post('password');
@@ -49,6 +50,7 @@ class Controller_Users extends Controller_Gate
 				$user->phone = $val->validated('phone');
 				$user->password = $val->validated('password');
 				$user->email = $val->validated('email');
+				$user->iban = $val->validated('iban');
 
 				Session::set_flash('error', $val->error());
 			}

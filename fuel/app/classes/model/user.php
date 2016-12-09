@@ -11,7 +11,7 @@ class Model_User extends \Auth\Model\Auth_User {
 		'name',
 		'phone' => array(
 			'default'     => '',
-			'null'        => true,
+			'null'        => false,
 		),
 		'active' => array(
 			'default'     => 1,
@@ -28,7 +28,14 @@ class Model_User extends \Auth\Model\Auth_User {
 		),
 		'password',
 		'group_id',
-		'email',
+		'iban' => array(
+			'default'     => '',
+			'null'        => true,
+		),
+		'email' => array(
+			'default'     => '',
+			'null'        => false,
+		),
 		'created_at',
 		'updated_at',
 		'last_login'      => array(

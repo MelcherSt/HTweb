@@ -39,12 +39,19 @@
 					</li>-->
 
 					<?php					
-						//$files = new GlobIterator(APPPATH.'classes/controller/admin/*.php');
-						$menu_items = array('dashboard', 'sessions', 'receipts');
+						if (isset($current_user)) {
+							$menu_items = array(
+								array('sessions', 'My Sessions'), 
+								array('receipts', 'My Receipts'),
+							);
+						} else {
+							$menu_items = array();
+						}
+						
 					
 						foreach($menu_items as $item) {
-							$section_segment = $item;
-							$section_title = Inflector::humanize($section_segment);
+							$section_segment = $item[0];
+							$section_title = $item[1];
 							?>
 							<li class="<?php echo Uri::segment(1) == $section_segment ? 'active' : '' ?>">
 								<?php echo Html::anchor($section_segment, $section_title) ?>
@@ -112,39 +119,11 @@
 		</div>
 		<hr/>
 		<footer>
-			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>
-			<p>HTWeb on 
-				<?php echo Request::forge('devtool/branch')->execute(); ?><br>
-				<small>using FUELPhp Version: <?php echo e(Fuel::VERSION); ?></small>
+			<p><span class="fa fa-bank"></span> Web <small>© 2016</small><br>
+				<small>Build using FuelPHP <?php echo e(Fuel::VERSION); ?></small>
 			</p>
+			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>
 		</footer>
 	</div>
-	
-	<!-- Modal dialog for package removal -->
-<div id="delete-enrollment-modal" class="modal fade">
-	<div class="modal-dialog active">
-		<div class="modal-content">
-			<form id="remove-package" action="#" method="POST">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Remove package</h4>
-				</div>
-				<div class="modal-body">
-					<p>Are you sure you want to delete <span id="user-name"></span> from this session??</p>
-					<!--  insert form elements here -->
-					<div class="form-group">
-						<input id="user-id" type="hidden" class="form-control" name="user-id">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="Remove" />
-					<button type="button" class="btn btn-default"
-						data-dismiss="modal">Cancel</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
 </body>
 </html>

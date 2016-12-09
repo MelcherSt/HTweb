@@ -50,9 +50,9 @@
 
 		</div>
 		<div class="form-group">
-			<?php echo Form::label('Balance', 'balance', array('class'=>'control-label')); ?>
+				<?php echo Form::label('IBAN', 'iban', array('class'=>'control-label')); ?>
 
-				<?php echo Form::input('balance', Input::post('balance', isset($user) ? $user->balance : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Balance')); ?>
+					<?php echo Form::input('iban', Input::post('iban', isset($user) ? $user->iban : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'IBAN')); ?>
 
 		</div>
 		<div class="form-group">

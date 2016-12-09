@@ -10,6 +10,9 @@
 	<strong>Name:</strong>
 	<?php echo $user->name; ?></p>
 <p>
+	<strong>IBAN:</strong>
+	<?php echo $user->iban; ?></p>
+<p>
 	<strong>Phone:</strong>
 	<?php echo $user->phone; ?></p>
 <p>
