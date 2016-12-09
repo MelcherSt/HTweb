@@ -63,6 +63,28 @@ class Model_Receipt extends \Orm\Model
 	}
 	
 	/**
+	 * Calculate points checksum. Should be 0.
+	 * @return type
+	 */
+	public function validate_points() {
+		return array_values(\DB::select(\DB::expr('SUM(points)'))
+			->from('user_receipts')
+			->where('receipt_id', $this->id)
+			->execute()[0])[0];
+	}
+	
+	/**
+	 * Calculate balance checksum. Should be 0.
+	 * @return type
+	 */
+	public function validate_balance() {
+		return array_values(\DB::select(\DB::expr('SUM(balance)'))
+			->from('user_receipts')
+			->where('receipt_id', $this->id)
+			->execute()[0])[0];
+	}
+	
+	/**
 	 * Retrieve a list of all people with a positive balance sorted highest credit first
 	 * @return [Model_User_Receipt]
 	 */

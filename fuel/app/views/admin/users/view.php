@@ -1,41 +1,41 @@
-<h2>Viewing #<?php echo $user->id; ?></h2>
+<h2>Viewing #<?php echo $enrollment->id; ?></h2>
 
 <p>
 	<strong>Username:</strong>
-	<?php echo $user->username; ?></p>
+	<?php echo $enrollment->username; ?></p>
 <p>
 	<strong>Surname:</strong>
-	<?php echo $user->surname; ?></p>
+	<?php echo $enrollment->surname; ?></p>
 <p>
 	<strong>Name:</strong>
-	<?php echo $user->name; ?></p>
+	<?php echo $enrollment->name; ?></p>
 <p>
 	<strong>Phone:</strong>
-	<?php echo $user->phone; ?></p>
+	<?php echo $enrollment->phone; ?></p>
 <p>
 	<strong>Active:</strong>
-	<?php echo $user->active; ?></p>
+	<?php echo $enrollment->active; ?></p>
 <p>
 	<strong>Start year:</strong>
-	<?php echo $user->start_year; ?></p>
+	<?php echo $enrollment->start_year; ?></p>
 <p>
 	<strong>End year:</strong>
-	<?php echo $user->end_year; ?></p>
+	<?php echo $enrollment->end_year; ?></p>
 <p>
 	<strong>Point count:</strong>
-	<?php echo $user->points; ?></p>
+	<?php echo $enrollment->points; ?></p>
 <p>
 	<strong>Balance:</strong>
-	<?php echo $user->balance; ?></p>
+	<?php echo $enrollment->balance; ?></p>
 <p>
 	<strong>Password:</strong>
-	<?php echo $user->password; ?></p>
+	<?php echo $enrollment->password; ?></p>
 <p>
 	<strong>Group:</strong>
-	<?php echo $user->group_id; ?></p>
+	<?php echo $enrollment->group_id; ?></p>
 <p>
 	<strong>Email:</strong>
-	<?php echo $user->email; ?></p>
+	<?php echo $enrollment->email; ?></p>
 
-<?php echo Html::anchor('admin/users/edit/'.$user->id, 'Edit'); ?> |
+<?php echo Html::anchor('admin/users/edit/'.$enrollment->id, 'Edit'); ?> |
 <?php echo Html::anchor('admin/users', 'Back'); ?>

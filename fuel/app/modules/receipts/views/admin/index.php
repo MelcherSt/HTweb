@@ -1,48 +1,68 @@
-<p>On this page you are able to create receipts. Essentialy this will archive the products and/or sessions in the system, calculates the point and money deltas and stores them.
-In princple a receipt can be made undone.
-</p>
-
-<div class="table-responsive">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Date</th>
-				<th>Notes</th>
-				<th>Participants</th>
-				<th>Cooks</th>
-				<th>Dishwashers</th>
-				<th>Cost</th>
-			</tr>
-		</thead>
-		<tbody>
-		<?php 			
-			foreach($sessions as $session): ?>
-			<tr>
-				<td><?=$session->id?></td>
-				<td><?=$session->date?></td>
-				<td><?=$session->notes?></td>
-				<td><?=$session->count_total_participants()?></td>
-				<td><?=$session->count_cooks()?></td>
-				<td><?=$session->count_dishwashers()?></td>
-				<td><?=$session->cost?></td>
-			</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-</div>
-	
-<form method="post" action="/receipts/admin/create">
-	<div class="form-group">
-		<input name="sessions" type="hidden" value="<?php foreach($sessions as $session):
-	echo $session->id. ',';
-endforeach;?>" />
+<div class="row">
+	<p>List of all receipts in the system.</p>
+		<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Creation date</th>
+					<th>Notes</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach($receipts as $receipt):
+					echo var_dump($receipt->validate_points());
+					?>
+				<tr>
+					<td><?=$receipt->id?></td>
+					<td><?=$receipt->date?></td>
+					<td><?=$receipt->notes?></td>
+					<td>
+						<a href="/receipts/view/<?=$receipt->id?>"><span class="fa fa-eye"></span> View</a> |
+						<a href="#" onclick="showDeleteModal(<?=$receipt->id?>)"><span class="fa fa-trash"></span> Remove</a>
+					</td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
 	</div>
-	<button class="btn btn-success" type="submit" ><span class="fa fa-pencil-square-o"></span> Create receipt</button>
-</form>	
-		
+</div>
 
-	
-<?php
+<!-- Modal dialog for receipt deletion -->
+<div id="delete-receipt-modal" class="modal fade">
+	<div class="modal-dialog active">
+		<div class="modal-content">
+			<form id="remove-package" action="/receipts/admin/delete/" method="POST">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Delete enrollment</h4>
+				</div>
+				<div class="modal-body">
+					<p><strong>Are you sure you want to delete this receipt?</strong>
+						<br>Delelting a receipt will redistribute all points
+					among the participants. Costs calculated for the receipt will be lost and all session and/or products will be marked unsettled.
+					</p>
+					<!--  insert form elements here -->
+					<div class="form-group">
+						<input id="delete-receipt-id" type="hidden" class="form-control" name="receipt_id">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-danger" value="Delete Receipt" />
+					<button type="button" class="btn btn-default"
+						data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
+<script>
+function showDeleteModal(receiptId) {
+	$("#delete-receipt-modal").modal('show');
+	$("#delete-receipt-id").val(receiptId);
+}
+</script>
 

@@ -135,8 +135,8 @@ $cur_enrollment = $session->current_enrollment();
 						<select class="form-control" id="add-user-id" name="user_id">
 							<?php 
 							$active_users = Model_User::get_by_state();
-							foreach($active_users as $user):?>
-							<option value="<?=$user->id?>"><?=$user->get_fullname()?></option>
+							foreach($active_users as $enrollment):?>
+							<option value="<?=$enrollment->id?>"><?=$enrollment->get_fullname()?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>	

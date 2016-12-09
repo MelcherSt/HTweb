@@ -4,10 +4,17 @@ namespace Receipts;
 
 class Controller_Admin extends \Controller_Admin {
 	
+	public function action_create() {
+		$this->template->title = 'Receipts';
+		$this->template->subtitle = 'Create';
+		$data['sessions'] = \Sessions\Model_Session::get_ready_for_settlement();
+		$this->template->content = \View::forge('admin/create', $data);
+	}
+	
 	public function action_index() {
 		$this->template->title = 'Receipts';
 		
-		$data['sessions'] = \Sessions\Model_Session::get_ready_for_settlement();
+		$data['receipts'] = Model_Receipt::find('all');
 		
 		$this->template->content = \View::forge('admin/index', $data);
 	}
@@ -26,6 +33,41 @@ class Controller_Admin extends \Controller_Admin {
 		// TODO: handle products
 				
 		\Response::redirect('/receipts/admin');
+	}
+	
+	public function post_delete() {
+		$id = \Input::post('receipt_id', null);
+		
+		if(isset($id)) {
+			if(!($receipt = Model_Receipt::find($id))) {
+				\Utils::handle_irrecoverable_error('Unable to delete non-existant receipt.');
+			}
+			
+			$user_receipts = $receipt->users;	
+			foreach($user_receipts as $user_receipt) {
+				// Restore the points
+				$user = $user_receipt->user;
+				$user->points += -1 * $user_receipt->points;
+				$user->save();
+			}
+			
+			$session_receipts = $receipt->sessions;
+			foreach($session_receipts as $session_receipt) {
+				// Undo settled state
+				$session = $session_receipt->session;
+				$session->settled = false;
+				$session->save();		
+			}
+			
+			if($receipt->delete()) {
+				\Session::set_flash('success', ('Receipt has been deleted.'));
+			} else {
+				\Session::set_flash('error', ('Could not delete receipt'));	
+			}
+
+			\Response::redirect('/receipts/admin/');
+		}
+		\Utils::handle_irrecoverable_error('No receipt id specified for deletion');
 	}
 	
 	
