@@ -9,25 +9,30 @@ class Controller_Widget extends \Controller_Widget_Base {
 		$style = 'panel-green';
 		$icon = 'fa-cutlery';
 		$notice = '';
-		$detail = 'Are you enrolled yet?';
+		$detail = 'Why don\'t you join them?';
 		$link = '/sessions/today';
 		
 		if(isset($session)) {
+			$enrollment = $session->current_enrollment();
 			$count = $session->count_total_participants();	
-	
-			if(!$session->can_enroll()) {
+			
+			if(isset($enrollment)) {
+				$icon = 'fa-check-circle';
+				$notice = 'And you are one of them!';	
+			} 
+			
+			if($session->count_cooks() == 0 && ((int)date('Hi') > 1300)) {
+				$style = 'panel-yellow';
+				$notice = 'Uh, there is no cook yet.';
+				$detail = 'Save the day, be a cook!';
+			}	
+
+			 if(!$session->can_enroll()) {
 				$style = 'panel-grey';
-				$notice = 'Deadline past due.';
+				$notice = 'Today\'s session is now closed.';
 				$detail = 'Enroll tomorrow?';
 				$link = '/sessions/tomorrow';
-			} else {
-				if($session->count_cooks() == 0) {
-					//TODO: make this time depedant
-					$style = 'panel-yellow';
-					$notice = 'There is no cook yet.';
-					$detail = 'Save the day, be a cook';
-				}
-			}		
+			} 
 		} else {
 			// Surely, if there was no session there are no enrollments
 			$count = 0;
@@ -40,9 +45,9 @@ class Controller_Widget extends \Controller_Widget_Base {
 		
 		$this->template->style = $style;
 		$this->template->count = $count;
-		$this->template->kind = $count == 1 ? 'person' : 'people';
+		$this->template->kind = 'participant' . ($count == 1 ? '' : 's');
 		$this->template->icon = $icon;
-		$this->template->message =  ($count == 1 ? 'is' : 'are') . ' enrolled. '. $notice;
+		$this->template->message =  $notice;
 		$this->template->detail = $detail;
 		$this->template->link = $link;
 	}

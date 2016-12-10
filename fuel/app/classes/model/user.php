@@ -36,6 +36,10 @@ class Model_User extends \Auth\Model\Auth_User {
 			'default'     => '',
 			'null'        => false,
 		),
+		'avatar' => array(
+			'default'     => '',
+			'null'        => false,
+		),
 		'created_at',
 		'updated_at',
 		'last_login'      => array(
@@ -99,8 +103,8 @@ class Model_User extends \Auth\Model\Auth_User {
 	public static function get_by_state($active=true) {
 		return Model_User::find('all', array(
 			'where' => array(
-				array('active', $active),
-			)
+				array('active', $active)),
+			'sort_by' => array('surname', 'desc')
 		));
 	}
 

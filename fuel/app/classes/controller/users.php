@@ -10,6 +10,15 @@ class Controller_Users extends Controller_Gate
 	public function action_me() {
 		\Response::redirect('users/view/' . \Auth::get_user_id()[1]);
 	}
+	
+	public function action_avatar($id=null) {
+		$user = \Model_User::find($id);
+		
+		if(!isset($user) || empty($user->avatar)) {
+			Response::redirect('/assets/img/wall/placeholder.jpg');
+		}		
+		Response::redirect('/files/users/avatar/'. $user->avatar);
+	}
 
 	public function action_view($id = null)	{	
 		$user = \Model_User::find($id);
@@ -39,11 +48,31 @@ class Controller_Users extends Controller_Gate
 			$cur_pass = Input::post('old_password');
 			$pass = Input::post('password');
 			
-			if(isset($pass)) {
+			if(!empty($pass)) {
 				if (!Auth::change_password($cur_pass, $pass)){
 					Session::set_flash('error', e('Current password is incorrect'));
 				}
 			}
+			
+			// Custom configuration for this upload
+			$config = array(
+				'path' => DOCROOT.'files/users/avatar/',
+				'randomize' => true,
+				'max_size' => 1024 * 1000,
+				'ext_whitelist' => array('jpg', 'jpeg', 'gif', 'png'),
+			);
+
+			// process the uploaded files in $_FILES
+			Upload::process($config);
+
+			// if there are any valid files
+			if (Upload::is_valid())
+			{
+				// save them according to the config
+				Upload::save(0);
+				$value = Upload::get_files();  
+				$user->avatar =  $value[0]['saved_as'];
+			} 
 			
 			if ($user->save()) {
 				Session::set_flash('success', e('Updated user account'));

@@ -43,6 +43,7 @@
 							$menu_items = array(
 								array('sessions', 'My Sessions'), 
 								array('receipts', 'My Receipts'),
+								array('wall', 'The wall'),
 							);
 						} else {
 							$menu_items = array();

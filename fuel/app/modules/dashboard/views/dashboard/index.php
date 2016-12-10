@@ -5,7 +5,6 @@
 	<p><a class="btn btn-success btn-lg" href="#">Read more</a></p>
 </div>
 
-
 <!-- Widget row -->
 <div class="row">
 <?php foreach($widgets as $widget) {
