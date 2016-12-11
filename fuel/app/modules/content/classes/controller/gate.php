@@ -18,7 +18,7 @@ class Controller_Gate extends \Controller_Base {
 		if(isset($post)) {
 			if(!$post->public && !\Auth::check()) {
 				// No user is logged in, redirect to login
-				Response::redirect('gate/login');
+				\Response::redirect('gate/login');
 			} else {
 				// Find and apply template
 				$template = Model_Template::find($post->template);

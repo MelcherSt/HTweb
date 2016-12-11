@@ -1,9 +1,12 @@
 
+
+<?php if(isset($featured_post)): ?>
 <div class="jumbotron">
-	<h1>Welcome!</h1>
-	<p>This is your dashboard. Here you'll find all information about Het Tribunaal Web you'll need.</p>
-	<p><a class="btn btn-success btn-lg" href="#">Read more</a></p>
+	<h1><?=$featured_post->title?></h1>
+	<p><?=$featured_post->get_excerpt()?></p>
+	<p><a class="btn btn-success btn-lg" href="/content/view/<?=$featured_post->id?>">Read more</a></p>
 </div>
+<?php endif; ?>
 
 <!-- Widget row -->
 <div class="row">

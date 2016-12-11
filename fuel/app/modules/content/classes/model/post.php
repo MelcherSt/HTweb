@@ -50,5 +50,31 @@ class Model_Post extends \Orm\Model
 		$val->add_field('author', 'Author', 'required|max_length[50]');
 		return $val;
 	}
+	
+	/**
+	 * Retrieve the latest featured post
+	 */
+	public static function get_first_featured() {
+		return Model_Post::query()
+			->where('featured', true)
+			->order_by('created_at', 'asc')
+			->get_one();
+	}
+	
+	/**
+	 * Get the first two sentences of the body. 
+	 * @return string
+	 */
+	public function get_excerpt() {
+		$content = $this->body;
+		$pos = strpos($content, '.');
+		if($pos === false) {
+			return $content;
+		} else {
+			 $offset = $pos + 1; //prepare offset
+			$pos2 = stripos ($content, '.', $offset); //find second dot using offset
+			return substr($content, 0, $pos2+1);
+		}
+	}
 
 }

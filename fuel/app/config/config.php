@@ -284,7 +284,7 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array('devtool', 'dashboard', 'sessions', 'receipts', 'stats'),
+		'modules'  => array('devtool', 'dashboard', 'sessions', 'receipts', 'stats', 'content'),
 
 		/**
 		 * Classes to autoload & initialize even when not used

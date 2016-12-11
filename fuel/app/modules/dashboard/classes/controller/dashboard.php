@@ -10,6 +10,7 @@ class Controller_Dashboard extends \Controller_Gate {
 		
 		$data = array();
 		$data['widgets'] = $widgets->get_items();
+		$data['featured_post'] = \Content\Model_Post::get_first_featured();
 		
 		$this->template->title = '';
 		$this->template->content = \View::forge('index', $data);
