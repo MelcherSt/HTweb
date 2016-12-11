@@ -35,3 +35,4 @@ desktop.ini
 
 # dev setting 
 /fuel/app/config/development/*
+/public/files/

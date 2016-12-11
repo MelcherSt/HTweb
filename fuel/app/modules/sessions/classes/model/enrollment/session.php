@@ -53,6 +53,53 @@ class Model_Enrollment_Session extends \Orm\Model {
 			)
 		));
 	}
+	
+	/**
+	 * Get a PREDITICION of points delta for this enrollment. 
+	 * Warning: this function MUST NOT be used for settling receipts
+	 * as it does not take dishwashers into account.
+	 * @return int
+	 */
+	public function get_point_prediction() {
+		// Default loss
+		$max_loss = 4;
+		$session = $this->session;
+
+		// Gain mutlipliers
+		$cook_gain = 2;
+		$dish_gain = 1;
+
+		$cook_count = $session->count_cooks();
+		$total_count = $session->count_total_participants();
+		$guests = $this->guests;
+	
+		if ($cook_count == 2) {
+			$cook_gain = 1; // Two cooks split the multiplier
+		}
+
+		$temp_points = -($max_loss + $max_loss * $guests);
+		
+		if ($this->cook) {
+			$temp_points += $cook_gain * $total_count;
+		}			
+		if ($this->dishwasher) {
+			$temp_points += $dish_gain * $total_count;
+		}				
+		
+		return $temp_points;		
+	}
+			
+	/**
+	 * Retrieve a list enrollments for all unsettled sessions the current user enrolled in.
+	 * @return [\Receipts\Model_User_Receipt]
+	 */
+	public static function get_unsettled() {
+		return Model_Enrollment_Session::query()
+			->related('session')
+			->where('session.settled', false)
+			->where('user_id', \Auth::get_user_id()[1])
+			->get();
+	}
 }
 
 

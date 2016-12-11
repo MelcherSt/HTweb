@@ -4,6 +4,7 @@
 
 <div class="row">
 	<div class="col-md-4">
+		<a href="/sessions/yesterday">
 		<div class="panel">
 			<div class="panel-heading">
 				<div class="row">
@@ -16,17 +17,12 @@
 					</div>
 				</div>
 			</div>	
-			<a href="/sessions/yesterday">
-				<div class="panel-footer">
-					<span class="pull-left">View</span>
-					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-					<div class="clearfix"></div>
-				</div>
-			</a>
 		</div>
+		</a>
 	</div>
-
+	
 	<div class="col-md-4">
+		<a href="/sessions/today">
 		<div class="panel">
 			<div class="panel-heading">
 				<div class="row">
@@ -39,17 +35,12 @@
 					</div>
 				</div>
 			</div>	
-			<a href="/sessions/today">
-				<div class="panel-footer">
-					<span class="pull-left">View</span>
-					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-					<div class="clearfix"></div>
-				</div>
-			</a>
 		</div>
+		</a>
 	</div>
-
+	
 	<div class="col-md-4">
+		<a href="/sessions/tomorrow">
 		<div class="panel">
 			<div class="panel-heading">
 				<div class="row">
@@ -62,17 +53,45 @@
 					</div>
 				</div>
 			</div>	
-			<a href="/sessions/tomorrow">
-				<div class="panel-footer">
-					<span class="pull-left">View</span>
-					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-					<div class="clearfix"></div>
-				</div>
-			</a>
 		</div>
+		</a>
 	</div>
+
+	
 </div>
 
-
-This page is under construction.
-
+<div class="row">
+	<p>This list only shows unsettled sessions. For a list of settled session you participated in, please see <a href="/receipts">My Receipts</a>.</p>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Participants</th>
+					<th>Cook(s)</th>
+					<th>Dishwasher(s)</th>
+					<th>Cost</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach($sessions as $session): ?>
+				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
+					<td><?=$session->date?></td>
+					<td><?=$session->count_total_participants()?></td>
+					<td>
+						<?php foreach($session->get_cook_enrollments() as $enrollment):?>
+							<?=$enrollment->user->get_fullname();?>			
+						<?php endforeach; ?>	
+					</td>
+					<td>
+						<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
+							<?=$enrollment->user->get_fullname();?>			
+						<?php endforeach; ?>
+					</td>
+					<td><?='€ ' . $session->cost?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>

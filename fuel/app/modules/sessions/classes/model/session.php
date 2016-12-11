@@ -60,14 +60,17 @@ class Model_Session extends \Orm\Model
 	}
 	
 	/**
-	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
-	 * @return [\Receipts\Model_User_Receipt]
+	 * Retrieve sessions in which user is enrolled
+	 * @param int $user_id
+	 * @param boolean $settled Query settled session only
+	 * @return /Sessions/Model_Session[]
 	 */
-	public function get_enrollments_sorted() {
-		return Model_Enrollment_Session::query()
-			->related('user')
-			->order_by('user.name', 'asc')
-			->where('session_id', $this->id)
+	public static function get_by_user($user_id, $settled=false) {
+		return Model_Session::query()
+			->related('enrollments')
+			->where('enrollments.user_id', $user_id)
+			->where('settled', $settled)
+			->order_by('date', 'desc')
 			->get();
 	}
 
@@ -85,6 +88,18 @@ class Model_Session extends \Orm\Model
 	}
 	
 	/* Below this line you will find instance methods */
+		
+	/**
+	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
+	 * @return [\Receipts\Model_User_Receipt]
+	 */
+	public function get_enrollments_sorted() {
+		return Model_Enrollment_Session::query()
+			->related('user')
+			->order_by('user.name', 'asc')
+			->where('session_id', $this->id)
+			->get();
+	}
 	
 	/**
 	 * Determine if the given user is enrolled

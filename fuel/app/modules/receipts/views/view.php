@@ -50,16 +50,18 @@
 					<tr>
 						<th>From</th>
 						<th>Amount</th>
-
 						<th>To</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach($schema as $key => $items): ?>
+					<?php foreach($schema as $key => $items): 
+						$to_user = \Model_User::find($items[1]);
+						
+					?>
 					<tr>
 						<td><?=\Model_User::find($items[0])->get_fullname()?></td>
 						<td><?= '€ ' . $items[2]?></td>
-						<td><?=\Model_User::find($items[1])->get_fullname()?></td>
+						<td><?=$to_user->get_fullname()?> - <?=$to_user->iban?></td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -90,7 +92,7 @@
 <div class="row">
 	<h2>Sessions</h2>
 	<p>The following sessions have been included in this receipt.</p>
-		<div class="table-responsive">
+	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>

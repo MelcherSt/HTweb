@@ -50,7 +50,8 @@ class Controller_Gate extends Controller_Base
 								Auth::dont_remember_me();
 							}
 							
-							Response::redirect_back();	
+							$dest = Input::post('destination', '/');
+							Response::redirect($dest);
 						}
 					} else {
 						$this->template->set_global('login_error', 'Login failed!');

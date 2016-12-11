@@ -18,8 +18,13 @@ class Controller_Widget extends \Controller_Widget_Base {
 			
 			if(isset($enrollment)) {
 				$icon = 'fa-check-circle';
-				$notice = 'And you are one of them!';	
+				$notice = $count == 1 ? 'And that\'s you!': 'And you are one of them!';	
+				$detail = 'View today\'s session';
 			} 
+			
+			if($count == 0) {
+				$detail = 'Be the first!';
+			}
 			
 			if($session->count_cooks() == 0 && ((int)date('Hi') > 1300)) {
 				$style = 'panel-yellow';
@@ -33,9 +38,11 @@ class Controller_Widget extends \Controller_Widget_Base {
 				$detail = 'Enroll tomorrow?';
 				$link = '/sessions/tomorrow';
 			} 
+			
 		} else {
 			// Surely, if there was no session there are no enrollments
 			$count = 0;
+			$detail = 'Be the first!';
 		}
 		
 		if(date('w') == 2) {

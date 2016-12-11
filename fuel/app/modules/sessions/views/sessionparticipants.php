@@ -8,7 +8,8 @@ $cur_enrollment = $session->current_enrollment();
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>Guests</th>
+				<th>∆ Points</th>
+				<th>Guests</th>	
 				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
 				<th>Actions</th>
 				<?php endif; ?>
@@ -18,7 +19,7 @@ $cur_enrollment = $session->current_enrollment();
 		<?php 			
 			foreach($enrollments as $enrollment): ?>
 			<tr>
-				<td><?=$enrollment->user->get_fullname()?>  
+				<td><?=$enrollment->user->get_fullname()?> 
 				<?php if ($enrollment->cook): ?>
 					<span class="fa fa-cutlery"></span> 
 				<?php endif; ?>
@@ -26,6 +27,7 @@ $cur_enrollment = $session->current_enrollment();
 					<span class="fa fa-shower"></span> 
 				<?php endif; ?>
 				</td>
+				<td><?=$enrollment->get_point_prediction()?>  </td>
 				<td><?=$enrollment->guests?></td>
 				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
 				<td>			

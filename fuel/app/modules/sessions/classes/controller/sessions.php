@@ -55,7 +55,8 @@ class Controller_Sessions extends \Controller_Gate {
 			}	
 		} else {
 			// TODO: Show a list of sessions
-			$this->template->content = \View::forge('index');
+			$data['sessions'] = Model_Session::get_by_user(\Auth::get_user_id()[1]);			
+			$this->template->content = \View::forge('index', $data);
 		}	
 	}
 }

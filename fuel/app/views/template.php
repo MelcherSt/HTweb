@@ -41,21 +41,23 @@
 					<?php					
 						if (isset($current_user)) {
 							$menu_items = array(
-								array('sessions', 'My Sessions'), 
-								array('receipts', 'My Receipts'),
-								array('wall', 'The wall'),
+								array('sessions', 'My Sessions', 'fa-cutlery'), 
+								array('receipts', 'My Receipts', 'fa-money'),
+								array('stats', 'My stats', 'fa-line-chart'),
+								array('wall', 'The wall', 'fa-id-card'),
 							);
 						} else {
 							$menu_items = array();
 						}
 						
-					
 						foreach($menu_items as $item) {
 							$section_segment = $item[0];
 							$section_title = $item[1];
+							$section_icon = $item[2];
+							
 							?>
 							<li class="<?php echo Uri::segment(1) == $section_segment ? 'active' : '' ?>">
-								<?php echo Html::anchor($section_segment, $section_title) ?>
+								<a href="/<?=$section_segment?>"><span class="fa <?=$section_icon?>"></span> <?=$section_title?> </a>
 							</li>
 							<?php
 						}

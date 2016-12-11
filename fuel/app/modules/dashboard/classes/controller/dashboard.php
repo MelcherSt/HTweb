@@ -11,7 +11,7 @@ class Controller_Dashboard extends \Controller_Gate {
 		$data = array();
 		$data['widgets'] = $widgets->get_items();
 		
-		$this->template->title = 'Dashboard';
+		$this->template->title = '';
 		$this->template->content = \View::forge('dashboard/index', $data);
 	}
 }
