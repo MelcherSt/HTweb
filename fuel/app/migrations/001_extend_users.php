@@ -16,7 +16,8 @@ class Extend_Users
 			'start_year' => array('constraint' => 4, 'type' => 'int'),
 			'end_year' => array('constraint' => 4, 'type' => 'int'),
 			'points' => array('constraint' => 5, 'type' => 'int'),
-			'balance' => array('constraint' => '10,2', 'type' => 'decimal'),
+			'iban' => array('constraint' => '30', 'type' => 'varchar'),
+			'avatar' => array('constraint' => 255, 'type' => 'varchar')
 		));
 	}
 

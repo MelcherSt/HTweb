@@ -11,7 +11,7 @@ class Create_Posts
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'title' => array('constraint' => 50, 'type' => 'varchar'),
 			'body' => array('type' => 'text'),
-			'author' => array('constraint' => 11, 'type' => 'int'),			// Auth users migration uses signed id's
+			'user_id' => array('constraint' => 11, 'type' => 'int'),			// Auth users migration uses signed id's
 			'image' => array('constraint' => 255, 'type' => 'varchar'),
 			'public' => array('type' => 'boolean'),
 			'featured' => array('type' => 'boolean'),
@@ -22,8 +22,8 @@ class Create_Posts
 		), array('id'));
 	
 		\DBUtil::add_foreign_key('posts', array(
-				'constraint' => 'fk_author_ps',
-				'key' => 'author',
+				'constraint' => 'fk_user_id_ps',
+				'key' => 'user_id',
 				'reference' => array(
 					'table' => 'users',
 					'column' => 'id',

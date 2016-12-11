@@ -1,12 +1,14 @@
 <?php
+namespace Content;
+
 class Model_Post extends \Orm\Model
 {
 	protected static $_properties = array(
 		'id',
 		'title',
 		'body',
-		'author',
-		'img',
+		'user_id',
+		'image',
 		'public',
 		'featured',
 		'category',
@@ -30,7 +32,7 @@ class Model_Post extends \Orm\Model
 	
 	protected static $_belongs_to = array(
 		'author' => array(
-			'key_from' => 'author',
+			'key_from' => 'user_id',
 			'key_to' => 'id',
 			'model_to' => '\Model_User',
 		),

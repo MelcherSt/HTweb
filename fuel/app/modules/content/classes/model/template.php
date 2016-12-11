@@ -1,4 +1,6 @@
 <?php
+namespace Content;
+
 class Model_Template extends \Orm\Model
 {
 	protected static $_properties = array(
