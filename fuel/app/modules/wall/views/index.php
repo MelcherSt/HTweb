@@ -1,10 +1,22 @@
-
 <div class="row">
-
-	<?php foreach($users as $user): 
+	<p>This page shows a list of all current inhabitants of Het Tribunaal.
+	<a href="/users" class="btn btn-primary pull-right"><span class="fa fa-users"></span> List of all users</a>
+	</p>
+</div>
+<div class="row">
+	
+	<?php 
+	$count = 0;
+	
+	foreach($users as $user) {
 		$rand = rand(1,4);
 		$end_year = $user->end_year;
 		$start_year = $user->start_year;
+		$count += 1;
+		
+		if ($count == 3) {
+			echo '<div class="row">';
+		}
 	?>
 	<div class="col-md-4 col-sm-4 col-xs-12 clickable">
 		<div class="framed<?php echo $rand ?> portrait-container">
@@ -17,7 +29,12 @@
 		</div>
 		<a href="/users/view/<?=$user->id?>"></a> 
 	</div>
-	<?php endforeach; ?>
+	<?php 
+		if ($count == 3) {
+			echo '</div>';
+		}
+	
+	} ?>
 </div>
 
 <?php echo Asset::css('wall.css'); ?>

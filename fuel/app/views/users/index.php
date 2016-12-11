@@ -3,7 +3,6 @@
 		<tr>
 			<th>Name</th>
 			<th>Phone</th>
-			<th>IBAN</th>
 			<th>Email</th>
 		</tr>
 	</thead>
@@ -12,7 +11,6 @@
 		<tr class="clickable-row" data-href="/users/view/<?=$user->id?>">
 			<td><?=$user->get_fullname()?></td>
 			<td><?=$user->phone?></td>
-			<td><?=$user->iban?></td>
 			<td><?=$user->email?></td>
 		</tr>
 		<?php endforeach; ?>	

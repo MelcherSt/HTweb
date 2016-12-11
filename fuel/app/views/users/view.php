@@ -1,4 +1,10 @@
 <div class="row">
+	<?php if($user->id == Auth::get_user_id()[1]) { ?>
+	<a href="/users/edit" class="btn btn-primary pull-right"> <span class="fa fa-pencil"></span> Edit account</a>
+	<?php }?>
+</div>
+
+<div class="row">
 	<div class="col-md-6">
 
 		<p>
@@ -42,9 +48,6 @@
 	</div>
 </div>
 
-<?php 
-if($user->id == Auth::get_user_id()[1]) {
-	echo '<a href="/users/edit"> <span class="fa fa-pencil"></span> Edit </a>';
-}
+<?php
 
 echo Asset::css('wall.css'); ?>
