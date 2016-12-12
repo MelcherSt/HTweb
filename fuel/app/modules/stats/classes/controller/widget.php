@@ -6,7 +6,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 	
 	public function action_points() {	
 		$unsettled_points_delta = 0;
-		$enrollments = \Sessions\Model_Enrollment_Session::get_unsettled();
+		$enrollments = \Sessions\Model_Enrollment_Session::get_ready_for_settlement();
 		foreach($enrollments as $enrollment) {
 			$unsettled_points_delta += $enrollment->get_point_prediction();
 		}

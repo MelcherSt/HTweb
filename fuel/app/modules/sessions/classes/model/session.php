@@ -13,6 +13,8 @@ class Model_Session extends \Orm\Model
 	const COST_GRACE = '+5days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
 	
+	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions
+	
 	protected static $_properties = array(
 		'id',
 		'date' => array(
@@ -76,12 +78,12 @@ class Model_Session extends \Orm\Model
 
 	/**
 	 * Retrieve all session older than 5 days that have not been settled yet
-	 * @return [\Sessions\Model_Session]
+	 * @return \Sessions\Model_Session[]
 	 */
 	public static function get_ready_for_settlement() {
 		return Model_Session::find('all', array(
 			'where' => array(
-				array(\DB::expr('DATE_ADD(date, INTERVAL 5 DAY)'), '<', \DB::expr('"'. date('Y-m-d'). '"')),
+				array(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<', date('Y-m-d')),
 				array('settled', 0)
 			)
 		));
@@ -91,7 +93,7 @@ class Model_Session extends \Orm\Model
 		
 	/**
 	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
-	 * @return [\Receipts\Model_User_Receipt]
+	 * @return \Sessions\Model_Enrollment_Session[]
 	 */
 	public function get_enrollments_sorted() {
 		return Model_Enrollment_Session::query()
@@ -103,7 +105,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine if the given user is enrolled
-	 * @param type $user_id
+	 * @param int $user_id
 	 * @return boolean
 	 */
 	public function is_enrolled($user_id) {
@@ -135,8 +137,7 @@ class Model_Session extends \Orm\Model
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
 	public function current_enrollment() {
-		$user = \Auth::get_user();
-		return $this->get_enrollment($user->id);
+		return $this->get_enrollment(\Auth::get_user()->id);
 	}
 	
 	/**
@@ -186,7 +187,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether the deadline of this session may changed
-	 * @return type
+	 * @return boolean
 	 */
 	public function can_change_deadline() {
 		if ($this->can_enroll()) { 
@@ -262,7 +263,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the enrollments for all cooks enrolled in this session
-	 * @return [\Sessions\Model_Enrollment_Session]
+	 * @return \Sessions\Model_Enrollment_Session[]
 	 */
 	public function get_cook_enrollments() {
 		$enrollments = Model_Enrollment_Session::find('all', array(
@@ -275,7 +276,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the enrollments for all cooks enrolled in this session
-	 * @return [\Sessions\Model_Enrollment_Session]
+	 * @return \Sessions\Model_Enrollment_Session[]
 	 */
 	public function get_dishwasher_enrollments() {
 		$enrollments = Model_Enrollment_Session::find('all', array(

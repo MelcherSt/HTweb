@@ -55,6 +55,19 @@ class Model_Enrollment_Session extends \Orm\Model {
 	}
 	
 	/**
+	 * Retrieve a list enrollments for all settleable sessions for current user
+	 * @return \Sessions\Model_Enrollment[]
+	 */
+	public static function get_ready_for_settlement() {
+		return Model_Enrollment_Session::query()
+			->related('session')
+			->where('session.settled', false)
+			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<', date('Y-m-d'))
+			->where('user_id', \Auth::get_user_id()[1])
+			->get();
+	}
+	
+	/**
 	 * Get a PREDITICION of points delta for this enrollment. 
 	 * Warning: this function MUST NOT be used for settling receipts
 	 * as it does not take dishwashers into account.
@@ -87,18 +100,6 @@ class Model_Enrollment_Session extends \Orm\Model {
 		}				
 		
 		return $temp_points;		
-	}
-			
-	/**
-	 * Retrieve a list enrollments for all unsettled sessions the current user enrolled in.
-	 * @return [\Receipts\Model_User_Receipt]
-	 */
-	public static function get_unsettled() {
-		return Model_Enrollment_Session::query()
-			->related('session')
-			->where('session.settled', false)
-			->where('user_id', \Auth::get_user_id()[1])
-			->get();
 	}
 }
 
