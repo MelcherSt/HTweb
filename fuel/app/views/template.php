@@ -34,10 +34,6 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<!--<li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
-						<?php echo Html::anchor('', 'Dashboard') ?>
-					</li>-->
-
 					<?php					
 						if (isset($current_user)) {
 							$menu_items = array(
@@ -45,6 +41,7 @@
 								array('receipts', 'My Receipts', 'fa-money'),
 								array('stats', 'My stats', 'fa-line-chart'),
 								array('wall', 'The wall', 'fa-id-card'),
+								array('content/posts', 'Posts', 'fa-file-text'),
 							);
 						} else {
 							$menu_items = array();
@@ -61,18 +58,6 @@
 							</li>
 							<?php
 						}
-					
-						/*
-						foreach($files as $file)
-						{
-							$section_segment = $file->getBasename('.php');
-							$section_title = Inflector::humanize($section_segment);
-							?>
-							<li class="<?php echo Uri::segment(2) == $section_segment ? 'active' : '' ?>">
-								<?php echo Html::anchor('admin/'.$section_segment, $section_title) ?>
-							</li>
-							<?php
-						}*/
 					?>
 				</ul>
 				<ul class="nav navbar-nav pull-right">

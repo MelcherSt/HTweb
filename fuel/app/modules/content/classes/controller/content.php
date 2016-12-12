@@ -5,7 +5,8 @@ namespace Content;
 class Controller_Content extends Controller_Gate {
 	
 	public function action_index() {
-		return \Response::forge('hoi');
+		$this->template->title = 'Posts';
+		$this->template->content = '123';
 	}
 	
 	public function action_view($content_id=0) {

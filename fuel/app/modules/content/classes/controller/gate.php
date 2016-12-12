@@ -12,7 +12,13 @@ class Controller_Gate extends \Controller_Gate {
 	
 	public function before() {
 		parent::before();
-		$post_id = \Request::active()->method_params[0];
+		$params = \Request::active()->method_params;
+		$post_id = -1;
+		
+		if (sizeof($params) > 0) {
+			$post_id = $params[0];
+		} 	
+		
 		$post = Model_Post::find($post_id);
 		
 		if(isset($post)) {
@@ -34,13 +40,16 @@ class Controller_Gate extends \Controller_Gate {
 		}
 	}
 	
-	public function after($response) {		
+	public function after($response) {	
+		// Directly process responses
+		if($response){ return parent::after($response); }
+
 		// Create content from content_template
 		$this->template->title = $this->template->post->title;
 		// Inject post into content
 		$data['post'] = $this->template->post;
 		$this->template->content = \View::forge($this->content_template, $data);
-		
+			
 		// Inject content into base template
 		if(empty($this->base_template)) {
 			// Delegate (use default)
