@@ -45,7 +45,12 @@ class Controller_Sessions extends \Controller_Gate {
 				}
 
 				// Assign sub-views
-				$data['left_content'] = \View::forge('sessionstate', ["session"=>$session]);
+				if(null !== $session->current_enrollment()) {
+					$data['left_content'] = \View::forge('state/enrolled', ["session"=>$session]);
+				} else {
+					$data['left_content'] = \View::forge('state/notenrolled', ["session"=>$session]);
+				}
+				
 				$data['right_content'] = \View::forge('sessionparticipants', ["session"=>$session]);
 				
 				$this->template->subtitle = date('l j F Y', strtotime($date));
