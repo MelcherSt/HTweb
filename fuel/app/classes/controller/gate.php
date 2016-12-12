@@ -5,6 +5,9 @@
  */
 class Controller_Gate extends Controller_Base
 {
+	protected $public_access = false; // Is the content accessible publicly?
+	protected $public_request = false; // Was the request made in not-logged-in state?
+	
 	public function action_index() {
 		$this->template->title = 'Gate';
 		$this->template->content = View::forge('gate/gate');
@@ -15,9 +18,19 @@ class Controller_Gate extends Controller_Base
 
 		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout'))) {
 			if (!Auth::check()) {
-				// No user is logged in, redirect to login
-				Response::redirect('gate/login');
+				// No user is logged in, this is a public request
+				$this->public_request = true;
 			}
+		}
+	}
+	
+	public function after($response) {
+		if($this->public_request && !$this->public_access) {
+			// If the page is not publicly accessible and we're not logged-in, redirect to login
+			return Response::redirect('gate/login');
+		} else {
+			// Otherwise, process as normal
+			return parent::after($response);
 		}
 	}
 
@@ -68,6 +81,6 @@ class Controller_Gate extends Controller_Base
 
 	public function action_logout() {
 		Auth::logout();
-		Response::redirect('gate');
+		Response::redirect('/');
 	}
 }

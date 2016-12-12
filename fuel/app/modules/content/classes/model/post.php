@@ -53,10 +53,23 @@ class Model_Post extends \Orm\Model
 	
 	/**
 	 * Retrieve the latest featured post
+	 * @return \Content\Model_Post
 	 */
 	public static function get_first_featured() {
 		return Model_Post::query()
 			->where('featured', true)
+			->order_by('created_at', 'asc')
+			->get_one();
+	}
+	
+	/**
+	 * Retrieve the latest public featured post
+	 * @return \Content\Model_Post
+	 */
+	public static function get_first_public_featured() {
+		return Model_Post::query()
+			->where('featured', true)
+			->where('public', true)
 			->order_by('created_at', 'asc')
 			->get_one();
 	}

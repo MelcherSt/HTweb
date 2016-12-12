@@ -5,7 +5,7 @@ namespace Content;
 /**
  * Controller regulating access and styling for content pages. 
  */
-class Controller_Gate extends \Controller_Base {
+class Controller_Gate extends \Controller_Gate {
 	
 	private $base_template;
 	private $content_template;
@@ -16,19 +16,19 @@ class Controller_Gate extends \Controller_Base {
 		$post = Model_Post::find($post_id);
 		
 		if(isset($post)) {
-			if(!$post->public && !\Auth::check()) {
-				// No user is logged in, redirect to login
-				\Response::redirect('gate/login');
-			} else {
-				// Find and apply template
-				$template = Model_Template::find($post->template);
-				$this->base_template = $template->base_template;
-				$this->content_template = $template->content_template;
-				
-				if(empty($this->content_template)) {
-					$this->content_template = 'templates/content/default.php';
-				}
-			}
+			if($post->public) {
+				// If the post is public this page is publicly accessible
+				$this->public_access = true;
+			}	
+			
+			// Find and apply template
+			$template = Model_Template::find($post->template);
+			$this->base_template = $template->base_template;
+			$this->content_template = $template->content_template;
+
+			if(empty($this->content_template)) {
+				$this->content_template = 'templates/content/default.php';
+			}		
 		} else {
 			\Utils::handle_irrecoverable_error('No post with given id exists');
 		}
