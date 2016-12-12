@@ -5,7 +5,7 @@ namespace Receipts;
 class Controller_Receipts extends \Controller_Gate {
 	
 	public function action_index() {
-		$this->template->title = 'Receipts';
+		$this->template->title = 'My Receipts';
 		
 		$data['receipts'] = Model_Receipt::get_by_user(\Auth::get_user_id()[1]);
 		

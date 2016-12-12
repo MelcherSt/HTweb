@@ -22,7 +22,7 @@ class Controller_Dashboard extends \Controller_Gate {
 			$data['widgets'] = $widgets->get_items();
 			$data['featured_post'] = \Content\Model_Post::get_first_featured();
 
-			$this->template->title = '';
+			$this->template->title = 'Dashboard';
 			$this->template->content = \View::forge('index', $data);
 		}
 	}

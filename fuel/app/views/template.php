@@ -78,11 +78,10 @@
 		</div>
 	</div>
 	
-
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<h1><?=$title?> <small><?php if(isset($subtitle)) { echo $subtitle; } ?></small></h1>
+				<h1><?php if(isset($page_title)) { echo $page_title; }?> <small><?php if(isset($subtitle)) { echo $subtitle; } ?></small></h1>
 				<hr>
 				<?php if (Session::get_flash('success')): ?>
 				<div class="alert alert-success alert-dismissable fade" id="alert-success" data-dismiss="alert">

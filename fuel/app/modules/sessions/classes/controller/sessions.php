@@ -26,7 +26,7 @@ class Controller_Sessions extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function action_view($date=null) {	
-		$this->template->title = 'Sessions';
+		$this->template->title = 'My Sessions';
 		
 		if(isset($date)) {
 			if (\Utils::valid_date($date)) {
