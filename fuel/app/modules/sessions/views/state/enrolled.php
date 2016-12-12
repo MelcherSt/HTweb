@@ -75,10 +75,11 @@ if($session->can_enroll()) { ?>
 		<?php endif; ?>
 		
 		<button class="btn btn-success" type="submit" ><span class="fa fa-sign-in"></span> Update session</button>
-	</form> 		
+	</form> 	
+
 	<?php } else { ?>
 	<div class="alert alert-info">
-		<strong>Heads up!</strong> You can no longer change your participation in this session. The deadline has passed.
+		<strong>Heads up!</strong> The deadline has passed. You can no longer leave this session.
 	</div>
 	<?php }
 }

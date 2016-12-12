@@ -4,10 +4,12 @@ namespace Dashboard;
 
 class Controller_Dashboard extends \Controller_Gate {
 	
+	public function before() {
+		$this->public_access = true;
+		parent::before();
+	}
 	
-	function action_index() {
-		$this->public_access = true; // Content is publicly accessible
-		
+	function action_index() {	
 		if($this->public_request) {
 			$data['featured_post'] = \Content\Model_Post::get_first_public_featured();
 			$this->template->title = '';

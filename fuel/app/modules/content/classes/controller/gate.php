@@ -10,8 +10,7 @@ class Controller_Gate extends \Controller_Gate {
 	private $base_template;
 	private $content_template;
 	
-	public function before() {
-		parent::before();
+	public function before() {	
 		$params = \Request::active()->method_params;
 		$post_id = -1;
 		
@@ -38,6 +37,8 @@ class Controller_Gate extends \Controller_Gate {
 		} else {
 			\Utils::handle_irrecoverable_error('No post with given id exists');
 		}
+		
+		parent::before();
 	}
 	
 	public function after($response) {	

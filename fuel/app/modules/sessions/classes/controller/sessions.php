@@ -4,7 +4,6 @@ namespace Sessions;
 
 class Controller_Sessions extends \Controller_Gate {
 	
-	
 	public function action_index() {
 		\Response::redirect('sessions/view/');
 	}
@@ -21,12 +20,12 @@ class Controller_Sessions extends \Controller_Gate {
 	public function action_tomorrow() {
 		\Response::redirect('sessions/view/'.date('Y-m-d', strtotime('+1 day')));
 	}
-	
+		
 	/**
 	 * Show a list of session or a single one
 	 * @param type $date
 	 */
-	public function action_view($date=null) {
+	public function action_view($date=null) {	
 		$this->template->title = 'Sessions';
 		
 		if(isset($date)) {
@@ -51,16 +50,14 @@ class Controller_Sessions extends \Controller_Gate {
 					$data['left_content'] = \View::forge('state/notenrolled', ["session"=>$session]);
 				}
 				
-				$data['right_content'] = \View::forge('sessionparticipants', ["session"=>$session]);
-				
+				$data['right_content'] = \View::forge('sessionparticipants', ["session"=>$session]);	
 				$this->template->subtitle = date('l j F Y', strtotime($date));
 				$this->template->content = \View::forge('layout/splitview', $data);
 			} else {
 				\Utils::handle_irrecoverable_error('Date not set or invalid date format.');
 			}	
 		} else {
-			// TODO: Show a list of sessions
-			$data['sessions'] = Model_Session::get_by_user(\Auth::get_user_id()[1]);			
+			$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id);			
 			$this->template->content = \View::forge('index', $data);
 		}	
 	}

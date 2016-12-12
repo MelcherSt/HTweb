@@ -20,17 +20,12 @@ class Controller_Gate extends Controller_Base
 			if (!Auth::check()) {
 				// No user is logged in, this is a public request
 				$this->public_request = true;
+				
+				if(!$this->public_access) {
+				// If the page is not publicly accessible and we're not logged-in, redirect to login
+					Response::redirect('gate/login');
+				}	
 			}
-		}
-	}
-	
-	public function after($response) {
-		if($this->public_request && !$this->public_access) {
-			// If the page is not publicly accessible and we're not logged-in, redirect to login
-			return Response::redirect('gate/login');
-		} else {
-			// Otherwise, process as normal
-			return parent::after($response);
 		}
 	}
 

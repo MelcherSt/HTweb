@@ -70,7 +70,7 @@
 						</ul>
 					</li>
 					<?php } else { ?>
-					<li><?php echo Html::anchor('gate/login', 'Login'); ?></li>
+					<li><a href="/gate/login"><span class="fa fa-sign-in"></span> Login</a></li>
 					<?php } ?>
 				</ul>
 	

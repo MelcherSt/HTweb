@@ -24,7 +24,7 @@ if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->de
 	</div>
 	<button class="btn btn-success" type="submit" ><span class="fa fa-sign-in"></span> Join session</button>
 </form> 
-<?php} else { ?>
+<?php } else { ?>
 <div class="alert alert-info">
 	<strong>Heads up!</strong> The deadline has passed. You are no longer able to join this session.
 </div>

@@ -31,7 +31,15 @@ $cur_enrollment = $session->current_enrollment();
 				<td><?=$enrollment->guests?></td>
 				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
 				<td>			
-					<a href="#" onclick="showEditModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', '<?=$enrollment->guests?>', '<?=$enrollment->cook?>', '<?=$enrollment->dishwasher?>')"><span class="fa fa-pencil"></span> Edit</a>  
+					<a href="#" onclick="showEditModal(
+								<?=$enrollment->user->id?>, 
+								'<?=$enrollment->user->name?>', 
+								'<?=$enrollment->guests?>', 
+								'<?=$enrollment->cook?>', 
+								'<?=$enrollment->dishwasher?>',
+								<?=(int)$session->can_enroll_cooks(true)?>, 
+								<?=(int)$session->can_enroll_dishwashers(true)?>
+							)"><span class="fa fa-pencil"></span> Edit</a>  
 					<?php if ($cur_enrollment->user_id != $enrollment->user_id): ?> |
 					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> Remove</a>
 					<?php endif; ?>
@@ -180,13 +188,16 @@ function showDeleteModal(userId, userName) {
 	$("#delete-user-id").val(userId);
 }
 
-function showEditModal(userId, userName, guests, cook, dishwasher) {
+function showEditModal(userId, userName, guests, cook, dishwasher, canCook, canDish) {
 	$("#edit-enrollment-modal").modal('show');
 	$("#edit-user-name").html(userName);
 	$("#edit-user-id").val(userId);
 	$("#edit-guests").val(guests);
-	$("#edit-cook").prop('checked', cook == 1);
-	$("#edit-dishwasher").prop('checked', dishwasher == 1);
+	$("#edit-cook").prop('checked', cook === 1);
+	$("#edit-dishwasher").prop('checked', dishwasher === 1);
+	$("#edit-cook").attr('disabled', canCook === 0);
+	$("#edit-dishwasher").attr('disabled', canDish === 0);
+	
 }
 
 </script>
