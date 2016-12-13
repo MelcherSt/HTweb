@@ -4,13 +4,16 @@ namespace Sessions;
 
 class Controller_Enrollments extends \Controller_Gate {
 	
+	public function before() {
+		\Lang::load('sessions', 'session');
+		\Lang::load('users', 'user');
+	}
+	
 	/**
 	 * Handle enrollment creation
 	 * @param type $date
 	 */
 	public function post_create($date=null) {
-		\Lang::load('sessions', 'session');
-		\Lang::load('users', 'user');
 		
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
@@ -71,7 +74,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	 * Handle enrollment updates
 	 * @param type $date
 	 */
-	public function post_update($date=null) {
+	public function post_update($date=null) {	
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
@@ -128,7 +131,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				$guests = \Input::post('guests', 0);
 				if ($guests > Model_Session::MAX_GUESTS) {
 					$enrollment->guests = 20;
-					\Session::set_flash('error', e(__('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS])));	
+					\Session::set_flash('error', __('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS]));	
 				} else {
 					$enrollment->guests = \Input::post('guests', 0);
 				}
@@ -161,7 +164,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	 * Handle enrollment deletion
 	 * @param type $date
 	 */
-	public function post_delete($date=null) {
+	public function post_delete($date=null) {		
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
@@ -188,10 +191,9 @@ class Controller_Enrollments extends \Controller_Gate {
 			// Remember the name
 			$name = $enrollment->user->name;
 			
-			try {
-				$enrollment->delete();
+			if( $enrollment->delete()) {	
 				\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
-			} catch (\Database_Exception $ex) {
+			} else  {
 				\Session::set_flash('error', __('session.alert.error.remove_enroll', ['name' => $name]));	
 			}
 
