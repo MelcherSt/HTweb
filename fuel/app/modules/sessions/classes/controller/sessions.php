@@ -26,8 +26,8 @@ class Controller_Sessions extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function action_view($date=null) {
-		\Lang::load('sessions', 'session');
-		
+		\Lang::load('session', 'session');
+
 		$this->template->title = __('session.title');
 		
 		if(isset($date)) {

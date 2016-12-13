@@ -1,7 +1,3 @@
-<?php
-Lang::load('sessions', 'session');
-?>
-
 <div class="row">
 	<div class="col-md-4">
 		<a href="/sessions/yesterday">

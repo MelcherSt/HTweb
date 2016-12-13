@@ -1,6 +1,4 @@
 <?php
-Lang::load('sessions', 'session');
-Lang::load('alerts', 'alert');
 
 $enrollment = $session->current_enrollment();
 $deadline = date('H:i', strtotime($session->deadline));

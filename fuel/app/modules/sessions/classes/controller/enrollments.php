@@ -3,12 +3,7 @@
 namespace Sessions;
 
 class Controller_Enrollments extends \Controller_Gate {
-	
-	public function before() {
-		\Lang::load('sessions', 'session');
-		\Lang::load('users', 'user');
-	}
-	
+		
 	/**
 	 * Handle enrollment creation
 	 * @param type $date
@@ -45,7 +40,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$guests = \Input::post('guests', 0);
 			if ($guests > Model_Session::MAX_GUESTS) {
 				$guests = 20;
-				\Session::set_flash('error', e(__('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS])));	
+				\Session::set_flash('error', __('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS]));	
 			} 
 			
 			// Create from model
@@ -83,14 +78,12 @@ class Controller_Enrollments extends \Controller_Gate {
 			$user_id = \Input::post('user_id', null);
 			$cur_enrollment = $session->current_enrollment();
 			
-			if(isset($user_id) && $cur_enrollment->cook) {
-				// Cook is enrolling another user
+			if(isset($user_id) && $cur_enrollment->cook) {	// Cook is enrolling another user
 				$enrollment = $session->get_enrollment($user_id);	
 				if (!$enrollment) {
 					\Utils::handle_recoverable_error(__('session.alert.error.no_enrollment', ['name' => \Model_User::find($user_id)->name]), '/sessions/view/'.$date);
 				}
-			} else {
-				// Enrolling ourselves
+			} else { // Enrolling ourselves
 				$enrollment = $cur_enrollment;
 			}
 			
@@ -104,24 +97,23 @@ class Controller_Enrollments extends \Controller_Gate {
 						$new_cost = \Input::post('cost', 0.0);
 						$cur_cost = $session->cost;
 						
-						if ($new_cost != $cur_cost) {
-							// Cost has been updated by this cook. Set him as payer.
-							$session->paid_by = $enrollment->user->id;
-							$session->cost = $new_cost;	
-						}		
+					if ($new_cost != $cur_cost) {
+						// Cost has been updated by this cook. Set him as payer.
+						$session->paid_by = $enrollment->user->id;
+						$session->cost = $new_cost;	
 					}		
-					if($session->can_change_deadline()) {
-						$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
-						$session->deadline = $deadline;
-					}	
-					if($session->can_enroll()) {
-						$notes = \Input::post('notes', '');		
-						$session->notes = $notes;
-					}
-
-					if(!$session->save()) {
-						\Utils::handle_recoverable_error(__('session.alert.error.update_session'), '/sessions/view/'.$date);	
-					}
+				}		
+				if($session->can_change_deadline()) {
+					$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
+					$session->deadline = $deadline;
+				}	
+				if($session->can_enroll()) {
+					$notes = \Input::post('notes', '');		
+					$session->notes = $notes;
+				}
+				if(!$session->save()) {
+					\Utils::handle_recoverable_error(__('session.alert.error.update_session'), '/sessions/view/'.$date);	
+				}
 			}	
 
 			if(($session->can_enroll() || ($cur_enrollment->cook && $session->can_change_enrollments())) && !$dishwasher_only) {
@@ -188,15 +180,15 @@ class Controller_Enrollments extends \Controller_Gate {
 				$enrollment = $cur_enrollment;
 			}
 			
-			// Remember the name
+			// Remember the name so we can report it back later.
 			$name = $enrollment->user->name;
 			
-			if( $enrollment->delete()) {	
+			try {
+				$enrollment->delete();	
 				\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
-			} else  {
+			} catch (\Database_Exception $ex) {
 				\Session::set_flash('error', __('session.alert.error.remove_enroll', ['name' => $name]));	
 			}
-
 			\Response::redirect('/sessions/view/'.$date);
 		}
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));

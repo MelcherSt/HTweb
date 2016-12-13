@@ -1,7 +1,4 @@
 <?php
-Lang::load('sessions', 'session');
-Lang::load('users', 'user');
-Lang::load('actions', 'actions');
 
 $enrollments = $session->get_enrollments_sorted(); 
 $cur_enrollment = $session->current_enrollment();
@@ -85,7 +82,6 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 				</div>
 				<div class="modal-body">
 					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
-					<!--  insert form elements here -->
 					<div class="form-group">
 						<input id="delete-user-id" type="hidden" class="form-control" name="user_id">
 					</div>
@@ -112,7 +108,6 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 				</div>
 				<div class="modal-body">
 					<p><?=__('session.modal.edit_enroll.msg')?> <strong><span id="edit-user-name"></span></strong>.</p>
-					<!--  insert form elements here -->
 					<div class="form-group">
 						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
 						<label for="edit-guests"><?=__('session.field.guest_plural')?></label>
@@ -150,9 +145,7 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 					<h4 class="modal-title"><?=__('session.modal.create_enroll.title')?></h4>
 				</div>
 				<div class="modal-body">
-					<p><?=__('session.modal.create_enroll.msg')?></p>
-					<!--  insert form elements here -->
-					
+					<p><?=__('session.modal.create_enroll.msg')?></p>					
 					<div class="form-group">
 						<label for="add-user-id"><?=__('user.name')?>:</label>
 						<select class="form-control" id="add-user-id" name="user_id">

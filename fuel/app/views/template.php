@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+	
+	<?php 
+	Lang::load('template'); 
+	Lang::load('session', 'session');
+	Lang::load('user', 'user');
+	Lang::load('actions', 'actions');	
+	Lang::load('alert', 'alert');
+	?>
+	
 	<meta charset="utf-8">
-	<title><?php echo $title; ?> | Het Tribunaal Web</title>
+	<meta name="viewport" content="width=device-width">
+	<title><?=$title?> | <?=__('site_title') . ' ' . __('site_sub')?></title>
 	
 	<?php 
 	echo Asset::css(array(
@@ -30,7 +40,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> Het Tribunaal <small>Web</small></a>
+				<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> <?=__('site_title')?> <small><?=__('site_sub')?></small></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
@@ -65,12 +75,12 @@
 					<li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->name . ' ' . $current_user->surname; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/users/me"><span class="fa fa-cogs"></span> Settings</a></li>
-							<li><a href="/gate/logout"><span class="fa fa-sign-out"></span> Logout</a></li>
+							<li><a href="/users/me"><span class="fa fa-cogs"></span> <?=__('settings')?></a></li>
+							<li><a href="/gate/logout"><span class="fa fa-sign-out"></span> <?=__('logout')?></a></li>
 						</ul>
 					</li>
 					<?php } else { ?>
-					<li><a href="/gate/login"><span class="fa fa-sign-in"></span> Login</a></li>
+					<li><a href="/gate/login"><span class="fa fa-sign-in"></span> <?=__('login')?></a></li>
 					<?php } ?>
 				</ul>
 	
@@ -106,7 +116,7 @@
 		</div>
 		<hr/>
 		<footer>
-			<p><span class="fa fa-bank"></span> Web <small>© 2016</small><br>
+			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>© 2016</small><br>
 				<small>Build using FuelPHP <?php echo e(Fuel::VERSION); ?></small>
 			</p>
 			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>

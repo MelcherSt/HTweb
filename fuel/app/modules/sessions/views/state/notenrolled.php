@@ -1,6 +1,4 @@
 <?php
-Lang::load('sessions', 'session');
-Lang::load('alerts', 'alert');
 
 $deadline = date('H:i', strtotime($session->deadline));
 
