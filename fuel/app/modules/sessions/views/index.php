@@ -1,5 +1,5 @@
 <?php
-
+Lang::load('sessions', 'session');
 ?>
 
 <div class="row">
@@ -12,7 +12,7 @@
 						<i class="fa fa-chevron-left fa-5x"></i>
 					</div>
 					<div class="col-xs-9 text-right">
-						<div class="huge">Yesterday<small></small></div>
+						<div class="huge"><?=__('session.day.yesterday')?><small></small></div>
 						<div></div>
 					</div>
 				</div>
@@ -30,7 +30,7 @@
 						<i class="fa fa-cutlery fa-5x"></i>
 					</div>
 					<div class="col-xs-9 text-right">
-						<div class="huge">Today<small></small></div>
+						<div class="huge"><?=__('session.day.today')?><small></small></div>
 						<div></div>
 					</div>
 				</div>
@@ -48,7 +48,7 @@
 						<i class="fa fa-chevron-right fa-5x"></i>
 					</div>
 					<div class="col-xs-9 text-right">
-						<div class="huge">Tomorrow<small></small></div>
+						<div class="huge"><?=__('session.day.tomorrow')?><small></small></div>
 						<div></div>
 					</div>
 				</div>
@@ -61,16 +61,16 @@
 </div>
 
 <div class="row">
-	<p>This list only shows unsettled sessions. For a list of settled session you participated in, please see <a href="/receipts">My Receipts</a>.</p>
+	<p><?=__('session.index.msg')?><a href="/receipts">My Receipts</a>.</p>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Date</th>
-					<th>Participants</th>
-					<th>Cook(s)</th>
-					<th>Dishwasher(s)</th>
-					<th>Cost</th>
+					<th><?=__('session.field.date')?></th>
+					<th><?=__('session.role.participant_plural')?></th>
+					<th><?=__('session.role.cook_plural')?></th>
+					<th><?=__('session.role.dishwasher_plural')?></th>
+					<th><?=__('session.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>

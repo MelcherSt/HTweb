@@ -8,15 +8,14 @@ class Utils {
 	 */
 	public static function handle_irrecoverable_error($message=null) {
 		if(isset($message)) {
-			\Session::set_flash('error', e($message));
+			\Session::set_flash('error', ($message));
 		}		
 		throw new \HttpNotFoundException();
 	} 	
 	
-	
 	public static function handle_recoverable_error($message=null, $redirect=null) {
 		if(isset($message)) {
-			\Session::set_flash('error', e($message));
+			\Session::set_flash('error', ($message));
 		}
 		if (isset($redirect)) {
 			return \Response::redirect($redirect);

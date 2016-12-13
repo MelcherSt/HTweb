@@ -1,17 +1,25 @@
 <?php
+Lang::load('sessions', 'session');
+Lang::load('users', 'user');
+Lang::load('actions', 'actions');
 
 $enrollments = $session->get_enrollments_sorted(); 
 $cur_enrollment = $session->current_enrollment();
+
+$can_cook = (int)$session->can_enroll_cooks(true);
+$can_dish = (int)$session->can_enroll_dishwashers(true);
+
+
 ?>
 <div class="table-responsive">
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>∆ Points</th>
-				<th>Guests</th>	
+				<th><?=__('user.field.name')?></th>
+				<th>∆ <?=__('session.field.point_plural')?></th>
+				<th><?=__('session.field.cost')?></th>	
 				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
-				<th>Actions</th>
+				<th><?=__('actions.name')?></th>
 				<?php endif; ?>
 			</tr>
 		</thead>
@@ -37,11 +45,11 @@ $cur_enrollment = $session->current_enrollment();
 								'<?=$enrollment->guests?>', 
 								'<?=$enrollment->cook?>', 
 								'<?=$enrollment->dishwasher?>',
-								<?=(int)$session->can_enroll_cooks(true)?>, 
-								<?=(int)$session->can_enroll_dishwashers(true)?>
-							)"><span class="fa fa-pencil"></span> Edit</a>  
+								<?=$can_cook?>, 
+								<?=$can_dish?>
+							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
 					<?php if ($cur_enrollment->user_id != $enrollment->user_id): ?> |
-					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> Remove</a>
+					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
 					<?php endif; ?>
 				</td>
 				<?php endif; ?>
@@ -52,11 +60,17 @@ $cur_enrollment = $session->current_enrollment();
 </div>
 <div class="row">
 	<?php if (isset($cur_enrollment) && $cur_enrollment->cook && $session->can_change_enrollments()): ?>
-		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel()"><span class="fa fa-user-plus"></span> Enroll new user</button>
+		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
+					<?=$can_cook?>, 
+					<?=$can_dish?>
+				)"><span class="fa fa-user-plus"></span>
+		 <?=__('session.view.btn.add_enroll')?>
+		</button>
 		<?php endif; ?>
 
-	<p class="pull-left">There are <?=$session->count_total_participants()?> participants in total
-		of which <?=$session->count_guests()?> are guests.</p>
+	<p class="pull-left">
+	<?=__('session.view.msg', (array('p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()))) ?>
+	</p>
 </div>
 
 <!-- Modal dialog for enrollment deletion -->
@@ -67,19 +81,19 @@ $cur_enrollment = $session->current_enrollment();
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Delete enrollment</h4>
+					<h4 class="modal-title"><?=__('session.modal.remove_enroll.title')?></h4>
 				</div>
 				<div class="modal-body">
-					<p>Are you sure you want to delete <strong><span id="delete-user-name"></span></strong> from this session?</p>
+					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
 					<!--  insert form elements here -->
 					<div class="form-group">
 						<input id="delete-user-id" type="hidden" class="form-control" name="user_id">
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" class="btn btn-danger" value="Delete user from session" />
+					<input type="submit" class="btn btn-danger" value="<?=__('session.modal.remove_enroll.btn')?>" />
 					<button type="button" class="btn btn-default"
-						data-dismiss="modal">Cancel</button>
+						data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
 			</form>
 		</div>
@@ -94,31 +108,31 @@ $cur_enrollment = $session->current_enrollment();
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Edit enrollment</h4>
+					<h4 class="modal-title"><?=__('session.modal.edit_enroll.title')?></h4>
 				</div>
 				<div class="modal-body">
-					<p>You are editing the enrollment of <strong><span id="edit-user-name"></span></strong></p>
+					<p><?=__('session.modal.edit_enroll.msg')?> <strong><span id="edit-user-name"></span></strong>.</p>
 					<!--  insert form elements here -->
 					<div class="form-group">
 						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
-						<label for="edit-guests">Guests</label>
+						<label for="edit-guests"><?=__('session.field.guest_plural')?></label>
 						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
 					</div>
 					
 					<div class="form-group">
-						<label>Roles</label>
+						<label><?=__('session.role.name_plural')?></label>
 						<div class="checkbox">
-							<label><input id="edit-cook" name="cook" type="checkbox">Cook</label>
+							<label><input id="edit-cook" name="cook" type="checkbox"><?=__('session.role.cook')?></label>
 						</div>
 						<div class="checkbox">
-							<label><input id="edit-dishwasher" name="dishwasher" type="checkbox">Dishwasher</label>
+							<label><input id="edit-dishwasher" name="dishwasher" type="checkbox"><?=__('session.role.dishwasher')?></label>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="Update enrollment" />
+					<input type="submit" class="btn btn-primary" value="<?=__('session.modal.edit_enroll.btn')?>" />
 					<button type="button" class="btn btn-default"
-						data-dismiss="modal">Cancel</button>
+						data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
 			</form>
 		</div>
@@ -133,14 +147,14 @@ $cur_enrollment = $session->current_enrollment();
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Create enrollment</h4>
+					<h4 class="modal-title"><?=__('session.modal.create_enroll.title')?></h4>
 				</div>
 				<div class="modal-body">
-					<p>Enroll a new user into this session.</p>
+					<p><?=__('session.modal.create_enroll.msg')?></p>
 					<!--  insert form elements here -->
 					
 					<div class="form-group">
-						<label for="add-user-id">Select a user</label>
+						<label for="add-user-id"><?=__('user.name')?>:</label>
 						<select class="form-control" id="add-user-id" name="user_id">
 							<?php 
 							$active_users = Model_User::get_by_state();
@@ -151,24 +165,24 @@ $cur_enrollment = $session->current_enrollment();
 					</div>	
 					<br>
 					<div class="form-group">
-						<label for="add-guests">Guests</label>
+						<label for="add-guests"><?=__('session.field.guest_plural')?></label>
 						<input id="add-guests" name="guests" type="number" step="1" max="10" min="0" value="0"/>
 					</div>
 					
 					<div class="form-group">
-						<label>Roles</label>
+						<label><?=__('session.role.name_plural')?></label>
 						<div class="checkbox">
-							<label><input id="add-cook" name="cook" type="checkbox">Cook</label>
+							<label><input id="add-cook" name="cook" type="checkbox"><?=__('session.role.cook')?></label>
 						</div>
 						<div class="checkbox">
-							<label><input id="add-dishwasher" name="dishwasher" type="checkbox">Dishwasher</label>
+							<label><input id="add-dishwasher" name="dishwasher" type="checkbox"><?=__('session.role.dishwasher')?></label>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="Create enrollment" />
+					<input type="submit" class="btn btn-primary" value="<?=__('session.modal.create_enroll.btn')?>" />
 					<button type="button" class="btn btn-default"
-						data-dismiss="modal">Cancel</button>
+						data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
 			</form>
 		</div>
@@ -176,10 +190,12 @@ $cur_enrollment = $session->current_enrollment();
 </div>
 
 
+<!-- //TODO: externalize -->
 <script>
-
-function showAddModel() {
+function showAddModel(canCook, canDish) {
 	$("#add-enrollment-modal").modal('show');
+	$("#add-cook").attr('disabled', canCook === 0);
+	$("#add-dishwasher").attr('disabled', canDish === 0);
 }
 
 function showDeleteModal(userId, userName) {
@@ -199,5 +215,4 @@ function showEditModal(userId, userName, guests, cook, dishwasher, canCook, canD
 	$("#edit-dishwasher").attr('disabled', canDish === 0);
 	
 }
-
 </script>

@@ -9,9 +9,12 @@ class Controller_Enrollments extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function post_create($date=null) {
+		\Lang::load('sessions', 'session');
+		\Lang::load('users', 'user');
+		
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
-				\Utils::handle_irrecoverable_error('Unable to update enrollment of non-existant session.');
+				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
 			$user_id = \Input::post('user_id', null);
@@ -21,9 +24,8 @@ class Controller_Enrollments extends \Controller_Gate {
 			
 			if(!isset($cur_enrollment)) {
 				if (!$session->can_enroll()) {
-					\Utils::handle_recoverable_error('Cannot enroll user outside enrollment boundaries', '/sessions/view/'.$date);
+					\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
 				}
-				
 				$user_id = \Auth::get_user()->id;
 				$user = \Model_User::find($user_id);	
 			} else {
@@ -31,10 +33,16 @@ class Controller_Enrollments extends \Controller_Gate {
 				
 				// user_id was set, but we're in a special situation now
 				if (!$cur_enrollment->cook && $session->can_change_enrollments()) {
-					\Utils::handle_recoverable_error('Cannot enroll user outside enrollment boundaries', '/sessions/view/'.$date);
+					\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
 				} else if (!isset($user)) {
-					\Utils::handle_recoverable_error('No user is associated with the given user id', '/sessions/view/'.$date);
+					\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), '/sessions/view/'.$date);
 				}
+			} 
+			
+			$guests = \Input::post('guests', 0);
+			if ($guests > Model_Session::MAX_GUESTS) {
+				$guests = 20;
+				\Session::set_flash('error', e(__('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS])));	
 			} 
 			
 			// Create from model
@@ -43,20 +51,20 @@ class Controller_Enrollments extends \Controller_Gate {
 				'session_id' => $session->id,
 				'dishwasher' => \Input::post('dishwasher', false) == 'on' ? true : false,
 				'cook' => \Input::post('cook', false) == 'on' ? true : false,
-				'guests' => \Input::post('guests', 0),
+				'guests' => $guests,
 			));
 			
 			// Save
 			try {
 				$enrollment->save();
-				\Session::set_flash('success', ('<strong>'. $user->name . '</strong> has been enrolled.'));
+				\Session::set_flash('success', __('session.alert.success.create_enroll', ['name' => $user->name]));
 			} catch (\Database_Exception $ex) {
-				\Session::set_flash('error', ('Could not enroll <strong>' . $user->name . '</strong>'));	
+				\Session::set_flash('error', __('session.alert.error.create_enroll', ['name' => $user->name]));	
 			}
 			
 			\Response::redirect('/sessions/view/'.$date);
 		}
-		\Utils::handle_irrecoverable_error('Invalid date format or no date parameter.');
+		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}
 	
 	/**
@@ -66,7 +74,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	public function post_update($date=null) {
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
-				\Utils::handle_irrecoverable_error('Unable to update enrollment of non-existant session.');
+				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
 			$user_id = \Input::post('user_id', null);
@@ -76,8 +84,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				// Cook is enrolling another user
 				$enrollment = $session->get_enrollment($user_id);	
 				if (!$enrollment) {
-					\Session::set_flash('error', ('There is no known enrollment for <strong>' . \Model_User::find($user_id)->name . '</strong> to be deleted.'));
-					\Response::redirect('/sessions/view/'.$date);
+					\Utils::handle_recoverable_error(__('session.alert.error.no_enrollment', ['name' => \Model_User::find($user_id)->name]), '/sessions/view/'.$date);
 				}
 			} else {
 				// Enrolling ourselves
@@ -110,17 +117,25 @@ class Controller_Enrollments extends \Controller_Gate {
 					}
 
 					if(!$session->save()) {
-						\Session::set_flash('error', e('An error ocurred while updating the session. Please check your input.'));
-						\Response::redirect('/sessions/view/'.$date);	
+						\Utils::handle_recoverable_error(__('session.alert.error.update_session'), '/sessions/view/'.$date);	
 					}
 			}	
 
 			if(($session->can_enroll() || ($cur_enrollment->cook && $session->can_change_enrollments())) && !$dishwasher_only) {
 				$enrollment->cook = \Input::post('cook', false) == 'on' ? true : false;	
-				$enrollment->guests = \Input::post('guests', 0);
+				
+				
+				$guests = \Input::post('guests', 0);
+				if ($guests > Model_Session::MAX_GUESTS) {
+					$enrollment->guests = 20;
+					\Session::set_flash('error', e(__('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS])));	
+				} else {
+					$enrollment->guests = \Input::post('guests', 0);
+				}
+				
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
 			} else if(!$enrollment->cook) {
-				\Session::set_flash('error', e('Cannot change enrollment of session past its deadline.'));			
+				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);	
 			}
 
 			if($session->can_enroll_dishwashers()) {
@@ -133,13 +148,13 @@ class Controller_Enrollments extends \Controller_Gate {
 			// Save
 			try {
 				$enrollment->save();
-				\Session::set_flash('success', ('Enrollment for <strong>'. $user->name . '</strong> has been updated.'));
+				\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $user->name]));
 			} catch (\Database_Exception $ex) {
-				\Session::set_flash('error', ('Could not update enrollment for <strong>' . $user->name . '</strong>'));	
+				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $user->name]));	
 			}
 			\Response::redirect('/sessions/view/'.$date);
 		}
-		\Utils::handle_irrecoverable_error('Invalid date format or no date parameter.');
+		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}
 	
 	/**
@@ -149,7 +164,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	public function post_delete($date=null) {
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
-				\Utils::handle_irrecoverable_error('Unable to unenroll out of non-existant session.');
+				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
 			$user_id = \Input::post('user_id', null);
@@ -159,15 +174,13 @@ class Controller_Enrollments extends \Controller_Gate {
 				// Cook is unenrolling another user
 				$enrollment = $session->get_enrollment($user_id);	
 				if (!$enrollment) {
-					\Session::set_flash('error', ('There is no known enrollment for <strong>' . \Model_User::find($user_id)->name . '</strong> to be deleted.'));
-					\Response::redirect('/sessions/view/'.$date);
+					\Utils::handle_recoverable_error(__('session.alert.error.no_enrollment', ['name' => \Model_User::find($user_id)->name]), '/sessions/view/'.$date);
 				}
 			} else {
 				// Unenrolling ourselves
 				if(!$session->can_enroll()) {
 					// User should not be able to enroll.
-					\Session::set_flash('error', e('Cannot leave a session past its deadline.'));
-					\Response::redirect('/sessions/view/'.$date);
+					\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
 				}
 				$enrollment = $cur_enrollment;
 			}
@@ -175,15 +188,16 @@ class Controller_Enrollments extends \Controller_Gate {
 			// Remember the name
 			$name = $enrollment->user->name;
 			
-			if($enrollment->delete()) {
-				\Session::set_flash('success', ('<strong>'. $name . '</strong> has been unenrolled.'));
-			} else {
-				\Session::set_flash('error', ('Could not unenroll <strong>' . $name . '</strong>'));	
+			try {
+				$enrollment->delete();
+				\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
+			} catch (\Database_Exception $ex) {
+				\Session::set_flash('error', __('session.alert.error.remove_enroll', ['name' => $name]));	
 			}
 
 			\Response::redirect('/sessions/view/'.$date);
 		}
-		\Utils::handle_irrecoverable_error('Invalid date format or no date parameter.');
+		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}
 }
 
