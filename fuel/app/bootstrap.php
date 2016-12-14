@@ -23,6 +23,7 @@ require COREPATH.'bootstrap.php';
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
 
+// Pre-load all localization files
 \Lang::load('template'); 
 \Lang::load('session', 'session');
 \Lang::load('user', 'user');
