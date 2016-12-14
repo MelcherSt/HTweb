@@ -3,11 +3,7 @@
 <head>
 	
 	<?php 
-	Lang::load('template'); 
-	Lang::load('session', 'session');
-	Lang::load('user', 'user');
-	Lang::load('actions', 'actions');	
-	Lang::load('alert', 'alert');
+
 	?>
 	
 	<meta charset="utf-8">
@@ -47,7 +43,7 @@
 					<?php					
 						if (isset($current_user)) {
 							$menu_items = array(
-								array('sessions', 'My Sessions', 'fa-cutlery'), 
+								array('sessions', Lang::get('session.title'), 'fa-cutlery'), 
 								array('receipts', 'My Receipts', 'fa-money'),
 								array('stats', 'My stats', 'fa-line-chart'),
 								array('wall', 'The wall', 'fa-id-card'),

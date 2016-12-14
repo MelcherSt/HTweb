@@ -26,8 +26,6 @@ class Controller_Sessions extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function action_view($date=null) {
-		\Lang::load('session', 'session');
-
 		$this->template->title = __('session.title');
 		
 		if(isset($date)) {
@@ -56,7 +54,7 @@ class Controller_Sessions extends \Controller_Gate {
 				$this->template->subtitle = date('l j F Y', strtotime($date));
 				$this->template->content = \View::forge('layout/splitview', $data);
 			} else {
-				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
+				\Utils::handle_irrecoverable_error(__('alert.error.no_session', ['date' => $date]));
 			}	
 		} else {
 			$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id);			

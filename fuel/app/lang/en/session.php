@@ -1,10 +1,10 @@
 <?php
 
-return array(
+return [
 	'title' => 'My Sessions',
 	'title_admin' => 'Sessions',
 	'type' => 'session',
-	'role' => array(
+	'role' => [
 		'name' => 'Role',
 		'name_plural' => 'Roles',
 		'dishwasher' => 'Dishwasher',
@@ -13,13 +13,13 @@ return array(
 		'cook_plural' => 'Cooks',
 		'participant' => 'Participant',
 		'participant_plural' => 'Participants',
-		),
-	'day' => array(
+	],
+	'day' => [
 		'yesterday' => 'Yesterday',
 		'today' => 'Today',
 		'tomorrow' => 'Tomorrow'
-		),
-	'field' => array(
+	],
+	'field' => [
 		'date' => 'Date', 
 		'point' => 'Point', 
 		'point_plural' => 'Points',
@@ -28,65 +28,78 @@ return array(
 		'guest_plural' => 'Guests',
 		'deadline' => 'Deadline',
 		'notes' => 'Notes',
-		),
-	'alert' => array(
-		'deadline' => array(
+	],
+	'alert' => [
+		'deadline' => [
 			'changed' => 'The deadline has been changed! The new deadline is today at <strong>:time</strong>.',
 			'passed' => 'The deadline is past due.',
 			'no_join' => 'You can no longer join this session.',
 			'no_leave' => 'You can no longer leave this session.',
 			'cook_edit' => 'For a limited amout of time you will be able to change the enrollments users in this session and enter the cost.',
-		),
+		],
 		'dishes' => 'Did you do the dishes? Be sure to enroll as dishwasher before the end of the day!',
-		'success' => array(
+		'success' => [
 			'create_enroll' => '<strong>:name</strong> has been enrolled.',
 			'update_enroll' => 'Enrollment for </strong>:name</strong> has been updated.',
 			'remove_enroll' => 'Enrollment for <strong>:name</strong> has been removed.'
-		),
-		'error' => array(
+		],
+		'error' => [
 			'create_enroll' => 'Cannot enroll <strong>:name</strong>.',
-			'deadline_passed' => 'Cannot (un)enroll after deadline.',
-			'no_session' => 'Cannot find session with date <strong>:date</strong>.',
-			'no_enrollment' => 'There is no known enrollment for <strong>:name</strong>',
-			'update_session' => 'Cannot update session',
 			'update_enroll' => 'Cannot update enrollment for <strong>:name</strong>.',
 			'remove_enroll' => 'Cannot remove enrollment for <strong>:name</strong>.',
+			'no_session' => 'Cannot find session with date <strong>:date</strong>.',
+			'no_enrollment' => 'There is no known enrollment for <strong>:name</strong>',
+			'deadline_passed' => 'Cannot (un)enroll after deadline.',
+			'update_session' => 'Cannot update session',
 			'too_many_guests' => 'Cannot bring more than :max_guests guests.',
-		)
-	),
-	'modal' => array(
-		'create_enroll' => array(
+		],
+	],
+	'modal' => [
+		'create_enroll' => [
 			'title' => 'Create enrollment', 
 			'msg' => 'Enroll a new user into this session.',
 			'btn' => 'Create enrollment',
-		),
-		'remove_enroll' => array(
+		],
+		'remove_enroll' => [
 			'title' => 'Remove enrollment' ,
 			'msg' => 'Are you sure you want to unenroll',
 			'btn' => 'Remove enrollment',
-		),
-		'edit_enroll' => array(
+		],
+		'edit_enroll' => [
 			'title' => 'Edit enrollment',
 			'msg' => 'You are editing the enrollment of',
 			'btn' => 'Update enrollment',
-		),
-	),
-	'index' => array(
+		],
+	],
+	'index' => [
 		'msg' => 'This list only shows unsettled sessions. For a list of settled session you participated in, please see',
-	),
-	'view' => array(
+	],
+	'view' => [
 		'msg' => 'There are :p_count participants of which :g_count are guests.',
-		'label' => array(
+		'label' => [
 			'cook' => 'I feel like cooking',
 			'guests'=> 'I\'m bringing guests',
-		),
-		'btn'=> array(
-			'enroll' => 'Join session',
+		],
+		'btn'=> ['enroll' => 'Join session',
 			'update' => 'Update session',
 			'unenroll' => 'Leave session',
 			'add_enroll' => 'Enroll extra user',
 			'enroll_dish' => 'I did the dishes',
 			'unenroll_dish' => 'Actually, I did not do the dishes',
-			)
-	)
-	);
+		],
+	],
+	'widget' => ['msg' => [
+			'enrolled_single' => 'And that\'s you!',
+			'enrolled_many' => 'And you\'re one of them!',
+			'no_cook' => 'Uh, there\'s no cook yet.',
+			'deadline_passed' => 'Today\'s deadline is past due.'
+		],
+		'link' => [
+			'enroll_first' => 'Be the first!',
+			'enroll_many' => 'Why don\'t you join them?',
+			'deadline_passed' => 'Enroll tomorrow?',
+			'no_cook' => 'Save the day, be a cook!',
+			'today' => 'View today\'s session',
+		]
+	],
+];

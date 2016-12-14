@@ -57,7 +57,7 @@
 </div>
 
 <div class="row">
-	<p><?=__('session.index.msg')?><a href="/receipts">My Receipts</a>.</p>
+	<p><?=__('session.index.msg')?> <a href="/receipts">My Receipts</a>.</p>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
