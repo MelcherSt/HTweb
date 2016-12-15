@@ -19,6 +19,15 @@ class Controller_Users extends Controller_Gate
 		}		
 		Response::redirect('/files/users/avatar/'. $user->avatar);
 	}
+	
+	public function action_lang($lang) {
+		if (in_array($lang, array('en', 'nl'))) {
+			$user = \Model_User::find(\Auth::get_user_id()[1]);
+			$user->lang = $lang;
+			$user->save();
+			\Response::redirect_back();
+		}
+	}
 
 	public function action_view($id = null)	{	
 		$user = \Model_User::find($id);
@@ -44,6 +53,7 @@ class Controller_Users extends Controller_Gate
 			$user->active = Input::post('active', 1);
 			$user->email = Input::post('email', '');
 			$user->iban = Input::post('iban', null);
+			$user->lang = Input::post('lang', null);
 
 			$cur_pass = Input::post('old_password');
 			$pass = Input::post('password');

@@ -1,6 +1,6 @@
 <div class="row">
 	<?php if($user->id == Auth::get_user_id()[1]) { ?>
-	<a href="/users/edit" class="btn btn-primary pull-right"> <span class="fa fa-pencil"></span> Edit account</a>
+	<a href="/users/edit" class="btn btn-primary pull-right"> <span class="fa fa-pencil"></span> <?=__('user.view.btn')?></a>
 	<?php }?>
 </div>
 
@@ -8,25 +8,25 @@
 	<div class="col-md-6">
 
 		<p>
-			<strong>Username:</strong>
+			<strong><?=__('user.field.username')?>:</strong>
 			<?php echo $user->username; ?></p>
 		<p>
-			<strong>Full name:</strong>
+			<strong><?=__('user.field.name')?>:</strong>
 			<?php echo $user->get_fullname(); ?></p>
 		<p>
-			<strong>IBAN:</strong>
+			<strong><?=__('user.field.iban')?>:</strong>
 			<?php echo $user->iban; ?></p>
 		<p>
-			<strong>Phone:</strong>
+			<strong><?=__('user.field.phone')?>:</strong>
 			<?php echo $user->phone; ?></p>
 		<p>
-			<strong>Start year:</strong>
-			<?php echo $user->start_year == 0 ? 'n/a' : $user->start_year; ?></p>
+			<strong><?=__('user.field.start_year')?>:</strong>
+			<?php echo $user->start_year == 0 ? __('user.view.na') : $user->start_year; ?></p>
 		<p>
-			<strong>End year:</strong>
-			<?php echo $user->end_year == 0 ? 'n/a' : $user->end_year; ?></p>
+			<strong><?=__('user.field.end_year')?>:</strong>
+			<?php echo $user->end_year == 0 ? __('user.view.na') : $user->end_year; ?></p>
 		<p>
-			<strong>Email:</strong>
+			<strong><?=__('user.field.email')?>:</strong>
 			<?php echo $user->email; ?></p>
 
 	</div>

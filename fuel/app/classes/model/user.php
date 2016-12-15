@@ -87,6 +87,7 @@ class Model_User extends \Auth\Model\Auth_User {
 		$val->add_field('phone', 'Phone', 'max_length[20]');
 		$val->add_field('email', 'Email', 'required|valid_email|max_length[255]');
 		$val->add_field('iban', 'IBAN', 'max_length[30]|valid_iban');
+		$val->add_field('lang', 'Language', 'max_length[2]|required');
 		return $val;
 	}
 	
@@ -110,5 +111,4 @@ class Model_User extends \Auth\Model\Auth_User {
 			'sort_by' => array('surname', 'desc')
 		));
 	}
-
 }
