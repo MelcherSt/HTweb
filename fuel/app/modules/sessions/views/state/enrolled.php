@@ -1,6 +1,5 @@
 <?php
 
-$enrollment = $session->current_enrollment();
 $deadline = date('H:i', strtotime($session->deadline));
 
 if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline)) && $session->can_enroll()) { ?>
@@ -28,7 +27,7 @@ if($session->can_enroll()) { ?>
 
 	<div class="form-group pull-right">
 		<label for="deadline"><?=__('session.field.deadline')?> </label>
-		<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="10" value="<?=$deadline?>"required/>
+		<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="8" value="<?=$deadline?>"required/>
 	</div>	
 	<?php endif; ?>
 

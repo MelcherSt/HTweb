@@ -17,4 +17,15 @@ class Controller_DevTool extends \Controller {
 		
 		return \Response::forge($branchName);
 	}
+	
+	function action_hash() { 
+		try {
+			$gitFile = file('../.git/ORIG_HEAD', FILE_USE_INCLUDE_PATH);
+			$commitHash = $gitFile[0];
+		} catch (Exception $ex) {
+			$commitHash = 'unknown commit hash';
+		}
+		
+		return \Response::forge($commitHash);
+	}
 }

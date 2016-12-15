@@ -58,12 +58,12 @@ class Model_Enrollment_Session extends \Orm\Model {
 	 * Retrieve a list enrollments for all settleable sessions for current user
 	 * @return \Sessions\Model_Enrollment[]
 	 */
-	public static function get_ready_for_settlement() {
+	public static function get_ready_for_settlement($user_id) {
 		return Model_Enrollment_Session::query()
 			->related('session')
 			->where('session.settled', false)
 			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<', date('Y-m-d'))
-			->where('user_id', \Auth::get_user_id()[1])
+			->where('user_id', $user_id)
 			->get();
 	}
 	

@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-	
-	<?php 
-
-	?>
-	
+<head>	
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title><?=$title?> | <?=__('site_title') . ' ' . __('site_sub')?></title>
@@ -43,11 +38,11 @@
 					<?php					
 						if (isset($current_user)) {
 							$menu_items = array(
-								array('sessions', Lang::get('session.title'), 'fa-cutlery'), 
+								array('sessions', __('session.title'), 'fa-cutlery'), 
 								array('receipts', 'My Receipts', 'fa-money'),
-								array('stats', 'My stats', 'fa-line-chart'),
+								array('stats', __('stats.title'), 'fa-line-chart'),
 								array('wall', 'The wall', 'fa-id-card'),
-								array('content/posts', 'Posts', 'fa-file-text'),
+								array('content/posts', __('content.post.title'), 'fa-file-text'),
 							);
 						} else {
 							$menu_items = array();

@@ -4,6 +4,7 @@ namespace Sessions;
 class Model_Session extends \Orm\Model
 {
 	const DEADLINE_TIME = '16:00';
+	const DINER_TIME = '18:00';
 	const MAX_COOKS = 1;
 	const MAX_DISHWASHER = 2;
 	const MAX_GUESTS = 20;
@@ -21,11 +22,19 @@ class Model_Session extends \Orm\Model
 		'date' => array(
 			'validation' => array('required', 'valid_date'),
 		),
-		'notes',
-		'cost',
-		'paid_by',
+		'notes' => array(
+			'default'     => ''
+		), 
+		'cost' => array(
+			'default'     => 0.0
+		), 
+		'paid_by' => array(
+			'default'     => 0
+		), 
 		'deadline',
-		'settled',
+		'settled' => array (
+			'default' => false,
+		),
 		'created_at',
 		'updated_at',
 	);
@@ -90,6 +99,20 @@ class Model_Session extends \Orm\Model
 		));
 	}
 	
+	public static function get_next_recommended_cook() {
+		$users = \Model_User::get_by_state(true);
+		$cur_recommendation = null;
+		foreach($users as $user) {
+			$points = $user->points;
+			
+			$enrollments = \Sessions\Model_Enrollment_Session::get_ready_for_settlement($user->id);
+			foreach($enrollments as $enrollment) {
+				$points += $enrollment->get_point_prediction();
+			}
+		}
+		
+	}
+	
 	/* Below this line you will find instance methods */
 		
 	/**
@@ -119,6 +142,8 @@ class Model_Session extends \Orm\Model
 
 		return isset($enrollment);
 	}
+	
+	
 	
 	/**
 	 * Retrieve the enrollment (if any) for the given user
@@ -150,6 +175,21 @@ class Model_Session extends \Orm\Model
 		$expiry_time = strtotime(date('Y-m-d H:i:s', strtotime($this->deadline)));	
 		// Deadline should be later than now
 		if ($expiry_time > $now_time) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Determine if current time is after the start of diner
+	 * @return boolean
+	 */
+	public function is_past_diner() {
+		$now_time = strtotime(date('Y-m-d H:i:s'));
+		$start_time = strtotime(date('Y-m-d H:i:s', strtotime(Model_Session::DINER_TIME)));	
+		// Now should be after diner start
+		if ($now_time > $start_time) {
 			return true;
 		} else {
 			return false;
@@ -208,7 +248,7 @@ class Model_Session extends \Orm\Model
 		}
 		
 		// Deadline should be past due + diswasher count should be less than max.
-		if(!$this->can_enroll() && ($this->count_dishwashers() < static::MAX_DISHWASHER)) {
+		if(!$this->can_enroll() && $this->is_past_diner() && ($this->count_dishwashers() < static::MAX_DISHWASHER)) {
 			// Dishwashers have untill the end of the day to enroll.
 			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DISHWASHER_ENROLLMENT_GRACE);
 		} else {
