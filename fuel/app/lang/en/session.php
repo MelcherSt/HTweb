@@ -76,7 +76,7 @@ return [
 		'msg' => 'This list only shows unsettled sessions. For a list of settled session you participated in, please see',
 	],
 	'view' => [
-		'msg' => 'There are :p_count participants of which :g_count are guests.',
+		'msg' => 'There are :p_count participants of whom :g_count are guests.',
 		'label' => [
 			'cook' => 'I feel like cooking',
 			'guests'=> 'I\'m bringing guests',
@@ -91,7 +91,8 @@ return [
 			'unenroll_dish' => 'Actually, I did not do the dishes',
 		],
 	],
-	'widget' => ['msg' => [
+	'widget' => [
+		'msg' => [
 			'enrolled_single' => 'And that\'s you!',
 			'enrolled_many' => 'And you\'re one of them!',
 			'no_cook' => 'Uh, there\'s no cook yet.',

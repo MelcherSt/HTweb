@@ -29,6 +29,7 @@ class Controller_Base extends Controller_Template {
 		\Config::set('language', $lang);
 		\Config::set('language_fallback', 'en');
 		
+		
 		// Pre-load all localization files
 		\Lang::load('template'); 
 		\Lang::load('session', 'session');
@@ -37,8 +38,7 @@ class Controller_Base extends Controller_Template {
 		\Lang::load('alert', 'alert');
 		\Lang::load('content', 'content');
 		\Lang::load('dashboard', 'dashboard');
-		\Lang::load('stats', 'stats'); 
-		
+		\Lang::load('stats', 'stats'); 	
 
 		// Set a global variable so views can use it
 		View::set_global('current_user', $this->current_user);

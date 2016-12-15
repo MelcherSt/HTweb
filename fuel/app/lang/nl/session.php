@@ -37,7 +37,7 @@ return [
 			'no_leave' => 'Je kunt je niet langer uitschrijven.',
 			'cook_edit' => 'Voor een beperkte period kan je de inschrijvingen en kosten veranderen.',
 		],
-		'dishes' => 'Heb jij afgewassen? Zorge ervoor dat je je voor het einde van de dag inschrijft!',
+		'dishes' => 'Heb jij afgewassen? Zorg ervoor dat je je voor het einde van de dag inschrijft!',
 		'success' => [
 			'create_enroll' => '<strong>:name</strong> is ingeschreven.',
 			'update_enroll' => 'Inschrijving voor </strong>:name</strong> is bijgewerkt.',
@@ -76,7 +76,7 @@ return [
 		'msg' => 'Deze lijst laat onverrekende sessies zijn. Voor een lijst met verrekende sessie, kijk op de pagina',
 	],
 	'view' => [
-		'msg' => 'Er zijn :p_count deelnemers waarvan :g_count gasten zijn.',
+		'msg' => 'Er zijn :p_count deelnemers waaronder :g_count gasten.',
 		'label' => [
 			'cook' => 'Ik heb zin om te koken',
 			'guests'=> 'Ik breng gasten',
