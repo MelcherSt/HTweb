@@ -57,31 +57,29 @@ if(!$enrollment->cook) { ?>
 // Every enrolled user can change enrollment before deadline
 if($session->can_enroll()) { ?>
 <div class="row">
-	<div class="col-md-12">
-		<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
-			<div class="form-group">
-				<label for="guests"><?=__('session.view.label.guests')?> </label>
-				<input name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="<?=$enrollment->guests?>"/>
+	<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
+		<div class="form-group">
+			<label for="guests"><?=__('session.view.label.guests')?> </label>
+			<input name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="<?=$enrollment->guests?>"/>
 
-				<div class="checkbox">
-					<label><input name="later" type="checkbox" <?=$enrollment->later ? 'checked' : ''?> > <?=__('session.view.label.later')?></label>
-				</div>
-				
-				
-				<?php if ($session->can_enroll_cooks() || $enrollment->cook): ?>
-				<div class="checkbox">
-					<label><input name="cook" type="checkbox" <?=$enrollment->cook ? 'checked' : ''?> > <?=__('session.view.label.cook')?></label>
-				</div>
-				<?php endif; ?>
+			<div class="checkbox">
+				<label><input name="later" type="checkbox" <?=$enrollment->later ? 'checked' : ''?> > <?=__('session.view.label.later')?></label>
 			</div>
 
-			<button class="btn btn-primary pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
-		</form> 
-	
-		<form action="/sessions/enrollments/delete/<?=$session->date?>" method="post" >
-			<button class="btn btn-danger pull-right" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
-		</form> 
-	</div>
+
+			<?php if ($session->can_enroll_cooks() || $enrollment->cook): ?>
+			<div class="checkbox">
+				<label><input name="cook" type="checkbox" <?=$enrollment->cook ? 'checked' : ''?> > <?=__('session.view.label.cook')?></label>
+			</div>
+			<?php endif; ?>
+		</div>
+
+		<button class="btn btn-primary pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
+	</form> 
+
+	<form action="/sessions/enrollments/delete/<?=$session->date?>" method="post" >
+		<button class="btn btn-danger pull-right" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
+	</form> 
 </div>
 
 <?php } 

@@ -49,7 +49,6 @@ class Controller_Gate extends Controller_Base
 						if (($id = Auth::get_user_id()) !== false) {
 							// Find user
 							$current_user = \Model_User::find($id[1]);
-							Session::set_flash('success', e('Welcome, '.$current_user->name . '!'));
 											
 							// Does the user want to be remembered?
 							if(Input::post('rememberme', false) == 'on' ? true : false) {

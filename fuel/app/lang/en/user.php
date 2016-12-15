@@ -12,8 +12,7 @@ return array(
 		'end_year' => 'End year',
 		'email' => 'Email',
 		'img' => 'Avatar',
-		'lang' => 'Language',
-		
+		'lang' => 'Language',	
 	),
 	'language' => [
 		'en' => 'English',
@@ -21,7 +20,7 @@ return array(
 	],	
 	'alert' => array(
 		'success' => [
-			'update' => 'Settings have been updated',
+			'update' => 'Settings have been saved',
 		],
 		'error' => array(
 			'no_id' => 'Cannot not find user with id <strong>:id</strong>.',
@@ -35,7 +34,7 @@ return array(
 		'na' => 'N/a',
 	],
 	'edit' => [
-		'title' => 'Edit user',
+		'title' => 'Edit settings',
 		'label' => 'Change password',
 		'placeholder' => [
 			'current_pass' => 'Current password',

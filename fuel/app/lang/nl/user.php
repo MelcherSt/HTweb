@@ -12,8 +12,7 @@ return array(
 		'end_year' => 'Eind jaar',
 		'email' => 'Email',
 		'img' => 'Avatar',
-		'lang' => 'Taal',
-		
+		'lang' => 'Taal',	
 	),
 	'language' => [
 		'en' => 'Engels',
@@ -32,9 +31,10 @@ return array(
 	),
 	'view' => [
 		'btn' => 'Instellingen aanpassen',
-		'na' => 'N.v.t',
+		'na' => 'N.v.t.',
 	],
 	'edit' => [
+		'title' => 'Instellingen aanpassen',
 		'label' => 'Wachtwoord veranderen',
 		'placeholder' => [
 			'current_pass' => 'Huidig wachtwoord',
