@@ -23,16 +23,6 @@ require COREPATH.'bootstrap.php';
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
 
-// Pre-load all localization files
-\Lang::load('template'); 
-\Lang::load('session', 'session');
-\Lang::load('user', 'user');
-\Lang::load('actions', 'actions');	
-\Lang::load('alert', 'alert');
-\Lang::load('content', 'content');
-\Lang::load('dashboard', 'dashboard');
-\Lang::load('stats', 'stats'); 
-
 // Execute bootstrap for each auto loaded module.
 foreach(Module::loaded() as $module => $path) {
 	if(File::exists($path. "bootstrap.php")){

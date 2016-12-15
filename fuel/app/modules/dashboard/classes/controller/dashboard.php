@@ -9,7 +9,9 @@ class Controller_Dashboard extends \Controller_Gate {
 		parent::before();
 	}
 	
-	function action_index() {		
+	function action_index() {	
+		
+		
 		if($this->public_request) {
 			$data['featured_post'] = \Content\Model_Post::get_first_public_featured();
 			$this->template->title = __('dashboard.title');

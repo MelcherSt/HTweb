@@ -31,7 +31,6 @@ class Controller_Admin extends \Controller_Admin {
 		$receipt->date = date('Y-m-d');
 		$receipt->save();
 
-		$session_ids = \Input::post('sessions', array());
 		$this->handle_sessions($session_ids, $receipt);
 		
 		\Response::redirect('/receipts/admin');
@@ -49,7 +48,7 @@ class Controller_Admin extends \Controller_Admin {
 			foreach($user_receipts as $user_receipt) {
 				// Restore the points
 				$user = $user_receipt->user;
-				$user->points += -1 * $user_receipt->points;
+				$user->points -= $user_receipt->points;
 				$user->save();
 			}
 			
@@ -78,7 +77,7 @@ class Controller_Admin extends \Controller_Admin {
 			$session = \Sessions\Model_Session::find($session_id);
 		
 			// If there is no session, skip
-			if (!$session || $session->settled) {
+			if (empty($session) || $session->settled) {
 				continue;
 			} 
 			

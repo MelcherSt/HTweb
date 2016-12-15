@@ -25,12 +25,17 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 			foreach($enrollments as $enrollment): ?>
 			<tr>
 				<td><?=$enrollment->user->get_fullname()?> 
-				<?php if ($enrollment->cook): ?>
+				<?php 
+				if($enrollment->later) : ?>
+					*
+				<?php endif;
+				if ($enrollment->cook): ?>
 					<span class="fa fa-cutlery"></span> 
-				<?php endif; ?>
-				<?php if ($enrollment->dishwasher): ?>
+				<?php endif; 
+				if ($enrollment->dishwasher): ?>
 					<span class="fa fa-shower"></span> 
 				<?php endif; ?>
+					
 				</td>
 				<td><?=$enrollment->get_point_prediction()?>  </td>
 				<td><?=$enrollment->guests?></td>

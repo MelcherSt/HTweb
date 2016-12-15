@@ -13,7 +13,7 @@ class Controller_Gate extends Controller_Base
 		$this->template->content = View::forge('gate/gate');
 	}
 	
-	public function before() {
+	public function before() {		
 		parent::before();
 
 		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout'))) {
