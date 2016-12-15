@@ -116,7 +116,7 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 					<div class="form-group">
 						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
 						<label for="edit-guests"><?=__('session.field.guest_plural')?></label>
-						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
+						<input id="edit-guests" name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value=""/>
 					</div>
 					
 					<div class="form-group">

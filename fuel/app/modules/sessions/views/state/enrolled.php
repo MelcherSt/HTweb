@@ -1,62 +1,63 @@
 <?php
 
-$deadline = date('H:i', strtotime($session->deadline));
+$deadline = date('H:i', strtotime($session->deadline)); ?>
 
-if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline)) && $session->can_enroll()) { ?>
-	<div class="alert alert-info">
-		<strong><?=__('alert.call.attention')?></strong> <?=__('session.alert.deadline.changed', array('time' => $deadline))?>
-	</div>
-<?php } 
 
-if(!$session->can_enroll()) {
-
-	if($enrollment->cook) { ?>
+	<?php if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline)) && $session->can_enroll()) { ?>
 		<div class="alert alert-info">
-			<strong><?=__('alert.call.info')?></strong> <?=__('session.alert.deadline.passed')?> <?=__('session.alert.deadline.cook_edit')?>
+			<strong><?=__('alert.call.attention')?></strong> <?=__('session.alert.deadline.changed', array('time' => $deadline))?>
 		</div>
-		<?php } else { ?>
-		<div class="alert alert-info">
-			<strong><?=__('alert.call.info')?></strong> <?=__('session.alert.deadline.passed')?> <?=__('session.alert.deadline.no_leave')?> 
+	<?php } 
+
+	if(!$session->can_enroll()) {
+
+		if($enrollment->cook) { ?>
+			<div class="alert alert-info">
+				<strong><?=__('alert.call.info')?></strong> <?=__('session.alert.deadline.passed')?> <?=__('session.alert.deadline.cook_edit')?>
+			</div>
+			<?php } else { ?>
+			<div class="alert alert-info">
+				<strong><?=__('alert.call.info')?></strong> <?=__('session.alert.deadline.passed')?> <?=__('session.alert.deadline.no_leave')?> 
+			</div>
+		<?php }
+	}
+
+	if(!$enrollment->cook) { ?>
+		<div class="well">
+		<?=$session->notes?>
 		</div>
-	<?php }
-}
+	<?php } 
 
-if(!$enrollment->cook) { ?>
-	<div class="well">
-	<?=$session->notes?>
-	</div>
-<?php } 
-
-// Cook can update session details
- if($enrollment->cook) { ?>
-<form action="/sessions/update/<?=$session->date?>" method="post" >
-	<div class="form-group">
-		<label for="comment"><?=__('session.field.notes')?></label>
-		<textarea name="notes" class="form-control" rows="3"><?=$session->notes?></textarea>
-	</div>
-
-	<?php if($session->can_change_deadline()): ?>
-		<div class="form-group pull-right">
-			<label for="deadline"><?=__('session.field.deadline')?></label>
-			<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="10" value="<?=$deadline?>"required/>
+	// Cook can update session details
+	 if($enrollment->cook) { ?>
+	<form action="/sessions/update/<?=$session->date?>" method="post" >
+		<div class="form-group">
+			<label for="comment"><?=__('session.field.notes')?></label>
+			<textarea name="notes" class="form-control" rows="3"><?=$session->notes?></textarea>
 		</div>
-		<?php endif;
-		
-		if ($session->can_change_cost()): ?>
-		<div class="form-group pull-right">
-			<label for="deadline"><?=__('session.field.cost')?> (in €)</label>
-			<input name="cost" type="number" step="0.1" max="100" min="0" value="<?=$session->cost?>"required/>
-		</div>
-		<?php endif; ?>	
-	<button class="btn btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
-</form>
-<br><br>
 
+		<?php if($session->can_change_deadline()): ?>
+			<div class="form-group pull-right">
+				<label for="deadline"><?=__('session.field.deadline')?></label>
+				<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="10" value="<?=$deadline?>"required/>
+			</div>
+			<?php endif;
+
+			if ($session->can_change_cost()): ?>
+			<div class="form-group pull-right">
+				<label for="deadline"><?=__('session.field.cost')?> (in €)</label>
+				<input name="cost" type="number" step="0.1" max="100" min="0" value="<?=$session->cost?>"required/>
+			</div>
+			<?php endif; ?>	
+		<button class="btn btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
+	</form>
+
+<br>
 <?php }
 
 // Every enrolled user can change enrollment before deadline
 if($session->can_enroll()) { ?>
-<div class="row">
+
 	<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
 		<div class="form-group">
 			<label for="guests"><?=__('session.view.label.guests')?> </label>
@@ -80,11 +81,12 @@ if($session->can_enroll()) { ?>
 	<form action="/sessions/enrollments/delete/<?=$session->date?>" method="post" >
 		<button class="btn btn-danger pull-right" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
 	</form> 
-</div>
+
 
 <?php } 
 
 if ($session->can_enroll_dishwashers() || ($session->can_change_enrollments() && $enrollment->dishwasher)) { ?>
+
 	<div class="alert alert-warning">
 		<strong><?=__('alert.call.alert')?></strong> <?=__('session.alert.dishes')?>
 	</div>

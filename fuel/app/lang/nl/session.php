@@ -52,7 +52,7 @@ return [
 			'no_enrollment' => 'Er is geen inschrijving bekend voor <strong>:name</strong>',
 			'deadline_passed' => 'Kan niet in- of uitschrijven na de deadline.',
 			'update_session' => 'Kan sessie niet bijwerken.',
-			'too_many_guests' => 'Je kan niet meer dan :max_guests gasten meebrengen.',
+			'guests' => 'Je kan niet minder dan 0 of meer dan :max_guests gasten meebrengen.',
 		],
 	],
 	'modal' => [
@@ -76,7 +76,7 @@ return [
 		'msg' => 'Deze lijst laat onverrekende sessies zijn. Voor een lijst met verrekende sessie, kijk op de pagina',
 	],
 	'view' => [
-		'msg' => 'Er zijn :p_count deelnemers waaronder :g_count gasten.',
+		'msg' => 'Er zijn :p_count deelnemers waaronder :g_count gast(en).',
 		'label' => [
 			'cook' => 'Ik heb zin om te koken',
 			'guests'=> 'Ik breng gasten',

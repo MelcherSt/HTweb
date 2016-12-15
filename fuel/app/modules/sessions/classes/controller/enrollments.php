@@ -9,7 +9,6 @@ class Controller_Enrollments extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function post_create($date=null) {
-		
 		if(isset($date) && \Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
@@ -21,7 +20,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$cur_enrollment = $session->current_enrollment();
 			$cook = false;
 			
-			if(!isset($cur_enrollment)) {
+			if(empty($cur_enrollment)) {
 				if (!$session->can_enroll()) {
 					\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
 				}
@@ -39,9 +38,9 @@ class Controller_Enrollments extends \Controller_Gate {
 			} 
 			
 			$guests = \Input::post('guests', 0);
-			if ($guests > Model_Session::MAX_GUESTS) {
-				$guests = 20;
-				\Session::set_flash('error', __('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS]));	
+			if ($guests > Model_Session::MAX_GUESTS || $guests < 0) {
+				$guests = 0;
+				\Session::set_flash('error', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));	
 			} 
 			
 			$cook = \Input::post('cook') == 'on' ? true : false;
@@ -91,44 +90,41 @@ class Controller_Enrollments extends \Controller_Gate {
 			$cur_enrollment = $session->current_enrollment();
 			
 			if(isset($user_id) && $cur_enrollment->cook) {	// Cook is enrolling another user
-				$enrollment = $session->get_enrollment($user_id);	
-				if (!$enrollment) {
+				if (empty($enrollment = $session->get_enrollment($user_id))) {
 					\Utils::handle_recoverable_error(__('session.alert.error.no_enrollment', ['name' => \Model_User::find($user_id)->name]), '/sessions/view/'.$date);
 				}
-			} else { // Enrolling ourselves
+			} else { // Updating current user's enrollment
 				$enrollment = $cur_enrollment;
 			}
 			
-			// Method is diswasher when using dishwasher button.
-			// This case needs to be handled differently than normal update.
+			// Dishwasher is alwasy updated alone
 			$dishwasher_only = \Input::post('method') == 'dishwasher';
-
+			if(($session->can_enroll_dishwashers() || $enrollment->dishwasher) && $dishwasher_only) {
+				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;	
+			} 
+			
+			// All other enrollment details. Skip over this block if the request was dishwasher_only
 			if(($session->can_enroll() || ($cur_enrollment->cook && $session->can_change_enrollments())) && !$dishwasher_only) {
 				$enrollment->cook = \Input::post('cook', false) == 'on' ? true : false;	
 				
 				$guests = \Input::post('guests', 0);
-				if ($guests > Model_Session::MAX_GUESTS) {
-					$guests = 20;
-					\Session::set_flash('error', __('session.alert.error.too_many_guest', ['max_guests' => Model_Session::MAX_GUESTS]));	
+				if ($guests > Model_Session::MAX_GUESTS || $guests < 0) {
+					$guests = 0;
+					\Session::set_flash('error', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));	
 				} 
 				$enrollment->guests = $guests;		
 				$enrollment->later = \Input::post('later') == 'on' ? true : false;		
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
-			} else if(!$enrollment->cook) {
+			} else if (!$dishwasher_only) {
+				// User may not edit enrollment
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);	
 			}
 
-			if($session->can_enroll_dishwashers()) {
-				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;			
-				\Session::delete_flash('error'); // Remove any errors
-			}			
-			$user = $enrollment->user;
-			
 			try {
 				$enrollment->save();
-				\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $user->name]));
+				\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $enrollment->user->name]));
 			} catch (\Database_Exception $ex) {
-				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $user->name]));	
+				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $enrollment->user->name]));	
 			}
 			\Response::redirect('/sessions/view/'.$date);
 		}

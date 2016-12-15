@@ -52,7 +52,7 @@ return [
 			'no_enrollment' => 'There is no known enrollment for <strong>:name</strong>',
 			'deadline_passed' => 'Cannot (un)enroll after deadline.',
 			'update_session' => 'Cannot update session',
-			'too_many_guests' => 'Cannot bring more than :max_guests guests.',
+			'guests' => 'Cannot bring less than 0 or more than :max_guests guests.',
 		],
 	],
 	'modal' => [
