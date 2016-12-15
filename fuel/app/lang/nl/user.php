@@ -26,7 +26,8 @@ return array(
 			'no_id' => 'Kan gebruiker vinden met id <strong>:id</strong>.',
 			'cur_pass' => 'Verkeerd wachtwoord.',
 			'update' => 'Kan gebruiker niet bijwerken',
-			'invalid_iban' => 'Het veld :label bevat geen geldig International Bank Acoount Number (IBAN)'
+			'invalid_iban' => 'De ingevulde <strong>:label</strong> is niet een correct International Bank Acoount Number (IBAN)',
+			'invalid_lang' => 'De geselecteerde <strong>:label</strong> is niet geldig.',
 		),
 	),
 	'view' => [

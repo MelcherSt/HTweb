@@ -4,6 +4,20 @@
  */
 class CustomRules {
 	
+	const SYSTEM_LANGS = ['nl', 'en'];
+	
+	/**
+	 * Check if a given two char language identification is a valid system language
+	 * @param type $lang
+	 * @return type
+	 */
+	public static function _validation_valid_lang($lang=null) {	
+		if(!($pass = in_array($lang, $this::SYSTEM_LANGS))) {
+			Validation::active()->set_message('valid_lang', __('user.alert.error.invalid_lang', ['label' => ':label']));
+		}
+		return $pass;
+	}
+	
 	/**
 	 * Check if a given string is a valid IBAN. If empty string, pass. 
 	 * @param type $iban
@@ -42,9 +56,8 @@ class CustomRules {
 		$pass = (int)$result == 1;
 		
 		if(!$pass) {
-			Validation::active()->set_message('valid_iban', __('user.alert.error.invalid_iban', ['label', ':label']));
+			Validation::active()->set_message('valid_iban', __('user.alert.error.invalid_iban', ['label' => ':label']));
 		}
-		
 		return $pass;
 	}
 	

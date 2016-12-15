@@ -28,20 +28,4 @@ class Controller_DevTool extends \Controller {
 		
 		return \Response::forge($commitHash);
 	}
-	
-	function action_lang() {
-		\Config::set('language', 'nl');
-		
-		// Pre-load all localization files
-		\Lang::load('template'); 
-		\Lang::load('session', 'session');
-		\Lang::load('user', 'user');
-		\Lang::load('actions', 'actions');	
-		\Lang::load('alert', 'alert');
-		\Lang::load('content', 'content');
-		\Lang::load('dashboard', 'dashboard');
-		\Lang::load('stats', 'stats'); 
-		
-		\Response::redirect('/');
-	}
 }
