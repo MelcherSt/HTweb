@@ -20,15 +20,22 @@ return array(
 		'nl' => 'Dutch',
 	],	
 	'alert' => array(
+		'success' => [
+			'update' => 'Settings have been updated',
+		],
 		'error' => array(
-			'no_id' => 'Could not find user with id <strong>:id</strong>.',
+			'no_id' => 'Cannot not find user with id <strong>:id</strong>.',
+			'cur_pass' => 'Incorrect password.',
+			'update' => 'Cannot update user settings',
+			'invalid_iban' => 'The field :label does not contain a valid International Bank Acoount Number (IBAN)'
 		),
 	),
 	'view' => [
-		'btn' => 'Edit account',
+		'btn' => 'Edit settings',
 		'na' => 'N/a',
 	],
 	'edit' => [
+		'title' => 'Edit user',
 		'label' => 'Change password',
 		'placeholder' => [
 			'current_pass' => 'Current password',

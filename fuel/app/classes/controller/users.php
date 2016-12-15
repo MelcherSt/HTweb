@@ -3,7 +3,7 @@ class Controller_Users extends Controller_Gate
 {
 	public function action_index() {
 		$data['users'] = Model_User::get_by_state();
-		$this->template->title = "Users";
+		$this->template->title = __('user.name_plural');
 		$this->template->content = View::forge('users/index', $data);
 	}
 	
@@ -33,11 +33,11 @@ class Controller_Users extends Controller_Gate
 		$user = \Model_User::find($id);
 		
 		if(!isset($user)) {
-			\Utils::handle_irrecoverable_error('No user with the given id exsits.');
+			\Utils::handle_irrecoverable_error(__('user.alert.error.no_id', ['id' => $id]));
 		}
 		
 		$data['user'] = $user;	
-		$this->template->title = "User";
+		$this->template->title = __('user.name');
 		$this->template->subtitle = $user->get_fullname();
 		$this->template->content = View::forge('users/view', $data);
 	}
@@ -60,7 +60,7 @@ class Controller_Users extends Controller_Gate
 			
 			if(!empty($pass)) {
 				if (!Auth::change_password($cur_pass, $pass)){
-					Session::set_flash('error', e('Current password is incorrect'));
+					Session::set_flash('error', __('user.alert.error.cur_pass'));
 				}
 			}
 			
@@ -85,10 +85,10 @@ class Controller_Users extends Controller_Gate
 			} 
 			
 			if ($user->save()) {
-				Session::set_flash('success', e('Updated user account'));
+				Session::set_flash('success', __('user.alert.success.update'));
 				Response::redirect('users/edit');
 			} else {
-				Session::set_flash('error', e('Could not update user account '));
+				Session::set_flash('error', __('user.alert.error.update'));
 			}
 		} else {
 			if (Input::method() == 'POST')
@@ -104,7 +104,7 @@ class Controller_Users extends Controller_Gate
 			$this->template->set_global('user', $user, false);
 		}
 
-		$this->template->title = "Edit User";
+		$this->template->title = __('user.edit.title');
 		$this->template->subtitle = $user->get_fullname();
 		$this->template->content = View::forge('users/edit');
 	}

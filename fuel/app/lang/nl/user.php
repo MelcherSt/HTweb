@@ -21,14 +21,17 @@ return array(
 	],	
 	'alert' => array(
 		'success' => [
-			
+			'update' => 'Instellingen zijn opgeslagen',
 		],
 		'error' => array(
-			'no_id' => 'Kon geen gebruiker vinden met id <strong>:id</strong>.',
+			'no_id' => 'Kan gebruiker vinden met id <strong>:id</strong>.',
+			'cur_pass' => 'Verkeerd wachtwoord.',
+			'update' => 'Kan gebruiker niet bijwerken',
+			'invalid_iban' => 'Het veld :label bevat geen geldig International Bank Acoount Number (IBAN)'
 		),
 	),
 	'view' => [
-		'btn' => 'Account bewerken',
+		'btn' => 'Instellingen aanpassen',
 		'na' => 'N.v.t',
 	],
 	'edit' => [

@@ -42,7 +42,7 @@ class CustomRules {
 		$pass = (int)$result == 1;
 		
 		if(!$pass) {
-			Validation::active()->set_message('valid_iban', 'The field :label does not contain a valid International Bank Acoount Number (IBAN)');
+			Validation::active()->set_message('valid_iban', __('user.alert.error.invalid_iban', ['label', ':label']));
 		}
 		
 		return $pass;
