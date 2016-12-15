@@ -33,15 +33,16 @@ return [
 		'deadline' => [
 			'changed' => 'The deadline has been changed! The new deadline is today at <strong>:time</strong>.',
 			'passed' => 'The deadline is past due.',
-			'no_join' => 'You can no longer join this session.',
-			'no_leave' => 'You can no longer leave this session.',
-			'cook_edit' => 'For a limited amout of time you will be able to change the enrollments users in this session and enter the cost.',
+			'no_join' => 'You can no longer enroll.',
+			'no_leave' => 'You can no longer unenroll.',
+			'cook_edit' => 'For a limited amout of time you will be able to change the enrollments and enter the cost.',
 		],
 		'dishes' => 'Did you do the dishes? Be sure to enroll as dishwasher before the end of the day!',
 		'success' => [
 			'create_enroll' => '<strong>:name</strong> has been enrolled.',
 			'update_enroll' => 'Enrollment for </strong>:name</strong> has been updated.',
-			'remove_enroll' => 'Enrollment for <strong>:name</strong> has been removed.'
+			'remove_enroll' => 'Enrollment for <strong>:name</strong> has been removed.',
+			'update_session' => 'Session has been updated',
 		],
 		'error' => [
 			'create_enroll' => 'Cannot enroll <strong>:name</strong>.',
@@ -79,10 +80,12 @@ return [
 		'label' => [
 			'cook' => 'I feel like cooking',
 			'guests'=> 'I\'m bringing guests',
+			'later' => 'I\'ll be eating later',
 		],
-		'btn'=> ['enroll' => 'Join session',
-			'update' => 'Update session',
-			'unenroll' => 'Leave session',
+		'btn'=> ['enroll' => 'Enroll',
+			'update_session' => 'Update session',
+			'update_enrollment' => 'Update enrollment',
+			'unenroll' => 'Unenroll',
 			'add_enroll' => 'Enroll extra user',
 			'enroll_dish' => 'I did the dishes',
 			'unenroll_dish' => 'Actually, I did not do the dishes',

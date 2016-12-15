@@ -17,6 +17,12 @@ if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->de
 	<div class="form-group">
 		<label for="guests"><?=__('session.view.label.guests')?> </label>
 		<input name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="0"/>
+		
+		<div class="checkbox">
+			<label><input name="later" type="checkbox"> <?=__('session.view.label.later')?></label>
+		</div>
+		
+		
 		<?php if ($session->can_enroll_cooks()) { ?>
 		<div class="checkbox">
 			<label><input name="cook" type="checkbox"> <?=__('session.view.label.cook')?></label>

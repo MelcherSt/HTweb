@@ -10,6 +10,7 @@ class Model_Enrollment_Session extends \Orm\Model {
 		'session_id',
 		'guests',
 		'cook',
+		'later',
 		'dishwasher',
 		'created_at',
 		'updated_at',

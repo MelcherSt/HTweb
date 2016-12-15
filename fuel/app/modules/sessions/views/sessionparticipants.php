@@ -14,7 +14,7 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 			<tr>
 				<th><?=__('user.field.name')?></th>
 				<th>∆ <?=__('session.field.point_plural')?></th>
-				<th><?=__('session.field.cost')?></th>	
+				<th><?=__('session.field.guest_plural')?></th>	
 				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
 				<th><?=__('actions.name')?></th>
 				<?php endif; ?>
@@ -34,14 +34,14 @@ $can_dish = (int)$session->can_enroll_dishwashers(true);
 				</td>
 				<td><?=$enrollment->get_point_prediction()?>  </td>
 				<td><?=$enrollment->guests?></td>
-				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
+				<?php if (isset($cur_enrollment) && $cur_enrollment->cook && $session->can_change_enrollments()): ?>
 				<td>			
 					<a href="#" onclick="showEditModal(
 								<?=$enrollment->user->id?>, 
 								'<?=$enrollment->user->name?>', 
-								'<?=$enrollment->guests?>', 
-								'<?=$enrollment->cook?>', 
-								'<?=$enrollment->dishwasher?>',
+								<?=$enrollment->guests?>, 
+								<?=$enrollment->cook?>, 
+								<?=$enrollment->dishwasher?>,
 								<?=$can_cook?>, 
 								<?=$can_dish?>
 							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
