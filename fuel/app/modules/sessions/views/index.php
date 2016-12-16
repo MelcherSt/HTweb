@@ -1,8 +1,8 @@
 <div class="row">
 	<div class="col-md-4">
 		<a href="/sessions/yesterday">
-		<div class="panel">
-			<div class="panel-heading">
+		<div class="panel-default">
+			<div class="panel-heading ">
 				<div class="row">
 					<div class="col-xs-3">
 						<i class="fa fa-chevron-left fa-5x"></i>
@@ -19,7 +19,7 @@
 	
 	<div class="col-md-4">
 		<a href="/sessions/today">
-		<div class="panel">
+		<div class="panel-default">
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-xs-3">
@@ -37,7 +37,7 @@
 	
 	<div class="col-md-4">
 		<a href="/sessions/tomorrow">
-		<div class="panel">
+		<div class="panel-default">
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-xs-3">
@@ -52,9 +52,8 @@
 		</div>
 		</a>
 	</div>
-
-	
 </div>
+<br>
 
 <div class="row">
 	<p><?=__('session.index.msg')?> <a href="/receipts">My Receipts</a>.</p>
@@ -72,7 +71,7 @@
 			<tbody>
 				<?php foreach($sessions as $session): ?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-					<td><?=$session->date?></td>
+					<td><?=date('l (Y-m-d)', strtotime($session->date))?></td>
 					<td><?=$session->count_total_participants()?></td>
 					<td>
 						<?php foreach($session->get_cook_enrollments() as $enrollment):?>

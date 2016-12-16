@@ -50,7 +50,8 @@ class Controller_Sessions extends \Controller_Gate {
 				}
 				
 				$data['right_content'] = \View::forge('sessionparticipants', ['session'=>$session]);	
-				$this->template->subtitle = date('l j F Y', strtotime($date));
+				
+				$this->template->subtitle = strftime('%A %e %B %Y', strtotime($date));			
 				$this->template->content = \View::forge('layout/splitview', $data);
 				return;
 			}

@@ -29,6 +29,9 @@ class Controller_Base extends Controller_Template {
 		\Config::set('language', $lang);
 		\Config::set('language_fallback', 'en');
 		
+		// Set locale
+		$locales = \Config::get('locales');
+		setlocale(LC_ALL, $locales[$lang]);
 		
 		// Pre-load all localization files
 		\Lang::load('template'); 
