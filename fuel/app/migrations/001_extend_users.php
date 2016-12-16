@@ -17,12 +17,13 @@ class Extend_Users
 			'end_year' => array('constraint' => 4, 'type' => 'int'),
 			'points' => array('constraint' => 5, 'type' => 'int'),
 			'iban' => array('constraint' => '30', 'type' => 'varchar'),
-			'avatar' => array('constraint' => 255, 'type' => 'varchar')
+			'avatar' => array('constraint' => 255, 'type' => 'varchar'),
+			'lang' => array('constraint' => 2, 'type' => 'varchar'),
 		));
 	}
 
 	public function down() {
 		\DBUtil::drop_fields('users', array('name', 'surname', 'phone', 
-			'active', 'start_year', 'end_year', 'points', 'balance'));
+			'active', 'start_year', 'end_year', 'points', 'avatar', 'iban', 'lang'));
 	}
 }

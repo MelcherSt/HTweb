@@ -10,7 +10,7 @@ class Model_User extends \Auth\Model\Auth_User {
 		'surname',
 		'name',
 		'lang' => [
-			'default' => '',
+			'default' => 'en',
 		],
 		'phone' => array(
 			'default'     => '',

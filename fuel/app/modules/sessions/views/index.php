@@ -71,7 +71,7 @@
 			<tbody>
 				<?php foreach($sessions as $session): ?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-					<td><?=date('l (Y-m-d)', strtotime($session->date))?></td>
+					<td><?=strftime('%F - %A', strtotime($session->date))?></td>
 					<td><?=$session->count_total_participants()?></td>
 					<td>
 						<?php foreach($session->get_cook_enrollments() as $enrollment):?>
