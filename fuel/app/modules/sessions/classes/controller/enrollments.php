@@ -18,7 +18,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			
 			// Is the current user enrolled and creating an enrollment for someone else?
 			$cur_enrollment = $session->current_enrollment();
-			$cook = false;
+			$cur_cook = false;
 			
 			if(empty($cur_enrollment)) {
 				if (!$session->can_enroll()) {
@@ -28,7 +28,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				$user = \Model_User::find($user_id);	
 			} else {
 				$user = \Model_User::find($user_id);
-				$cook = true;
+				$cur_cook = true;
 				// user_id was set, but we're in a special situation now
 				if (!$cur_enrollment->cook && $session->can_change_enrollments()) {
 					\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
@@ -44,12 +44,12 @@ class Controller_Enrollments extends \Controller_Gate {
 			} 
 			
 			$cook = \Input::post('cook') == 'on' ? true : false;
-			if (!$session->can_enroll_cooks($cook)) {
+			if (!$session->can_enroll_cooks($cur_cook)) {
 				$cook = false;
 			}
 			
 			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
-			if (!$session->can_enroll_dishwashers($cook)) {
+			if (!$session->can_enroll_dishwashers($cur_cook)) {
 				$dishwasher = false;
 			}
 			
