@@ -23,24 +23,19 @@ class Add_Mock_Sessions {
 			$s1e1 = \Sessions\Model_Enrollment_Session::forge(array(
 				'user_id' => 3,
 				'session_id' => $s1->id,
-				'dishwasher' => false,
 				'cook' => true,
-				'guests' => 0,
 			));
 
 			$s1e2 = \Sessions\Model_Enrollment_Session::forge(array(
 				'user_id' => 1,
 				'session_id' => $s1->id,
 				'dishwasher' => true,
-				'cook' => false,
 				'guests' => 2,
 			));
 
 			$s1e3 = \Sessions\Model_Enrollment_Session::forge(array(
 				'user_id' => 4,
 				'session_id' => $s1->id,
-				'dishwasher' => false,
-				'cook' => false,
 				'guests' => 1,
 			));
 
@@ -62,22 +57,17 @@ class Add_Mock_Sessions {
 				'user_id' => 3,
 				'session_id' => $s2->id,
 				'dishwasher' => true,
-				'cook' => false,
-				'guests' => 0,
 			));
 
 			$s2e2 = \Sessions\Model_Enrollment_Session::forge(array(
 				'user_id' => 1,
 				'session_id' => $s2->id,
 				'dishwasher' => true,
-				'cook' => false,
-				'guests' => 0,
 			));
 
 			$s2e3 = \Sessions\Model_Enrollment_Session::forge(array(
 				'user_id' => 4,
 				'session_id' => $s2->id,
-				'dishwasher' => false,
 				'cook' => true,
 				'guests' => 1,
 			));
@@ -85,8 +75,6 @@ class Add_Mock_Sessions {
 			$s2e4 = \Sessions\Model_Enrollment_Session::forge(array(
 				'user_id' => 5,
 				'session_id' => $s2->id,
-				'dishwasher' => false,
-				'cook' => false,
 				'guests' => 2,
 			));
 

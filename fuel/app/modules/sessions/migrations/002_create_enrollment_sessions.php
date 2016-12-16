@@ -15,6 +15,7 @@ class Create_Enrollment_Sessions {
 			'guests' => array('constraint' => 11, 'type' => 'int'),
 			'cook' => array('type' => 'boolean'),
 			'dishwasher' => array('type' => 'boolean'),
+			'later' => array('type' => 'boolean'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 		), array('id'));
