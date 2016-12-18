@@ -74,6 +74,13 @@
 
 		</div>
 		<div class="form-group">
+				<label for="lang"><?=__('user.field.lang')?></label>
+				<select class="form-control" id="lang" name="lang">
+					<option value="nl" <?=Config::get('language') == 'nl' ? 'selected' : ''?>><?=__('user.language.nl')?></option>
+					<option value="en" <?=Config::get('language') == 'en' ? 'selected' : ''?>><?=__('user.language.en')?></option>
+				</select>
+			</div>
+		<div class="form-group">
 			<label class='control-label'>&nbsp;</label>
 			<?php echo Form::submit('submit', 'Save', array('class' => 'btn btn-primary')); ?>		</div>
 	</fieldset>
