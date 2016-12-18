@@ -5,7 +5,11 @@ FuelPHP based web application
 * download oil `$ sudo curl get.fuelphp.com/oil | sh`
 * download dependencies using composer (from root) `$ sudo php composer.phar update`
 * configure database and auth packages in fuel/app/config (see fuelphp documentation)
-* migrate auth tables and others `$ oil r migrate --packages=auth` and `$ oil r migrate --all`
+* run all migrations. Please note there's a strict order in which to run migrations:
+1 auth tables and others `$ oil r migrate --packages=auth` 
+2 default tables `$ oil r migrate --default`
+3 session tables `$ oil r migrate --modules=sessions`
+4 all others `$ oil r migrate --all`
 * run the application using `$ oil s`
 
 
