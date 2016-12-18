@@ -57,9 +57,12 @@ class Controller_Users extends Controller_Gate
 
 			$cur_pass = Input::post('old_password');
 			$pass = Input::post('password');
+			$new_salt = $this->rand_str(12);
 			
 			if(!empty($pass)) {
-				if (!Auth::change_password($cur_pass, $pass)){
+				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){
+					$user->salt = $new_salt;
+				} else {
 					Session::set_flash('error', __('user.alert.error.cur_pass'));
 				}
 			}
@@ -108,4 +111,15 @@ class Controller_Users extends Controller_Gate
 		$this->template->subtitle = $user->get_fullname();
 		$this->template->content = View::forge('users/edit');
 	}
+	
+	function rand_str($len){
+    $result = "";
+    $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_?!-0123456789';
+    $charArray = str_split($chars);
+    for($i = 0; $i < $len; $i++){
+	    $randItem = array_rand($charArray);
+	    $result .= "".$charArray[$randItem];
+    }
+    return $result;
+}
 }

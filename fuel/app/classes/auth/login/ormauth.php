@@ -25,7 +25,6 @@ class Auth_Login_OrmAuth extends \Auth\Auth_Login_Ormauth {
 
 		// Look up the user
 		$user = \Model_User::query()
-			->select('salt')
 			->where_open()
 				->where('username', '=', $username_or_email)
 				->or_where('email', '=', $username_or_email)
@@ -40,11 +39,10 @@ class Auth_Login_OrmAuth extends \Auth\Auth_Login_Ormauth {
 		$salt = $user->salt;
 		echo $salt;
 		
+		// return the user object, or false if not found
 		if($user->password === $this->hash_password($password . $salt)) {
 			return \Model\Auth_User::find($user->id);
 		}
-
-		// return the user object, or false if not found
 		return false;
 	}
 }
