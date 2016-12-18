@@ -8,7 +8,7 @@ class Model_Post extends \Orm\Model
 		'title',
 		'body',
 		'user_id',
-		'image',
+		'image' => ['default' => ''],
 		'public',
 		'featured',
 		'category',
