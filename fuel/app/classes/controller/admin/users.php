@@ -35,7 +35,7 @@ class Controller_Admin_Users extends Controller_Admin
 					'end_year' => Input::post('end_year'),
 					'points' => Input::post('points', 0),
 					'iban' => Input::post('iban', ''),
-					'password' => Auth::instance()->hash_password(Input::post('password')),
+					'password' => Auth::instance()->hash_password(Input::post('password' . \Utils::rand_str(12))),
 					'group_id' => Input::post('group_id', 3),
 					'email' => Input::post('email'),
 					'last_login'      => 0,

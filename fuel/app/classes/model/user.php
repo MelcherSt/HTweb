@@ -6,6 +6,7 @@
 class Model_User extends \Auth\Model\Auth_User {
 	protected static $_properties = array(
 		'id',
+		'username',
 		'surname',
 		'name',
 		'lang' => [
@@ -29,6 +30,7 @@ class Model_User extends \Auth\Model\Auth_User {
 			'null'        => false,
 		),
 		'password',
+		'salt',
 		'group_id',
 		'iban' => array(
 			'default'     => '',
@@ -42,6 +44,7 @@ class Model_User extends \Auth\Model\Auth_User {
 			'default'     => '',
 			'null'        => false,
 		),
+		'last_login'
 	);
 
 	public static function validate($factory) {

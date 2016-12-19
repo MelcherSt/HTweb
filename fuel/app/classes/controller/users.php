@@ -59,7 +59,11 @@ class Controller_Users extends Controller_Gate
 			$pass = Input::post('password');
 			
 			if(!empty($pass)) {
-				if (!Auth::change_password($cur_pass, $pass)){
+				// Generate new salt
+				$new_salt = \Utils::rand_str(12);
+				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){
+					$user->salt = $new_salt;
+				} else {
 					Session::set_flash('error', __('user.alert.error.cur_pass'));
 				}
 			}
