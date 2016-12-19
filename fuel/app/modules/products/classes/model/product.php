@@ -1,13 +1,19 @@
 <?php
+namespace Products;
+
+/**
+ * Product
+ */
 class Model_Product extends \Orm\Model
 {
 	protected static $_properties = array(
 		'id',
-		'title',
-		'notes',
-		'price',
+		'cost' => ['default' => 0.0],
 		'paid_by',
-		'settled',
+		'name',
+		'notes' => ['default' => ''],
+		'approved' => ['default' => false],
+		'settled' => ['default' => false],
 		'created_at',
 		'updated_at',
 	);
@@ -26,11 +32,10 @@ class Model_Product extends \Orm\Model
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
-		$val->add_field('title', 'Title', 'required|max_length[255]');
-		$val->add_field('notes', 'Notes', 'required');
-		$val->add_field('price', 'Price', 'required');
+		$val->add_field('name', 'Name', 'required|max_length[50]');
+		$val->add_field('notes', 'Notes', 'max_length[255]');
+		$val->add_field('cost', 'Cost', 'required');
 		$val->add_field('paid_by', 'Paid By', 'required|valid_string[numeric]');
-		$val->add_field('settled', 'Settled', 'required');
 
 		return $val;
 	}
