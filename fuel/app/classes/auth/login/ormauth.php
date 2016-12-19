@@ -7,7 +7,7 @@ class Auth_Login_OrmAuth extends \Auth\Auth_Login_Ormauth {
 	
 	
 	/**
-	 * Check the user exists
+	 * Check the user exists and the correct password was entered
 	 *
 	 * @return  bool
 	 */
@@ -38,8 +38,6 @@ class Auth_Login_OrmAuth extends \Auth\Auth_Login_Ormauth {
 		
 		// Retrieve salt
 		$salt = $user->salt;
-		
-		echo $salt . ' <- theres the salt';
 		
 		// return the user object, or false if not found
 		if($user->password === $this->hash_password($password . $salt)) {
