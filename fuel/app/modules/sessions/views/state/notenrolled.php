@@ -1,5 +1,6 @@
 <?php
 $deadline = date('H:i', strtotime($session->deadline));
+
 ?>
 
 <div class="row">
@@ -24,7 +25,7 @@ $deadline = date('H:i', strtotime($session->deadline));
 			</div>
 
 
-			<?php if ($session->can_enroll_cooks()) { ?>
+			<?php if ($session->can_cook()) { ?>
 			<div class="checkbox">
 				<label><input name="cook" type="checkbox"> <?=__('session.view.label.cook')?></label>
 			</div>			

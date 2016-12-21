@@ -3,8 +3,8 @@
 $enrollments = $session->get_enrollments_sorted(); 
 $cur_enrollment = $session->current_enrollment();
 
-$can_cook = (int)$session->can_enroll_cooks(true);
-$can_dish = (int)$session->can_enroll_dishwashers(true);
+$can_cook = (int)$session->can_cook(true);
+$can_dish = (int)$session->can_change_dishwashers(true);
 
 
 ?>

@@ -31,6 +31,10 @@ class Utils {
 	 * @return boolean
 	 */
 	public static function valid_date($date) {
+		if (empty($date)) {
+			return false;
+		}
+		
 		$d = \DateTime::createFromFormat('Y-m-d', $date);
 		return $d && $d->format('Y-m-d') === $date;
 	}

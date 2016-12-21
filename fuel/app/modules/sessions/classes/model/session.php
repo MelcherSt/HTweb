@@ -222,29 +222,32 @@ class Model_Session extends \Orm\Model
 		} else {
 			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DEADLINE_GRACE);
 		}
-		
 	}
 	
 	/**
-	 * Determine whether cooks may enroll
-	 * @param boolean $cook Cooks may enroll people in an extended grade period
+	 * Determine whether an extra cook may be enrolled
 	 * @return boolean
 	 */
-	public function can_enroll_cooks($cook=false) {			
-		if($cook) {
-			return ($this->count_cooks() < static::MAX_COOKS) && ($this->can_change_enrollments() || $this->can_change_enrollments());
-		} 	
-		return $this->can_enroll() && ((int)$this->count_cooks() < static::MAX_COOKS); 	
+	public function can_cook() {			
+		return (int)$this->count_cooks() < static::MAX_COOKS; 	
 	}
 	
 	/**
-	 * Determine whether dishwashers may enroll
+	 * Determine whether an extra dishwasher may be enrolled
+	 * @return type
+	 */
+	public function can_dishwasher() {
+		return (int)$this->count_dishwashers() < static::MAX_DISHWASHER;
+	}
+	
+	/**
+	 * Determine if we're in the timespan a dishwasher may enroll
 	 * @param boolean $cook Cooks may enroll people in an extended grade period
 	 * @return boolean
 	 */
-	public function can_enroll_dishwashers($cook=false) {
+	public function can_change_dishwashers() {
 		if($cook) {
-			return ($this->count_dishwashers() < static::MAX_DISHWASHER) && ($this->can_change_enrollments() || $this->can_change_enrollments());
+			return ($this->can_change_enrollments() || $this->can_change_enrollments());
 		}
 		
 		// Deadline should be past due + diswasher count should be less than max.

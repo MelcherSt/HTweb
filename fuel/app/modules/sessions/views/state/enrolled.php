@@ -68,7 +68,7 @@ if($session->can_enroll()) { ?>
 			</div>
 
 
-			<?php if ($session->can_enroll_cooks() || $enrollment->cook): ?>
+			<?php if ($session->can_cook() || $enrollment->cook): ?>
 			<div class="checkbox">
 				<label><input name="cook" type="checkbox" <?=$enrollment->cook ? 'checked' : ''?> > <?=__('session.view.label.cook')?></label>
 			</div>
@@ -85,7 +85,7 @@ if($session->can_enroll()) { ?>
 
 <?php } 
 
-if ($session->can_enroll_dishwashers() || ($session->can_change_enrollments() && $enrollment->dishwasher)) { ?>
+if ($session->can_change_dishwashers() || ($session->can_change_enrollments() && $enrollment->dishwasher)) { ?>
 
 	<div class="alert alert-warning">
 		<strong><?=__('alert.call.alert')?></strong> <?=__('session.alert.dishes')?>
