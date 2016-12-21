@@ -24,27 +24,39 @@ class Context {
 	 * Check to see if the user may perform the given actions in the current context.
 	 * This basically is an AND on all given actions. If a single action is not 
 	 * permitted - or doesn't exist - , the function will report negatively.
+	 * An action can have added permissions. Permissions are passed as parameters.
 	 * @param array $actions
 	 */
 	public function can_perform($actions) {
 		$result = true;
-		
 		foreach($actions as $action) {
-			$callback = static::FUNC_PREFIX . $action;
+			$pos = strpos($action, '[');
+			$params = [];
+			if ($pos > 2 || $pos != false) {
+				$params = explode(',', substr($action, $pos + 1, -1));
+				$func = substr($action, 0, $pos);		
+			} else {
+				$func = $action;
+			}
+			
+			echo var_dump($params);
+			echo $pos;
+			
+			$callback = static::FUNC_PREFIX . $func;
 			if(method_exists($this, $callback)) {
-				$result = $result && call_user_func([$this, $callback]);
+				$result = $result && call_user_func([$this, $callback], $params);
 			} else {
 				return false;
 			}
 		}	
 		return $result;
-	}
+	}	
 	
 	/**
 	 * Most primitive enrollment permission.  
 	 * @return boolean
 	 */
-	private function _can_enroll() {
+	private function _can_enroll() {	
 		return $this->session->can_enroll() || $this->_can_enroll_other();
 	}
 	
@@ -64,6 +76,37 @@ class Context {
 	 */
 	private function _can_enroll_dishwasher() {
 		return $this->_in_dishwasher_grace() || $this->_can_enroll_other();
+	}
+	
+	/**
+	 * Most primitive session update permission.
+	 * @return boolean
+	 */
+	private function _can_update_session($permissions) {	
+		echo 'hoi';
+		
+		if(empty($permissions) || sizeof($permissions) == 0) {
+			return $this->_is_moderator();
+		} else {
+			$result = true;			
+			foreach($permissions as $permission) {
+				switch($permission) {
+					case 'deadline':
+						$result = $result && $this->session->can_change_deadline();
+						break;
+					case 'cost':
+						$result = $result && $this->session->can_change_cost();
+						break;
+					case 'notes':
+						$result = $result && $this->_can_enroll();
+						break;
+					default:
+						// Unknown permission
+						return true;
+				}
+			}	
+			return $result;
+		}
 	}
 	
 	/* Below follow functions used to determine the role of the user in the session */

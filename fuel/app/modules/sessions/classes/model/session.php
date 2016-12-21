@@ -163,7 +163,7 @@ class Model_Session extends \Orm\Model
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
 	public function current_enrollment() {
-		return $this->get_enrollment(\Auth::get_user()->id);
+		return $this->get_enrollment(\Auth::get_user_id()[1]);
 	}
 	
 	/**
@@ -246,9 +246,6 @@ class Model_Session extends \Orm\Model
 	 * @return boolean
 	 */
 	public function can_change_dishwashers() {
-		if($cook) {
-			return ($this->can_change_enrollments() || $this->can_change_enrollments());
-		}
 		
 		// Deadline should be past due + diswasher count should be less than max.
 		if(!$this->can_enroll() && $this->is_past_diner() && ($this->count_dishwashers() < static::MAX_DISHWASHER)) {

@@ -98,6 +98,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$redirect = '/sessions/view/'.$date;	
 			
 			if(!$context->can_perform(['enroll'])) {
+				// Drop out
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 			}
 			
@@ -140,12 +141,12 @@ class Controller_Enrollments extends \Controller_Gate {
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
 			
 				
-			} else if($context->can_perform(['update_dishwasher'])) {
+			} else if($context->can_perform(['enroll_dishwasher'])) {
 				// Dishwasher only updated
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;	
 			} else {
 				// No rights for updating dishwasher. Report error.
-				
+				\Utils::handle_recoverable_error(__('session.alert.error.no_perm', ['action' => 'enroll_dishwasher']), $redirect);
 			}
 
 
@@ -174,6 +175,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$redirect = '/sessions/view/'.$date;	
 			
 			if(!$context->can_perform(['enroll'])) {
+				// Drop out
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 			}
 			
@@ -187,7 +189,7 @@ class Controller_Enrollments extends \Controller_Gate {
 					$enrollment = $session->get_enrollment($user_id);
 				} else {
 					// Report error
-					\Utils::handle_recoverable_error(__('session.alert.error.no_perm'), $redirect);
+					\Utils::handle_recoverable_error(__('session.alert.error.no_perm', ['action' => 'enroll_other']), $redirect);
 				}	
 			} else {
 				// Trying to delete our enrollment.
