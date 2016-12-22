@@ -41,8 +41,8 @@ class Controller_Sessions extends \Controller_Gate {
 				$session->save();
 			}
 
-			$context = Context::forge($session, \Auth::get_user());
-			echo $context->can_perform(['enroll']);
+			$context = Auth_Context_Session::forge($session, \Auth::get_user());
+			echo $context->has_access(['enroll']);
 
 			$enrollment = $session->current_enrollment();		
 			if(!empty($enrollment)) {
@@ -66,10 +66,10 @@ class Controller_Sessions extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$context = Context::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;
 			
-			if(!$context->can_perform(['update_session'])) {
+			if(!$context->has_access(['update_session'])) {
 				// Drop out
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 			}
@@ -77,7 +77,7 @@ class Controller_Sessions extends \Controller_Gate {
 			$enrollment = $session->current_enrollment();	
 			
 
-			if($context->can_perform(['update_session[cost]'])) {
+			if($context->has_access(['update_session[cost]'])) {
 					$new_cost = \Input::post('cost', 0.0);
 					$cur_cost = $session->cost;
 
@@ -87,11 +87,11 @@ class Controller_Sessions extends \Controller_Gate {
 					$session->cost = $new_cost;	
 				}		
 			}		
-			if($context->can_perform(['update_session[deadline]'])) {
+			if($context->has_access(['update_session[deadline]'])) {
 				$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
 				$session->deadline = $deadline;
 			}	
-			if($context->can_perform(['update_session[notes]'])) {
+			if($context->has_access(['update_session[notes]'])) {
 				$notes = \Input::post('notes', '');		
 				$session->notes = $notes;
 			}

@@ -94,10 +94,10 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$context = Context::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;	
 			
-			if(!$context->can_perform(['enroll'])) {
+			if(!$context->has_access(['enroll'])) {
 				// Drop out
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 			}
@@ -108,7 +108,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			
 			if(isset($user_id)) {
 				// Trying to update other user. Check rights
-				if($context->can_perform(['enroll_other'])) {
+				if($context->has_access(['enroll_other'])) {
 					$enrollment = $session->get_enrollment($user_id);
 				} else {
 					// Report error
@@ -141,7 +141,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
 			
 				
-			} else if($context->can_perform(['enroll_dishwasher'])) {
+			} else if($context->has_access(['enroll_dishwasher'])) {
 				// Dishwasher only updated
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;	
 			} else {
@@ -171,10 +171,10 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$context = Context::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;	
 			
-			if(!$context->can_perform(['enroll'])) {
+			if(!$context->has_access(['enroll'])) {
 				// Drop out
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 			}
@@ -185,7 +185,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			
 			if(isset($user_id)) {
 				// Trying to delete other user. Check rights
-				if($context->can_perform(['enroll_other'])) {
+				if($context->has_access(['enroll_other'])) {
 					$enrollment = $session->get_enrollment($user_id);
 				} else {
 					// Report error
