@@ -66,9 +66,9 @@ class Controller_Sessions extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;
 			
-			if(!$context->has_access(['session.update'])) {
+			if(!$context->has_access(['session.update'], true)) {
 				// Drop out
-				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
+				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
 			
 			$enrollment = $session->current_enrollment();	

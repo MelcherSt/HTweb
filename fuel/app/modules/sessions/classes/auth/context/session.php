@@ -31,41 +31,44 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * Most primitive enrollment permission.  
 	 * @return boolean
 	 */
-	protected function _can_enroll() {	
-		return $this->session->can_enroll();
+	protected function _can_enroll(array $actions) {
+		// Must at least be in normal or grace period
+		$result = $this->_in_enroll_period() || $this->_in_enroll_cook_grace();
+		if(!$result) { array_push($this->messages, 'Outside enrollment period.'); }
+		
+		if(isset($actions) && $result) {		
+			foreach($actions as $action) {
+				switch($action) {
+					case 'other':
+						$result = $result && ($this->_is_moderator() && $this->_in_enroll_cook_grace());
+						if(!$result) { array_push($this->messages, 'You do not have permission to enroll others.'); }
+						break;
+					case 'diswasher':
+						$result = $result && $this->_in_dishwasher_grace() || $this->_can_enroll(['other']);
+						if(!$result) { array_push($this->messages, 'Cannot enroll dishwasher.'); }
+						break;
+					default:
+						$result = false;
+						array_push($this->messages, 'Unknown permission requested.');
+						break 2; // Break from for-loop
+				}
+			}			
+		}
+		return $result;
 	}
-	
-	/**
-	 * Extension of the enrollment perm. User is able to enroll others
-	 * only if they're a moderator.
-	 * @return boolean
-	 */
-	protected function _can_enroll_other() {
-		return $this->_in_enroll_cook_grace() && $this->_is_moderator();
-	}
-	
-	/**
-	 * Dishwasher enrollment. Either we're in the general grace period or 
-	 * the cook is still in his grace period to (un)enroll users.
-	 * @return boolean
-	 */
-	protected function _can_enroll_dishwasher() {
-		return $this->_in_dishwasher_grace() || $this->_can_enroll_other();
-	}
-	
+		
 	/**
 	 * Most primitive session update permission.
 	 * @param actions [deadline, notes, cost]
 	 * @return boolean
 	 */
-	protected function _can_session_update($actions) {			
-		$result = $this->_is_moderator(); // Base permission
+	protected function _can_session_update(array $actions) {	
+		// Must at least be a moderator
+		$result = $this->_is_moderator();
+		if(!$result) { array_push($this->messages, 'You do not have permission to edit the session.'); }
 		
-		\Log::error('Basic perm: ' . $result);
-		
-		if(isset($actions)) {		
+		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
-				\Log::error('Action: ' . $action);
 				switch($action) {
 					case 'deadline':
 						$result = $result && $this->_in_deadline_cook_grace();
@@ -74,23 +77,15 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						$result = $result && $this->_in_cost_cook_grace();
 						break;
 					case 'notes':
-						$result = $result && $this->_can_enroll();
+						$result = $result && $this->_in_enroll_period();
 						break;
 					default:
-						// Unknown permission
 						$result = false;
-						break;
+						array_push($this->messages, 'Unknown permission requested.');
+						break 2; // Break from for-loop
 				}
 			}			
-		}		
-		
-		\Log::error('Actions perm: ' . $result);
-		
-			
-		if(!$result) {
-			$this->last_error = __('session.alert.error.deadline_passed') . ' O HOI!';
-		}
-		
+		}				
 		return $result;
 	}
 	
@@ -101,21 +96,41 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		return $this->enrollment->cook || $this->user->group_id == 5;
 	}
 	
-	/* Below follow functions used to determine in what timespan we are */
+	/* Below follow functions used to determine in what (grace)period we are */
 	
-	
-	protected function _in_dishwasher_grace() {
-		return strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::DISHWASHER_ENROLLMENT_GRACE);
+	/**
+	 * Determine if we're in the normal enroll period for this session
+	 * @return boolean
+	 */
+	protected function _in_enroll_period() {
+		$now = strtotime(date('Y-m-d H:i:s'));
+		$deadline = strtotime(date('Y-m-d H:i:s', strtotime($this->session->deadline)));	
+		// Check if we live before the deadline
+		if ($now < $deadline) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
-	 * Determine whether the deadline of this session may changed
+	 * Determine if dishwashers may enroll for this session. Sets both upper and lower boundary.
+	 * @return boolean
+	 */
+	protected function _in_dishwasher_grace() {
+		return !$this->_in_enroll_period() && strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::DISHWASHER_ENROLLMENT_GRACE);
+	}
+	
+	/**
+	 * Determine whether the deadline of this session may changed. Sets both upper and lower boundary.
 	 * @return boolean
 	 */
 	protected function _in_deadline_cook_grace() {
-		if ($this->_can_enroll()) { 
+		if ($this->_in_enroll_period()) { 
+			// Deadline may be changed during enrollment period just alright.
 			return true;
 		} else {
+			// If the deadline already passed
 			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::DEADLINE_GRACE);
 		}
 	}
@@ -125,16 +140,16 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _in_cost_cook_grace() {
-		return !$this->_can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::COST_GRACE));
+		return !$this->_in_enroll_period() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::COST_GRACE));
 
 	}
 	
 	/**
-	 * Determine whether the enrollments of this session may be altered by the cooks
+	 * Determine whether the enrollments of this session may be altered by the cooks. Sets both upper and lower boundary.
 	 * @return boolean
 	 */
 	protected function _in_enroll_cook_grace() {
-		return !$this->_can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE));
+		return !$this->_in_enroll_period() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE));
 
 	}
 }

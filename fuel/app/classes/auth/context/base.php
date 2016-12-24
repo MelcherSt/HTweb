@@ -8,18 +8,18 @@ class Auth_Context_Base {
 	const FUNC_PREFIX = '_can_';
 	const FUNC_SPLIT = '_';
 	
-	protected $last_error = '';
+	protected $messages = [];
 
 	/**
-	 * Check to see if the user has the given permissions in this context.
-	 * Performs an AND on all permissions. If a single permission is not 
-	 * granted- or doesn't exist - , the function will report negatively.
-	 * An permission can have added actions. Actions are passed as parameters.
+	 * Check to see if the user has the given permissions in this context. Performs an AND on all permissions. If a single permission is not 
+	 * granted- or doesn't exist - , the function will report negatively. An permission can have added actions. Actions are passed as parameters.
 	 * @param array $permissions list of permissions in the form of area.permission[action1, action2]
-	 * @param boolean $verbose write any errors to $last_error for later retrieval
+	 * @param boolean $verbose if set to true any error messages can be retrieved using get_message() or get_messages()
 	 * @return boolean permission-granted
 	 */
-	public function has_access(array $permissions) {
+	public function has_access(array $permissions, $verbose=false) {
+		$this->clear_messages();
+
 		// We have the permission until proven otherwise
 		$result = true;
 		
@@ -64,18 +64,33 @@ class Auth_Context_Base {
 		}	
 		
 		// Empty last_error property if we aren't verbose
-		/*if (!$verbose) {
-			$this->last_error = '';
-		}*/
+		if (!$verbose) {
+			$this->clear_messages();
+		}
 		
 		return $result;
 	}
 	
 	/**
-	 * Get the last error message returned while checking for permissions on this context.
+	 * Pop the last message from the messages list.
 	 * @return string
 	 */
-	public function get_last_error() {
-		return $this->last_error;
+	public function get_message() {
+		return array_pop($this->messages);
+	}
+	
+	/**
+	 * Get the list of all messages
+	 * @return array
+	 */
+	public function get_messages() {
+		return $this->messages;
+	}
+	
+	/**
+	 * Empty the messages list
+	 */
+	protected function clear_messages() {
+		$this->messages = [];
 	}
 }	
