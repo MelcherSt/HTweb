@@ -41,9 +41,6 @@ class Controller_Sessions extends \Controller_Gate {
 				$session->save();
 			}
 
-			$context = Auth_Context_Session::forge($session, \Auth::get_user());
-			echo $context->has_access(['enroll']);
-
 			$enrollment = $session->current_enrollment();		
 			if(!empty($enrollment)) {
 				$data['left_content'] = \View::forge('state/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
@@ -69,7 +66,7 @@ class Controller_Sessions extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;
 			
-			if(!$context->has_access(['update_session'])) {
+			if(!$context->has_access(['session.update'])) {
 				// Drop out
 				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 			}
@@ -77,7 +74,7 @@ class Controller_Sessions extends \Controller_Gate {
 			$enrollment = $session->current_enrollment();	
 			
 
-			if($context->has_access(['update_session[cost]'])) {
+			if($context->has_access(['session.update[cost]'])) {
 					$new_cost = \Input::post('cost', 0.0);
 					$cur_cost = $session->cost;
 
@@ -87,11 +84,11 @@ class Controller_Sessions extends \Controller_Gate {
 					$session->cost = $new_cost;	
 				}		
 			}		
-			if($context->has_access(['update_session[deadline]'])) {
+			if($context->has_access(['session.update[deadline]'])) {
 				$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
 				$session->deadline = $deadline;
 			}	
-			if($context->has_access(['update_session[notes]'])) {
+			if($context->has_access(['session.update[notes]'])) {
 				$notes = \Input::post('notes', '');		
 				$session->notes = $notes;
 			}
@@ -102,7 +99,7 @@ class Controller_Sessions extends \Controller_Gate {
 			} catch(\Database_Exception $ex) {
 				\Utils::handle_recoverable_error(__('session.alert.error.update_session'), $redirect);	
 			}
-			\Response::redirect('/sessions/view/'.$date);
+			\Response::redirect($redirect);
 		}
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}

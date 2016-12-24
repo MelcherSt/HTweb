@@ -58,10 +58,10 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @param actions [deadline, notes, cost]
 	 * @return boolean
 	 */
-	protected function _can_update_session($actions=[]) {	
+	protected function _can_session_update($actions) {	
 		$result = $this->_is_moderator(); // Base permission
 		
-		if(!empty($actions)) {		
+		if(isset($actions)) {		
 			foreach($actions as $action) {
 				switch($action) {
 					case 'deadline':

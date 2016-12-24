@@ -44,7 +44,9 @@ class Model_User extends \Auth\Model\Auth_User {
 			'default'     => '',
 			'null'        => false,
 		),
-		'last_login'
+		'last_login',
+		'login_hash' => [
+			'default' => ''],
 	);
 
 	public static function validate($factory) {

@@ -14,7 +14,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			
+			$redirect = '/sessions/view/'.$date;
 			
 			// Run validation to validate amount of guests
 			$val = Model_Enrollment_Session::validate('create');
@@ -25,7 +25,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				if(empty($cur_enrollment)) {
 					// Create an enrollment for current user		
 					if (!$session->can_enroll()) {
-						\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
+						\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
 					}
 
 					$user_id = \Auth::get_user()->id;
