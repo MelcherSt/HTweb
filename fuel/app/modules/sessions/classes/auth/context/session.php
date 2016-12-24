@@ -32,7 +32,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _can_enroll() {	
-		return $this->session->can_enroll() || $this->_can_enroll_other();
+		return $this->session->can_enroll();
 	}
 	
 	/**
@@ -58,11 +58,14 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @param actions [deadline, notes, cost]
 	 * @return boolean
 	 */
-	protected function _can_session_update($actions) {	
+	protected function _can_session_update($actions) {			
 		$result = $this->_is_moderator(); // Base permission
+		
+		\Log::error('Basic perm: ' . $result);
 		
 		if(isset($actions)) {		
 			foreach($actions as $action) {
+				\Log::error('Action: ' . $action);
 				switch($action) {
 					case 'deadline':
 						$result = $result && $this->_in_deadline_cook_grace();
@@ -75,10 +78,19 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						break;
 					default:
 						// Unknown permission
-						return false;
+						$result = false;
+						break;
 				}
 			}			
 		}		
+		
+		\Log::error('Actions perm: ' . $result);
+		
+			
+		if(!$result) {
+			$this->last_error = __('session.alert.error.deadline_passed') . ' O HOI!';
+		}
+		
 		return $result;
 	}
 	
@@ -122,7 +134,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _in_enroll_cook_grace() {
-				return !$this->_can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE));
+		return !$this->_can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE));
 
 	}
 }

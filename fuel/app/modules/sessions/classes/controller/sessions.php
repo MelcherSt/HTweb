@@ -40,7 +40,7 @@ class Controller_Sessions extends \Controller_Gate {
 				]);
 				$session->save();
 			}
-
+			
 			$enrollment = $session->current_enrollment();		
 			if(!empty($enrollment)) {
 				$data['left_content'] = \View::forge('state/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
@@ -83,7 +83,8 @@ class Controller_Sessions extends \Controller_Gate {
 					$session->paid_by = $enrollment->user->id;
 					$session->cost = $new_cost;	
 				}		
-			}		
+			}
+			
 			if($context->has_access(['session.update[deadline]'])) {
 				$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
 				$session->deadline = $deadline;
