@@ -70,9 +70,6 @@ class Controller_Sessions extends \Controller_Gate {
 				// Drop out
 				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
-			
-			$enrollment = $session->current_enrollment();	
-			
 
 			if($context->has_access(['session.update[cost]'])) {
 					$new_cost = \Input::post('cost', 0.0);
@@ -80,7 +77,7 @@ class Controller_Sessions extends \Controller_Gate {
 
 				if ($new_cost != $cur_cost) {
 					// Cost has been updated by this cook. Set him as payer.
-					$session->paid_by = $enrollment->user->id;
+					$session->paid_by = \Auth::get_user()->id;
 					$session->cost = $new_cost;	
 				}		
 			}
@@ -88,7 +85,8 @@ class Controller_Sessions extends \Controller_Gate {
 			if($context->has_access(['session.update[deadline]'])) {
 				$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
 				$session->deadline = $deadline;
-			}	
+			}
+			
 			if($context->has_access(['session.update[notes]'])) {
 				$notes = \Input::post('notes', '');		
 				$session->notes = $notes;

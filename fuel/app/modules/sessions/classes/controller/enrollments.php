@@ -97,9 +97,9 @@ class Controller_Enrollments extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;	
 			
-			if(!$context->has_access(['enroll'])) {
+			if(!$context->has_access(['enroll'], true)) {
 				// Drop out
-				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
+				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
 			
 			$user_id = \Input::post('user_id', null);
@@ -108,11 +108,11 @@ class Controller_Enrollments extends \Controller_Gate {
 			
 			if(isset($user_id)) {
 				// Trying to update other user. Check rights
-				if($context->has_access(['enroll_other'])) {
+				if($context->has_access(['enroll[other]'], true)) {
 					$enrollment = $session->get_enrollment($user_id);
 				} else {
 					// Report error
-					\Utils::handle_recoverable_error(__('session.alert.error.no_perm'), $redirect);
+					\Utils::handle_recoverable_error($context->get_message(), $redirect);
 				}	
 			} else {
 				// Trying to update our enrollment.
@@ -141,7 +141,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
 			
 				
-			} else if($context->has_access(['enroll_dishwasher'])) {
+			} else if($context->has_access(['enroll[dishwasher]'])) {
 				// Dishwasher only updated
 				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;	
 			} else {
@@ -174,9 +174,9 @@ class Controller_Enrollments extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;	
 			
-			if(!$context->has_access(['enroll'])) {
+			if(!$context->has_access(['enroll'], true)) {
 				// Drop out
-				\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
+				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
 			
 			$user_id = \Input::post('user_id', null);
@@ -184,12 +184,12 @@ class Controller_Enrollments extends \Controller_Gate {
 			$enrollment = null;		
 			
 			if(isset($user_id)) {
-				// Trying to delete other user. Check rights
-				if($context->has_access(['enroll_other'])) {
+				// Request rights to delete other user
+				if($context->has_access(['enroll[other]'], true)) {
 					$enrollment = $session->get_enrollment($user_id);
 				} else {
 					// Report error
-					\Utils::handle_recoverable_error(__('session.alert.error.no_perm', ['action' => 'enroll_other']), $redirect);
+					\Utils::handle_recoverable_error($context->get_message(), $redirect);
 				}	
 			} else {
 				// Trying to delete our enrollment.
