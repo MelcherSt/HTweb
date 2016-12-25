@@ -17,7 +17,7 @@ class Auth_Context_Base {
 	 * @param boolean $verbose if set to true any error messages can be retrieved using get_message() or get_messages()
 	 * @return boolean permission-granted
 	 */
-	public function has_access(array $permissions, $verbose=false) {
+	public function has_access(array $permissions, $verbose=false, $or_mode=false) {
 		$this->clear_messages();
 
 		// We have the permission until proven otherwise
@@ -54,10 +54,12 @@ class Auth_Context_Base {
 			
 			// Invoke callback
 			if(method_exists($this, $callback)) {
-				\Log::error('Calling callback');
-				$result = $result && call_user_func([$this, $callback], $actions);
+				if($or_mode) {
+					$result = $result || call_user_func([$this, $callback], $actions);
+				} else {
+					$result = $result && call_user_func([$this, $callback], $actions);
+				}	
 			} else {
-				\Log::error('Not callable. Quit.');
 				// Early exit, callback doesn't exist.
 				$result = false;
 			}
@@ -65,7 +67,7 @@ class Auth_Context_Base {
 		
 		// Empty last_error property if we aren't verbose
 		if (!$verbose) {
-			$this->clear_messages();
+			//$this->clear_messages();
 		}
 		
 		return $result;

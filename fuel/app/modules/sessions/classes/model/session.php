@@ -168,6 +168,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine if session is open for normal enrollment
+	 * @deprecated
 	 * @return boolean
 	 */
 	public function can_enroll() {
@@ -183,6 +184,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine if current time is after the start of diner
+	 * @deprecated
 	 * @return boolean
 	 */
 	public function is_past_diner() {
@@ -198,6 +200,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether the cost of this session may be changed by the cooks
+	 * @deprecated
 	 * @return boolean
 	 */
 	public function can_change_cost() {
@@ -206,6 +209,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether the enrollments of this session may be altered by the cooks
+	 * @deprecated
 	 * @return boolean
 	 */
 	public function can_change_enrollments() {
@@ -214,6 +218,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether the deadline of this session may changed
+	 * @deprecated since version number
 	 * @return boolean
 	 */
 	public function can_change_deadline() {
@@ -226,6 +231,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether an extra cook may be enrolled
+	 * @deprecated since version number
 	 * @return boolean
 	 */
 	public function can_cook() {			
@@ -234,6 +240,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Determine whether an extra dishwasher may be enrolled
+	 * @deprecated since version number
 	 * @return type
 	 */
 	public function can_dishwasher() {
@@ -243,6 +250,7 @@ class Model_Session extends \Orm\Model
 	/**
 	 * Determine if we're in the timespan a dishwasher may enroll
 	 * @param boolean $cook Cooks may enroll people in an extended grade period
+	 * @deprecated
 	 * @return boolean
 	 */
 	public function can_change_dishwashers() {

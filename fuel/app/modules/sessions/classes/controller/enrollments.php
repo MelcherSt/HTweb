@@ -14,56 +14,49 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$redirect = '/sessions/view/'.$date;
+			$cur_user = \Auth::get_user();
+			$context = Auth_Context_Session::forge($session, $cur_user);
+			$redirect = '/sessions/view/'.$date;				
 			
 			// Run validation to validate amount of guests
 			$val = Model_Enrollment_Session::validate('create');
 			if($val->run()) {
 				$user_id = \Input::post('user_id', null);
-				$cur_enrollment = $session->current_enrollment();
-
-				if(empty($cur_enrollment)) {
-					// Create an enrollment for current user		
-					if (!$session->can_enroll()) {
-						\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), $redirect);
-					}
-
-					$user_id = \Auth::get_user()->id;
-					$user = \Model_User::find($user_id);	
-				} else {
-					$user = \Model_User::find($user_id);
-
-					if (empty($user)) {
-						\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), '/sessions/view/'.$date);
-					}
-
-					if(!$cur_enrollment->cook) {
-						// Not a cook, may not enroll other users
-						\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
-					} else if (!$session->can_change_enrollments()) {
-						// A cook, but not the correct timespan
-						\Utils::handle_recoverable_error(__('session.alert.error.deadline_passed'), '/sessions/view/'.$date);
-					} 
-				} 
 				
-				// We're through the whole timespan check now, everything's possible
 				$guests = \Input::post('guests', 0);
 				$cook = \Input::post('cook') == 'on' ? true : false;
 				$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
+				$later = \Input::post('later') == 'on' ? true : false;
+				
+				if(isset($user_id)) {
+					// Trying to create other user. Check rights
+					if(!$context->has_access(['enroll.other'], true)) {
+						\Utils::handle_recoverable_error($context->get_message(), $redirect);
+					}	
 
-				if($cook && !$session->can_cook()) {
-					$cook = false;
-				}				
+					if (empty($user = \Model_User::find($user_id))) {
+						\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), $redirect);
+					}
+					
+					$dishwasher = $context->has_access(['enroll.other[dishwasher]']) && $dishwasher;
+					$cook = $context->has_access(['enroll.other[cook]']) && $cook;	
 
-				if ($dishwasher && !$session->can_dishwasher()) {
+				} else {
+					// Create a new enrollment for current user.
+					if(!$context->has_access(['enroll.create'])) {
+						\Utils::handle_recoverable_error($context->get_message(), $redirect);
+					}
+
+					$user = \Model_User::find($cur_user->id);		
 					$dishwasher = false;
-				}
+					$cook = $context->has_access(['enroll.create[cook]']) && $cook;	
+				} 
 
 				// Create from model
 				$enrollment = Model_Enrollment_Session::forge([
 					'user_id' => $user->id,
 					'session_id' => $session->id,
-					'later' => \Input::post('later') == 'on' ? true : false,
+					'later' => $later,
 					'dishwasher' => $dishwasher,
 					'cook' => $cook,
 					'guests' => $guests,
@@ -95,60 +88,60 @@ class Controller_Enrollments extends \Controller_Gate {
 			}
 			
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
-			$redirect = '/sessions/view/'.$date;	
-			
-			if(!$context->has_access(['enroll'], true)) {
-				// Drop out
-				\Utils::handle_recoverable_error($context->get_message(), $redirect);
-			}
+			$redirect = '/sessions/view/'.$date;				
 			
 			$user_id = \Input::post('user_id', null);
-			$cur_enrollment = $session->current_enrollment();
-			$enrollment = null;		
+				
+			$guests = \Input::post('guests', 0);
+			$cook = \Input::post('cook') == 'on' ? true : false;
+			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
+			$later = \Input::post('later') == 'on' ? true : false;
+
+			/* TEMP CHECK -- CHANGE FOR VALIDATOR */
+			if ($guests > Model_Session::MAX_GUESTS || $guests < 0) {
+				$guests = 0;
+				\Session::set_flash('error', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));	
+			} 
+			/* END OF TEMP CHECK */
 			
 			if(isset($user_id)) {
 				// Trying to update other user. Check rights
-				if($context->has_access(['enroll[other]'], true)) {
-					$enrollment = $session->get_enrollment($user_id);
-				} else {
-					// Report error
+				if(!$context->has_access(['enroll.other'], true)) {
 					\Utils::handle_recoverable_error($context->get_message(), $redirect);
 				}	
+				
+				if (empty($user = \Model_User::find($user_id))) {
+					\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), $redirect);
+				}
+					
+				$enrollment = $session->get_enrollment($user_id);	
+				$dishwasher = $context->has_access(['enroll.other[dishwasher]']) && $dishwasher;
+				$cook = $context->has_access(['enroll.other[cook]']) && $cook;	
+	
 			} else {
-				// Trying to update our enrollment.
-				$enrollment = $cur_enrollment;
+				// Trying to update our enrollment.			
+				if(!$context->has_access(['enroll.update'], true)) {
+					\Utils::handle_recoverable_error($context->get_message(), $redirect);
+				}
+				
+				$enrollment = $session->current_enrollment();		
+				$dishwasher = $context->has_access(['enroll.update[dishwasher]']) && $dishwasher;
+				$cook = $context->has_access(['enroll.update[cook]']) && $cook;		
 			} 
 			
 			if(empty($enrollment)) {
-				\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]));
+				\Utils::handle_recoverable_error('LOL ENTER APPROPRIATE ERROR HERE.');
 			}
 			
-			// Still rolling? Let's get on with updating the enrollment.
-			$dishwasher_only = \Input::post('method') == 'dishwasher';
-			
-			if(!$dishwasher_only) {
-				// All other enrollment details. Skip over this block if the request was dishwasher_only
-				
-				$enrollment->cook = \Input::post('cook', false) == 'on' ? true : false;	
-
-				$guests = \Input::post('guests', 0);
-				if ($guests > Model_Session::MAX_GUESTS || $guests < 0) {
-					$guests = 0;
-					\Session::set_flash('error', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));	
-				} 
-				$enrollment->guests = $guests;		
-				$enrollment->later = \Input::post('later') == 'on' ? true : false;		
-				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;
-			
-				
-			} else if($context->has_access(['enroll[dishwasher]'])) {
-				// Dishwasher only updated
-				$enrollment->dishwasher = \Input::post('dishwasher', false) == 'on' ? true : false;	
+			// Check dishwasher flag. When set, we're only going to update dishwasher.
+			if(\Input::post('method') == 'dishwasher') {
+				$enrollment->dishwasher = $dishwasher;
 			} else {
-				// No rights for updating dishwasher. Report error.
-				\Utils::handle_recoverable_error(__('session.alert.error.no_perm', ['action' => 'enroll_dishwasher']), $redirect);
+				$enrollment->dishwasher = $dishwasher;
+				$enrollment->cook = $cook;
+				$enrollment->guests = $guests;
+				$enrollment->later = $later;	
 			}
-
 
 			try {
 				$enrollment->save();
@@ -156,7 +149,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			} catch (\Database_Exception $ex) {
 				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $enrollment->user->name]));	
 			}
-			\Response::redirect('/sessions/view/'.$date);
+			\Response::redirect($redirect);
 		}
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}
@@ -174,7 +167,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;	
 			
-			if(!$context->has_access(['enroll'], true)) {
+			if(!$context->has_access(['enroll.delete'], true)) {
 				// Drop out
 				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
@@ -185,12 +178,11 @@ class Controller_Enrollments extends \Controller_Gate {
 			
 			if(isset($user_id)) {
 				// Request rights to delete other user
-				if($context->has_access(['enroll[other]'], true)) {
-					$enrollment = $session->get_enrollment($user_id);
-				} else {
+				if(!$context->has_access(['enroll.other'], true)) {
 					// Report error
-					\Utils::handle_recoverable_error($context->get_message(), $redirect);
+					\Utils::handle_recoverable_error($context->get_message(), $redirect);	
 				}	
+				$enrollment = $session->get_enrollment($user_id);			
 			} else {
 				// Trying to delete our enrollment.
 				$enrollment = $cur_enrollment;

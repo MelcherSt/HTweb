@@ -44,32 +44,29 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	}
 	
 	/**
-	 * Determine whether if enrollment may be updated.
+	 * Determine whether user's enrollment may be updated
 	 * @param array $actions [other, dishwasher, cook]
 	 * @return boolean
 	 */
 	protected function _can_enroll_update(array $actions=null) {
 		// Must at least be in normal or grace period
-		$result = $this->_in_enroll_period() || $this->_in_enroll_cook_grace();
+		$result = $this->_in_enroll_period() || $this->_in_enroll_mod_grace();
 		if(!$result) { array_push($this->messages, 'Outside enrollment period.'); }
 		
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
 				switch($action) {
-					case 'other':
-						$result = $result && ($this->_is_moderator() && $this->_in_enroll_cook_grace());
-						if(!$result) { array_push($this->messages, 'You do not have permission to enroll others.'); }
-						break;
-					case 'diswasher':
-						$result = $result && $this->_in_dishwasher_grace() || $this->_can_enroll_update(['other']); // Explicilty check 'other' for moderator perm.
+					case 'dishwasher':
+						// NOTE: this only works because dishwasher grace period is in the mod grace period! (base perm)
+						$result = $result && ($this->enrollment->dishwasher ? true : ($this->_in_dishwasher_grace() && !$this->_is_max_dishwashers()));
 						if(!$result) { array_push($this->messages, 'Cannot enroll dishwasher.'); }
 						break;
 					case 'cook':
-						// Base permission is enough 
+						$result = $result && ($this->enrollment->cook ? true : $this->_can_enroll_create(['cook']));
 						break;
 					default:
 						$result = false;
-						array_push($this->messages, 'Unknown permission requested.');
+						array_push($this->messages, 'Unknown permission <strong>'. $action . '</strong> on enroll.update requested.');
 						break 2; // Break from for-loop
 				}
 			}			
@@ -80,29 +77,53 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	/**
 	 * Determine whether enrollment may be created.
 	 * Basically a wrapper around enroll.update also checking if max counts have been reached.
-	 * @param array $actions
+	 * @param array $actions [cook, dishwasher]
 	 * @return boolean
 	 */
 	protected function _can_enroll_create(array $actions=null) {
-		$result = $this->_can_enroll_update();
+		$result = $this->_in_enroll_period();
+		if(!$result) { array_push($this->messages, 'Outside enrollment period.'); }
 		
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
 				switch($action) {
-					case 'other':
-						$result = $result && $this->_can_enroll_update(['other']);
+					case 'cook':
+						$result = $result && !$this->_is_max_cooks();
+						if(!$result) { array_push($this->messages, 'Maximum amount of cooks reached.'); }
 						break;
-					case 'diswasher':
-						$result = $result && $this->_can_enroll_update(['dishwasher']) && !$this->_is_max_dishwashers();
-						if(!$result) { array_push($this->messages, 'Maximum amount of dishwashers reached.'); }
+					case 'dishwasher':
+						// NOTE: Can only apply dishwasher role through update or 'enroll.other'
+						$result = false;
+						array_push($this->messages, 'Cannot create enrollment with dishwasher during enrollment period.');
+						break 2; // Break from for-loop
+					default:
+						$result = false;
+						array_push($this->messages, 'Unknown permission <strong>'. $action . '</strong> on enroll.create requested.');
+						break 2; // Break from for-loop
+				}
+			}			
+		}
+		return $result;
+	}
+	
+	
+	protected function _can_enroll_other(array $actions=null) {
+		// Must at least be in normal or grace period
+		$result = $this->_in_enroll_mod_grace() && $this->_is_moderator();
+		if(!$result) { array_push($this->messages, 'You do not have permission to enroll others.'); }
+
+		if(isset($actions) && $result) {		
+			foreach($actions as $action) {
+				switch($action) {
+					case 'dishwasher':
+						$result = $result && !$this->_is_max_dishwashers();
 						break;
 					case 'cook':
-						$result = $result && $this->_can_enroll_update(['cook']) && !$this->_is_max_cooks();
-						if(!$result) { array_push($this->messages, 'Maximum amount of cooks reached.'); }
+						$result = $result && !$this->_is_max_cooks();
 						break;
 					default:
 						$result = false;
-						array_push($this->messages, 'Unknown permission requested.');
+						array_push($this->messages, 'Unknown permission <strong>'. $action . '</strong> on enroll.other requested.');
 						break 2; // Break from for-loop
 				}
 			}			
@@ -134,7 +155,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						break;
 					default:
 						$result = false;
-						array_push($this->messages, 'Unknown permission requested.');
+						array_push($this->messages, 'Unknown permission <strong>'. $action . '</strong> requested.');
 						break 2; // Break from for-loop
 				}
 			}			
@@ -227,7 +248,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * Determine whether the enrollments of this session may be altered by the cooks. Sets both upper and lower boundary.
 	 * @return boolean
 	 */
-	private function _in_enroll_cook_grace() {
+	private function _in_enroll_mod_grace() {
 		return !$this->_in_enroll_period() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE));
 
 	}
