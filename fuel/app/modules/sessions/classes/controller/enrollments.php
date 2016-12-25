@@ -21,8 +21,8 @@ class Controller_Enrollments extends \Controller_Gate {
 			// Run validation to validate amount of guests
 			$val = Model_Enrollment_Session::validate('create');
 			if($val->run()) {
+				/* Input variables */
 				$user_id = \Input::post('user_id', null);
-				
 				$guests = \Input::post('guests', 0);
 				$cook = \Input::post('cook') == 'on' ? true : false;
 				$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
@@ -72,7 +72,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			} else {	
 				\Session::set_flash('error', $val->error('guests')->get_message());
 			}
-			\Response::redirect('/sessions/view/'.$date);
+			\Response::redirect($redirect);
 		}
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}
@@ -90,65 +90,62 @@ class Controller_Enrollments extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;				
 			
-			$user_id = \Input::post('user_id', null);
-				
-			$guests = \Input::post('guests', 0);
-			$cook = \Input::post('cook') == 'on' ? true : false;
-			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
-			$later = \Input::post('later') == 'on' ? true : false;
+			// Run validation to validate amount of guests
+			$val = Model_Enrollment_Session::validate('create');
+			if($val->run()) {	
+				/* Input variables */
+				$user_id = \Input::post('user_id', null);
+				$guests = \Input::post('guests', 0);
+				$cook = \Input::post('cook') == 'on' ? true : false;
+				$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
+				$later = \Input::post('later') == 'on' ? true : false;
 
-			/* TEMP CHECK -- CHANGE FOR VALIDATOR */
-			if ($guests > Model_Session::MAX_GUESTS || $guests < 0) {
-				$guests = 0;
-				\Session::set_flash('error', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));	
-			} 
-			/* END OF TEMP CHECK */
-			
-			if(isset($user_id)) {
-				// Trying to update other user. Check rights
-				if(!$context->has_access(['enroll.other'], true)) {
-					\Utils::handle_recoverable_error($context->get_message(), $redirect);
-				}	
-				
-				if (empty($user = \Model_User::find($user_id))) {
-					\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), $redirect);
-				}
-					
-				$enrollment = $session->get_enrollment($user_id);	
-				$dishwasher = $context->has_access(['enroll.other[dishwasher]']) && $dishwasher;
-				$cook = $context->has_access(['enroll.other[cook]']) && $cook;	
-	
-			} else {
-				// Trying to update our enrollment.			
-				if(!$context->has_access(['enroll.update'], true)) {
-					\Utils::handle_recoverable_error($context->get_message(), $redirect);
-				}
-				
-				$enrollment = $session->current_enrollment();		
-				$dishwasher = $context->has_access(['enroll.update[dishwasher]']) && $dishwasher;
-				$cook = $context->has_access(['enroll.update[cook]']) && $cook;		
-			} 
-			
-			if(empty($enrollment)) {
-				\Utils::handle_recoverable_error('LOL ENTER APPROPRIATE ERROR HERE.');
-			}
-			
-			// Check dishwasher flag. When set, we're only going to update dishwasher.
-			if(\Input::post('method') == 'dishwasher') {
-				$enrollment->dishwasher = $dishwasher;
-			} else {
-				$enrollment->dishwasher = $dishwasher;
-				$enrollment->cook = $cook;
-				$enrollment->guests = $guests;
-				$enrollment->later = $later;	
-			}
+				if(isset($user_id)) {
+					// Trying to update other user. Check rights
+					if(!$context->has_access(['enroll.other'], true)) {
+						\Utils::handle_recoverable_error($context->get_message(), $redirect);
+					}	
 
-			try {
-				$enrollment->save();
-				\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $enrollment->user->name]));
-			} catch (\Database_Exception $ex) {
-				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $enrollment->user->name]));	
-			}
+					if (empty($user = \Model_User::find($user_id))) {
+						\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), $redirect);
+					}
+
+					$enrollment = $session->get_enrollment($user_id);	
+					$dishwasher = $context->has_access(['enroll.other[dishwasher]']) && $dishwasher;
+					$cook = $context->has_access(['enroll.other[cook]']) && $cook;	
+				} else {
+					// Trying to update our enrollment.			
+					if(!$context->has_access(['enroll.update'], true)) {
+						\Utils::handle_recoverable_error($context->get_message(), $redirect);
+					}
+
+					$enrollment = $session->current_enrollment();		
+					$dishwasher = $context->has_access(['enroll.update[dishwasher]']) && $dishwasher;
+					$cook = $context->has_access(['enroll.update[cook]']) && $cook;		
+				} 
+
+				if(empty($enrollment)) {
+					\Utils::handle_recoverable_error(__('sesion.alert.error.no_enrollment', ['name' => $user_id=0]));
+				}
+
+				$enrollment->dishwasher = $dishwasher;
+				// Check dishwasher flag. When set, we're only going to update dishwasher.
+				if(!\Input::post('method') == 'dishwasher') {
+					$enrollment->dishwasher = $dishwasher;
+					$enrollment->cook = $cook;
+					$enrollment->guests = $guests;
+					$enrollment->later = $later;	
+				}
+
+				try {
+					$enrollment->save();
+					\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $enrollment->user->name]));
+				} catch (\Database_Exception $ex) {
+					\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $enrollment->user->name]));	
+				}
+			} else {	
+				\Session::set_flash('error', $val->error('guests')->get_message());
+			}		
 			\Response::redirect($redirect);
 		}
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
@@ -172,9 +169,8 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
 			
-			$user_id = \Input::post('user_id', null);
-			$cur_enrollment = $session->current_enrollment();
-			$enrollment = null;		
+			/* Input variable */
+			$user_id = \Input::post('user_id', null);	
 			
 			if(isset($user_id)) {
 				// Request rights to delete other user
@@ -182,14 +178,19 @@ class Controller_Enrollments extends \Controller_Gate {
 					// Report error
 					\Utils::handle_recoverable_error($context->get_message(), $redirect);	
 				}	
+				
+				if (empty($user = \Model_User::find($user_id))) {
+					\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]), $redirect);
+				}
+				
 				$enrollment = $session->get_enrollment($user_id);			
 			} else {
 				// Trying to delete our enrollment.
-				$enrollment = $cur_enrollment;
+				$enrollment = $session->current_enrollment();
 			} 
 			
 			if(empty($enrollment)) {
-				\Utils::handle_recoverable_error(__('user.alert.error.no_id', ['id' => $user_id]));
+				\Utils::handle_recoverable_error(__('sesion.alert.error.no_enrollment', ['name' => $user_id=0]));
 			}
 			
 			// Store name so we can report back.
