@@ -192,8 +192,8 @@ $can_dish = (int)$session->can_change_dishwashers(true);
 <script>
 function showAddModel(canCook, canDish) {
 	$("#add-enrollment-modal").modal('show');
-	$("#add-cook").attr('disabled', canCook === 0);
-	$("#add-dishwasher").attr('disabled', canDish === 0);
+	//$("#add-cook").attr('disabled', canCook === 0);
+	//$("#add-dishwasher").attr('disabled', canDish === 0);
 }
 
 function showDeleteModal(userId, userName) {
@@ -209,8 +209,8 @@ function showEditModal(userId, userName, guests, cook, dishwasher, canCook, canD
 	$("#edit-guests").val(guests);
 	$("#edit-cook").prop('checked', cook === 1);
 	$("#edit-dishwasher").prop('checked', dishwasher === 1);
-	$("#edit-cook").attr('disabled', canCook === 0);
-	$("#edit-dishwasher").attr('disabled', canDish === 0);
+	//$("#edit-cook").attr('disabled', canCook === 0);
+	//$("#edit-dishwasher").attr('disabled', canDish === 0);
 	
 }
 </script>

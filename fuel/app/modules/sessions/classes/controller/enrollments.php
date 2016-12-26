@@ -91,7 +91,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$redirect = '/sessions/view/'.$date;				
 			
 			// Run validation to validate amount of guests
-			$val = Model_Enrollment_Session::validate('create');
+			$val = Model_Enrollment_Session::validate('update');
 			if($val->run()) {	
 				/* Input variables */
 				$user_id = \Input::post('user_id', null);
@@ -111,8 +111,8 @@ class Controller_Enrollments extends \Controller_Gate {
 					}
 
 					$enrollment = $session->get_enrollment($user_id);	
-					$dishwasher = $context->has_access(['enroll.other[dishwasher]']) && $dishwasher;
-					$cook = $context->has_access(['enroll.other[cook]']) && $cook;	
+					$dishwasher = $context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]']) ? $dishwasher : $enrollment->dishwasher;
+					$cook = $context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]']) ? $cook : $enrollment->cook;	
 				} else {
 					// Trying to update our enrollment.			
 					if(!$context->has_access(['enroll.update'], true)) {
@@ -120,8 +120,8 @@ class Controller_Enrollments extends \Controller_Gate {
 					}
 
 					$enrollment = $session->current_enrollment();		
-					$dishwasher = $context->has_access(['enroll.update[dishwasher]']) && $dishwasher;
-					$cook = $context->has_access(['enroll.update[cook]']) && $cook;		
+					$dishwasher = $context->has_access(['enroll.update[dishwasher]'], true) ? $dishwasher : $enrollment->dishwasher;
+					$cook = $context->has_access(['enroll.update[cook]'], true) ? $cook : $enrollment->cook;	
 				} 
 
 				if(empty($enrollment)) {
@@ -139,6 +139,7 @@ class Controller_Enrollments extends \Controller_Gate {
 
 				try {
 					$enrollment->save();
+					\Session::set_flash('error', $context->get_messages());	
 					\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $enrollment->user->name]));
 				} catch (\Database_Exception $ex) {
 					\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $enrollment->user->name]));	
@@ -164,11 +165,6 @@ class Controller_Enrollments extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session, \Auth::get_user());
 			$redirect = '/sessions/view/'.$date;	
 			
-			if(!$context->has_access(['enroll.delete'], true)) {
-				// Drop out
-				\Utils::handle_recoverable_error($context->get_message(), $redirect);
-			}
-			
 			/* Input variable */
 			$user_id = \Input::post('user_id', null);	
 			
@@ -185,6 +181,11 @@ class Controller_Enrollments extends \Controller_Gate {
 				
 				$enrollment = $session->get_enrollment($user_id);			
 			} else {
+				if(!$context->has_access(['enroll.delete'], true)) {
+					// Drop out
+					\Utils::handle_recoverable_error($context->get_message(), $redirect);
+				}
+				
 				// Trying to delete our enrollment.
 				$enrollment = $session->current_enrollment();
 			} 

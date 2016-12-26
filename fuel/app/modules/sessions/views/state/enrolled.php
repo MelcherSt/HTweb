@@ -1,8 +1,8 @@
 <?php
 
-$deadline = date('H:i', strtotime($session->deadline)); ?>
-
-
+$deadline = date('H:i', strtotime($session->deadline)); 
+$context = \Sessions\Auth_Context_Session::forge($session, \Auth::get_user());
+?>
 	<?php if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline)) && $session->can_enroll()) { ?>
 		<div class="alert alert-info">
 			<strong><?=__('alert.call.attention')?></strong> <?=__('session.alert.deadline.changed', array('time' => $deadline))?>

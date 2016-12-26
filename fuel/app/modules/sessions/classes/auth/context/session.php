@@ -45,24 +45,25 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	
 	/**
 	 * Determine whether user's enrollment may be updated
-	 * @param array $actions [other, dishwasher, cook]
+	 * @param array $actions [dishwasher, cook]
 	 * @return boolean
 	 */
 	protected function _can_enroll_update(array $actions=null) {
 		// Must at least be in normal or grace period
-		$result = $this->_in_enroll_period() || $this->_in_enroll_mod_grace();
-		if(!$result) { array_push($this->messages, 'Outside enrollment period.'); }
+		$result = $this->_in_enroll_period() || $this->_in_dishwasher_grace();
+		if(!$result) { array_push($this->messages, 'Cannot update enrollment. Outside enrollment period.'); }
 		
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
 				switch($action) {
 					case 'dishwasher':
-						// NOTE: this only works because dishwasher grace period is in the mod grace period! (base perm)
-						$result = $result && ($this->enrollment->dishwasher ? true : ($this->_in_dishwasher_grace() && !$this->_is_max_dishwashers()));
-						if(!$result) { array_push($this->messages, 'Cannot enroll dishwasher.'); }
+						// Check period. If we have the prop, we are allowed to update, otherwise we're adding and need to check max.
+						$result = $result && $this->_in_dishwasher_grace() && ($this->enrollment->dishwasher ? true : !$this->_is_max_dishwashers());
+						if(!$result) { array_push($this->messages, 'Cannot update dishwasher property on this enrollment.'); }
 						break;
 					case 'cook':
-						$result = $result && ($this->enrollment->cook ? true : $this->_can_enroll_create(['cook']));
+						$result = $result && $this->_in_enroll_period && ($this->enrollment->cook ? true : !$this->_is_max_cooks());
+						if(!$result) { array_push($this->messages, 'Cannot update cook property on this enrollment.'); }
 						break;
 					default:
 						$result = false;
@@ -77,12 +78,12 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	/**
 	 * Determine whether enrollment may be created.
 	 * Basically a wrapper around enroll.update also checking if max counts have been reached.
-	 * @param array $actions [cook, dishwasher]
+	 * @param array $actions [dishwasher, cook]
 	 * @return boolean
 	 */
 	protected function _can_enroll_create(array $actions=null) {
 		$result = $this->_in_enroll_period();
-		if(!$result) { array_push($this->messages, 'Outside enrollment period.'); }
+		if(!$result) { array_push($this->messages, 'Cannot create enrollment. Outside enrollment period.'); }
 		
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
@@ -94,7 +95,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 					case 'dishwasher':
 						// NOTE: Can only apply dishwasher role through update or 'enroll.other'
 						$result = false;
-						array_push($this->messages, 'Cannot create enrollment with dishwasher during enrollment period.');
+						array_push($this->messages, 'Cannot create enrollment with dishwasher property set during normal enrollment period.');
 						break 2; // Break from for-loop
 					default:
 						$result = false;
@@ -106,20 +107,38 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		return $result;
 	}
 	
-	
+	/**
+	 * 
+	 * @param array $actions [dishwasher, cook]
+	 * @return boolean
+	 */
 	protected function _can_enroll_other(array $actions=null) {
 		// Must at least be in normal or grace period
 		$result = $this->_in_enroll_mod_grace() && $this->_is_moderator();
-		if(!$result) { array_push($this->messages, 'You do not have permission to enroll others.'); }
+		if(!$result) { array_push($this->messages, 'Cannot create/update enrollment for other user. You do not have sufficient privilleges.'); }
 
+		$set_dishwasher = false;
+		$set_cook = false;
+		
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
 				switch($action) {
+					case 'set-dishwasher':
+						// Used to check if the 'other' user did already have this prop set.
+						$set_dishwasher = true;
+						array_push($this->messages, 'Set dishwasher');
+						break;
+					case 'set-cook':
+						$set_cook = true;
+						array_push($this->messages, 'Set cook');
+						break;	
 					case 'dishwasher':
-						$result = $result && !$this->_is_max_dishwashers();
+						$result = $result && (!$this->_is_max_dishwashers() || $set_dishwasher);
+						if(!$result) { array_push($this->messages, 'Cannot update dishwasher property on other enrollment. Prev val: ' . (int)$set_dishwasher); }
 						break;
 					case 'cook':
-						$result = $result && !$this->_is_max_cooks();
+						$result = $result && (!$this->_is_max_cooks() || $set_cook);
+						if(!$result) { array_push($this->messages, 'Cannot update cook property on other enrollment. Prev val: ' . (int)$set_cook); }
 						break;
 					default:
 						$result = false;
@@ -139,7 +158,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	protected function _can_session_update(array $actions=null) {	
 		// Must at least be a moderator
 		$result = $this->_is_moderator();
-		if(!$result) { array_push($this->messages, 'You do not have permission to edit the session.'); }
+		if(!$result) { array_push($this->messages, 'Cannot update session properties. You do not have sufficient privilleges.'); }
 		
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {

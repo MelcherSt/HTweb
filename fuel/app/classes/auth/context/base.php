@@ -11,11 +11,12 @@ class Auth_Context_Base {
 	protected $messages = [];
 
 	/**
-	 * Check to see if the user has the given permissions in this context. Performs an AND on all permissions. If a single permission is not 
-	 * granted- or doesn't exist - , the function will report negatively. An permission can have added actions. Actions are passed as parameters.
-	 * @param array $permissions list of permissions in the form of area.permission[action1, action2]
+	 * Check to see if the user has the given permissions in this context. An permission can have added actions. Actions are passed as parameters.
+	 * @param array $permissions list of permissions. A permission is in the form of 'area.permission[action1, action2]'
 	 * @param boolean $verbose if set to true any error messages can be retrieved using get_message() or get_messages()
-	 * @return boolean permission-granted
+	 * @param boolean $or_mode retrieve permission result in OR modus instead of default AND. 
+	 * @return boolean Determines if the given permissions were granted. 
+	 * Depending on modus (AND by default) all or some permissions need to be granted for the result to be true.
 	 */
 	public function has_access(array $permissions, $verbose=false, $or_mode=false) {
 		$this->clear_messages();
@@ -48,10 +49,7 @@ class Auth_Context_Base {
 			} else {
 				$callback = static::FUNC_PREFIX . $func;
 			}
-			
-			\Log::error('Callback: ' . $callback);
-			\Log::error('Arguments: ' . var_dump($actions));
-			
+				
 			// Invoke callback
 			if(method_exists($this, $callback)) {
 				if($or_mode) {
@@ -67,7 +65,7 @@ class Auth_Context_Base {
 		
 		// Empty last_error property if we aren't verbose
 		if (!$verbose) {
-			//$this->clear_messages();
+			$this->clear_messages();
 		}
 		
 		return $result;
