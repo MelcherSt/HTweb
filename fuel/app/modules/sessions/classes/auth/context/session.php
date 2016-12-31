@@ -27,6 +27,11 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		$this->session = $session;
 		$this->user = $user;
 		$this->enrollment = $session->current_enrollment();
+		
+		// Create bogus enrollment if the user is not enrolled.
+		if(empty($this->enrollment)) {
+			$this->enrollment = Model_Enrollment_Session::forge();
+		}
 	}
 	
 	public static function forge($session, $user) {
@@ -62,7 +67,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						if(!$result) { array_push($this->messages, 'Cannot update dishwasher property on this enrollment.'); }
 						break;
 					case 'cook':
-						$result = $result && $this->_in_enroll_period && ($this->enrollment->cook ? true : !$this->_is_max_cooks());
+						$result = $result && $this->_in_enroll_period() && ($this->enrollment->cook ? true : !$this->_is_max_cooks());
 						if(!$result) { array_push($this->messages, 'Cannot update cook property on this enrollment.'); }
 						break;
 					default:
@@ -109,7 +114,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	
 	/**
 	 * 
-	 * @param array $actions [dishwasher, cook]
+	 * @param array $actions [dishwasher, cook, set-cook, set-dishwasher]
 	 * @return boolean
 	 */
 	protected function _can_enroll_other(array $actions=null) {
@@ -126,19 +131,17 @@ class Auth_Context_Session extends \Auth_Context_Base{
 					case 'set-dishwasher':
 						// Used to check if the 'other' user did already have this prop set.
 						$set_dishwasher = true;
-						array_push($this->messages, 'Set dishwasher');
 						break;
 					case 'set-cook':
 						$set_cook = true;
-						array_push($this->messages, 'Set cook');
 						break;	
 					case 'dishwasher':
 						$result = $result && (!$this->_is_max_dishwashers() || $set_dishwasher);
-						if(!$result) { array_push($this->messages, 'Cannot update dishwasher property on other enrollment. Prev val: ' . (int)$set_dishwasher); }
+						if(!$result) { array_push($this->messages, 'Cannot update dishwasher property on other enrollment. Reported previous value: ' . (int)$set_dishwasher); }
 						break;
 					case 'cook':
 						$result = $result && (!$this->_is_max_cooks() || $set_cook);
-						if(!$result) { array_push($this->messages, 'Cannot update cook property on other enrollment. Prev val: ' . (int)$set_cook); }
+						if(!$result) { array_push($this->messages, 'Cannot update cook property on other enrollment. Reported previous value: ' . (int)$set_cook); }
 						break;
 					default:
 						$result = false;

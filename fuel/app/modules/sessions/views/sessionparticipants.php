@@ -1,12 +1,7 @@
 <?php
-
 $enrollments = $session->get_enrollments_sorted(); 
-$cur_enrollment = $session->current_enrollment();
-
-$can_cook = (int)$session->can_cook(true);
-$can_dish = (int)$session->can_change_dishwashers(true);
-
-
+$user = Auth::get_user();
+$context = \Sessions\Auth_Context_Session::forge($session, $user);
 ?>
 <div class="table-responsive">
 	<table class="table table-hover">
@@ -15,7 +10,7 @@ $can_dish = (int)$session->can_change_dishwashers(true);
 				<th><?=__('user.field.name')?></th>
 				<th>∆ <?=__('session.field.point_plural')?></th>
 				<th><?=__('session.field.guest_plural')?></th>	
-				<?php if (isset($cur_enrollment) && $cur_enrollment->cook): ?>
+				<?php if ($context->has_access(['session.update'])): ?>
 				<th><?=__('actions.name')?></th>
 				<?php endif; ?>
 			</tr>
@@ -39,7 +34,7 @@ $can_dish = (int)$session->can_change_dishwashers(true);
 				</td>
 				<td><?=$enrollment->get_point_prediction()?>  </td>
 				<td><?=$enrollment->guests?></td>
-				<?php if (isset($cur_enrollment) && $cur_enrollment->cook && $session->can_change_enrollments()): ?>
+				<?php if ($context->has_access(['enroll.other'])): ?>
 				<td>			
 					<a href="#" onclick="showEditModal(
 								<?=$enrollment->user->id?>, 
@@ -47,10 +42,10 @@ $can_dish = (int)$session->can_change_dishwashers(true);
 								<?=$enrollment->guests?>, 
 								<?=$enrollment->cook?>, 
 								<?=$enrollment->dishwasher?>,
-								<?=$can_cook?>, 
-								<?=$can_dish?>
+								<?=$context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
+								<?=$context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
 							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
-					<?php if ($cur_enrollment->user_id != $enrollment->user_id): ?> |
+					<?php if ($user->id != $enrollment->user_id): ?> |
 					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
 					<?php endif; ?>
 				</td>
@@ -61,10 +56,10 @@ $can_dish = (int)$session->can_change_dishwashers(true);
 	</table>
 </div>
 <div class="row">
-	<?php if (isset($cur_enrollment) && $cur_enrollment->cook && $session->can_change_enrollments()): ?>
+	<?php if ($context->has_access(['enroll.other'])): ?>
 		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
-					<?=$can_cook?>, 
-					<?=$can_dish?>
+					<?=$context->has_access(['enroll.other[cook]'])?>, 
+					<?=$context->has_access(['enroll.other[dishwasher]'])?>
 				)"><span class="fa fa-user-plus"></span>
 		 <?=__('session.view.btn.add_enroll')?>
 		</button>
@@ -192,8 +187,8 @@ $can_dish = (int)$session->can_change_dishwashers(true);
 <script>
 function showAddModel(canCook, canDish) {
 	$("#add-enrollment-modal").modal('show');
-	//$("#add-cook").attr('disabled', canCook === 0);
-	//$("#add-dishwasher").attr('disabled', canDish === 0);
+	("#add-cook").attr('disabled', canCook === 0);
+	$("#add-dishwasher").attr('disabled', canDish === 0);
 }
 
 function showDeleteModal(userId, userName) {
@@ -209,8 +204,8 @@ function showEditModal(userId, userName, guests, cook, dishwasher, canCook, canD
 	$("#edit-guests").val(guests);
 	$("#edit-cook").prop('checked', cook === 1);
 	$("#edit-dishwasher").prop('checked', dishwasher === 1);
-	//$("#edit-cook").attr('disabled', canCook === 0);
-	//$("#edit-dishwasher").attr('disabled', canDish === 0);
+	$("#edit-cook").attr('disabled', canCook === 0);
+	$("#edit-dishwasher").attr('disabled', canDish === 0);
 	
 }
 </script>
