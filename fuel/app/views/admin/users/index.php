@@ -12,7 +12,7 @@
 			<th>Start year</th>
 			<th>End year</th>
 			<th>Point count</th>
-			<th>Balance</th>
+			<th>IBAN</th>
 			<th>Group</th>
 			<th>Email</th>
 			<th></th>
@@ -20,7 +20,6 @@
 	</thead>
 	<tbody>
 <?php foreach ($users as $item): ?>		<tr>
-
 			<td><?php echo $item->username; ?></td>
 			<td><?php echo $item->name; ?></td>
 			<td><?php echo $item->surname; ?></td>
@@ -29,7 +28,7 @@
 			<td><?php echo $item->start_year; ?></td>
 			<td><?php echo $item->end_year; ?></td>
 			<td><?php echo $item->points; ?></td>
-			<td><?php echo $item->balance; ?></td>
+			<td><?php echo $item->iban; ?></td>
 			<td><?php echo $item->group_id; ?></td>
 			<td><?php echo $item->email; ?></td>
 			<td>

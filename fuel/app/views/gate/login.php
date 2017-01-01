@@ -1,4 +1,5 @@
 <div class="row">
+	<p>You are about to enter the protected area of the site.</p>
 	<div class="col-md-3">
 		<?php echo Form::open(array()); ?>
 
@@ -34,6 +35,7 @@
 				<?php echo Form::checkbox('rememberme'); ?>
 				Remember me
 				</label>
+				</div>
 			</div>
 
 			<div class="actions">

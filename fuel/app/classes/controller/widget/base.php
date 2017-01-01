@@ -10,7 +10,7 @@ class Controller_Widget_Base extends \Controller {
 		$this->template = new \stdClass();
 	}
 	
-	public function before() {
+	public function before() {		
 		parent::before();
 		// Widgets should be requested via HMVC only
 		if (!\Request::is_hmvc()) {

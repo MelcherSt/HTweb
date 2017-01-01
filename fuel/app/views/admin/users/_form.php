@@ -50,9 +50,9 @@
 
 		</div>
 		<div class="form-group">
-			<?php echo Form::label('Balance', 'balance', array('class'=>'control-label')); ?>
+				<?php echo Form::label('IBAN', 'iban', array('class'=>'control-label')); ?>
 
-				<?php echo Form::input('balance', Input::post('balance', isset($user) ? $user->balance : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Balance')); ?>
+					<?php echo Form::input('iban', Input::post('iban', isset($user) ? $user->iban : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'IBAN')); ?>
 
 		</div>
 		<div class="form-group">
@@ -73,6 +73,13 @@
 				<?php echo Form::input('email', Input::post('email', isset($user) ? $user->email : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Email')); ?>
 
 		</div>
+		<div class="form-group">
+				<label for="lang"><?=__('user.field.lang')?></label>
+				<select class="form-control" id="lang" name="lang">
+					<option value="nl" <?=Config::get('language') == 'nl' ? 'selected' : ''?>><?=__('user.language.nl')?></option>
+					<option value="en" <?=Config::get('language') == 'en' ? 'selected' : ''?>><?=__('user.language.en')?></option>
+				</select>
+			</div>
 		<div class="form-group">
 			<label class='control-label'>&nbsp;</label>
 			<?php echo Form::submit('submit', 'Save', array('class' => 'btn btn-primary')); ?>		</div>

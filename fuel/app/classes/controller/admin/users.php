@@ -34,8 +34,8 @@ class Controller_Admin_Users extends Controller_Admin
 					'start_year' => Input::post('start_year'),
 					'end_year' => Input::post('end_year'),
 					'points' => Input::post('points', 0),
-					'balance' => Input::post('balance', 0.0),
-					'password' => Auth::instance()->hash_password(Input::post('password')),
+					'iban' => Input::post('iban', ''),
+					'password' => Auth::instance()->hash_password(Input::post('password' . \Utils::rand_str(12))),
 					'group_id' => Input::post('group_id', 3),
 					'email' => Input::post('email'),
 					'last_login'      => 0,
@@ -78,15 +78,15 @@ class Controller_Admin_Users extends Controller_Admin
 			$user->username = Input::post('username');
 			$user->surname = Input::post('surname');
 			$user->name = Input::post('name');
-			$user->phone = Input::post('phone');
-			$user->active = Input::post('active');
-			$user->start_year = Input::post('start_year');
-			$user->end_year = Input::post('end_year');
-			$user->points = Input::post('points');
-			$user->balance = Input::post('balance');
+			$user->phone = Input::post('phone', '');
+			$user->active = Input::post('active', 1);
+			$user->start_year = Input::post('start_year', 0);
+			$user->end_year = Input::post('end_year', 0);
+			$user->points = Input::post('points', 0);
+			$user->iban = Input::post('iban', '');
 			$user->password = Input::post('password');
-			$user->group_id = Input::post('group_id');
-			$user->email = Input::post('email');
+			$user->group_id = Input::post('group_id', 3);
+			$user->email = Input::post('email', '');
 
 			if ($user->save())
 			{
@@ -113,7 +113,7 @@ class Controller_Admin_Users extends Controller_Admin
 				$user->start_year = $val->validated('start_year');
 				$user->end_year = $val->validated('end_year');
 				$user->points = $val->validated('points');
-				$user->balance = $val->validated('balance');
+				$user->iban = $val->validated('iban');
 				$user->password = $val->validated('password');
 				$user->group_id = $val->validated('group_id');
 				$user->email = $val->validated('email');

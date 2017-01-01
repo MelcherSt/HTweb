@@ -2,7 +2,10 @@
 
 namespace Fuel\Migrations;
 
-class Extend_Users
+/**
+ * Extend the users table initially created by the Auth package with some extra columns.
+ */
+class Extend_Users 
 {
 	public function up() {
 		\DBUtil::add_fields('users', array(
@@ -13,12 +16,15 @@ class Extend_Users
 			'start_year' => array('constraint' => 4, 'type' => 'int'),
 			'end_year' => array('constraint' => 4, 'type' => 'int'),
 			'points' => array('constraint' => 5, 'type' => 'int'),
-			'balance' => array('constraint' => '10,2', 'type' => 'decimal'),
+			'iban' => array('constraint' => '30', 'type' => 'varchar'),
+			'avatar' => array('constraint' => 255, 'type' => 'varchar'),
+			'lang' => array('constraint' => 2, 'type' => 'varchar'),
+			'salt' => array('constraint' => 255, 'type' => 'varchar'),
 		));
 	}
 
 	public function down() {
 		\DBUtil::drop_fields('users', array('name', 'surname', 'phone', 
-			'active', 'start_year', 'end_year', 'points', 'balance'));
+			'active', 'start_year', 'end_year', 'points', 'avatar', 'iban', 'lang', 'salt'));
 	}
 }

@@ -5,18 +5,21 @@
  */
 class Controller_Gate extends Controller_Base
 {
-	public function action_index() {
-		$this->template->title = 'Gate';
-		$this->template->content = View::forge('gate/gate');
-	}
+	protected $public_access = false; // Is the content accessible publicly?
+	protected $public_request = false; // Was the request made in not-logged-in state?
 	
-	public function before() {
+	public function before() {		
 		parent::before();
 
 		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout'))) {
 			if (!Auth::check()) {
-				// No user is logged in, redirect to login
-				Response::redirect('gate/login');
+				// No user is logged in, this is a public request
+				$this->public_request = true;
+				
+				if(!$this->public_access) {
+				// If the page is not publicly accessible and we're not logged-in, redirect to login
+					Response::redirect('gate/login');
+				}	
 			}
 		}
 	}
@@ -41,7 +44,6 @@ class Controller_Gate extends Controller_Base
 						if (($id = Auth::get_user_id()) !== false) {
 							// Find user
 							$current_user = \Model_User::find($id[1]);
-							Session::set_flash('success', e('Welcome, '.$current_user->name . '!'));
 											
 							// Does the user want to be remembered?
 							if(Input::post('rememberme', false) == 'on' ? true : false) {
@@ -50,7 +52,8 @@ class Controller_Gate extends Controller_Base
 								Auth::dont_remember_me();
 							}
 							
-							Response::redirect_back();	
+							$dest = Input::post('destination', '/');
+							Response::redirect($dest);
 						}
 					} else {
 						$this->template->set_global('login_error', 'Login failed!');
@@ -67,6 +70,6 @@ class Controller_Gate extends Controller_Base
 
 	public function action_logout() {
 		Auth::logout();
-		Response::redirect('gate');
+		Response::redirect('/');
 	}
 }

@@ -2,7 +2,9 @@
 
 namespace DevTool;
 
-\Event::register('gather_widgets',function(\Data $data) {
-	$data->put_item('devtool');
-});
+If(\Fuel::$env == \Fuel::DEVELOPMENT) {
+	\Event::register('gather_widgets',function(\Data $data) {
+		//$data->put_item('devtool/widget');
+	});
+}
 

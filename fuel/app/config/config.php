@@ -77,9 +77,13 @@ return array(
 	/**
 	 * Localization & internationalization settings
 	 */
-	// 'language'           => 'en', // Default language
-	// 'language_fallback'  => 'en', // Fallback language when file isn't available for default language
-	// 'locale'             => 'en_US', // PHP set_locale() setting, null to not set
+	'language'           => 'en', // Default language
+	'language_fallback'  => 'en', // Fallback language when file isn't available for default language
+	'locale'             => 'en_US.UTF-8', // PHP set_locale() setting, null to not set
+	'locales'			 => [
+		'en' => 'en_US.UTF-8',
+		'nl' => 'nl_NL.UTF-8'
+	],
 
 	/**
 	 * Internal string encoding charset
@@ -284,7 +288,7 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array('devtool', 'dashboard', 'sessions'),
+		'modules'  => array('devtool', 'dashboard', 'sessions', 'receipts', 'stats', 'content'),
 
 		/**
 		 * Classes to autoload & initialize even when not used

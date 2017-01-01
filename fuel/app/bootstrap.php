@@ -5,6 +5,7 @@ require COREPATH.'bootstrap.php';
 \Autoloader::add_classes(array(
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
+	'Auth_Login_OrmAuth' => APPPATH.'classes/auth/login/ormauth.php',
 ));
 
 // Register the autoloader
@@ -29,3 +30,4 @@ foreach(Module::loaded() as $module => $path) {
 		include_once($path. "bootstrap.php");
 	}
 }
+

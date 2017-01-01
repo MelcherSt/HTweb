@@ -5,6 +5,20 @@
 body { 
 	margin: 60px; 
 }
+
+.modal-open[style] {		
+	padding-right: 0px !important;		
+}	
+
+.clickable-row {
+	cursor: pointer;
+}
+
+td a {
+	text-decoration: none !important;
+}
+
+
 .huge { 
 	font-size: 40px; 
 }
@@ -13,6 +27,20 @@ body {
 }
 
 /* Additional non-bootstrap panel colors */
+.panel-grey {
+  border-color: #dedede;
+}
+.panel-grey > .panel-heading {
+  border-color: #dedede;
+  background-color: #dedede;
+}
+.panel-grey > a {
+  color: #888888;
+}
+.panel-grey > a:hover {
+  color: #9e9d9d;
+}
+
 .panel-green {
   border-color: #5cb85c;
 }
