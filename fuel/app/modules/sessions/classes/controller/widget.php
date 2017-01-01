@@ -6,7 +6,6 @@ class Controller_Widget extends \Controller_Widget_Base {
 	
 	public function action_index() {	
 		$session = Model_Session::get_by_date(date('Y-m-d'));
-		$context = \Sessions\Auth_Context_Session::forge($session, \Auth::get_user());
 		
 		$style = 'panel-green';
 		$icon = 'fa-cutlery';
@@ -15,6 +14,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 		$link = '/sessions/today';
 		
 		if(isset($session)) {
+			$context = \Sessions\Auth_Context_Session::forge($session, \Auth::get_user());
 			$enrollment = $session->current_enrollment();
 			$count = $session->count_total_participants();	
 			
