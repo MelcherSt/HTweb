@@ -229,7 +229,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	}
 	
 	/**
-	 * Determine if we're past diner time
+	 * Determine if we're past diner time (by default diner time is at 18:00)
 	 * @return boolean
 	 */
 	private function _in_past_diner() {

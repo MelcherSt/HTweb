@@ -2,7 +2,7 @@
 
 namespace Api;
 
-class Controller_Test extends \Controller {
+class Controller_Test extends \Controller_Gate {
 	
 	public function action_index($page=null) {
 		$config = array(

@@ -4,18 +4,9 @@ namespace Sessions;
 class Model_Session extends \Orm\Model
 {
 	const DEADLINE_TIME = '16:00';
-	const DINER_TIME = '18:00';
-	const MAX_COOKS = 1;
-	const MAX_DISHWASHER = 2;
 	const MAX_GUESTS = 20;
 	
-	/* Grace variables */
-	const DEADLINE_GRACE = '+1day';
-	const ENROLLMENT_GRACE = '+5days';
-	const COST_GRACE = '+5days';
-	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
-	
-	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions
+	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions in days
 	
 	protected static $_properties = array(
 		'id',
