@@ -139,7 +139,6 @@ class Controller_Enrollments extends \Controller_Gate {
 
 				try {
 					$enrollment->save();
-					\Session::set_flash('error', $context->get_messages());	
 					\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $enrollment->user->name]));
 				} catch (\Database_Exception $ex) {
 					\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $enrollment->user->name]));	

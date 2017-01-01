@@ -5,7 +5,9 @@ namespace Sessions;
 class Controller_Widget extends \Controller_Widget_Base {
 	
 	public function action_index() {	
-		$session = Model_Session::get_by_date(date('Y-m-d'));		
+		$session = Model_Session::get_by_date(date('Y-m-d'));
+		$context = \Sessions\Auth_Context_Session::forge($session, \Auth::get_user());
+		
 		$style = 'panel-green';
 		$icon = 'fa-cutlery';
 		$message = '';
@@ -32,7 +34,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 				$link_text = __('session.widget.link.no_cook');
 			}	
 
-			 if(!$session->can_enroll()) {
+			 if(!$context->has_access(['enroll.create'])) {
 				$style = 'panel-grey';
 				$message = __('session.widget.msg.deadline_passed');
 				$link_text = __('session.widget.link.deadline_passed');

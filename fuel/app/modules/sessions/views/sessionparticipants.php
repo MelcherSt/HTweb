@@ -1,7 +1,6 @@
 <?php
 $enrollments = $session->get_enrollments_sorted(); 
-$user = Auth::get_user();
-$context = \Sessions\Auth_Context_Session::forge($session, $user);
+$context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
 <div class="table-responsive">
 	<table class="table table-hover">
@@ -37,15 +36,13 @@ $context = \Sessions\Auth_Context_Session::forge($session, $user);
 				<?php if ($context->has_access(['enroll.other'])): ?>
 				<td>			
 					<a href="#" onclick="showEditModal(
-								<?=$enrollment->user->id?>, 
-								'<?=$enrollment->user->name?>', 
-								<?=$enrollment->guests?>, 
-								<?=$enrollment->cook?>, 
+								<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', 
+								<?=$enrollment->guests?>, <?=$enrollment->cook?>, 
 								<?=$enrollment->dishwasher?>,
-								<?=$context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
-								<?=$context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
+								<?=(int)$context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
+								<?=(int)$context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
 							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
-					<?php if ($user->id != $enrollment->user_id): ?> |
+					<?php if ($current_user->id != $enrollment->user_id): ?> |
 					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
 					<?php endif; ?>
 				</td>
@@ -58,8 +55,8 @@ $context = \Sessions\Auth_Context_Session::forge($session, $user);
 <div class="row">
 	<?php if ($context->has_access(['enroll.other'])): ?>
 		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
-					<?=$context->has_access(['enroll.other[cook]'])?>, 
-					<?=$context->has_access(['enroll.other[dishwasher]'])?>
+					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
+					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
 				)"><span class="fa fa-user-plus"></span>
 		 <?=__('session.view.btn.add_enroll')?>
 		</button>
@@ -187,7 +184,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $user);
 <script>
 function showAddModel(canCook, canDish) {
 	$("#add-enrollment-modal").modal('show');
-	("#add-cook").attr('disabled', canCook === 0);
+	$("#add-cook").attr('disabled', canCook === 0);
 	$("#add-dishwasher").attr('disabled', canDish === 0);
 }
 
