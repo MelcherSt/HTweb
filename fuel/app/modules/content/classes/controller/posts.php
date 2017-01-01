@@ -17,6 +17,13 @@ class Controller_Posts extends \Controller_Gate {
 		} else {
 			$this->template->content = \View::forge('index');
 		}
+	}
+
+	public function action_view($content_id=0) {
+		$post = Model_Post::find($content_id);
+		
+		$this->template->title = $post->title;
+		$this->template->post = $post;
 	}	
 }
 

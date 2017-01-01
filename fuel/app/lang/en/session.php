@@ -53,6 +53,7 @@ return [
 			'deadline_passed' => 'Cannot (un)enroll after deadline.',
 			'update_session' => 'Cannot update session',
 			'guests' => 'Cannot bring less than 0 or more than :max_guests guests.',
+			'no_perm' => 'You do not have sufficient permissions to perform this action <strong>:action</strong>',
 		],
 	],
 	'modal' => [

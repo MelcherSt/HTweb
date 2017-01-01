@@ -8,11 +8,6 @@ class Controller_Gate extends Controller_Base
 	protected $public_access = false; // Is the content accessible publicly?
 	protected $public_request = false; // Was the request made in not-logged-in state?
 	
-	public function action_index() {
-		$this->template->title = 'Gate';
-		$this->template->content = View::forge('gate/gate');
-	}
-	
 	public function before() {		
 		parent::before();
 

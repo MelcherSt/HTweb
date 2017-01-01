@@ -16,6 +16,13 @@ class Model_Enrollment_Session extends \Orm\Model {
 		'updated_at',
 	);
 	
+	public static function validate($factory) {
+		$val = \Validation::forge($factory);
+		$val->add_field('guests', 'Guests', 'numeric_between[0,10]');
+		$val->set_message('numeric_between', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));
+		return $val;
+	}
+	
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),

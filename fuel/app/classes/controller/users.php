@@ -19,15 +19,6 @@ class Controller_Users extends Controller_Gate
 		}		
 		Response::redirect('/files/users/avatar/'. $user->avatar);
 	}
-	
-	public function action_lang($lang) {
-		if (in_array($lang, array('en', 'nl'))) {
-			$user = \Model_User::find(\Auth::get_user_id()[1]);
-			$user->lang = $lang;
-			$user->save();
-			\Response::redirect_back();
-		}
-	}
 
 	public function action_view($id = null)	{	
 		$user = \Model_User::find($id);
@@ -59,7 +50,11 @@ class Controller_Users extends Controller_Gate
 			$pass = Input::post('password');
 			
 			if(!empty($pass)) {
-				if (!Auth::change_password($cur_pass, $pass)){
+				// Generate new salt
+				$new_salt = \Utils::rand_str(12);
+				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){
+					$user->salt = $new_salt;
+				} else {
 					Session::set_flash('error', __('user.alert.error.cur_pass'));
 				}
 			}
@@ -76,8 +71,7 @@ class Controller_Users extends Controller_Gate
 			Upload::process($config);
 
 			// if there are any valid files
-			if (Upload::is_valid())
-			{
+			if (Upload::is_valid()) {
 				// save them according to the config
 				Upload::save(0);
 				$value = Upload::get_files();  
@@ -91,14 +85,8 @@ class Controller_Users extends Controller_Gate
 				Session::set_flash('error', __('user.alert.error.update'));
 			}
 		} else {
-			if (Input::method() == 'POST')
-			{		
-				$user->phone = $val->validated('phone');
-				$user->password = $val->validated('password');
-				$user->email = $val->validated('email');
-				$user->iban = $val->validated('iban');
-
-				Session::set_flash('error', $val->error());
+			if (Input::method() == 'POST') {		
+				\Session::set_flash('error', $val->error());
 			}
 
 			$this->template->set_global('user', $user, false);

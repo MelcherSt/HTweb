@@ -6,5 +6,5 @@ return array(
 	'login' => 'Log-in',
 	'logout' => 'Log-out',
 	'settings' => 'Settings',
-	
+	'not_found' => 'Not Found',
   );

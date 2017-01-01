@@ -4,18 +4,9 @@ namespace Sessions;
 class Model_Session extends \Orm\Model
 {
 	const DEADLINE_TIME = '16:00';
-	const DINER_TIME = '18:00';
-	const MAX_COOKS = 1;
-	const MAX_DISHWASHER = 2;
 	const MAX_GUESTS = 20;
 	
-	/* Grace variables */
-	const DEADLINE_GRACE = '+1day';
-	const ENROLLMENT_GRACE = '+5days';
-	const COST_GRACE = '+5days';
-	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
-	
-	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions
+	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions in days
 	
 	protected static $_properties = array(
 		'id',
@@ -163,97 +154,7 @@ class Model_Session extends \Orm\Model
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
 	public function current_enrollment() {
-		return $this->get_enrollment(\Auth::get_user()->id);
-	}
-	
-	/**
-	 * Determine if session is open for normal enrollment
-	 * @return boolean
-	 */
-	public function can_enroll() {
-		$now_time = strtotime(date('Y-m-d H:i:s'));
-		$expiry_time = strtotime(date('Y-m-d H:i:s', strtotime($this->deadline)));	
-		// Deadline should be later than now
-		if ($expiry_time > $now_time) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Determine if current time is after the start of diner
-	 * @return boolean
-	 */
-	public function is_past_diner() {
-		$now_time = strtotime(date('Y-m-d H:i:s'));
-		$start_time = strtotime(date('Y-m-d H:i:s', strtotime(Model_Session::DINER_TIME)));	
-		// Now should be after diner start
-		if ($now_time > $start_time) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Determine whether the cost of this session may be changed by the cooks
-	 * @return boolean
-	 */
-	public function can_change_cost() {
-		return !$this->can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::COST_GRACE));
-	}
-	
-	/**
-	 * Determine whether the enrollments of this session may be altered by the cooks
-	 * @return boolean
-	 */
-	public function can_change_enrollments() {
-		return !$this->can_enroll() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::ENROLLMENT_GRACE));
-	}
-	
-	/**
-	 * Determine whether the deadline of this session may changed
-	 * @return boolean
-	 */
-	public function can_change_deadline() {
-		if ($this->can_enroll()) { 
-			return true;
-		} else {
-			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DEADLINE_GRACE);
-		}
-		
-	}
-	
-	/**
-	 * Determine whether cooks may enroll
-	 * @param boolean $cook Cooks may enroll people in an extended grade period
-	 * @return boolean
-	 */
-	public function can_enroll_cooks($cook=false) {
-		if($cook) {
-			return ($this->count_cooks() < static::MAX_COOKS) && $this->can_change_enrollments();
-		}
-		return $this->can_enroll() && ($this->count_cooks() < static::MAX_COOKS); 
-	}
-	
-	/**
-	 * Determine whether dishwashers may enroll
-	 * @param boolean $cook Cooks may enroll people in an extended grade period
-	 * @return boolean
-	 */
-	public function can_enroll_dishwashers($cook=false) {
-		if($cook) {
-			return ($this->count_dishwashers() < static::MAX_DISHWASHER) && $this->can_change_enrollments();
-		}
-		
-		// Deadline should be past due + diswasher count should be less than max.
-		if(!$this->can_enroll() && $this->is_past_diner() && ($this->count_dishwashers() < static::MAX_DISHWASHER)) {
-			// Dishwashers have untill the end of the day to enroll.
-			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DISHWASHER_ENROLLMENT_GRACE);
-		} else {
-			return false;
-		}
+		return $this->get_enrollment(\Auth::get_user_id()[1]);
 	}
 	
 	/**

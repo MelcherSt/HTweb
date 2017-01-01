@@ -19,11 +19,12 @@ class Extend_Users
 			'iban' => array('constraint' => '30', 'type' => 'varchar'),
 			'avatar' => array('constraint' => 255, 'type' => 'varchar'),
 			'lang' => array('constraint' => 2, 'type' => 'varchar'),
+			'salt' => array('constraint' => 255, 'type' => 'varchar'),
 		));
 	}
 
 	public function down() {
 		\DBUtil::drop_fields('users', array('name', 'surname', 'phone', 
-			'active', 'start_year', 'end_year', 'points', 'avatar', 'iban', 'lang'));
+			'active', 'start_year', 'end_year', 'points', 'avatar', 'iban', 'lang', 'salt'));
 	}
 }

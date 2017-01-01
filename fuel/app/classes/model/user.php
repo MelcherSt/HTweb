@@ -30,6 +30,7 @@ class Model_User extends \Auth\Model\Auth_User {
 			'null'        => false,
 		),
 		'password',
+		'salt',
 		'group_id',
 		'iban' => array(
 			'default'     => '',
@@ -43,42 +44,9 @@ class Model_User extends \Auth\Model\Auth_User {
 			'default'     => '',
 			'null'        => false,
 		),
-		'created_at',
-		'updated_at',
-		'last_login'      => array(
-			'form'        => array('type' => false),
-		),
-		'previous_login'  => array(
-			'form'        => array('type' => false),
-		),'login_hash'      => array(
-			'form'        => array('type' => false),
-		),
-		'user_id'         => array(
-			'default'     => 0,
-			'null'        => false,
-			'form'        => array('type' => false),
-		),
-		'created_at'      => array(
-			'default'     => 0,
-			'null'        => false,
-			'form'        => array('type' => false),
-		),
-		'updated_at'      => array(
-			'default'     => 0,
-			'null'        => false,
-			'form'        => array('type' => false),
-		),
-	);
-
-	protected static $_observers = array(
-		'Orm\Observer_CreatedAt' => array(
-			'events' => array('before_insert'),
-			'mysql_timestamp' => false,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_save'),
-			'mysql_timestamp' => false,
-		),
+		'last_login',
+		'login_hash' => [
+			'default' => ''],
 	);
 
 	public static function validate($factory) {
