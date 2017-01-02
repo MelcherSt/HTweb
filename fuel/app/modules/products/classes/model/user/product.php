@@ -35,10 +35,10 @@ class Model_User_Product extends \Orm\Model {
 			'key_to' => 'id',
 			'model_to' => '\Model_User',
 		)
-		,'session' => array(
+		,'product' => array(
 			'key_from' => 'product_id',
 			'key_to' => 'id',
-			'model_to' => '\Sessions\Model_Product'
+			'model_to' => 'Model_Product'
 		)
 	);	
 }

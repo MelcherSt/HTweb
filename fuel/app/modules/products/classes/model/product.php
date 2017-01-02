@@ -28,6 +28,13 @@ class Model_Product extends \Orm\Model
 			'mysql_timestamp' => false,
 		),
 	);
+	
+	protected static $_has_many = array(
+		'users' => array(
+			'model_to' => 'Sessions\Model_User_Product',
+			'cascade_delete' => true,
+		),
+	);
 
 	public static function validate($factory)
 	{

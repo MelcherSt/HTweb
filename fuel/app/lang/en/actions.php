@@ -7,4 +7,6 @@ return array(
 	'remove' => 'Remove',
 	'update' => 'Update',
 	'cancel' => 'Cancel',
+	'select_all' => 'Select all',
+	'deselect_all' => 'Deselect all',
   );

@@ -37,13 +37,14 @@
 				<ul class="nav navbar-nav">
 					<?php					
 						if (isset($current_user)) {
-							$menu_items = array(
+							$menu_items = [
 								array('sessions', __('session.title'), 'fa-cutlery'), 
+								['products', __('product.title'), 'fa fa-shopping-bag'],
 								array('receipts', 'My Receipts', 'fa-money'),
 								array('stats', __('stats.title'), 'fa-line-chart'),
 								array('wall', 'The wall', 'fa-id-card'),
 								array('content/posts', __('content.post.title'), 'fa-file-text'),
-							);
+							];
 						} else {
 							$menu_items = array();
 						}
