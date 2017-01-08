@@ -46,7 +46,7 @@ class Model_Receipt extends \Orm\Model
 	 * @param int $user_id
 	 * @return array \Receipts\Model_Receipt
 	 */
-	public static function get_by_user(int $user_id) {
+	public static function get_by_user($user_id) {
 		return Model_Receipt::query()->related('users', array(
 			'where' => array(
 				array('user_id', $user_id),
