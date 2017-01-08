@@ -2,21 +2,39 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
-
+<script>
+	$(function() {
+	
+	Morris.Bar({
+		element: 'distr-bar-chart',
+		data: [
+			<?php foreach($receipt->get_users_sorted() as $user_receipt): ?>
+			{
+				y: '<?=$user_receipt->user->get_fullname()?>',
+				a: '<?=$user_receipt->points?>',
+				b: '<?=$user_receipt->balance?>'
+			},
+			<?php endforeach; ?>
+		],
+		xkey: 'y',
+		ykeys: ['a', 'b'],
+		labels: ['Points', 'Balance']
+	  });
+    
+});
+</script>
 
 <div class="row">
 	<div class="well"><?=$receipt->notes?></div>
 	
-	<h2>Cost and points distrubution</h2>
-	<p>A receipt shows the distribution of cost and points over an interval. 
-		This means that only the points gained or lost in the given interval
-		will be shown in the chart and table below.</p>
+	<h2><?=__('receipt.view.title')?></h2>
+	<p><?=__('receipt.view.msg')?></p>
 	<div id="distr-bar-chart" style="height: 250px; width: 100%;"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-6"> 
-		<h3>Detailed overview</h3>
+		<h3><?=__('receipt.view.detail')?></h3>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
@@ -43,14 +61,14 @@
 	<?php $schema = $receipt->get_transaction_schema();?>
 	
 	<div class="col-md-6">
-		<h3>Transaction schema</h3>
+		<h3><?=__('receipt.view.trans_schema.title')?></h3>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>From</th>
-						<th>Amount</th>
-						<th>To</th>
+						<th><?=__('receipt.view.trans_schema.from')?></th>
+						<th><?=__('receipt.view.trans_schema.amount')?></th>
+						<th><?=__('receipt.view.trans_schema.to')?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,15 +92,15 @@
 			$balance_checksum = $receipt->validate_balance();
 			
 			if($points_checksum == 0) {?>
-			<p class="label label-success"><span class="fa fa-check"></span> Points checksum</p>
+			<p class="label label-success"><span class="fa fa-check"></span> <?=__('receipt.view.point_check')?></p>
 			<?php } else { ?>
-			<p class="label label-danger"><span class="fa fa-times"></span> Points checksum (<?=$points_checksum?>)</p>
+			<p class="label label-danger"><span class="fa fa-times"></span> <?=__('receipt.view.point_check')?> (<?=$points_checksum?>)</p>
 			<?php } ?>
 
 			<?php if($balance_checksum == 0) {?>
-			<p class="label label-success"><span class="fa fa-check"></span> Balance checksum</p>
+			<p class="label label-success"><span class="fa fa-check"></span> <?=__('receipt.view.balance_check')?></p>
 			<?php } else { ?>
-			<p class="label label-danger"><span class="fa fa-times"></span> Balance checksum (<?=$balance_checksum?>)</p>
+			<p class="label label-danger"><span class="fa fa-times"></span> <?=__('receipt.view.balance_check')?> (<?=$balance_checksum?>)</p>
 			<?php } ?>
 		</div>
 	</div>
@@ -90,17 +108,16 @@
 
 
 <div class="row">
-	<h2>Sessions</h2>
-	<p>The following sessions have been included in this receipt.</p>
+	<h2><?=__('session.name_plural')?></h2>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Date</th>
-					<th>Participants</th>
-					<th>Cook(s)</th>
-					<th>Dishwasher(s)</th>
-					<th>Cost</th>
+					<th><?=__('session.field.date')?></th>
+					<th><?=__('session.role.participant_plural')?></th>
+					<th><?=__('session.role.cook_plural')?></th>
+					<th><?=__('session.role.dishwasher_plural')?></th>
+					<th><?=__('session.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -125,27 +142,33 @@
 			</tbody>
 		</table>
 	</div>
+	
+	<h2><?=__('product.name_plural')?></h2>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><?=__('product.field.name')?></th>
+					<th><?=__('product.field.date')?></th>		
+					<th><?=__('product.field.paid_by')?></th>
+					<th><?=__('product.view.participant_plural')?></th>
+					<th><?=__('product.field.cost')?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach($receipt->products as $product_receipt): 
+					$product = $product_receipt->product;?>
+				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
+					<td><?=$product->name?></td>
+					<td><?=date('Y-m-d', $product->created_at)?></td>
+					<td><?=$product->payer->get_fullname()?>
+					<td><?=$product->count_participants()?></td>
+					<td><?='€ ' . $product->cost?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 
-<script>
-	$(function() {
-	
-	Morris.Bar({
-		element: 'distr-bar-chart',
-		data: [
-			<?php foreach($receipt->get_users_sorted() as $user_receipt): ?>
-			{
-				y: '<?=$user_receipt->user->get_fullname()?>',
-				a: '<?=$user_receipt->points?>',
-				b: '<?=$user_receipt->balance?>'
-			},
-			<?php endforeach; ?>
-		],
-		xkey: 'y',
-		ykeys: ['a', 'b'],
-		labels: ['Points', 'Balance']
-	  });
-    
-});
-</script>

@@ -3,12 +3,14 @@
 return [
 	'title' => 'My Sessions',
 	'title_admin' => 'Sessions',
+	'name' => 'Session',
+	'name_plural' => 'Session',
 	'type' => 'session',
 	'role' => [
 		'name' => 'Role',
 		'name_plural' => 'Roles',
 		'dishwasher' => 'Dishwasher',
-		'dishwasher_plural' => 'Dishwasher',
+		'dishwasher_plural' => 'Dishwashers',
 		'cook' => 'Cook',
 		'cook_plural' => 'Cooks',
 		'participant' => 'Participant',

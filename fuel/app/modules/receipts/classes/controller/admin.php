@@ -21,9 +21,10 @@ class Controller_Admin extends \Controller_Admin {
 	}
 
 	public function post_create() {
-		$session_ids = \Input::post('sessions', array());
+		$session_ids = \Input::post('sessions', []);
+		$product_ids = \Input::post('products', []);
 		
-		if(sizeof($session_ids) == 0) {
+		if(sizeof($session_ids) == 0 && sizeof($product_ids) == 0) {
 			\Utils::handle_recoverable_error('A receipt should at least settle one or more sessions/products.', '/receipts/admin/create');
 		}
 		
@@ -33,6 +34,7 @@ class Controller_Admin extends \Controller_Admin {
 		$receipt->save();
 
 		$this->handle_sessions($session_ids, $receipt);
+		$this->handle_products($product_ids, $receipt);
 		
 		\Response::redirect('/receipts/admin');
 	}
@@ -61,6 +63,14 @@ class Controller_Admin extends \Controller_Admin {
 				$session->save();		
 			}
 			
+			$product_receipts = $receipt->products;
+			foreach($product_receipts as $product_receipt) {
+				// Undo settled state
+				$product = $product_receipt->product;
+				$product->settled = false;
+				$product->save();
+			}
+			
 			if($receipt->delete()) {
 				\Session::set_flash('success', ('Receipt has been deleted.'));
 			} else {
@@ -72,6 +82,86 @@ class Controller_Admin extends \Controller_Admin {
 		\Utils::handle_irrecoverable_error('No receipt id specified for deletion');
 	}
 	
+	public function handle_products($product_ids, $receipt) {
+		foreach($product_ids as $product_id) {
+			$product = \Products\Model_Product::find($product_id);
+			
+			if(empty($product) || $product->settled || !$product->approved) {
+				continue;
+			}
+			
+			$product->settled = true;
+			$product->save();
+			
+			$total_count = $product->count_participants();
+			
+			// If there are no people skip this session
+			if ($total_count == 0 ) {
+				continue;
+			} else {
+				$avg_cost = $product->cost / $total_count;
+			}
+			
+			// Create a product receipt to relate the product to this receipt
+			$product_receipt = Model_Product_Receipt::forge([
+					'product_id' => $product->id,
+					'receipt_id' => $receipt->id
+				]);
+			$product_receipt->save();
+			
+			$payer = $product->payer;
+			$processed_payer = false;
+			
+			// Apply debits
+			foreach($product->users as $product_user) {
+				$user_id = $product_user->user->id;
+					
+				// Apply avg cost * amount
+				$temp_balance = -($avg_cost * $product_user->amount);
+				
+				if($user_id == $payer->id) {
+					$processed_payer = true;
+					$temp_balance = $temp_balance + $product->cost;
+				}
+				
+				$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt->id);
+				$precision = 2;
+				
+				if (!isset($user_receipt)) {
+					// Create new one
+					$user_receipt = \Receipts\Model_User_Receipt::forge(array(
+						'user_id' => $user_id,
+						'receipt_id' => $receipt->id,
+						'balance' => round($temp_balance, $precision),
+					));	
+				} else {
+					// Update values if receipt already exists
+					$user_receipt->balance += round($temp_balance, $precision);
+				}
+				
+				$user_receipt->save();
+			}
+			
+			
+			// Process payer
+			
+			if (!$processed_payer) {
+				$payer_receipt = Model_User_Receipt::get_by_user($payer->id, $receipt->id);
+				if(!isset($payer_receipt)) {
+					$payer_receipt = \Receipts\Model_User_Receipt::forge(array(
+						'user_id' => $payer->id,
+						'receipt_id' => $receipt->id,
+						'balance' => round($product->cost, $precision),
+					));	
+				} else {
+					$payer_receipt->balance += $product->cost;
+				}
+
+				$payer_receipt->save();
+			}
+			
+		}
+	}
 	
 	public function handle_sessions($session_ids, $receipt) {
 		foreach($session_ids as $session_id) {

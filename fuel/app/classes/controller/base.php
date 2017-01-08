@@ -38,6 +38,7 @@ class Controller_Base extends Controller_Template {
 		\Lang::load('template'); 
 		\Lang::load('session', 'session');
 		\Lang::load('product', 'product');
+		\Lang::load('receipt', 'receipt');
 		\Lang::load('user', 'user');
 		\Lang::load('actions', 'actions');	
 		\Lang::load('alert', 'alert');

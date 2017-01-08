@@ -8,4 +8,6 @@ return array(
 	'settings' => 'Instellingen',
 	'not_found' => 'Niet gevonden',
 	'me' => 'Profiel bekijken',
+	'render' => 'Pagina geladen in {exec_time}s met {mem_usage}mb geheugen.',
+	'fuel' => 'Gebouwd met FuelPHP ',
   );

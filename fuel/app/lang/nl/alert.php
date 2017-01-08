@@ -9,7 +9,7 @@ return array(
 	'msg' => [
 		'alpha_rel' => '<strong>Dit is een alpha versie van :product voor testdoeleinden.</strong>'
 		. '<br>Deze versie representeert niet de uiteindelijke kwaliteit van het product.'
-		. ' Bedankt voor uw begrip en ondersteuning.',
+		. ' Bedankt voor je begrip en ondersteuning.',
 	]
 	
   );

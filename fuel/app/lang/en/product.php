@@ -2,7 +2,11 @@
 
 return [
 	'title' => 'Products',
+	'title_admin' => 'Products',
+	'name' => 'Product',
+	'name_plural' => 'Products',
 	'field' => [
+		'date' => 'Date added',
 		'paid_by' => 'Paid by',
 		'name' => 'Product name',
 		'notes' => 'Description',
@@ -13,6 +17,9 @@ return [
 		'btn' => [
 			'add_product' => 'Add product',
 		],
+	],
+	'view' => [
+		'participant_plural' => 'Participants',
 	],
 	'modal' => [
 		'create' => [

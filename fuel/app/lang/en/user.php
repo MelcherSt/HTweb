@@ -31,7 +31,7 @@ return array(
 		),
 	),
 	'wall' => [
-		'title' => 'The wall',
+		'title' => 'The Wall',
 		'sub' => 'of fame',
 		'msg' => 'This page shows the photo frames of all current inhabitants.',
 		'btn' => 'List of all users',

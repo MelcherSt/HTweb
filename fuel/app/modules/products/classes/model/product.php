@@ -31,7 +31,7 @@ class Model_Product extends \Orm\Model
 	
 	protected static $_has_many = array(
 		'users' => array(
-			'model_to' => 'Sessions\Model_User_Product',
+			'model_to' => 'Products\Model_User_Product',
 			'cascade_delete' => true,
 		),
 	);
@@ -45,25 +45,47 @@ class Model_Product extends \Orm\Model
 		)
 	);
 
-	public static function validate($factory)
-	{
-		$val = Validation::forge($factory);
+	public static function validate($factory) {
+		$val = \Validation::forge($factory);
 		$val->add_field('name', 'Name', 'required|max_length[50]');
 		$val->add_field('notes', 'Notes', 'max_length[255]');
-		$val->add_field('cost', 'Cost', 'required');
-		$val->add_field('paid_by', 'Paid By', 'required|valid_string[numeric]');
-
+		$val->add_field('cost', 'Cost', 'required|numeric_min[0]');
+		//$val->add_field('paid_by', 'Paid By', 'required|valid_string[numeric]');
 		return $val;
 	}
 	
+	/**
+	 * Retrieve all products that have been approved and haven't been settled
+	 * @return array \Products\Model_Product
+	 */
 	public static function get_ready_for_settlement() {
-		return Model_Product::query()->where('approved', true)->get();
+		return Model_Product::query()
+				->where('approved', true)
+				->where('settled', false)
+				->get();
 	}
 	
+	/**
+	 * Get the amount of users paying for this product
+	 * @return int
+	 */
 	public function count_participants() {
 		return $this::query()
 				->related('users')
-				->count();
+				->where('id', $this->id)
+				->count(false, false);
+	}
+	
+	/**
+	 * Retrieve a list of user products in this product sorted by name alphabetically
+	 * @return array \Products\Model_User_Product
+	 */
+	public function get_participants_sorted() {
+		return Model_User_Product::query()
+			->related('user')
+			->order_by('user.name', 'asc')
+			->where('product_id', $this->id)
+			->get();
 	}
 
 }

@@ -1,4 +1,4 @@
-<p>Create a receipt. Please select all sessions and/or product that should be settled with this receipt.</p>
+<p>Create a receipt. Please select all sessions and/or products that should be settled in this receipt.</p>
 
 <form method="post" action="/receipts/admin/create">
 	<div class="form-group">
@@ -36,7 +36,7 @@
 					<td><?=$session->count_total_participants()?></td>
 					<td><?=$session->count_cooks()?></td>
 					<td><?=$session->count_dishwashers()?></td>
-					<td><?=$session->cost?></td>
+					<td>€ <?=$session->cost?></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -65,13 +65,13 @@
 				<tr>
 					<td>
 						<label class="checkbox-inline">
-							<input type="checkbox" class="session-select" name="sessions[]" value="<?=$product->id?>"> <?=$product->id?>
+							<input type="checkbox" class="session-select" name="products[]" value="<?=$product->id?>"> <?=$product->id?>
 						</label>
 					</td>
 					<td><?=$product->name?></td>
 					<td><?=$product->payer->name?></td>
 					<td><?=$product->count_participants()?></td>
-					<td><?=$session->cost?></td>
+					<td>€ <?=$product->cost?></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>

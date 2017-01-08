@@ -53,10 +53,10 @@
 		</div>
 		<hr/>
 		<footer>
-			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>© 2016</small><br>
-				<small>Build using FuelPHP <?php echo e(Fuel::VERSION); ?></small>
+			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>© 2016-2017</small><br>
+				<small><?= __('fuel') . e(Fuel::VERSION); ?></small>
 			</p>
-			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>
+			<p class="pull-right"><?=__('render')?></p>
 		</footer>
 	</div>
 </body>

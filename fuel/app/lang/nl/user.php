@@ -31,7 +31,7 @@ return array(
 		),
 	),
 	'wall' => [
-		'title' => 'De muur',
+		'title' => 'De Muur',
 		'sub' => '',
 		'msg' => 'Deze pagina laat de lijstjes van alle huidige inwoners zien.',
 		'btn' => 'Lijst van alle gebruikers',

@@ -1,17 +1,13 @@
 <?php
 
-namespace Products;
+namespace Receipts;
 
-/**
- * Relate a user to a product
- */
-class Model_User_Product extends \Orm\Model {
+class Model_Product_Receipt extends \Orm\Model {
 	
 	protected static $_properties = array(
 		'id',
-		'user_id',
 		'product_id',
-		'amount' => ['default' => 1],
+		'receipt_id',
 		'created_at',
 		'updated_at',
 	);
@@ -27,20 +23,20 @@ class Model_User_Product extends \Orm\Model {
 		),
 	);
 	
-	protected static $_table_name = 'user_product';
+	protected static $_table_name = 'product_receipts';
 	
 	protected static $_belongs_to = array(
-		'user' => array(
-			'key_from' => 'user_id',
-			'key_to' => 'id',
-			'model_to' => '\Model_User',
-		)
-		,'product' => array(
+		'product' => array(
 			'key_from' => 'product_id',
 			'key_to' => 'id',
-			'model_to' => 'Products\Model_Product'
+			'model_to' => '\Products\Model_Product',
 		)
-	);	
+		,'receipt' => array(
+			'key_from' => 'receipt_id',
+			'key_to' => 'id',
+			'model_to' => '\Receipts\Model_Receipt'
+		)
+	);
 }
 
 

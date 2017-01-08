@@ -107,7 +107,7 @@ class Model_Session extends \Orm\Model
 	/* Below this line you will find instance methods */
 		
 	/**
-	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
+	 * Retrieve a list of user receipts in this receipt sorted by name alphabetically
 	 * @return \Sessions\Model_Enrollment_Session[]
 	 */
 	public function get_enrollments_sorted() {

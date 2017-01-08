@@ -3,6 +3,8 @@
 return [
 	'title' => 'Mijn Sessies',
 	'title_admin' => 'Sessies',
+	'name' => 'Sessie',
+	'name_plural' => 'Sessies',
 	'type' => 'sessie',
 	'role' => [
 		'name' => 'Rol',

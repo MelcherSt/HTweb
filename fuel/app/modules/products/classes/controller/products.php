@@ -21,8 +21,9 @@ class Controller_Products extends \Controller_Gate {
 		$data['left_content'] = \View::forge('details', ['product'=>$product]);	
 		$data['right_content'] = \View::forge('participants', ['product'=>$product]);	
 	
-		$this->template->title = $product->name;
-		$this->template->subtitle = 'Product';			
+		$this->template->page_title = $product->name;
+		$this->template->title = $product->name . ' - ' . __('product.title');
+		$this->template->subtitle = '€ ' . $product->cost;			
 		$this->template->content = \View::forge('layout/splitview', $data);
 	}
 }

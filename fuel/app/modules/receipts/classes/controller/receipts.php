@@ -5,7 +5,7 @@ namespace Receipts;
 class Controller_Receipts extends \Controller_Gate {
 	
 	public function action_index() {
-		$this->template->title = 'My Receipts';
+		$this->template->title = __('receipt.title');
 		
 		$data['receipts'] = Model_Receipt::get_by_user(\Auth::get_user_id()[1]);
 		
@@ -16,11 +16,11 @@ class Controller_Receipts extends \Controller_Gate {
 		if (isset($id)) {
 			$receipt = Model_Receipt::find($id);
 			if (!$receipt) {
-				\Utils::handle_irrecoverable_error("No receipt with id " . $id);
+				\Utils::handle_irrecoverable_error(__('receipt.alert.error.no_receipt', ['id' => $id]));
 			}
 			
 			$data['receipt'] = $receipt;
-			$this->template->title = 'Receipt';
+			$this->template->title = __('receipt.title_admin');
 			$this->template->subtitle = date('l j F Y', strtotime($receipt->date));
 			$this->template->content = \View::forge('view', $data);
 		} 

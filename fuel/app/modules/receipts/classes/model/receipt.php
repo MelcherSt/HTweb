@@ -31,6 +31,10 @@ class Model_Receipt extends \Orm\Model
 			'model_to' => '\Receipts\Model_Session_Receipt',
 			'cascade_delete' => false,
 		),
+		'products' => array(
+			'model_to' => '\Receipts\Model_Product_Receipt',
+			'cascade_delete' => false,
+		),
 		'users' => array(
 			'model_to' => '\Receipts\Model_User_Receipt',
 			'cascade_delete' => false,
@@ -40,9 +44,9 @@ class Model_Receipt extends \Orm\Model
 	/**
 	 * Retrieve all receipts related to the given user
 	 * @param int $user_id
-	 * @return [\Receipts\Model_Receipt]
+	 * @return array \Receipts\Model_Receipt
 	 */
-	public static function get_by_user($user_id) {
+	public static function get_by_user(int $user_id) {
 		return Model_Receipt::query()->related('users', array(
 			'where' => array(
 				array('user_id', $user_id),
@@ -52,7 +56,7 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
-	 * @return [\Receipts\Model_User_Receipt]
+	 * @return array \Receipts\Model_User_Receipt
 	 */
 	public function get_users_sorted() {
 		return Model_User_Receipt::query()
@@ -121,7 +125,7 @@ class Model_Receipt extends \Orm\Model
 		$creditors = $this->get_creditors();
 		$debtors = $this->get_debtors();
 		
-		$result = array();
+		$result = [];
 		
 		foreach($creditors as $creditor) {
 			$credit = $creditor->balance;
@@ -133,13 +137,13 @@ class Model_Receipt extends \Orm\Model
 				if($overshot <= 0) {
 					// Debt is larger than credit
 					$debtor->balance = $overshot;
-					array_push($result, array($debtor->user->id, $creditor->user->id, $credit));
+					array_push($result, [$debtor->user->id, $creditor->user->id, $credit]);
 					break; 
 				} else {
 					// Dept is smaller than credit
 					$debtor->balance = 0;
 					$credit = $overshot;
-					array_push($result, array($debtor->user->id, $creditor->user->id, $debit));
+					array_push($result, [$debtor->user->id, $creditor->user->id, $debit]);
 				}
 			}
 		}
