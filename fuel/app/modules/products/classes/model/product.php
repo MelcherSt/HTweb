@@ -35,6 +35,15 @@ class Model_Product extends \Orm\Model
 			'cascade_delete' => true,
 		),
 	);
+	
+	protected static $_has_one = array(
+		'payer' => array(
+			'key_from' => 'paid_by',
+			'model_to' => '\Model_User',
+			'key_to' => 'id',
+			'cascade_delete' => false,
+		)
+	);
 
 	public static function validate($factory)
 	{
@@ -45,6 +54,16 @@ class Model_Product extends \Orm\Model
 		$val->add_field('paid_by', 'Paid By', 'required|valid_string[numeric]');
 
 		return $val;
+	}
+	
+	public static function get_ready_for_settlement() {
+		return Model_Product::query()->where('approved', true)->get();
+	}
+	
+	public function count_participants() {
+		return $this::query()
+				->related('users')
+				->count();
 	}
 
 }

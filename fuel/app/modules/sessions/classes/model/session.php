@@ -162,11 +162,11 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_cooks() {
-		return array_values(\DB::select(\DB::expr('COUNT(*)'))
-				->from('enrollment_sessions')
-				->where('cook', 1)
-				->and_where('session_id', $this->id)
-				->execute()[0])[0];
+		return $this::query()
+				->where('id', $this->id)
+				->related('enrollments')
+				->where('enrollments.cook', true)
+				->count(false, false);
 	}
 	
 	/**
@@ -174,18 +174,18 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_dishwashers() {
-		return array_values(\DB::select(\DB::expr('COUNT(*)'))
-				->from('enrollment_sessions')
-				->where('dishwasher', 1)
-				->and_where('session_id', $this->id)
-				->execute()[0])[0];
+		return $this::query()
+				->related('enrollments')
+				->where('id', $this->id)
+				->where('enrollments.dishwasher', true)
+				->count(false, false);
 	}
 	
 	/**
 	 * Get the total amount of guests for this session
 	 * @return int
 	 */
-	public function count_guests() {
+	public function count_guests() {		
 		return array_values(\DB::select(\DB::expr('SUM(guests)'))
 				->from('enrollment_sessions')
 				->where('session_id', $this->id)
@@ -198,10 +198,10 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_participants() {
-		return array_values(\DB::select(\DB::expr('COUNT(*)'))
-				->from('enrollment_sessions')
-				->where('session_id', $this->id)
-				->execute()[0])[0];
+		return $this::query()
+				->related('enrollments')
+				->where('id', $this->id)
+				->count(false, false);
 	}
 	
 	/**

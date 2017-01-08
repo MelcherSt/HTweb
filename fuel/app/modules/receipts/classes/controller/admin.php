@@ -8,6 +8,7 @@ class Controller_Admin extends \Controller_Admin {
 		$this->template->title = 'Receipts';
 		$this->template->subtitle = 'create';
 		$data['sessions'] = \Sessions\Model_Session::get_ready_for_settlement();
+		$data['products'] = \Products\Model_Product::get_ready_for_settlement();
 		$this->template->content = \View::forge('admin/create', $data);
 	}
 	
