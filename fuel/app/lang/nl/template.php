@@ -6,5 +6,6 @@ return array(
 	'login' => 'Inloggen',
 	'logout' => 'Uitloggen',
 	'settings' => 'Instellingen',
-	
+	'not_found' => 'Niet gevonden',
+	'me' => 'Profiel bekijken',
   );

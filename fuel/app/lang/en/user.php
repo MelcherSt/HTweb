@@ -30,6 +30,12 @@ return array(
 			'invalid_lang' => 'The selected </strong>:label</strong> is invalid.',
 		),
 	),
+	'wall' => [
+		'title' => 'The wall',
+		'sub' => 'of fame',
+		'msg' => 'This page shows the photo frames of all current inhabitants.',
+		'btn' => 'List of all users',
+	],
 	'view' => [
 		'btn' => 'Edit settings',
 		'na' => 'N/a',

@@ -7,8 +7,8 @@ class Controller_wall extends \Controller_Gate {
 	public function action_index() {
 		$data['users'] = \Model_User::get_by_state();
 		
-		$this->template->title = 'The Wall';
-		$this->template->subtitle = 'of fame';
+		$this->template->page_title = $this->template->title = __('user.wall.title');
+		$this->template->subtitle = __('user.wall.sub');
 		$this->template->content = \View::forge('index', $data);
 	}
 }

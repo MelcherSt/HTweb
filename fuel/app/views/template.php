@@ -23,62 +23,8 @@
 		
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> <?=__('site_title')?> <small><?=__('site_sub')?></small></a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<?php					
-						if (isset($current_user)) {
-							$menu_items = [
-								array('sessions', __('session.title'), 'fa-cutlery'), 
-								['products', __('product.title'), 'fa fa-shopping-bag'],
-								array('receipts', 'My Receipts', 'fa-money'),
-								array('stats', __('stats.title'), 'fa-line-chart'),
-								array('wall', 'The wall', 'fa-id-card'),
-								array('content/posts', __('content.post.title'), 'fa-file-text'),
-							];
-						} else {
-							$menu_items = array();
-						}
-						
-						foreach($menu_items as $item) {
-							$section_segment = $item[0];
-							$section_title = $item[1];
-							$section_icon = $item[2];
-							
-							?>
-							<li class="<?php echo Uri::segment(1) == $section_segment ? 'active' : '' ?>">
-								<a href="/<?=$section_segment?>"><span class="fa <?=$section_icon?>"></span> <?=$section_title?> </a>
-							</li>
-							<?php
-						}
-					?>
-				</ul>
-				<ul class="nav navbar-nav pull-right">
-					<?php if (isset($current_user)){ ?>
-					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->name . ' ' . $current_user->surname; ?> <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="/users/me"><span class="fa fa-cogs"></span> <?=__('settings')?></a></li>
-							<li><a href="/gate/logout"><span class="fa fa-sign-out"></span> <?=__('logout')?></a></li>
-						</ul>
-					</li>
-					<?php } else { ?>
-					<li><a href="/gate/login"><span class="fa fa-sign-in"></span> <?=__('login')?></a></li>
-					<?php } ?>
-				</ul>
 	
-			</div>
-		</div>
-	</div>
+	<?= Request::forge('/nav/base')->execute([Uri::segment(1)]); ?>
 	
 	<div class="container">
 		<div class="row">
@@ -103,7 +49,7 @@
 				<?php endif; ?>
 			</div>
 			
-			<?php echo $content; ?>
+			<?=$content?>
 		</div>
 		<hr/>
 		<footer>

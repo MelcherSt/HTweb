@@ -1,9 +1,9 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Name</th>
-			<th>Phone</th>
-			<th>Email</th>
+			<th><?=__('user.field.name')?></th>
+			<th><?=__('user.field.phone')?></th>
+			<th><?=__('user.field.email')?></th>
 		</tr>
 	</thead>
 		<tbody>

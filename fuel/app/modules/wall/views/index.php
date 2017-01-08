@@ -1,6 +1,6 @@
 <div class="row">
-	<p>This page shows a list of all current inhabitants of Het Tribunaal.
-	<a href="/users" class="btn btn-primary pull-right"><span class="fa fa-users"></span> List of all users</a>
+	<p><?=__('user.wall.msg')?>
+	<a href="/users" class="btn btn-primary pull-right"><span class="fa fa-users"></span> <?=__('user.wall.btn')?></a>
 	</p>
 </div>
 <div class="row">

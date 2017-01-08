@@ -7,4 +7,5 @@ return array(
 	'logout' => 'Log-out',
 	'settings' => 'Settings',
 	'not_found' => 'Not Found',
+	'me' => 'View profile',
   );

@@ -15,6 +15,6 @@
 <!-- .Widget row -->
 
 <div class="alert alert-info">
-	<strong>Note!</strong> Het Tribunaal Web is currently in its early alpha stages and should be used for testing purposes only. 
-	Feature request are very welcome, but the core features (sessions, receipts and the dashboard) have priority over others.
+	<strong><?=__('alert.call.attention')?></strong>	
+	<?=__('alert.msg.alpha_rel', ['product' => __('site_title') . ' ' .__('site_sub')])?>
 </div>
