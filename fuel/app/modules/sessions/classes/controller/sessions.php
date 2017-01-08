@@ -43,13 +43,14 @@ class Controller_Sessions extends \Controller_Gate {
 			
 			$enrollment = $session->current_enrollment();		
 			if(!empty($enrollment)) {
-				$data['left_content'] = \View::forge('state/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
+				$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
 			} else {
-				$data['left_content'] = \View::forge('state/notenrolled', ['session'=>$session]);
+				$data['left_content'] = \View::forge('details/notenrolled', ['session'=>$session]);
 			}
 
-			$data['right_content'] = \View::forge('sessionparticipants', ['session'=>$session]);	
+			$data['right_content'] = \View::forge('participants', ['session'=>$session]);	
 
+			$this->template->page_title = __('session.name');
 			$this->template->subtitle = strftime('%A %e %B %Y', strtotime($date));			
 			$this->template->content = \View::forge('layout/splitview', $data);
 			return;

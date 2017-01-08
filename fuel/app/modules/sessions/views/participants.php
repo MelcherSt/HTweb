@@ -2,6 +2,7 @@
 $enrollments = $session->get_enrollments_sorted(); 
 $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
+<h3><?=__('session.role.participant_plural')?></h3>
 <div class="table-responsive">
 	<table class="table table-hover">
 		<thead>

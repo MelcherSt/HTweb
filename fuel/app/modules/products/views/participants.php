@@ -1,5 +1,5 @@
 <?php $participants = $product->get_participants_sorted(); ?>
-
+<h3><?=__('product.view.participant_plural')?></h3>
 <div class="table-responsive">
 	<table class="table table-hover">
 		<thead>
