@@ -36,3 +36,4 @@ desktop.ini
 # dev setting 
 /fuel/app/config/development/*
 /public/files/
+/fuel/app/migrations/003_add_prod_users.php

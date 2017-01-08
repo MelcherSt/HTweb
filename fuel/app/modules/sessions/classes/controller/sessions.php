@@ -49,9 +49,11 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 
 			$data['right_content'] = \View::forge('participants', ['session'=>$session]);	
-
+			$formatted_date = strftime('%A %e %B %Y', strtotime($date));
+			
 			$this->template->page_title = __('session.name');
-			$this->template->subtitle = strftime('%A %e %B %Y', strtotime($date));			
+			$this->template->title = $formatted_date . ' - ' . __('session.title');
+			$this->template->subtitle = $formatted_date;		
 			$this->template->content = \View::forge('layout/splitview', $data);
 			return;
 		}
