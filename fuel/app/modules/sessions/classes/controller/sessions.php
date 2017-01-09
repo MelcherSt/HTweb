@@ -41,6 +41,13 @@ class Controller_Sessions extends \Controller_Gate {
 				$session->save();
 			}
 			
+			// Automatically delay a session without cook
+			$context = Auth_Context_Session::forge($session, \Auth::get_user());
+			if ($context->has_access(['session.delay'])) {
+				$session->deadline = date('Y-m-d H:i:s', strtotime($session->deadline . '+1hour'));
+				$session->save();
+			}
+			
 			$enrollment = $session->current_enrollment();		
 			if(!empty($enrollment)) {
 				$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);

@@ -185,6 +185,23 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		return $result;
 	}
 	
+	/**
+	 * Determines if the session can be delayed (e.g. alter deadline).
+	 * For a delay to be possible, there should be at least 1 participant.
+	 * @param array $actions There are no valid actions 
+	 * @return boolean
+	 */
+	protected function _can_session_delay(array $actions=null) {
+		// The deadline must be past-due and there should be 0 cooks
+		if ($this->session->count_participants() > 0) {
+			return !$this->_in_enroll_period() && 
+				($this->session->count_cooks() == 0) && 
+				$this->_in_deadline_mod_grace();
+		} else {
+			return false;
+		}
+	}
+	
 	/* Below follow functions used to determine the role of the user in the session */
 	
 	private function _is_moderator() {
