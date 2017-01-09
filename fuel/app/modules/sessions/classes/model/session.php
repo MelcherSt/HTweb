@@ -166,7 +166,7 @@ class Model_Session extends \Orm\Model
 				->where('id', $this->id)
 				->related('enrollments')
 				->where('enrollments.cook', true)
-				->count(false, false);
+				->count('.user_id', true);
 	}
 	
 	/**
@@ -178,7 +178,7 @@ class Model_Session extends \Orm\Model
 				->related('enrollments')
 				->where('id', $this->id)
 				->where('enrollments.dishwasher', true)
-				->count(false, false);
+				->count('.user_id', true);
 	}
 	
 	/**
@@ -186,10 +186,15 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_guests() {		
-		return array_values(\DB::select(\DB::expr('SUM(guests)'))
+		$guest_count = array_values(\DB::select(\DB::expr('SUM(guests)'))
 				->from('enrollment_sessions')
 				->where('session_id', $this->id)
 				->execute()[0])[0];
+		
+		if (empty($guest_count)) {
+			return 0;
+		}
+		return $guest_count;
 	}
 	
 	/**
@@ -201,7 +206,7 @@ class Model_Session extends \Orm\Model
 		return $this::query()
 				->related('enrollments')
 				->where('id', $this->id)
-				->count(false, false);
+				->count('.user_id', true);
 	}
 	
 	/**

@@ -12,7 +12,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	private $enrollment;	// \Sessions\Model_Enrollment from $user
 	
 	/* Grace variables */
-	const DEADLINE_GRACE = '+1day';
+	const DEADLINE_GRACE = '+19hours';
 	const ENROLLMENT_GRACE = '+5days';
 	const COST_GRACE = '+5days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
