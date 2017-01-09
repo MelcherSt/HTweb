@@ -3,6 +3,7 @@ $enrollments = $session->get_enrollments_sorted();
 $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
 <h3><?=__('session.role.participant_plural')?></h3>
+<p><?=__('session.view.msg', ['p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()])?></p>	
 <div class="table-responsive">
 	<table class="table table-hover">
 		<thead>

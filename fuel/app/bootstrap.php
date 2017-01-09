@@ -31,3 +31,6 @@ foreach(Module::loaded() as $module => $path) {
 	}
 }
 
+// Set time-zone
+date_default_timezone_set('Europe/Amsterdam');
+
