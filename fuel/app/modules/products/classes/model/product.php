@@ -55,6 +55,41 @@ class Model_Product extends \Orm\Model
 	}
 	
 	/**
+	 * Retrieve all products that have been paid by the given user
+	 * @param int $user_id
+	 * @return array \Products\Model_Product
+	 */
+	public static function get_by_payer($user_id, $settled=false) {
+		return Model_Product::query()
+				->where('paid_by', $user_id)
+				->where('settled', $settled)
+				->get();
+	}
+	
+	/**
+	 * Retrieve all products that were bought for the given user
+	 * @param int $user_id
+	 * @return array \Products\Model_Product
+	 */
+	public static function get_by_user($user_id, $settled=false, $include_self=false) {
+		if(!$include_self) {
+			return Model_Product::query()
+				->related('users')
+				->where('users.user_id', $user_id)
+				->where('settled', $settled)
+				->where('paid_by', '!=', $user_id)
+				->get();
+		}
+		
+		
+		return Model_Product::query()
+				->related('users')
+				->where('users.user_id', $user_id)
+				->where('settled', $settled)
+				->get();
+	}
+	
+	/**
 	 * Retrieve all products that have been approved and haven't been settled
 	 * @return array \Products\Model_Product
 	 */

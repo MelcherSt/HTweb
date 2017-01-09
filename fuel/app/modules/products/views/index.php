@@ -1,8 +1,67 @@
-<button type="button" class="btn btn-primary" onClick="showAddProduct()">
-	<span class="fa fa-cart-plus"></span>
-	<?=__('product.index.btn.add_product')?>
-</button>
 
+
+<p><?=__('product.view.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
+
+<div class="row">
+	<button type="button" class="btn btn-primary pull-right" onClick="showAddProduct()">
+		<span class="fa fa-cart-plus"></span>
+		<?=__('product.index.btn.add_product')?>
+	</button>
+
+	<h2><?=__('product.view.paid_by_me')?></h2>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><?=__('product.field.name')?></th>
+					<th><?=__('product.field.date')?></th>		
+					<th><?=__('product.field.paid_by')?></th>
+					<th><?=__('product.view.participant_plural')?></th>
+					<th><?=__('product.field.cost')?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach(\Products\Model_Product::get_by_payer($current_user->id) as $product): ?>
+				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
+					<td><?=$product->name?></td>
+					<td><?=date('Y-m-d', $product->created_at)?></td>
+					<td><?=$product->payer->get_fullname()?>
+					<td><?=$product->count_participants()?></td>
+					<td><?='€ ' . $product->cost?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row">
+	<h2><?=__('product.view.paid_for_me')?></h2>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><?=__('product.field.name')?></th>
+					<th><?=__('product.field.date')?></th>		
+					<th><?=__('product.field.paid_by')?></th>
+					<th><?=__('product.view.participant_plural')?></th>
+					<th><?=__('product.field.cost')?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach(\Products\Model_Product::get_by_user($current_user->id) as $product): ?>
+				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
+					<td><?=$product->name?></td>
+					<td><?=date('Y-m-d', $product->created_at)?></td>
+					<td><?=$product->payer->get_fullname()?>
+					<td><?=$product->count_participants()?></td>
+					<td><?='€ ' . $product->cost?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>
 
 <!-- Modal dialog for product creation -->
 <div id="add-product-modal" class="modal fade">
