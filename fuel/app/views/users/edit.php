@@ -14,10 +14,12 @@
 				<?php echo Form::label(__('user.field.phone'), 'phone', array('class'=>'control-label')); ?>
 				<?php echo Form::input('phone', Input::post('phone', isset($user) ? $user->phone : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Phone')); ?>
 			</div>
+			<!--
 			<div class="form-group">
 				<label for="avatar_upload"><?=__('user.field.img')?></label>
 				<?php echo Form::file('avatar_upload', array('class' => 'col-md-4 form-control', 'placeholder'=>'123')); ?>	
 			</div>
+			-->
 			<div class="form-group">
 				<label for="lang"><?=__('user.field.lang')?></label>
 				<select class="form-control" id="lang" name="lang">

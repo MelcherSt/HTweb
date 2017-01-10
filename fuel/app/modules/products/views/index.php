@@ -78,7 +78,7 @@
 					
 					<div class="form-group">
 						<label for="name"><?=__('product.field.name')?></label>
-						<input name="name" class="form-control"></input>
+						<input name="name" class="form-control" required></input>
 					</div>
 					
 					<div class="form-group">
@@ -88,7 +88,7 @@
 					
 					<div class="form-group">
 						<label for="cost"><?=__('product.field.cost')?></label>
-						<input id="add-guests" class="form-control" name="cost" type="number" step="0.01" max="500" min="0" value="0"/>
+						<input id="cost" class="form-control" name="cost" type="number" step="0.01" max="500" min="0" value="0" required/>
 					</div>
 					
 					

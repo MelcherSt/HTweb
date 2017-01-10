@@ -50,7 +50,7 @@
 
 		if ($context->has_access(['session.update[cost]'])) { ?>
 		<div class="form-group pull-right">
-			<label for="deadline"><?=__('session.field.cost')?></label>
+			<label for="cost"><?=__('product.field.cost')?></label>
 			<input name="cost" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>
 		</div>
 		<?php } ?>	
@@ -85,9 +85,15 @@
 		<form action="/sessions/enrollments/delete/<?=$session->date?>" method="post" >
 			<button class="btn btn-danger pull-right" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
 		</form> 
-
-
-	<?php } 
+	<?php } else { ?>
+		<dl>
+			<dt><?=__('product.field.cost')?></dt>
+			<dd>€ <?=$session->cost?></dd>
+			<dt><?=__('product.field.paid_by')?></dt>
+			<dd><?=$session->payer->get_fullname() ?></dd>
+		</dl>
+	<?php
+	} 
 
 	if ($context->has_access(['enroll.update[dishwasher]'])) { ?>
 		<div class="alert alert-warning">

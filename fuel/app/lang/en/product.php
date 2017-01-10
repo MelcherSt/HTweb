@@ -19,7 +19,7 @@ return [
 		],
 	],
 	'view' => [
-		'msg' => 'This list shows all unsettled products that you have bought or have been bought by other for you. For a list of settled product see',
+		'msg' => 'This list only shows unsettled products that you have bought or have been bought by others for you. For a list of settled product see',
 		'participant_plural' => 'Participants',
 		'paid_by_me' => 'Products I bought',
 		'paid_for_me' => 'Products others bought for me',

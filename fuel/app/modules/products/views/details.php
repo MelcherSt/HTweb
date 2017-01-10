@@ -4,9 +4,10 @@
 	<?=$product->notes?>
 </div>
 
-<p><?=__('product.field.cost')?>: € <?=$product->cost?>
-	<br>
-	<?=__('product.field.paid_by')?>: <?=$product->payer->get_fullname() ?>
+<dl>
+	<dt><?=__('product.field.cost')?></dt>
+	<dd>€ <?=$product->cost?></dd>
+	<dt><?=__('product.field.paid_by')?></dt>
+	<dd><?=$product->payer->get_fullname() ?></dd>
+</dl>
 
-
-</p>

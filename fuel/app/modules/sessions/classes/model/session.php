@@ -50,6 +50,15 @@ class Model_Session extends \Orm\Model
 		),
 	);
 	
+	protected static $_has_one = array(
+		'payer' => array(
+			'key_from' => 'paid_by',
+			'model_to' => '\Model_User',
+			'key_to' => 'id',
+			'cascade_delete' => false,
+		)
+	);
+	
 	/**
 	 * Retrieve session from database by date
 	 * @param string $date

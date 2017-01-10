@@ -65,7 +65,7 @@
 					<th><?=__('session.role.participant_plural')?></th>
 					<th><?=__('session.role.cook_plural')?></th>
 					<th><?=__('session.role.dishwasher_plural')?></th>
-					<th><?=__('session.field.cost')?></th>
+					<th><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>

@@ -25,7 +25,6 @@ return [
 		'date' => 'Date', 
 		'point' => 'Point', 
 		'point_plural' => 'Points',
-		'cost' => 'Cost', 
 		'guest', 'Guest',
 		'guest_plural' => 'Guests',
 		'deadline' => 'Deadline',
