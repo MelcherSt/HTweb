@@ -35,26 +35,32 @@
 	if($context->has_access(['session.update'])) { ?>
 	<form action="/sessions/update/<?=$session->date?>" method="post" >
 		<?php if($context->has_access(['session.update[notes]'])) { ?>
-		<div class="form-group">
+		<div class="form-group ">
 			<label for="comment"><?=__('session.field.notes')?></label>
 			<textarea name="notes" class="form-control" rows="3"><?=$session->notes?></textarea>
 		</div>
-		<?php } 
+		<?php } ?>
 
-		if($context->has_access(['session.update[deadline]'])) { ?>
-		<div class="form-group pull-right">
-			<label for="deadline"><?=__('session.field.deadline')?></label>
-			<input class="timepicker" name="deadline" type="text" id="deadline" maxlength="5" max="5" size="10" value="<?=$deadline?>"required/>
-		</div>
-		<?php }
+		<div class="form-inline">	
+			<?php if($context->has_access(['session.update[deadline]'])) { ?>
+			<div class="form-group">
+				<label for="deadline"><?=__('session.field.deadline')?></label>
+				<input class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" value="<?=$deadline?>"required/>
+			</div>
+			<?php }
 
-		if ($context->has_access(['session.update[cost]'])) { ?>
-		<div class="form-group pull-right">
-			<label for="cost"><?=__('product.field.cost')?></label>
-			<input name="cost" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>
+			if ($context->has_access(['session.update[cost]'])) { ?>
+			<div class="form-group">
+				<label for="cost"><?=__('product.field.cost')?></label>
+				<div class="input-group">
+					<div class="input-group-addon">€</div>
+					<input name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>
+				</div>
+			</div>
+			<?php } ?>	
+			
+			<button class="btn btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
 		</div>
-		<?php } ?>	
-		<button class="btn btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
 	</form>
 	<br>
 	<?php } 
@@ -65,7 +71,7 @@
 		<form action="/sessions/enrollments/update/<?=$session->date?>" method="post" >
 			<div class="form-group">
 				<label for="guests"><?=__('session.view.label.guests')?> </label>
-				<input name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="<?=$enrollment->guests?>"/>
+				<input name="guests" class="form-control" type="number" step="1" maxlength="2" size="3" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="<?=$enrollment->guests?>"/>
 
 				<div class="checkbox">
 					<label><input name="later" type="checkbox" <?=$enrollment->later ? 'checked' : ''?> > <?=__('session.view.label.later')?></label>
@@ -78,7 +84,6 @@
 				</div>
 				<?php } ?>
 			</div>
-
 			<button class="btn btn-primary pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
 		</form> 
 

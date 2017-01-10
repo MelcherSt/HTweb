@@ -2,6 +2,14 @@
 $enrollments = $session->get_enrollments_sorted(); 
 $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
+<?php if ($context->has_access(['enroll.other'])) {?>
+		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
+					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
+					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
+				)"><span class="fa fa-user-plus"></span>
+		 <?=__('session.view.btn.add_enroll')?>
+		</button>
+	<?php } ?>
 <h3><?=__('session.role.participant_plural')?></h3>
 <p><?=__('session.view.msg', ['p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()])?></p>	
 <div class="table-responsive">
@@ -54,15 +62,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 		</tbody>
 	</table>
 </div>
-<div class="row">
-	<?php if ($context->has_access(['enroll.other'])): ?>
-		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
-					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
-					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
-				)"><span class="fa fa-user-plus"></span>
-		 <?=__('session.view.btn.add_enroll')?>
-		</button>
-		<?php endif; ?>
+
 
 <!-- Modal dialog for enrollment deletion -->
 <div id="delete-enrollment-modal" class="modal fade">

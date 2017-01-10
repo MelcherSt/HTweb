@@ -17,7 +17,8 @@
 	<form action="/sessions/enrollments/create/<?=$session->date?>" method="post" >
 		<div class="form-group">
 			<label for="guests"><?=__('session.view.label.guests')?> </label>
-			<input name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="0"/>
+			<input name="guests" class="form-control" type="number" step="1" maxlength="2" size="3" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" placeholder="0"/>
+
 
 			<div class="checkbox">
 				<label><input name="later" type="checkbox"> <?=__('session.view.label.later')?></label>

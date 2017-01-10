@@ -67,7 +67,7 @@
 <div id="add-product-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/products/create/" method="POST">
+			<form id="add-product" action="/products/create/" method="POST">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -88,7 +88,10 @@
 					
 					<div class="form-group">
 						<label for="cost"><?=__('product.field.cost')?></label>
-						<input id="cost" class="form-control" name="cost" type="number" step="0.01" max="500" min="0" value="0" required/>
+						<div class="input-group">
+							<div class="input-group-addon">€</div>
+							<input id="cost" class="form-control" name="cost" type="number" step="0.01" max="500" min="0" value="0" required/>
+						</div>
 					</div>
 					
 					
