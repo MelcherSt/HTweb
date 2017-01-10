@@ -90,20 +90,6 @@ class Model_Session extends \Orm\Model
 		));
 	}
 	
-	public static function get_next_recommended_cook() {
-		$users = \Model_User::get_by_state(true);
-		$cur_recommendation = null;
-		foreach($users as $user) {
-			$points = $user->points;
-			
-			$enrollments = \Sessions\Model_Enrollment_Session::get_ready_for_settlement($user->id);
-			foreach($enrollments as $enrollment) {
-				$points += $enrollment->get_point_prediction();
-			}
-		}
-		
-	}
-	
 	/* Below this line you will find instance methods */
 		
 	/**
@@ -132,9 +118,7 @@ class Model_Session extends \Orm\Model
 				));
 
 		return isset($enrollment);
-	}
-	
-	
+	}	
 	
 	/**
 	 * Retrieve the enrollment (if any) for the given user
@@ -162,7 +146,7 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_cooks() {
-		return $this::query()
+		return Model_Session::query()
 				->where('id', $this->id)
 				->related('enrollments')
 				->where('enrollments.cook', true)
@@ -174,7 +158,7 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_dishwashers() {
-		return $this::query()
+		return Model_Session::query()
 				->related('enrollments')
 				->where('id', $this->id)
 				->where('enrollments.dishwasher', true)
@@ -203,7 +187,7 @@ class Model_Session extends \Orm\Model
 	 * @return int
 	 */
 	public function count_participants() {
-		return $this::query()
+		return Model_Session::query()
 				->related('enrollments')
 				->where('id', $this->id)
 				->count('.user_id', true);
@@ -219,7 +203,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the enrollments for all cooks enrolled in this session
-	 * @return \Sessions\Model_Enrollment_Session[]
+	 * @return array \Sessions\Model_Enrollment_Session
 	 */
 	public function get_cook_enrollments() {
 		$enrollments = Model_Enrollment_Session::find('all', array(
@@ -232,7 +216,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Get the enrollments for all cooks enrolled in this session
-	 * @return \Sessions\Model_Enrollment_Session[]
+	 * @return array \Sessions\Model_Enrollment_Session
 	 */
 	public function get_dishwasher_enrollments() {
 		$enrollments = Model_Enrollment_Session::find('all', array(

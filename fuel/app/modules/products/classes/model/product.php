@@ -57,6 +57,7 @@ class Model_Product extends \Orm\Model
 	/**
 	 * Retrieve all products that have been paid by the given user
 	 * @param int $user_id
+	 * @param boolean $settled Settled products only
 	 * @return array \Products\Model_Product
 	 */
 	public static function get_by_payer($user_id, $settled=false) {
@@ -69,24 +70,21 @@ class Model_Product extends \Orm\Model
 	/**
 	 * Retrieve all products that were bought for the given user
 	 * @param int $user_id
+	 * @param boolean $include_self Include products user has bought
+	 * @param boolean $settled Settled products only
 	 * @return array \Products\Model_Product
 	 */
-	public static function get_by_user($user_id, $settled=false, $include_self=false) {
-		if(!$include_self) {
-			return Model_Product::query()
+	public static function get_by_user($user_id, $include_self=false, $settled=false) {
+		$query = Model_Product::query()
 				->related('users')
 				->where('users.user_id', $user_id)
-				->where('settled', $settled)
-				->where('paid_by', '!=', $user_id)
-				->get();
+				->where('settled', $settled);
+		
+		if (!$include_self) {
+			$query = $query->where('paid_by', '!=', $user_id);
 		}
-		
-		
-		return Model_Product::query()
-				->related('users')
-				->where('users.user_id', $user_id)
-				->where('settled', $settled)
-				->get();
+	
+		return $query->get();
 	}
 	
 	/**
@@ -105,10 +103,10 @@ class Model_Product extends \Orm\Model
 	 * @return int
 	 */
 	public function count_participants() {
-		return $this::query()
+		return Model_Product::query()
 				->related('users')
 				->where('id', $this->id)
-				->count(false, false);
+				->count('.user_id', true);
 	}
 	
 	/**
@@ -121,6 +119,21 @@ class Model_Product extends \Orm\Model
 			->order_by('user.name', 'asc')
 			->where('product_id', $this->id)
 			->get();
+	}
+	
+	/**
+	 * Return a string with either the # of participants or the single participant name
+	 * @return mixed string / int
+	 */
+	public function get_nicified_participants() {
+		$part_no = $this->count_participants();
+		
+		if ($part_no == 1) {
+			$part = Model_User_Product::query()->where('product_id', $this->id)->get_one();
+			return $part->user->get_fullname(0);
+		} else {
+			return $part_no;
+		}
 	}
 
 }

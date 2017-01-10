@@ -26,7 +26,7 @@
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->payer->get_fullname()?>
-					<td><?=$product->count_participants()?></td>
+					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
 				<?php endforeach; ?>
@@ -54,7 +54,7 @@
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->payer->get_fullname()?>
-					<td><?=$product->count_participants()?></td>
+					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
 				<?php endforeach; ?>
