@@ -74,13 +74,29 @@ class Model_Session extends \Orm\Model
 	/**
 	 * Retrieve sessions in which user is enrolled
 	 * @param int $user_id
+	 * @param boolean $include_self Include sessions in which user cooked
 	 * @param boolean $settled Query settled session only
 	 * @return /Sessions/Model_Session[]
 	 */
-	public static function get_by_user($user_id, $settled=false) {
+	public static function get_by_user($user_id, $include_self=false, $settled=false) {
+		$query = Model_Session::query()
+			->related('enrollments')
+			->where('enrollments.user_id', $user_id)
+			->where('settled', $settled)
+			->order_by('date', 'desc');
+		
+		if(!$include_self) {
+			$query = $query->where('enrollments.cook', false);
+		}
+		
+		return $query->get();
+	}
+	
+	public static function get_by_cook($user_id, $settled=false) {
 		return Model_Session::query()
 			->related('enrollments')
 			->where('enrollments.user_id', $user_id)
+			->where('enrollments.cook', true)
 			->where('settled', $settled)
 			->order_by('date', 'desc')
 			->get();

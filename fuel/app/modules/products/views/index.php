@@ -1,6 +1,6 @@
 
 
-<p><?=__('product.view.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
+<p><?=__('product.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
 
 <div class="row">
 	<button type="button" class="btn btn-primary pull-right" onClick="showAddProduct()">
@@ -8,16 +8,15 @@
 		<?=__('product.index.btn.add_product')?>
 	</button>
 
-	<h2><?=__('product.view.paid_by_me')?></h2>
+	<h2><?=__('product.index.paid_by_me')?></h2>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th><?=__('product.field.name')?></th>
-					<th><?=__('product.field.date')?></th>		
-					<th><?=__('product.field.paid_by')?></th>
-					<th><?=__('product.view.participant_plural')?></th>
-					<th><?=__('product.field.cost')?></th>
+					<th class="col-md-2"><?=__('product.field.name')?></th>
+					<th class="col-md-2"><?=__('product.field.date')?></th>		
+					<th class="col-md-2"><?=__('product.view.participant_plural')?></th>
+					<th class="col-md-1"><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -25,7 +24,6 @@
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
-					<td><?=$product->payer->get_fullname()?>
 					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
@@ -36,16 +34,16 @@
 </div>
 
 <div class="row">
-	<h2><?=__('product.view.paid_for_me')?></h2>
+	<h2><?=__('product.index.paid_for_me')?></h2>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th><?=__('product.field.name')?></th>
-					<th><?=__('product.field.date')?></th>		
-					<th><?=__('product.field.paid_by')?></th>
-					<th><?=__('product.view.participant_plural')?></th>
-					<th><?=__('product.field.cost')?></th>
+					<th class="col-md-2"><?=__('product.field.name')?></th>
+					<th class="col-md-2"><?=__('product.field.date')?></th>	
+					<th class="col-md-2"><?=__('product.field.paid_by')?></th>
+					<th class="col-md-2"><?=__('product.view.participant_plural')?></th>
+					<th class="col-md-1"><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>

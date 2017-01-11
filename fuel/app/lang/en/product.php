@@ -12,15 +12,14 @@ return [
 		'notes' => 'Description',
 		'approved' => 'Approved',
 		'cost' => 'Cost',
+		'participant' => 'Participant',
+		'participant_plural' => 'Participants',
 	],
 	'index' => [
 		'btn' => [
 			'add_product' => 'Add product',
 		],
-	],
-	'view' => [
 		'msg' => 'This list only shows unsettled products that you have bought or have been bought by others for you. For a list of settled product see',
-		'participant_plural' => 'Participants',
 		'paid_by_me' => 'Products I bought',
 		'paid_for_me' => 'Products others bought for me',
 	],

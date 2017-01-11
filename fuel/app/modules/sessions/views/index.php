@@ -55,17 +55,55 @@
 </div>
 <br>
 
+<p><?=__('session.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
+
 <div class="row">
-	<p><?=__('session.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
+	<h2><?=__('session.index.cooked_by_me')?></h2>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th><?=__('session.field.date')?></th>
-					<th><?=__('session.role.participant_plural')?></th>
-					<th><?=__('session.role.cook_plural')?></th>
-					<th><?=__('session.role.dishwasher_plural')?></th>
-					<th><?=__('product.field.cost')?></th>
+					<th class="col-md-2"><?=__('session.field.date')?></th>
+					<th class="col-md-1"><?=__('session.role.participant_plural')?></th>
+					<th class="col-md-2"><?=__('session.role.cook_plural')?></th>
+					<th class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
+					<th class="col-md-1"><?=__('product.field.cost')?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach(\Sessions\Model_Session::get_by_cook($current_user->id) as $session): ?>
+				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
+					<td><?=strftime('%F - %A', strtotime($session->date))?></td>
+					<td><?=$session->count_total_participants()?></td>
+					<td>
+						<?php foreach($session->get_cook_enrollments() as $enrollment):?>
+							<?=$enrollment->user->get_fullname();?>			
+						<?php endforeach; ?>	
+					</td>
+					<td>
+						<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
+							<?=$enrollment->user->get_fullname();?>			
+						<?php endforeach; ?>
+					</td>
+					<td><?='€ ' . $session->cost?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row">
+	<h2><?=__('session.index.cooked_for_me')?></h2>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="col-md-2"><?=__('session.field.date')?></th>
+					<th class="col-md-1"><?=__('session.role.participant_plural')?></th>
+					<th class="col-md-2"><?=__('session.role.cook_plural')?></th>
+					<th class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
+					<th class="col-md-1"><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>
