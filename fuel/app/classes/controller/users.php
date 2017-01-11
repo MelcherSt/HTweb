@@ -67,6 +67,7 @@ class Controller_Users extends Controller_Gate
 				'ext_whitelist' => array('jpg', 'jpeg', 'gif', 'png'),
 			);
 
+			/*
 			// process the uploaded files in $_FILES
 			Upload::process($config);
 
@@ -76,7 +77,7 @@ class Controller_Users extends Controller_Gate
 				Upload::save(0);
 				$value = Upload::get_files();  
 				$user->avatar =  $value[0]['saved_as'];
-			} 
+			} */
 			
 			if ($user->save()) {
 				Session::set_flash('success', __('user.alert.success.update'));
