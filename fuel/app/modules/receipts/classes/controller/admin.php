@@ -82,6 +82,12 @@ class Controller_Admin extends \Controller_Admin {
 		\Utils::handle_irrecoverable_error('No receipt id specified for deletion');
 	}
 	
+	/**
+	 * Create Product receipts and update all User receipts for given product. 
+	 * Empty or incomplete products will be deleted in the process.
+	 * @param type $product_ids
+	 * @param type $receipt
+	 */
 	public function handle_products($product_ids, $receipt) {
 		foreach($product_ids as $product_id) {
 			$product = \Products\Model_Product::find($product_id);
@@ -94,12 +100,15 @@ class Controller_Admin extends \Controller_Admin {
 			$product->save();
 			
 			$total_count = $product->count_participants();
+			$cost = $product->cost;
 			
-			// If there are no people skip this session
-			if ($total_count == 0 ) {
+			// If there are no people skip this product
+			if ($total_count == 0 || $cost = 0) {
+				// Remove product alltogether
+				$product->delete();
 				continue;
 			} else {
-				$avg_cost = $product->cost / $total_count;
+				$avg_cost = $cost / $total_count;
 			}
 			
 			// Create a product receipt to relate the product to this receipt
@@ -143,8 +152,7 @@ class Controller_Admin extends \Controller_Admin {
 			}
 			
 			
-			// Process payer
-			
+			// Process payer seperately (payer may not be a participant)
 			if (!$processed_payer) {
 				$payer_receipt = Model_User_Receipt::get_by_user($payer->id, $receipt->id);
 				if(!isset($payer_receipt)) {
@@ -163,6 +171,12 @@ class Controller_Admin extends \Controller_Admin {
 		}
 	}
 	
+	/**
+	 * Create Session receipts and update all User receipts for given sessions. 
+	 * Empty or incomplete sessions will be deleted in the process.
+	 * @param type $session_ids
+	 * @param type $receipt
+	 */
 	public function handle_sessions($session_ids, $receipt) {
 		foreach($session_ids as $session_id) {
 			$session = \Sessions\Model_Session::find($session_id);
@@ -186,6 +200,16 @@ class Controller_Admin extends \Controller_Admin {
 			$cook_count = $session->count_cooks();
 			$total_count = $session->count_total_participants();
 			
+			// If there are no people or no cook, skip this session
+			if ($total_count == 0 || $cook_count == 0) {
+				// Remove session altogether
+				$session->delete();
+				continue;
+			} else {
+				$avg_cost = $session->cost / $total_count;
+			}
+			
+			
 			if ($dish_count == 0) {
 				$max_loss = 2; // No dishwashers means less loss
 			} else if ($dish_count == 1) {
@@ -193,13 +217,6 @@ class Controller_Admin extends \Controller_Admin {
 			}
 			if ($cook_count == 2) {
 				$cook_gain = 1; // Two cooks split the multiplier
-			}
-			
-			// If there are no people or no cook, skip this session
-			if ($total_count == 0 || $cook_count == 0) {
-				continue;
-			} else {
-				$avg_cost = $session->cost / $total_count;
 			}
 			
 			// Create a session receipt to relate the session to this receipt
