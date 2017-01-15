@@ -93,14 +93,13 @@ class Controller_Admin extends \Controller_Admin {
 			$product = \Products\Model_Product::find($product_id);
 			
 			if(empty($product) || $product->settled || !$product->approved) {
-				continue;
+				//continue;
 			}
 			
 			$product->settled = true;
 			$product->save();
 			
-			$total_count = $product->count_participants();
-			$cost = $product->cost;
+			$total_count = $product->count_total_participants();
 			
 			// If there are no people skip this product
 			if ($total_count == 0 || $cost = 0) {
@@ -108,7 +107,7 @@ class Controller_Admin extends \Controller_Admin {
 				$product->delete();
 				continue;
 			} else {
-				$avg_cost = $cost / $total_count;
+				$avg_cost = $product->cost / (float)$total_count;
 			}
 			
 			// Create a product receipt to relate the product to this receipt
@@ -136,14 +135,12 @@ class Controller_Admin extends \Controller_Admin {
 				$precision = 2;
 				
 				// Update user receipt
-				$b_delta = round($temp_balance, $precision);
-				$this->update_user_receipt($user_id, $receipt->id, $p_delta, $b_delta);
+				$this->update_user_receipt($user_id, $receipt->id, round($temp_balance, $precision));
 			}
 			
 			// Process payer seperately (payer may not be a participant)
 			if (!$processed_payer) {
-				$b_delta = round($product->cost, $precision);
-				$this->update_user_receipt($payer->id, $receipt->id, 0, $b_delta);
+				$this->update_user_receipt($payer->id, $receipt->id, round($product->cost, $precision));
 			}
 			
 		}
@@ -228,7 +225,7 @@ class Controller_Admin extends \Controller_Admin {
 				// Update user receipt
 				$p_delta = round($temp_points, $precision);
 				$b_delta = round($temp_balance, $precision);
-				$this->update_user_receipt($user_id, $receipt->id, $p_delta, $b_delta);
+				$this->update_user_receipt($user_id, $receipt->id, $b_delta, $p_delta);
 				
 				// Apply points delta to actual user 
 				$user = \Model_User::find($user_id);
@@ -245,8 +242,8 @@ class Controller_Admin extends \Controller_Admin {
 	 * @param type $p_delta Point delta
 	 * @param type $b_delta Balance delta
 	 */
-	private function update_user_receipt($user_id, $receipt_id, $p_delta=0, $b_delta=0) {
-		$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt->id);
+	private function update_user_receipt($user_id, $receipt_id, $b_delta, $p_delta=0) {
+		$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt_id);
 		
 		if (!isset($user_receipt)) {
 			$user_receipt = \Receipts\Model_User_Receipt::forge(array(
@@ -257,7 +254,7 @@ class Controller_Admin extends \Controller_Admin {
 			));	
 		} else {
 			$user_receipt->balance += $b_delta;
-			$user_receipt->point += $p_delta;
+			$user_receipt->points += $p_delta;
 		}
 		$user_receipt->save();
 	}

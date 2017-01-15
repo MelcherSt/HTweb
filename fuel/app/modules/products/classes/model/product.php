@@ -100,6 +100,7 @@ class Model_Product extends \Orm\Model
 	
 	/**
 	 * Get the amount of users paying for this product
+	 * @deprecated since version .1+alpha2
 	 * @return int
 	 */
 	public function count_participants() {
@@ -107,6 +108,22 @@ class Model_Product extends \Orm\Model
 				->related('users')
 				->where('id', $this->id)
 				->count('.user_id', true);
+	}
+	
+	/**
+	 * Get the total amount of participants (this takes into account the amounts of purchases)
+	 * @return int
+	 */
+	public function count_total_participants() {		
+		$guest_count = array_values(\DB::select(\DB::expr('SUM(amount)'))
+				->from('user_product')
+				->where('product_id', $this->id)
+				->execute()[0])[0];
+		
+		if (empty($guest_count)) {
+			return 0;
+		}
+		return $guest_count;
 	}
 	
 	/**
