@@ -19,10 +19,15 @@ class Controller_Create extends \Controller_Gate {
 			$product->save();
 			
 			foreach($user_ids as $user_id) {
+				$amount = \Input::post($user_id, 1);	
+				if (!($amount > 1 && $amount < 20)) {
+					$amount = 1;
+				}
+				
 				$user_product = Model_User_Product::forge([
 					'user_id' => $user_id,
 					'product_id' => $product->id,
-					'amount' => 1,	// For now, default amount is 1
+					'amount' => $amount,
 				]);
 				
 				$user_product->save();

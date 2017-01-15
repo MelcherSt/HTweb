@@ -5,12 +5,14 @@
 		<thead>
 			<tr>
 				<th><?=__('user.field.name')?></th>
+				<th><?=__('product.field.amount')?></th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php foreach($participants as $participant): ?>
 			<tr>
 				<td><?=$participant->user->get_fullname()?></td>
+				<td><?=$participant->amount?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>

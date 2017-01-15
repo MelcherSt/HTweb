@@ -12,6 +12,7 @@ return [
 		'notes' => 'Description',
 		'approved' => 'Approved',
 		'cost' => 'Cost',
+		'amount' => 'Amount',
 		'participant' => 'Participant',
 		'participant_plural' => 'Participants',
 	],

@@ -12,6 +12,7 @@ return [
 		'notes' => 'Beschrijving',
 		'approved' => 'Goedgekeurd',
 		'cost' => 'Kosten',
+		'amount' => 'Aantal',
 		'participant' => 'Deelnemer',
 		'participant_plural' => 'Deelnemers',
 	],

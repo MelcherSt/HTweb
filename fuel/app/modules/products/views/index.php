@@ -92,7 +92,6 @@
 						</div>
 					</div>
 					
-					
 					<div class="btn-group btn-group-sm pull-right">
 							<a class="btn btn-primary" onClick="checkAll()"><?=__('actions.select_all')?></a>
 							<a class="btn btn-primary" onClick="uncheckAll()"><?=__('actions.deselect_all')?></a>
@@ -103,6 +102,12 @@
 						
 						<div class="table-responsive">
 							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th><?=__('user.field.name')?></th>
+										<th><?=__('product.field.amount')?></th>
+									</tr>
+								</thead>
 								<tbody>
 								<?php 			
 									$active_users = Model_User::get_by_state();
@@ -112,6 +117,9 @@
 											<label class="checkbox-inline">
 												<input type="checkbox" class="user-select" name="users[]" value="<?=$user->id?>"> <?=$user->get_fullname()?>
 											</label>
+										</td>
+										<td>
+											<input class="form-control" type="number" name="<?=$user->id?>" min="0" max="20" placeholder="1">
 										</td>
 									</tr>
 									<?php endforeach; ?>
