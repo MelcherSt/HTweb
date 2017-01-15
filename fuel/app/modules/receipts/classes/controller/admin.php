@@ -133,39 +133,17 @@ class Controller_Admin extends \Controller_Admin {
 					$temp_balance = $temp_balance + $product->cost;
 				}
 				
-				$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt->id);
 				$precision = 2;
 				
-				if (!isset($user_receipt)) {
-					// Create new one
-					$user_receipt = \Receipts\Model_User_Receipt::forge(array(
-						'user_id' => $user_id,
-						'receipt_id' => $receipt->id,
-						'balance' => round($temp_balance, $precision),
-					));	
-				} else {
-					// Update values if receipt already exists
-					$user_receipt->balance += round($temp_balance, $precision);
-				}
-				
-				$user_receipt->save();
+				// Update user receipt
+				$b_delta = round($temp_balance, $precision);
+				$this->update_user_receipt($user_id, $receipt->id, $p_delta, $b_delta);
 			}
-			
 			
 			// Process payer seperately (payer may not be a participant)
 			if (!$processed_payer) {
-				$payer_receipt = Model_User_Receipt::get_by_user($payer->id, $receipt->id);
-				if(!isset($payer_receipt)) {
-					$payer_receipt = \Receipts\Model_User_Receipt::forge(array(
-						'user_id' => $payer->id,
-						'receipt_id' => $receipt->id,
-						'balance' => round($product->cost, $precision),
-					));	
-				} else {
-					$payer_receipt->balance += $product->cost;
-				}
-
-				$payer_receipt->save();
+				$b_delta = round($product->cost, $precision);
+				$this->update_user_receipt($payer->id, $receipt->id, 0, $b_delta);
 			}
 			
 		}
@@ -245,23 +223,12 @@ class Controller_Admin extends \Controller_Admin {
 					$temp_balance += $session->cost;
 				}
 				
-				$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt->id);
 				$precision = 2;
 				
-				if (!isset($user_receipt)) {
-					// Create new one
-					$user_receipt = \Receipts\Model_User_Receipt::forge(array(
-						'user_id' => $user_id,
-						'receipt_id' => $receipt->id,
-						'balance' => round($temp_balance, $precision),
-						'points' => round($temp_points, $precision),
-					));	
-				} else {
-					// Update values if receipt already exists
-					$user_receipt->balance += round($temp_balance, $precision);
-					$user_receipt->points += round($temp_points, $precision);
-				}
-				$user_receipt->save();	
+				// Update user receipt
+				$p_delta = round($temp_points, $precision);
+				$b_delta = round($temp_balance, $precision);
+				$this->update_user_receipt($user_id, $receipt->id, $p_delta, $b_delta);
 				
 				// Apply points delta to actual user 
 				$user = \Model_User::find($user_id);
@@ -269,5 +236,29 @@ class Controller_Admin extends \Controller_Admin {
 				$user->save();
 			}
 		}
+	}
+	
+	/**
+	 * Update the user receipt for given user on given receipt with given deltas
+	 * @param type $receipt_id
+	 * @param type $user_id 
+	 * @param type $p_delta Point delta
+	 * @param type $b_delta Balance delta
+	 */
+	private function update_user_receipt($user_id, $receipt_id, $p_delta=0, $b_delta=0) {
+		$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt->id);
+		
+		if (!isset($user_receipt)) {
+			$user_receipt = \Receipts\Model_User_Receipt::forge(array(
+				'user_id' => $user_id,
+				'receipt_id' => $receipt_id,
+				'balance' => $b_delta,
+				'points' => $p_delta,
+			));	
+		} else {
+			$user_receipt->balance += $b_delta;
+			$user_receipt->point += $p_delta;
+		}
+		$user_receipt->save();
 	}
 }
