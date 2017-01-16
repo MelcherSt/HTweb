@@ -15,7 +15,7 @@
 				<tr>
 					<th class="col-md-2"><?=__('product.field.name')?></th>
 					<th class="col-md-2"><?=__('product.field.date')?></th>		
-					<th class="col-md-2"><?=__('product.view.participant_plural')?></th>
+					<th class="col-md-2"><?=__('product.field.participant_plural')?></th>
 					<th class="col-md-1"><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
@@ -42,7 +42,7 @@
 					<th class="col-md-2"><?=__('product.field.name')?></th>
 					<th class="col-md-2"><?=__('product.field.date')?></th>	
 					<th class="col-md-2"><?=__('product.field.paid_by')?></th>
-					<th class="col-md-2"><?=__('product.view.participant_plural')?></th>
+					<th class="col-md-2"><?=__('product.field.participant_plural')?></th>
 					<th class="col-md-1"><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
