@@ -53,11 +53,30 @@ class Model_Session extends \Orm\Model
 	protected static $_has_one = array(
 		'payer' => array(
 			'key_from' => 'paid_by',
-			'model_to' => '\Model_User',
 			'key_to' => 'id',
+			'model_to' => '\Model_User',
 			'cascade_delete' => false,
 		)
 	);
+	
+	/**
+	 * Delete all (incomplete) session entries from database with no valid enrollments
+	 */
+	public static function scrub_empty_or_invalid() {
+		$query = \DB::query('select s.id from sessions s, enrollment_sessions es where s.id = es.session_id group by s.id having sum(es.cook) = 0;')
+				->execute()->as_array();
+
+		$query2 = \DB::select('id')
+				->from('sessions')
+				->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
+				->execute()->as_array();
+		
+		// Prepare id array and delete
+		$query = array_merge($query, $query2);
+		foreach($query as $result) {
+			Model_Session::find($result)->delete();
+		}
+	}
 	
 	/**
 	 * Retrieve session from database by date
@@ -65,10 +84,9 @@ class Model_Session extends \Orm\Model
 	 * @return Model_Session
 	 */
 	public static function get_by_date($date) {
-		return Model_Session::find('first', array(
-			'where' => array(
-				array('date', $date))
-		));
+		return Model_Session::query()
+				->where('date', $date)
+				->get_one();
 	}
 	
 	/**
