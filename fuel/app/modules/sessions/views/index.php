@@ -55,6 +55,10 @@
 </div>
 <br>
 
+<!-- TODO: Insert quick picker -->
+
+<br>
+
 <p><?=__('session.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
 
 <div class="row">

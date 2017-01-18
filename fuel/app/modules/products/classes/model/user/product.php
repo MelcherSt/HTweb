@@ -34,6 +34,7 @@ class Model_User_Product extends \Orm\Model {
 			'key_from' => 'user_id',
 			'key_to' => 'id',
 			'model_to' => '\Model_User',
+			'cascade_delete' => false,
 		)
 		,'product' => array(
 			'key_from' => 'product_id',

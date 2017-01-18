@@ -41,11 +41,12 @@ class Model_Enrollment_Session extends \Orm\Model {
 			'key_from' => 'user_id',
 			'key_to' => 'id',
 			'model_to' => '\Model_User',
+			'cascade_delete' => false,
 		)
 		,'session' => array(
 			'key_from' => 'session_id',
 			'key_to' => 'id',
-			'model_to' => '\Sessions\Model_Session'
+			'model_to' => '\Sessions\Model_Session',
 		)
 	);
 	
