@@ -138,7 +138,7 @@ class Model_Session extends \Orm\Model
 	 * @return \Model_User
 	 */
 	public function get_payer() {
-		return \Model_User::find($this->payer_id);
+		return \Model_User::find($this->paid_by);
 	}
 	
 	/**
