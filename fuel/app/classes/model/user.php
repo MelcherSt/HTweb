@@ -50,6 +50,10 @@ class Model_User extends \Auth\Model\Auth_User {
 		'login_hash' => [
 			'default' => ''],
 	);
+	
+	protected static $_conditions = array(
+        'order_by' => array('name' => 'asc'),
+    );
 
 	public static function validate($factory) {
 		$val = Validation::forge($factory);

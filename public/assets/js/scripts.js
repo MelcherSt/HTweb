@@ -4,9 +4,12 @@
  */
 
 $(document).ready(function($) {
-	// Make rows clickable
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
+	// Make rows clickable while maintaing anchors
+    $(".clickable-row").click(function(e) {
+		// event target will always retrieve the anchor when clicked.
+		if(e.target.tagName !== 'A') {
+			window.location = $(this).data("href");
+		}
     });
 	
 	// Fade in all alerts

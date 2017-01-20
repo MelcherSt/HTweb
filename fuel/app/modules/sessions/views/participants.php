@@ -1,8 +1,9 @@
 <?php
-$enrollments = $session->get_enrollments_sorted(); 
+$enrollments = $session->get_enrollments(); 
+$unenrolled_users = $session->get_unenrolled();
 $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
-<?php if ($context->has_access(['enroll.other'])) {?>
+<?php if ($context->has_access(['enroll.other']) && sizeof($unenrolled_users > 0)) {?>
 		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
 					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
 					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
@@ -144,8 +145,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 						<label for="add-user-id"><?=__('user.name')?>:</label>
 						<select class="form-control" id="add-user-id" name="user_id">
 							<?php 
-							$active_users = Model_User::get_by_state();
-							foreach($active_users as $user):?>
+							foreach($unenrolled_users as $user):?>
 							<option value="<?=$user->id?>"><?=$user->get_fullname()?></option>
 							<?php endforeach; ?>
 						</select>
