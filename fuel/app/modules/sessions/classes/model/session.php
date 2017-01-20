@@ -136,15 +136,27 @@ class Model_Session extends \Orm\Model
 	/* Below this line you will find instance methods */
 		
 	/**
-	 * Retrieve a list of user receipts in this receipt sorted by name alphabetically
+	 * Retrieve a list of user enrollments in this session
 	 * @return \Sessions\Model_Enrollment_Session[]
 	 */
-	public function get_enrollments_sorted() {
+	public function get_enrollments() {
 		return Model_Enrollment_Session::query()
 			->related('user')
-			->order_by('user.name', 'asc')
 			->where('session_id', $this->id)
 			->get();
+	}
+	
+	/**
+	 * Retrieve a list of all users not unrolled in this session
+	 * Guest user (id 0) is excluded from the list.
+	 * @return \Model_User[]
+	 */
+	public function get_unenrolled() {
+		//select u.id, u.name from users u where u.id not in (select es.user_id from enrollment_sessions es, sessions s where es.session_id = 2 and s.id = 2);
+		return \Model_User::query()
+				->where('id', 'not in', \DB::query('select es.user_id from enrollment_sessions es, sessions s where es.session_id = ' . $this->id . ' and s.id = ' . $this->id))
+				->where('id', '!=', 0)
+				->get();		
 	}
 	
 	/**
