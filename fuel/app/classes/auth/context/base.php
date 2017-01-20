@@ -9,7 +9,18 @@ class Auth_Context_Base {
 	const FUNC_SPLIT = '_';
 	
 	protected $messages = [];
-
+	protected $user;
+	
+	private $verbose_mode = false;
+	
+	public function __construct($user) {
+		if(empty($user)) {
+			throw new InvalidArgumentException('Context base needs a valid user object!');
+		}
+		
+		$this->user = $user; // Either \Model_User or \Auth\Model_User
+	}
+	
 	/**
 	 * Check to see if the user has the given permissions in this context. An permission can have added actions. Actions are passed as parameters.
 	 * @param array $permissions list of permissions. A permission is in the form of 'area.permission[action1, action2]'
@@ -19,7 +30,7 @@ class Auth_Context_Base {
 	 * Depending on modus (AND by default) all or some permissions need to be granted for the result to be true.
 	 */
 	public function has_access(array $permissions, $verbose=false, $or_mode=false) {
-		$this->clear_messages();
+		$this->verbose_mode = $verbose;
 
 		// We have the permission until proven otherwise
 		$result = true;
@@ -63,11 +74,6 @@ class Auth_Context_Base {
 			}
 		}	
 		
-		// Empty last_error property if we aren't verbose
-		if (!$verbose) {
-			$this->clear_messages();
-		}
-		
 		return $result;
 	}
 	
@@ -88,9 +94,31 @@ class Auth_Context_Base {
 	}
 	
 	/**
+	 * Push a message on top of the message queue during access evaluation. 
+	 * If verbose mode was not set during access eval, message will be discarded.
+	 * @param string $msg
+	 */
+	protected function push_message($msg) {
+		if ($this->verbose_mode) { array_push($this->messages, $msg); }
+	}
+	
+	/**
 	 * Empty the messages list
 	 */
 	protected function clear_messages() {
 		$this->messages = [];
+	}
+	
+	/*
+	 * Utility methods below
+	 */
+	
+	/** 
+	 * Check if current user is member of (super) administrators group
+	 */
+	protected function is_administrator() {
+		$user_group_id = $this->user->group_id;
+		
+		return ($user_group_id == 5 || $user_group_id == 6);
 	}
 }	

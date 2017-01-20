@@ -27,8 +27,6 @@ class Create_sessions
 				'table' => 'users',
 				'column' => 'id',
 			),
-			'on_update' => 'CASCADE',
-			'on_delete' => 'RESTRICT'
 		));
 	}
 

@@ -5,8 +5,8 @@ class Utils {
 	const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_?!-0123456789';
 	
 	/**
-	 * Redirect to 404 with given message
-	 * @param type $message
+	 * Redirect to 404 and show given error message
+	 * @param string $message
 	 * @throws \HttpNotFoundException
 	 */
 	public static function handle_irrecoverable_error($message=null) {
@@ -16,13 +16,15 @@ class Utils {
 		throw new \HttpNotFoundException();
 	} 	
 	
-	public static function handle_recoverable_error($message=null, $redirect=null) {
-		if(isset($message)) {
-			\Session::set_flash('error', ($message));
-		}
-		if (isset($redirect)) {
-			return \Response::redirect($redirect);
-		}
+	/**
+	 * Redirect and show error message
+	 * @param string $message
+	 * @param string $redirect
+	 * @return \Response
+	 */
+	public static function handle_recoverable_error($message, $redirect) {
+		\Session::set_flash('error', ($message));
+		return \Response::redirect($redirect);
 	}
 	
 	/**

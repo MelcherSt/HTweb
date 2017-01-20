@@ -95,7 +95,7 @@
 			<dt><?=__('product.field.cost')?></dt>
 			<dd>€ <?=$session->cost?></dd>
 			<dt><?=__('product.field.paid_by')?></dt>
-			<dd><?=$session->payer->get_fullname() ?></dd>
+			<dd><?=$session->get_payer->get_fullname() ?></dd>
 		</dl>
 	<?php
 	} 

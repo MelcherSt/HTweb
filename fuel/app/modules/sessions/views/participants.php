@@ -4,7 +4,7 @@ $unenrolled_users = $session->get_unenrolled();
 $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
 <?php if ($context->has_access(['enroll.other']) && sizeof($unenrolled_users > 0)) {?>
-		<button type="button" class="btn btn-primary pull-right" onClick="showAddModel(
+		<button type="button" class="btn btn-primary pull-right" onClick="showAddModal(
 					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
 					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
 				)"><span class="fa fa-user-plus"></span>
@@ -179,7 +179,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 
 <!-- //TODO: externalize -->
 <script>
-function showAddModel(canCook, canDish) {
+function showAddModal(canCook, canDish) {
 	$("#add-enrollment-modal").modal('show');
 	$("#add-cook").attr('disabled', canCook === 0);
 	$("#add-dishwasher").attr('disabled', canDish === 0);

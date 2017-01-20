@@ -15,7 +15,7 @@ class Controller_Products extends \Controller_Gate {
 		$product = Model_Product::find($id);
 		
 		if(!isset($product)) {
-			throw new \HttpNotFoundException();
+			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $id]));
 		}
 		
 		$data['left_content'] = \View::forge('details', ['product'=>$product]);	

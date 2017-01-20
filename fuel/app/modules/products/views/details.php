@@ -8,6 +8,6 @@
 	<dt><?=__('product.field.cost')?></dt>
 	<dd>€ <?=$product->cost?></dd>
 	<dt><?=__('product.field.paid_by')?></dt>
-	<dd><?=$product->payer->get_fullname() ?></dd>
+	<dd><?=$product->get_payer()->get_fullname() ?></dd>
 </dl>
 

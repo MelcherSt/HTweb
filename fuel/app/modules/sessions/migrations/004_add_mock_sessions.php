@@ -8,7 +8,7 @@ namespace Fuel\Migrations;
 class Add_Mock_Sessions {
 	
 	public function up() {
-		If(\Fuel::$env == \Fuel::DEVELOPMENT) {
+		If(\Fuel::$env == \Fuel::DEVELOPMENT && false) {
 			/* Session 1 */
 			$s1 = \Sessions\Model_Session::forge(array(
 				'notes' => 'Some notes about the food here',

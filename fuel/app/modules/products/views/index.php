@@ -3,7 +3,7 @@
 <p><?=__('product.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
 
 <div class="row">
-	<button type="button" class="btn btn-primary pull-right" onClick="showAddProduct()">
+	<button type="button" class="btn btn-primary pull-right" onClick="showAddModal()">
 		<span class="fa fa-cart-plus"></span>
 		<?=__('product.index.btn.add_product')?>
 	</button>
@@ -27,7 +27,7 @@
 					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
-					<td><a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$product->id?>)"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
+					<td><a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$product->id?>, '<?=$product->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -53,13 +53,40 @@
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
-					<td><?=$product->payer->get_fullname()?>
+					<td><?=$product->get_payer()->get_fullname()?>
 					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+	</div>
+</div>
+
+
+<!-- Modal dialog for product deletion -->
+<div id="delete-product-modal" class="modal fade">
+	<div class="modal-dialog active">
+		<div class="modal-content">
+			<form id="remove-package" action="/products/delete/" method="POST">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><?=__('product.modal.remove.title')?></h4>
+				</div>
+				<div class="modal-body">
+					<p><?=__('product.modal.remove.msg')?> <strong><span id="delete-product-name"></span></strong>?</p>
+					<div class="form-group">
+						<input id="delete-product-id" type="hidden" class="form-control" name="product_id">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-danger" value="<?=__('product.modal.remove.btn')?>" />
+					<button type="button" class="btn btn-default"
+						data-dismiss="modal"><?=__('actions.cancel')?></button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -121,7 +148,7 @@
 											</label>
 										</td>
 										<td>
-											<input class="form-control" type="number" name="<?=$user->id?>" min="0" max="20" placeholder="1">
+											<input type="number" name="<?=$user->id?>" min="0" max="20" placeholder="1">
 										</td>
 									</tr>
 									<?php endforeach; ?>
@@ -151,7 +178,13 @@ function uncheckAll() {
 	$(".user-select").prop('checked', false);
 }
 
-function showAddProduct() {
+function showAddModal() {
 	$("#add-product-modal").modal('show');
+}
+
+function showDeleteModal(productId, productName) {
+	$("#delete-product-modal").modal('show');
+	$("#delete-product-name").html(productName);
+	$("#delete-product-id").val(productId);
 }
 </script>

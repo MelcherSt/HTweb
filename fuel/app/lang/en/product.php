@@ -29,8 +29,21 @@ return [
 			'title' => 'Create new product',
 			'msg' => 'Add a product that you bought for someone else.',
 			'participants' => 'Select the people you bought the product for',
-			'btn' => 'Create product'
-			
+			'btn' => 'Create product'	
+		],
+		'remove' => [
+			'title' => 'Delete product',
+			'msg' => 'Are you sure you want to remove the product',
+			'btn' => 'Delete product',
+		]
+	],
+	'alert' => [
+		'success' => [
+			'create_product' => 'Product <strong>:name</strong> has been created.',
+			'remove_product' => 'Product <strong>:name</strong> has been removed.',
+		],
+		'error' => [
+			'no_product' => 'Cannot find product with id <strong>:id</strong>.',
 		]
 	]
 ];

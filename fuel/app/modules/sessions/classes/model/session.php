@@ -50,32 +50,30 @@ class Model_Session extends \Orm\Model
 		),
 	);
 	
-	protected static $_has_one = array(
-		'payer' => array(
-			'key_from' => 'paid_by',
-			'key_to' => 'id',
-			'model_to' => '\Model_User',
-			'cascade_delete' => false,
-		)
-	);
-	
 	/**
-	 * Delete all (incomplete) session entries from database with no valid enrollments
+	 * Delete all (incomplete) session entries created before today
 	 */
 	public static function scrub_empty_or_invalid() {
-		$query = \DB::query('select s.id from sessions s, enrollment_sessions es where s.id = es.session_id group by s.id having sum(es.cook) = 0;')
-				->execute()->as_array();
-
-		$query2 = \DB::select('id')
-				->from('sessions')
-				->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
-				->execute()->as_array();
+		$today = date('Y-m-d');
 		
-		// Prepare id array and delete
-		$query = array_merge($query, $query2);
+		$query = \DB::select('s.id')
+				->from(['sessions', 's'], ['enrollment_sessions', 'es'])
+				->where('s.id', 'es.session_id')
+				->where('date', '<', $today)
+				->group_by('s.id')
+				->having(\DB::query('sum(es.cook'), 0)
+				->having_close()
+				->execute();
+		
 		foreach($query as $result) {
 			Model_Session::find($result)->delete();
 		}
+		
+		// Remove all orphaned sessions
+		$query2 = \DB::delete('sessions')
+				->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
+				->where('date', '<', $today)
+				->execute();
 	}
 	
 	/**
@@ -134,7 +132,15 @@ class Model_Session extends \Orm\Model
 	}
 	
 	/* Below this line you will find instance methods */
-		
+	
+	/**
+	 * Retrieve user model for paying user
+	 * @return \Model_User
+	 */
+	public function get_payer() {
+		return \Model_User::find($this->payer_id);
+	}
+	
 	/**
 	 * Retrieve a list of user enrollments in this session
 	 * @return \Sessions\Model_Enrollment_Session[]
@@ -147,7 +153,7 @@ class Model_Session extends \Orm\Model
 	}
 	
 	/**
-	 * Retrieve a list of all users not unrolled in this session
+	 * Retrieve a list of all active users not unrolled in this session
 	 * Guest user (id 0) is excluded from the list.
 	 * @return \Model_User[]
 	 */
@@ -156,6 +162,7 @@ class Model_Session extends \Orm\Model
 		return \Model_User::query()
 				->where('id', 'not in', \DB::query('select es.user_id from enrollment_sessions es, sessions s where es.session_id = ' . $this->id . ' and s.id = ' . $this->id))
 				->where('id', '!=', 0)
+				->where('active', true)
 				->get();		
 	}
 	

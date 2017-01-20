@@ -36,15 +36,6 @@ class Model_Product extends \Orm\Model
 		),
 	);
 	
-	protected static $_has_one = array(
-		'payer' => array(
-			'key_from' => 'paid_by',
-			'model_to' => '\Model_User',
-			'key_to' => 'id',
-			'cascade_delete' => false,
-		)
-	);
-
 	public static function validate($factory) {
 		$val = \Validation::forge($factory);
 		$val->add_field('name', 'Name', 'required|max_length[50]');
@@ -96,6 +87,14 @@ class Model_Product extends \Orm\Model
 				->where('approved', true)
 				->where('settled', false)
 				->get();
+	}
+	
+	/**
+	 * Retrieve user model for paying user
+	 * @return \Model_User
+	 */
+	public function get_payer() {
+		return \Model_User::find($this->paid_by);
 	}
 	
 	/**
