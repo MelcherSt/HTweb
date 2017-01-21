@@ -30,7 +30,20 @@ return [
 			'msg' => 'Voeg hier een product toe dat je voor een ander hebt aangeschaft.',
 			'participants' => 'Selecteer gebruikers voor wie je dit product kocht.',
 			'btn' => 'Product toevoegen'
-			
+		],
+		'remove' => [
+			'title' => 'Bestaand product verwijderen',
+			'msg' => 'Weet je zeker dat je dit product wilt verwijderen: ',
+			'btn' => 'Product verwijderen',
+		]
+	],
+	'alert' => [
+		'success' => [
+			'create_product' => 'Product <strong>:name</strong> is aangemaakt.',
+			'remove_product' => 'Product <strong>:name</strong> is verwijderd.',
+		],
+		'error' => [
+			'no_product' => 'Kan geen product vinden product met id <strong>:id</strong>.',
 		]
 	]
 ];
