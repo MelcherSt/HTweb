@@ -6,6 +6,7 @@ return [
 	'field' => [
 		'notes' => 'Notes',
 		'date' => 'Creation date',
+		'balance' => 'Balance',
 	],
 	'index' => [
 		'msg' => 'Here you find all your receipts',

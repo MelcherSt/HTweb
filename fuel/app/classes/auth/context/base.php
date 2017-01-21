@@ -4,27 +4,36 @@
  */
 class Auth_Context_Base {
 	
-	// Default function prefix
+	// Default function prefix and function split values
 	const FUNC_PREFIX = '_can_';
 	const FUNC_SPLIT = '_';
 	
+	/**
+	 * Message queue
+	 * @var array 
+	 */
 	protected $messages = [];
+	
+	/**
+	 * User for which to check contextual permissions
+	 * @var \Auth\Model_User 
+	 */
 	protected $user;
 	
 	private $verbose_mode = false;
 	
-	public function __construct($user) {
+	protected function __construct($user) {
 		if(empty($user)) {
-			throw new InvalidArgumentException('Context base needs a valid user object!');
+			throw new InvalidArgumentException('Context base needs an initialized user object!');
 		}
 		
-		$this->user = $user; // Either \Model_User or \Auth\Model_User
+		$this->user = $user; 
 	}
 	
 	/**
 	 * Check to see if the user has the given permissions in this context. An permission can have added actions. Actions are passed as parameters.
 	 * @param array $permissions list of permissions. A permission is in the form of 'area.permission[action1, action2]'
-	 * @param boolean $verbose if set to true any error messages can be retrieved using get_message() or get_messages()
+	 * @param boolean $verbose if set any error messages while be saved in the message queue
 	 * @param boolean $or_mode retrieve permission result in OR modus instead of default AND. 
 	 * @return boolean Determines if the given permissions were granted. 
 	 * Depending on modus (AND by default) all or some permissions need to be granted for the result to be true.
@@ -32,6 +41,12 @@ class Auth_Context_Base {
 	public function has_access(array $permissions, $verbose=false, $or_mode=false) {
 		$this->verbose_mode = $verbose;
 
+		// Check if user fulfills override requirements
+		if ($this->override_access()) {
+			// Thanks for stopping by. Bye.
+			return true;
+		}
+		
 		// We have the permission until proven otherwise
 		$result = true;
 		
@@ -78,7 +93,16 @@ class Auth_Context_Base {
 	}
 	
 	/**
-	 * Pop the last message from the messages list.
+	 * Checked by has_access() function to determine whether or not to continue checking access rights.
+	 * Implement this function to override the normal access evaluation procedure.
+	 * @return boolean Returns true when user meets override requirements. Any further access evaluation will seize. 
+	 */
+	protected function override_access() {
+		return false;
+	}
+	
+	/**
+	 * Pop the last message from the messages queue.
 	 * @return string
 	 */
 	public function get_message() {
@@ -86,7 +110,7 @@ class Auth_Context_Base {
 	}
 	
 	/**
-	 * Get the list of all messages
+	 * Retrieve the complete message queue.
 	 * @return array
 	 */
 	public function get_messages() {
@@ -95,7 +119,7 @@ class Auth_Context_Base {
 	
 	/**
 	 * Push a message on top of the message queue during access evaluation. 
-	 * If verbose mode was not set during access eval, message will be discarded.
+	 * If verbose mode was not set during access evaluation, message will be discarded.
 	 * @param string $msg
 	 */
 	protected function push_message($msg) {
@@ -103,7 +127,7 @@ class Auth_Context_Base {
 	}
 	
 	/**
-	 * Empty the messages list
+	 * Empty the messages queue.
 	 */
 	protected function clear_messages() {
 		$this->messages = [];

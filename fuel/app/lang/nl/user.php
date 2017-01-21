@@ -6,13 +6,17 @@ return array(
 	'field' => array(
 		'name' => 'Naam',
 		'username' => 'Gebruikersnaam',
-		'iban' => 'IBAN',
+		'iban' => [
+			'' => 'IBAN',
+			'show' => 'Toon IBAN',
+			],
 		'phone' => 'Telefoon',
 		'start_year' => 'Start jaar',
 		'end_year' => 'Eind jaar',
 		'email' => 'Email',
 		'img' => 'Avatar',
 		'lang' => 'Taal',	
+		'group' => 'Groep'
 	),
 	'language' => [
 		'en' => 'Engels',

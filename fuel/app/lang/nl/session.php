@@ -75,7 +75,7 @@ return [
 	],
 	'index' => [
 		'msg' => 'Deze lijst laat onverrekende sessies zijn. Voor een lijst met verrekende sessie, kijk op de pagina',
-		'cooked_for_me' => 'Maaltijden die anderen kookten voor mij',
+		'cooked_for_me' => 'Maaltijden die anderen voor mij kookten',
 		'cooked_by_me' => 'Maaltijden die ik kookte',
 	],
 	'view' => [

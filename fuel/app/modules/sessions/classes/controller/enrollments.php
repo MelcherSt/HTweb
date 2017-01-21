@@ -87,7 +87,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$context = Auth_Context_Session::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session);
 			$redirect = '/sessions/view/'.$date;				
 			
 			// Run validation to validate amount of guests
@@ -161,7 +161,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$context = Auth_Context_Session::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session);
 			$redirect = '/sessions/view/'.$date;	
 			
 			/* Input variable */

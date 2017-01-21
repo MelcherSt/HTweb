@@ -12,8 +12,18 @@ $(document).ready(function($) {
 		}
     });
 	
+	// Hide IBANs by default
+	$('.iban').hide();
+	
 	// Fade in all alerts
 	$(".alert").addClass("in");
 	// Fade out success alerts
 	$("#alert-success").delay(2000).fadeOut("slow", function () { $(this).remove(); });	
 });
+
+
+// Show iban with given id number			
+function showIban($id) {				
+	$('.iban-' + $id).show();
+	$('.iban-show-' + $id).hide();
+}

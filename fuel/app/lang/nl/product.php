@@ -32,7 +32,7 @@ return [
 			'btn' => 'Product toevoegen'
 		],
 		'remove' => [
-			'title' => 'Bestaand product verwijderen',
+			'title' => 'Product verwijderen',
 			'msg' => 'Weet je zeker dat je dit product wilt verwijderen: ',
 			'btn' => 'Product verwijderen',
 		]

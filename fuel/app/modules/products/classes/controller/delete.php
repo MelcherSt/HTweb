@@ -4,7 +4,7 @@ namespace Products;
 
 class Controller_Delete extends \Controller_Gate {
 	
-	public function action_index() {
+	public function post_index() {
 		$product_id = \Input::post('product_id', null);
 		$product = Model_Product::find($product_id);
 		$redirect = '/products';
@@ -14,7 +14,7 @@ class Controller_Delete extends \Controller_Gate {
 			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $id]));
 		}
 		
-		$context = new Auth_Context_Product($product, \Auth::get_user());	
+		$context = Auth_Context_Product::forge($product);	
 		if($context->has_access(['product.delete'], true)) {
 			$name = $product->name;
 			$product->delete();

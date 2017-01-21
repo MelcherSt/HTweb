@@ -9,25 +9,30 @@
 
 		<p>
 			<strong><?=__('user.field.username')?>:</strong>
-			<?php echo $user->username; ?></p>
+			<?=$user->username?></p>
 		<p>
 			<strong><?=__('user.field.name')?>:</strong>
-			<?php echo $user->get_fullname(); ?></p>
+			<?=$user->get_fullname()?></p>
 		<p>
-			<strong><?=__('user.field.iban')?>:</strong>
-			<?php echo $user->iban; ?></p>
+			<strong><?=__('user.field.group')?>:</strong>
+			<?=\Auth::group()->get_name($user->group_id)?></p>
+		<p>
+			<strong><?=__('user.field.iban.')?>:</strong>
+			<a class="iban-link iban-show-0" onclick="showIban('0');"><?=__('user.field.iban.show')?></a>
+			<span class="iban iban-0"><?=$user->iban?></span>
+		</p>
 		<p>
 			<strong><?=__('user.field.phone')?>:</strong>
-			<?php echo $user->phone; ?></p>
+			<?=$user->phone?></p>
 		<p>
 			<strong><?=__('user.field.start_year')?>:</strong>
-			<?php echo $user->start_year == 0 ? __('user.view.na') : $user->start_year; ?></p>
+			<?=$user->start_year == 0 ? __('user.view.na') : $user->start_year?></p>
 		<p>
 			<strong><?=__('user.field.end_year')?>:</strong>
-			<?php echo $user->end_year == 0 ? __('user.view.na') : $user->end_year; ?></p>
+			<?=$user->end_year == 0 ? __('user.view.na') : $user->end_year?></p>
 		<p>
 			<strong><?=__('user.field.email')?>:</strong>
-			<?php echo $user->email; ?></p>
+			<?=$user->email?></p>
 
 	</div>
 	<div class="col-md-6">
@@ -50,4 +55,4 @@
 
 <?php
 
-echo Asset::css('wall.css'); ?>
+echo Asset::css('wall.css')?>

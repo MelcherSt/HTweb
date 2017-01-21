@@ -6,6 +6,7 @@ return [
 	'field' => [
 		'notes' => 'Beschrijving',
 		'date' => 'Aanmaak datum',
+		'balance' => 'Balans',
 	],
 	'index' => [
 		'msg' => 'Hier vind je al je afrekeningen',

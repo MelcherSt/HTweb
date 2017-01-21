@@ -65,11 +65,11 @@
 				<tr>
 					<td>
 						<label class="checkbox-inline">
-							<input type="checkbox" class="session-select" name="products[]" value="<?=$product->id?>"> <?=$product->id?>
+							<input type="checkbox" class="product-select" name="products[]" value="<?=$product->id?>"> <?=$product->id?>
 						</label>
 					</td>
 					<td><?=$product->name?></td>
-					<td><?=$product->payer->name?></td>
+					<td><?=$product->get_payer()->name?></td>
 					<td><?=$product->count_participants()?></td>
 					<td>€ <?=$product->cost?></td>
 				</tr>

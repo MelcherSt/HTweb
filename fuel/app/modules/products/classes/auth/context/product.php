@@ -6,10 +6,15 @@ class Auth_Context_Product extends \Auth_Context_Base {
 	
 	private $product;
 	
-	public function __construct(Model_Product $product, $user) {
+	private function __construct(Model_Product $product, $user) {
 		parent::__construct($user);
 		
 		$this->product = $product;
+	}
+	
+	public static function forge($product, $user=null) {
+		if(empty($user)) { $user = \Auth::get_user(); }
+		return new Auth_Context_Product($product, $user);
 	}
 	
 	/**

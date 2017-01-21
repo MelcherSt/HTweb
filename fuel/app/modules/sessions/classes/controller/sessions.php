@@ -45,7 +45,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 			
 			// Automatically delay a session without cook
-			$context = Auth_Context_Session::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session);
 			if ($context->has_access(['session.delay'])) {
 				$session->deadline = date('Y-m-d H:i:s', strtotime($session->deadline . '+1hour'));
 				$session->save();
@@ -70,13 +70,17 @@ class Controller_Sessions extends \Controller_Gate {
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 	}
 	
+	/**
+	 * Handle session updates
+	 * @param type $date
+	 */
 	public function post_update($date=null) {
 		if(\Utils::valid_date($date)) {
 			if(!($session = Model_Session::get_by_date($date))) {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$context = Auth_Context_Session::forge($session, \Auth::get_user());
+			$context = Auth_Context_Session::forge($session);
 			$redirect = '/sessions/view/'.$date;
 			
 			if(!$context->has_access(['session.update'], true)) {

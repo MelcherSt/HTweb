@@ -130,8 +130,14 @@ class Model_Receipt extends \Orm\Model
 		foreach($creditors as $creditor) {
 			$credit = $creditor->balance;
 			
-			foreach($debtors as $debtor) {
+			foreach($debtors as $debtor) {			
 				$debit = $debtor->balance;
+				
+				if($debit == 0) {
+					// Since we re-itare the debtors for each creditor. There may be no dept anymore => Skip!
+					continue;
+				}
+				
 				$overshot = $credit + $debit;
 				
 				if($overshot <= 0) {
@@ -143,7 +149,7 @@ class Model_Receipt extends \Orm\Model
 					// Dept is smaller than credit
 					$debtor->balance = 0;
 					$credit = $overshot;
-					array_push($result, [$debtor->user->id, $creditor->user->id, $debit]);
+					array_push($result, [$debtor->user->id, $creditor->user->id, -1 * $debit]);
 				}
 			}
 		}

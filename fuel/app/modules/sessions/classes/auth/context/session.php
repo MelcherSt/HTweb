@@ -22,7 +22,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	
 	const DINER_TIME = '18:00';
 	
-	public function __construct(Model_Session $session, $user) {
+	protected  function __construct(Model_Session $session, $user) {
 		parent::__construct($user);
 		
 		$this->session = $session;
@@ -34,10 +34,10 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		}
 	}
 	
-	public static function forge($session, $user) {
+	public static function forge($session, $user=null) {
+		if(empty($user)) { $user = \Auth::get_user(); }
 		return new Auth_Context_Session($session, $user);
 	}
-	
 	
 	/**
 	 * Determine whether if enrollment may be deleted. Alias for enroll.update.

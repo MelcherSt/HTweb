@@ -117,7 +117,7 @@ class Controller_Admin extends \Controller_Admin {
 				]);
 			$product_receipt->save();
 			
-			$payer = $product->payer;
+			$payer = $product->get_payer();
 			$processed_payer = false;
 			
 			// Apply debits

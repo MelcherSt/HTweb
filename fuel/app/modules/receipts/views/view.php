@@ -10,7 +10,7 @@
 		data: [
 			<?php foreach($receipt->get_users_sorted() as $user_receipt): ?>
 			{
-				y: '<?=$user_receipt->user->get_fullname()?>',
+				y: '<?= addslashes($user_receipt->user->name)?>',
 				a: '<?=$user_receipt->points?>',
 				b: '<?=$user_receipt->balance?>'
 			},
@@ -18,7 +18,7 @@
 		],
 		xkey: 'y',
 		ykeys: ['a', 'b'],
-		labels: ['Points', 'Balance']
+		labels: ['<?=__('session.field.point_plural')?>', '<?=__('receipt.field.balance')?>']
 	  });
     
 });
@@ -33,15 +33,15 @@
 </div>
 
 <div class="row">
-	<div class="col-md-6"> 
+	<div class="col-md-4"> 
 		<h3><?=__('receipt.view.detail')?></h3>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>∆ Points</th>
-						<th>Balance</th>
+						<th><?=__('user.field.name')?></th>
+						<th>∆ <?=__('session.field.point_plural')?></th>
+						<th><?=__('receipt.field.balance')?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -60,7 +60,7 @@
 	
 	<?php $schema = $receipt->get_transaction_schema();?>
 	
-	<div class="col-md-6">
+	<div class="col-md-8">
 		<h3><?=__('receipt.view.trans_schema.title')?></h3>
 		<div class="table-responsive">
 			<table class="table table-hover">
@@ -68,7 +68,7 @@
 					<tr>
 						<th><?=__('receipt.view.trans_schema.from')?></th>
 						<th><?=__('receipt.view.trans_schema.amount')?></th>
-						<th><?=__('receipt.view.trans_schema.to')?></th>
+						<th class="col-md-6"><?=__('receipt.view.trans_schema.to')?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -79,7 +79,11 @@
 					<tr>
 						<td><?=\Model_User::find($items[0])->get_fullname()?></td>
 						<td><?= '€ ' . $items[2]?></td>
-						<td><?=$to_user->get_fullname()?> - <?=$to_user->iban?></td>
+						<td>
+							<?=$to_user->get_fullname()?> - 
+							<a class="iban-link iban-show-<?=$to_user->id?>" onclick="showIban('<?=$to_user->id?>');"><?=__('user.field.iban.show')?></a>
+							<span class="iban iban-<?=$to_user->id?>"><?=$to_user->iban?></span>
+						</td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -161,8 +165,8 @@
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
-					<td><?=$product->payer->get_fullname()?>
-					<td><?=$product->count_participants()?></td>
+					<td><?=$product->get_payer()->get_fullname()?>
+					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
 				<?php endforeach; ?>
