@@ -49,7 +49,7 @@
 					<tr>
 						<td><?=$user_receipt->user->get_fullname()?></td>
 						<td><?=$user_receipt->points?></td>
-						<td><?='€ ' . $user_receipt->balance; ?></td>
+						<td><?='€ ' . round($user_receipt->balance, 2); ?></td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -80,9 +80,13 @@
 						<td><?=\Model_User::find($items[0])->get_fullname()?></td>
 						<td><?= '€ ' . $items[2]?></td>
 						<td>
-							<?=$to_user->get_fullname()?> - 
+							<?php if(isset($to_user)) { ?>
+							<strong><?=$to_user->get_fullname()?></strong> - 
 							<a class="iban-link iban-show-<?=$to_user->id?>" onclick="showIban('<?=$to_user->id?>');"><?=__('user.field.iban.show')?></a>
 							<span class="iban iban-<?=$to_user->id?>"><?=$to_user->iban?></span>
+							<?php } else {?>
+								.
+							<?php } ?>
 						</td>
 					</tr>
 					<?php endforeach; ?>
@@ -101,10 +105,10 @@
 			<p class="label label-danger"><span class="fa fa-times"></span> <?=__('receipt.view.point_check')?> (<?=$points_checksum?>)</p>
 			<?php } ?>
 
-			<?php if($balance_checksum == 0) {?>
-			<p class="label label-success"><span class="fa fa-check"></span> <?=__('receipt.view.balance_check')?></p>
+			<?php if($balance_checksum < 0.0009) {?>
+			<p class="label label-success"><span class="fa fa-check"></span> <?=__('receipt.view.balance_check')?> (<?=$receipt->validate_balance_rounded()?>)</p>
 			<?php } else { ?>
-			<p class="label label-danger"><span class="fa fa-times"></span> <?=__('receipt.view.balance_check')?> (<?=$balance_checksum?>)</p>
+			<p class="label label-danger"><span class="fa fa-times"></span> <?=__('receipt.view.balance_check')?> (<?=$balance_checksum?> / <?=$receipt->validate_balance_rounded()?>)</p>
 			<?php } ?>
 		</div>
 	</div>
@@ -155,7 +159,7 @@
 					<th><?=__('product.field.name')?></th>
 					<th><?=__('product.field.date')?></th>		
 					<th><?=__('product.field.paid_by')?></th>
-					<th><?=__('product.view.participant_plural')?></th>
+					<th><?=__('product.field.participant_plural')?></th>
 					<th><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>

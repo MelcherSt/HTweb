@@ -142,7 +142,6 @@ class Auth_Context_Base {
 	 */
 	protected function is_administrator() {
 		$user_group_id = $this->user->group_id;
-		
 		return ($user_group_id == 5 || $user_group_id == 6);
 	}
 }	

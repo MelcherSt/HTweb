@@ -4,27 +4,25 @@
 	
 </div>
 
-
 <div class="row">
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Id</th>
-					<th>Creation date</th>
-					<th>Notes</th>
-					<th>Actions</th>
+					<th class="col-md-1">Id</th>
+					<th class="col-md-2"><?=__('receipt.field.date')?></th>
+					<th class="col-md-5"><?=__('receipt.field.notes')?></th>
+					<th><?=__('actions.name')?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach($receipts as $receipt): ?>
-				<tr>
+				<tr class="clickable-row" data-href="/receipts/view/<?=$receipt->id?>">
 					<td><?=$receipt->id?></td>
 					<td><?=$receipt->date?></td>
 					<td><?=$receipt->notes?></td>
 					<td>
-						<a href="/receipts/view/<?=$receipt->id?>"><span class="fa fa-eye"></span> View</a> |
-						<a href="#" onclick="showDeleteModal(<?=$receipt->id?>)"><span class="fa fa-trash"></span> Remove</a>
+						<a href="#" onclick="showDeleteModal(<?=$receipt->id?>)"><span class="fa fa-trash"></span> <?=__('actions.remove')?></a>
 					</td>
 				</tr>
 				<?php endforeach; ?>
@@ -41,11 +39,11 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Delete enrollment</h4>
+					<h4 class="modal-title">Delete receipt</h4>
 				</div>
 				<div class="modal-body">
 					<p><strong>Are you sure you want to delete this receipt?</strong>
-						<br>Delelting a receipt will redistribute all points
+						<br>Deleting a receipt will redistribute all points
 					among the participants. Costs calculated for the receipt will be lost and all session and/or products will be marked unsettled.
 					</p>
 					<!--  insert form elements here -->

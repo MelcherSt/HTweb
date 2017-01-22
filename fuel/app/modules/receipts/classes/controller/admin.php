@@ -107,7 +107,7 @@ class Controller_Admin extends \Controller_Admin {
 				$product->delete();
 				continue;
 			} else {
-				$avg_cost = $product->cost / (float)$total_count;
+				$avg_cost = $product->cost / $total_count;
 			}
 			
 			// Create a product receipt to relate the product to this receipt
@@ -117,8 +117,6 @@ class Controller_Admin extends \Controller_Admin {
 				]);
 			$product_receipt->save();
 			
-			$payer = $product->get_payer();
-			$processed_payer = false;
 			
 			// Apply debits
 			foreach($product->users as $product_user) {
@@ -127,22 +125,15 @@ class Controller_Admin extends \Controller_Admin {
 				// Apply avg cost * amount
 				$temp_balance = -($avg_cost * $product_user->amount);
 				
-				if($user_id == $payer->id) {
-					$processed_payer = true;
-					$temp_balance = $temp_balance + $product->cost;
-				}
-				
-				$precision = 2;
+				$precision = 10;
 				
 				// Update user receipt
 				$this->update_user_receipt($user_id, $receipt->id, round($temp_balance, $precision));
 			}
 			
 			// Process payer seperately (payer may not be a participant)
-			if (!$processed_payer) {
-				$this->update_user_receipt($payer->id, $receipt->id, round($product->cost, $precision));
-			}
-			
+			$payer = $product->get_payer();	
+			$this->update_user_receipt($payer->id, $receipt->id, round($product->cost, $precision));	
 		}
 	}
 	
@@ -220,7 +211,7 @@ class Controller_Admin extends \Controller_Admin {
 					$temp_balance += $session->cost;
 				}
 				
-				$precision = 2;
+				$precision = 10;
 				
 				// Update user receipt
 				$p_delta = round($temp_points, $precision);

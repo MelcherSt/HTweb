@@ -3,7 +3,7 @@
 	<fieldset>
 		<div class="col-md-3">
 			<div class="form-group">
-				<?php echo Form::label(__('user.field.iban'), 'iban', array('class'=>'control-label')); ?>
+				<?php echo Form::label(__('user.field.iban.'), 'iban', array('class'=>'control-label')); ?>
 				<?php echo Form::input('iban', Input::post('iban', isset($user) ? $user->iban : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'IBAN')); ?>
 			</div>
 			<div class="form-group">

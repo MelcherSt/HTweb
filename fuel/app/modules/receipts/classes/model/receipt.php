@@ -88,6 +88,13 @@ class Model_Receipt extends \Orm\Model
 			->execute()[0])[0];
 	}
 	
+	public function validate_balance_rounded() {
+		return array_values(\DB::select(\DB::expr('SUM(ROUND(balance,2))'))
+			->from('user_receipts')
+			->where('receipt_id', $this->id)
+			->execute()[0])[0];
+	}
+	
 	/**
 	 * Retrieve a list of all people with a positive balance sorted highest credit first
 	 * @return [Model_User_Receipt]
@@ -118,12 +125,13 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Get a list of lists (from user_id, to user_id, amount) describing transactions.
-	 * Warning: This changes the balance model value for debtors.
+	 * Warning: This changes the balance value for debtors.
 	 * @return array
 	 */
 	public function get_transaction_schema() {
 		$creditors = $this->get_creditors();
 		$debtors = $this->get_debtors();
+		$precision = 2;
 		
 		$result = [];
 		
@@ -143,13 +151,13 @@ class Model_Receipt extends \Orm\Model
 				if($overshot <= 0) {
 					// Debt is larger than credit
 					$debtor->balance = $overshot;
-					array_push($result, [$debtor->user->id, $creditor->user->id, $credit]);
+					array_push($result, [$debtor->user->id, $creditor->user->id, round($credit, $precision)]);
 					break; 
 				} else {
 					// Dept is smaller than credit
 					$debtor->balance = 0;
 					$credit = $overshot;
-					array_push($result, [$debtor->user->id, $creditor->user->id, -1 * $debit]);
+					array_push($result, [$debtor->user->id, $creditor->user->id, round(-1 * $debit, $precision)]);
 				}
 			}
 		}

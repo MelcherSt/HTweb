@@ -78,7 +78,7 @@ return array(
 	 * Note that this is less secure, as session hijacking countermeasures have to
 	 * be disabled for this to work!
 	 */
-	'multiple_logins' => false,
+	'multiple_logins' => true,
 
 	/**
 	 * Salt for the login hash
