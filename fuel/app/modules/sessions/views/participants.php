@@ -20,7 +20,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<th><?=__('user.field.name')?></th>
 				<th>∆ <?=__('session.field.point_plural')?></th>
 				<th><?=__('session.field.guest_plural')?></th>	
-				<?php if ($context->has_access(['session.update'])): ?>
+				<?php if ($context->has_access(['session.manage'])): ?>
 				<th><?=__('actions.name')?></th>
 				<?php endif; ?>
 			</tr>

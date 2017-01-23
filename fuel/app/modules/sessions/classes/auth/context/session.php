@@ -39,7 +39,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		return new Auth_Context_Session($session, $user);
 	}
 	
-	protected function override_access($override_all=false) {
+	protected function override_access() {
 		return false;
 	}
 	
@@ -49,7 +49,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _can_enroll_delete(array $actions=null) {
-		if($this->_can_session_management()) { return true; }
+		if($this->_can_session_manage(['all'])) { return true; }
 		
 		return $this->_can_enroll_update($actions);
 	}
@@ -60,7 +60,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _can_enroll_update(array $actions=null) {
-		if($this->_can_session_management()) { return false; }
+		if($this->_can_session_manage(['all'])) { return false; }
 		
 		// Must at least be in normal or grace period
 		$result = $this->_in_enroll_period() || $this->_in_dishwasher_grace();
@@ -95,7 +95,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _can_enroll_create(array $actions=null) {
-		if($this->_can_session_management()) { return false; }
+		if($this->_can_session_manage(['all'])) { return false; }
 		
 		$result = $this->_in_enroll_period();
 		if(!$result) { $this->push_message('Cannot create enrollment. Outside enrollment period.'); }
@@ -128,7 +128,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _can_enroll_other(array $actions=null) {
-		if($this->_can_session_management()) { return true; }
+		if($this->_can_session_manage(['all'])) { return true; }
 		
 		// Must at least be in normal or grace period
 		$result = $this->_in_enroll_mod_grace() && $this->_is_moderator();
@@ -170,8 +170,8 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @param actions [deadline, notes, cost]
 	 * @return boolean
 	 */
-	protected function _can_session_update(array $actions=null) {	
-		if($this->_can_session_management()) { return true; }
+	protected function _can_session_manage(array $actions=null) {	
+		if($this->is_administrator()) { return true; }
 		
 		// Must at least be a moderator
 		$result = $this->_is_moderator();
@@ -180,6 +180,9 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		if(isset($actions) && $result) {		
 			foreach($actions as $action) {
 				switch($action) {
+					case 'all':
+						$result = false;
+						break 2; // Break from for-loop
 					case 'deadline':
 						$result = $result && $this->_in_deadline_mod_grace();
 						break;
@@ -190,8 +193,8 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						$result = $result && $this->_in_enroll_period();
 						break;
 					case 'payer':
-						$result = $result && $this->_can_session_management();
-						break;
+						$result = false; // Only admin, which would have returned by now
+						break 2;
 					default:
 						$result = false;
 						$this->push_message('Unknown permission <strong>'. $action . '</strong> requested.');
@@ -217,16 +220,6 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		} else {
 			return false;
 		}
-	}
-	
-	/**
-	 * Determines if the session may be managed. Normally this is the admin's task.
-	 * @param array $actions There are no valid actions 
-	 * @return type
-	 */
-	protected function _can_session_management(array $actions=null) {
-		// TODO: Should use real ORMAuth role here instead?
-		return $this->is_administrator();
 	}
 	
 	/* Below follow functions used to determine the role of the user in the session */

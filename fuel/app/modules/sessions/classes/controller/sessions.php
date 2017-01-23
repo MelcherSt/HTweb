@@ -52,7 +52,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 			
 			$enrollment = $session->current_enrollment();		
-			if(!empty($enrollment) || $context->has_access(['session.management'])) {
+			if(!empty($enrollment) || $context->has_access(['session.manage[all]'])) {
 				$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
 			} else {
 				$data['left_content'] = \View::forge('details/notenrolled', ['session'=>$session]);
@@ -83,19 +83,19 @@ class Controller_Sessions extends \Controller_Gate {
 			$context = Auth_Context_Session::forge($session);
 			$redirect = '/sessions/view/'.$date;
 			
-			if(!$context->has_access(['session.update'], true)) {
+			if(!$context->has_access(['session.manage'], true)) {
 				// Drop out
 				\Utils::handle_recoverable_error($context->get_message(), $redirect);
 			}
 
-			if($context->has_access(['session.update[cost]'])) {
+			if($context->has_access(['session.manage[cost]'])) {
 				$new_cost = \Input::post('cost', 0.0);
 				$cur_cost = $session->cost;
 
 				$payer_id = \Auth::get_user()->id;	
 				$payer_id_alt = \Input::post('payer_id', null);
 
-				if(isset($payer_id_alt) && $context->has_access(['session.update[payer]'])) {
+				if(isset($payer_id_alt) && $context->has_access(['session.manage[payer]'])) {
 					$payer_id = \Input::post('payer_id');
 					$session->paid_by = $payer_id;
 				}
@@ -107,12 +107,12 @@ class Controller_Sessions extends \Controller_Gate {
 				}		
 			}
 			
-			if($context->has_access(['session.update[deadline]'])) {
+			if($context->has_access(['session.manage[deadline]'])) {
 				$deadline = date($date. ' ' . \Input::post('deadline', Model_Session::DEADLINE_TIME));
 				$session->deadline = $deadline;
 			}
 			
-			if($context->has_access(['session.update[notes]'])) {
+			if($context->has_access(['session.manage[notes]'])) {
 				$notes = \Input::post('notes', '');		
 				$session->notes = $notes;
 			}

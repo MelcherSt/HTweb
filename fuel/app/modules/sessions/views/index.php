@@ -56,8 +56,47 @@
 <br>
 
 <!-- TODO: Insert quick picker -->
+<div class="row text-center">
+	Quick enrollment
+	
+	<ul class="list-inline">
+	<?php 
+	$now = new DateTime();
+	$date = new DateTime();
+	$day_of_week = $date->format('w') + 1;
+	$week_start = $date->modify('-' . $day_of_week . 'days');
 
-<br>
+	
+	for ($i = 0; $i < 7; $i++) { 
+		$day = $week_start->modify('+1day');
+		$date = $day->format('Y-m-d');
+		
+		$session = \Sessions\Model_Session::get_by_date($date);
+		if(empty($session)) {			
+			$session = \Sessions\Model_Session::forge([
+				'deadline' => $date. ' ' . \Sessions\Model_Session::DEADLINE_TIME,
+				'date' => $date,
+			]);
+			$session->save();	
+		}
+		$enrollment = $session->current_enrollment();
+		$enrolled = false;
+		
+		if($day < $now) { continue; }
+		if(isset($enrollment)) { $enrolled=true; }
+		
+	?>
+		<li>
+			<div class="checkbox">
+				<label><input name="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked' : '' ?>><?=strftime('%A', $day->getTimestamp())?></label>
+			</div>
+		</li>
+	
+
+	<?php } ?>
+	<ul>
+</div>
+
 
 <p><?=__('session.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
 

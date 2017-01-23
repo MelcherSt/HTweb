@@ -11,7 +11,7 @@
 	<?php } 
 	
 	// Show deadline passed alert
-	if (!$enroll && !$context->has_access(['session.management'])) { ?>
+	if (!$enroll && !$context->has_access(['session.manage'])) { ?>
 	<div class="alert alert-info">
 		<strong><?=__('alert.call.info')?></strong> <?=__('session.alert.deadline.passed')?>
 		<?php
@@ -25,16 +25,16 @@
 	<?php }
 	
 	// Show notes well
-	if(!$context->has_access(['session.update[notes]'])) { ?>
+	if(!$context->has_access(['session.manage[notes]'])) { ?>
 	<div class="well">
 		<?=$session->notes?>
 	</div>
 	<?php }
 
 	// Show session update form
-	if($context->has_access(['session.update'])) { ?>
+	if($context->has_access(['session.manage'])) { ?>
 	<form action="/sessions/update/<?=$session->date?>" method="post" >
-		<?php if($context->has_access(['session.update[notes]'])) { ?>
+		<?php if($context->has_access(['session.manage[notes]'])) { ?>
 		<div class="form-group ">
 			<label for="comment"><?=__('session.field.notes')?></label>
 			<textarea name="notes" class="form-control" rows="3"><?=$session->notes?></textarea>
@@ -42,14 +42,14 @@
 		<?php } ?>
 
 		<div class="form-inline">	
-			<?php if($context->has_access(['session.update[deadline]'])) { ?>
+			<?php if($context->has_access(['session.manage[deadline]'])) { ?>
 			<div class="form-group">
 				<label for="deadline"><?=__('session.field.deadline')?></label>
 				<input class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" value="<?=$deadline?>"required/>
 			</div>
 			<?php }
 
-			if ($context->has_access(['session.update[cost]'])) { ?>
+			if ($context->has_access(['session.manage[cost]'])) { ?>
 			<div class="form-group">
 				<label for="cost"><?=__('product.field.cost')?></label>
 				<div class="input-group">
@@ -57,7 +57,7 @@
 					<input name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
 				</div>
 				
-				<?php if ($context->has_access(['session.update[payer]'])) { ?>
+				<?php if ($context->has_access(['session.manage[payer]'])) { ?>
 				<select class="form-control" id="add-user-id" name="payer_id">
 					<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
 							
