@@ -42,7 +42,7 @@ abstract class Auth_Context_Base {
 		$this->verbose_mode = $verbose;
 
 		// Check if user fulfills override requirements
-		if ($this->override_access()) {
+		if ($this->override_access(true)) {
 			// Thanks for stopping by. Bye.
 			return true;
 		}
@@ -95,9 +95,10 @@ abstract class Auth_Context_Base {
 	/**
 	 * Checked by has_access() function to determine whether or not to continue checking access rights.
 	 * Implement this function to override the normal access evaluation procedure.
+	 * @param boolean $override_all Check if we can override all permissions
 	 * @return boolean Returns true when user meets override requirements. Any further access evaluation will seize. 
 	 */
-	protected abstract function override_access();
+	protected abstract function override_access($override_all=false);
 	
 	/**
 	 * Pop the last message from the messages queue.

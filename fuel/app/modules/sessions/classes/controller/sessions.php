@@ -52,7 +52,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 			
 			$enrollment = $session->current_enrollment();		
-			if(!empty($enrollment)) {
+			if(!empty($enrollment) || $context->has_access(['session.management'])) {
 				$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
 			} else {
 				$data['left_content'] = \View::forge('details/notenrolled', ['session'=>$session]);
