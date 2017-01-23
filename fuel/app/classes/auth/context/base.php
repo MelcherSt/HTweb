@@ -2,7 +2,7 @@
 /**
  * Allows for context-based permission checking. 
  */
-class Auth_Context_Base {
+abstract class Auth_Context_Base {
 	
 	// Default function prefix and function split values
 	const FUNC_PREFIX = '_can_';
@@ -97,9 +97,7 @@ class Auth_Context_Base {
 	 * Implement this function to override the normal access evaluation procedure.
 	 * @return boolean Returns true when user meets override requirements. Any further access evaluation will seize. 
 	 */
-	protected function override_access() {
-		return false;
-	}
+	protected abstract function override_access();
 	
 	/**
 	 * Pop the last message from the messages queue.

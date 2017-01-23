@@ -39,6 +39,12 @@ class Auth_Context_Session extends \Auth_Context_Base{
 		return new Auth_Context_Session($session, $user);
 	}
 	
+	protected function override_access() {
+		// Administrators overrule all access rights determined below.
+		return $this->is_administrator();
+	}
+	
+	
 	/**
 	 * Determine whether if enrollment may be deleted. Alias for enroll.update.
 	 * @param array $actions [other, dishwasher, cook]
@@ -174,6 +180,9 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						break;
 					case 'notes':
 						$result = $result && $this->_in_enroll_period();
+						break;
+					case 'payer':
+						$result = $result && $this->is_administrator();
 						break;
 					default:
 						$result = false;

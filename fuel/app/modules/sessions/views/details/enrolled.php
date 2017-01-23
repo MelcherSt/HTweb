@@ -54,8 +54,21 @@
 				<label for="cost"><?=__('product.field.cost')?></label>
 				<div class="input-group">
 					<div class="input-group-addon">€</div>
-					<input name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>
+					<input name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
 				</div>
+				
+				<?php if ($context->has_access(['session.update[payer]'])) { ?>
+				<select class="form-control" id="add-user-id" name="payer_id">
+					<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
+							
+					<?php foreach($session->enrollments as $enrollment):
+							$user_id = $enrollment->user->id;
+							if($user_id == $session->paid_by) { continue; }
+					?>
+					<option value="<?=$user_id?>"><?=$enrollment->user->get_fullname()?></option>
+					<?php endforeach;  ?>
+				</select>
+				<?php } ?>
 			</div>
 			<?php } ?>	
 			

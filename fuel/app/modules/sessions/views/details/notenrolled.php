@@ -1,6 +1,7 @@
 <?php
 	$deadline = date('H:i', strtotime($session->deadline));
 	$context = \Sessions\Auth_Context_Session::forge($session, $current_user);
+	$enroll = $context->has_access(['enroll.create']);
 	
 	// Show deadline changed alert
 	if (\Sessions\Model_Session::DEADLINE_TIME != date('H:i', strtotime($session->deadline)) && $enroll) { ?>

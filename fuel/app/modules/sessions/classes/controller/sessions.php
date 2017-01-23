@@ -89,12 +89,20 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 
 			if($context->has_access(['session.update[cost]'])) {
-					$new_cost = \Input::post('cost', 0.0);
-					$cur_cost = $session->cost;
+				$new_cost = \Input::post('cost', 0.0);
+				$cur_cost = $session->cost;
 
+				$payer_id = \Auth::get_user()->id;	
+				$payer_id_alt = \Input::post('payer_id', null);
+
+				if(isset($payer_id_alt) && $context->has_access(['session.update[payer]'])) {
+					$payer_id = \Input::post('payer_id');
+					$session->paid_by = $payer_id;
+				}
+				
 				if ($new_cost != $cur_cost && $new_cost >= 0) {
-					// Cost has been updated by this cook. Set him as payer.
-					$session->paid_by = \Auth::get_user()->id;
+					// Cost has been updated by this cook. Set him as payer.					
+					$session->paid_by = $payer_id;
 					$session->cost = $new_cost;	
 				}		
 			}
