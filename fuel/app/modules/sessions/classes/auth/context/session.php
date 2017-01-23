@@ -190,7 +190,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 						$result = $result && $this->_in_enroll_period();
 						break;
 					case 'payer':
-						$result = $result && $this->is_administrator();
+						$result = $result && $this->_can_session_management();
 						break;
 					default:
 						$result = false;
@@ -209,8 +209,6 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	protected function _can_session_delay(array $actions=null) {
-		if($this->_can_session_management()) { return true; }
-		
 		// The deadline must be past-due and there should be 0 cooks
 		if ($this->session->count_participants() > 0) {
 			return !$this->_in_enroll_period() && 

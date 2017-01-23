@@ -11,7 +11,7 @@
 	<?php } 
 	
 	// Show deadline passed alert
-	if (!$enroll) { ?>
+	if (!$enroll && !$context->has_access(['session.management'])) { ?>
 	<div class="alert alert-info">
 		<strong><?=__('alert.call.info')?></strong> <?=__('session.alert.deadline.passed')?>
 		<?php
