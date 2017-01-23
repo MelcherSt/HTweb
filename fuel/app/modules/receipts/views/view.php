@@ -8,7 +8,7 @@
 	Morris.Bar({
 		element: 'distr-bar-chart',
 		data: [
-			<?php foreach($receipt->get_users_sorted() as $user_receipt): ?>
+			<?php foreach($receipt->get_users() as $user_receipt): ?>
 			{
 				y: '<?= addslashes($user_receipt->user->name)?>',
 				a: '<?=$user_receipt->points?>',
@@ -45,7 +45,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach($receipt->get_users_sorted() as $user_receipt): ?>
+					<?php foreach($receipt->get_users() as $user_receipt): ?>
 					<tr>
 						<td><?=$user_receipt->user->get_fullname()?></td>
 						<td><?=$user_receipt->points?></td>

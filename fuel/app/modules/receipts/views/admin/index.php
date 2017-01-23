@@ -16,7 +16,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach($receipts as $receipt): ?>
+				<?php 
+				
+				if(sizeof($receipts) == 0) {
+					echo '<tr><td>' . __('receipt.empty_list') . '</td></tr>';
+				}
+				
+				foreach($receipts as $receipt): ?>
 				<tr class="clickable-row" data-href="/receipts/view/<?=$receipt->id?>">
 					<td><?=$receipt->id?></td>
 					<td><?=$receipt->date?></td>

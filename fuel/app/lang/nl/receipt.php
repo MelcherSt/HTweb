@@ -3,6 +3,7 @@
 return [
 	'title' => 'Mijn Afrekeningen',
 	'title_admin' => 'Afrekeningen',
+	'empty_list' => '<em>Er zijn geen verrekeningen om hier te tonen</em>',
 	'field' => [
 		'notes' => 'Beschrijving',
 		'date' => 'Aanmaak datum',

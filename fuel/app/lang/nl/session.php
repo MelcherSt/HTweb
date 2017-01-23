@@ -5,6 +5,7 @@ return [
 	'title_admin' => 'Sessies',
 	'name' => 'Sessie',
 	'name_plural' => 'Sessies',
+	'empty_list' => '<em>Er zijn geen sessies om hier te tonen</em>',
 	'type' => 'sessie',
 	'role' => [
 		'name' => 'Rol',

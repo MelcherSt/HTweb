@@ -24,7 +24,12 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php 			
+				<?php 	
+
+				if(sizeof($sessions) == 0) {
+					echo '<tr><td>' . __('session.empty_list') . '</td></tr>';
+				}
+				
 				foreach($sessions as $session): ?>
 				<tr>
 					<td>
@@ -60,7 +65,12 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php 			
+			<?php 	
+			
+				if(sizeof($products) == 0) {
+					echo '<tr><td>' . __('product.empty_list') . '</td></tr>';
+				}
+			
 				foreach($products as $product): ?>
 				<tr>
 					<td>

@@ -75,7 +75,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach(\Sessions\Model_Session::get_by_cook($current_user->id) as $session): ?>
+				<?php 
+				$sessions_cooked = \Sessions\Model_Session::get_by_cook($current_user->id);
+				
+				if(sizeof($sessions_cooked) == 0) {
+					echo '<tr><td>' . __('session.empty_list') . '</td></tr>';
+				}
+				
+				foreach($sessions_cooked as $session): ?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td><?=strftime('%F - %A', strtotime($session->date))?></td>
 					<td><?=$session->count_total_participants()?></td>
@@ -111,7 +118,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach($sessions as $session): ?>
+				<?php 
+				
+				if(sizeof($sessions) == 0) {
+					echo '<tr><td>' . __('session.empty_list') . '</td></tr>';
+				}
+				
+				foreach($sessions as $session): ?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td><?=strftime('%F - %A', strtotime($session->date))?></td>
 					<td><?=$session->count_total_participants()?></td>

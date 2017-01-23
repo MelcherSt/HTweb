@@ -5,6 +5,7 @@ return [
 	'title_admin' => 'Products',
 	'name' => 'Product',
 	'name_plural' => 'Products',
+	'empty_list' => '<em>There are no products to show here</em>',
 	'field' => [
 		'date' => 'Date added',
 		'paid_by' => 'Paid by',

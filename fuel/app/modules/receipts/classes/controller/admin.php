@@ -107,7 +107,7 @@ class Controller_Admin extends \Controller_Admin {
 				$product->delete();
 				continue;
 			} else {
-				$avg_cost = $product->cost / $total_count;
+				$avg_cost = $product->cost / (float)$total_count;
 			}
 			
 			// Create a product receipt to relate the product to this receipt

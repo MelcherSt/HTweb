@@ -5,6 +5,7 @@ return [
 	'title_admin' => 'Producten',
 	'name' => 'Product',
 	'name_plural' => 'Producten',
+	'empty_list' => '<em>Er zijn geen producten om hier te tonen</em>',
 	'field' => [
 		'date' => 'Datum toegevoegd',
 		'paid_by' => 'Betaald door',

@@ -3,6 +3,7 @@
 return [
 	'title' => 'My Receipts',
 	'title_admin' => 'Receipts',
+	'empty_list' => '<em>There are no receipts to show here</em>',
 	'field' => [
 		'notes' => 'Notes',
 		'date' => 'Creation date',

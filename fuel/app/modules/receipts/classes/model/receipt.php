@@ -58,17 +58,16 @@ class Model_Receipt extends \Orm\Model
 	 * Retrieve a list of user receipts in this receipt sorted by name alphabetical
 	 * @return array \Receipts\Model_User_Receipt
 	 */
-	public function get_users_sorted() {
+	public function get_users() {
 		return Model_User_Receipt::query()
 			->related('user')
-			->order_by('user.name', 'asc')
 			->where('receipt_id', $this->id)
 			->get();
 	}
 	
 	/**
 	 * Calculate points checksum. Should be 0.
-	 * @return type
+	 * @return int
 	 */
 	public function validate_points() {
 		return array_values(\DB::select(\DB::expr('SUM(points)'))
@@ -78,8 +77,8 @@ class Model_Receipt extends \Orm\Model
 	}
 	
 	/**
-	 * Calculate balance checksum. Should be 0.
-	 * @return type
+	 * Calculate balance checksum over all raw balance values (rounded to 10 decimals). Should be as close to 0 as possible.
+	 * @return int Typically balance checksum is in the area of 0.0000X
 	 */
 	public function validate_balance() {
 		return array_values(\DB::select(\DB::expr('SUM(balance)'))
@@ -88,6 +87,11 @@ class Model_Receipt extends \Orm\Model
 			->execute()[0])[0];
 	}
 	
+	/**
+	 * Calculate balance checksum over all balance rounded to 2 decimals. 
+	 * @return int When positive: rounding error is spread among all participants.
+	 * When negative: rounding error is paid by creditors.
+	 */
 	public function validate_balance_rounded() {
 		return array_values(\DB::select(\DB::expr('SUM(ROUND(balance,2))'))
 			->from('user_receipts')
@@ -97,7 +101,7 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Retrieve a list of all people with a positive balance sorted highest credit first
-	 * @return [Model_User_Receipt]
+	 * @return array Model_User_Receipt
 	 */
 	public function get_creditors() {
 		return Model_User_Receipt::find('all', array(
@@ -124,7 +128,7 @@ class Model_Receipt extends \Orm\Model
 	}
 	
 	/**
-	 * Get a list of lists (from user_id, to user_id, amount) describing transactions.
+	 * Get a list of lists [from user_id, to user_id, amount] describing transactions.
 	 * Warning: This changes the balance value for debtors.
 	 * @return array
 	 */
@@ -135,9 +139,11 @@ class Model_Receipt extends \Orm\Model
 		
 		$result = [];
 		
+		// Iterate each creditor
 		foreach($creditors as $creditor) {
 			$credit = $creditor->balance;
 			
+			// Spread depts over credit of current creditor
 			foreach($debtors as $debtor) {			
 				$debit = $debtor->balance;
 				

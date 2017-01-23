@@ -21,7 +21,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach(\Products\Model_Product::get_by_payer($current_user->id) as $product): ?>
+				<?php 
+				
+				$products_paid = \Products\Model_Product::get_by_payer($current_user->id);
+				
+				if(sizeof($products_paid) == 0) {
+					echo '<tr><td>' . __('product.empty_list') . '</td></tr>';
+				}
+				
+				foreach($products_paid as $product): ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
@@ -49,7 +57,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach(\Products\Model_Product::get_by_user($current_user->id) as $product): ?>
+				<?php 
+				
+				$products = \Products\Model_Product::get_by_user($current_user->id);
+				
+				if(sizeof($products) == 0) {
+					echo '<tr><td>' . __('product.empty_list') . '</td></tr>';
+				}
+				
+				foreach($products as $product): ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>

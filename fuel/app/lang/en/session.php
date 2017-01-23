@@ -5,6 +5,7 @@ return [
 	'title_admin' => 'Sessions',
 	'name' => 'Session',
 	'name_plural' => 'Session',
+	'empty_list' => '<em>There are no sessions to show here</em>',
 	'type' => 'session',
 	'role' => [
 		'name' => 'Role',
