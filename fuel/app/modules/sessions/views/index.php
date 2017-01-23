@@ -55,46 +55,37 @@
 </div>
 <br>
 
-<!-- TODO: Insert quick picker -->
 <div class="row text-center">
-	Quick enrollment
-	
-	<ul class="list-inline">
-	<?php 
-	$now = new DateTime();
-	$date = new DateTime();
-	$day_of_week = $date->format('w') + 1;
-	$week_start = $date->modify('-' . $day_of_week . 'days');
+	<h4><?=__('session.index.quick_enroll')?></h4>
+	<form method="post" action="/sessions/enrollments/quick">
+		<ul class="list-inline">
+		<?php 
+		$now = new DateTime();
+		$date = new DateTime();
+		$day_of_week = $date->format('w') + 1;
+		$week_start = $date->modify('-' . $day_of_week . 'days');
 
-	
-	for ($i = 0; $i < 7; $i++) { 
-		$day = $week_start->modify('+1day');
-		$date = $day->format('Y-m-d');
-		
-		$session = \Sessions\Model_Session::get_by_date($date);
-		if(empty($session)) {			
-			$session = \Sessions\Model_Session::forge([
-				'deadline' => $date. ' ' . \Sessions\Model_Session::DEADLINE_TIME,
-				'date' => $date,
-			]);
-			$session->save();	
-		}
-		$enrollment = $session->current_enrollment();
-		$enrolled = false;
-		
-		if($day < $now) { continue; }
-		if(isset($enrollment)) { $enrolled=true; }
-		
-	?>
-		<li>
-			<div class="checkbox">
-				<label><input name="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked' : '' ?>><?=strftime('%A', $day->getTimestamp())?></label>
-			</div>
-		</li>
-	
 
-	<?php } ?>
-	<ul>
+		for ($i = 0; $i < 7; $i++) { 
+			$day = $week_start->modify('+1day');
+			$date = $day->format('Y-m-d');
+			if($day < $now) { continue; }
+
+			$session = \Sessions\Model_Session::get_by_date($date);
+			$enrollment = empty($session) ? null : $session->current_enrollment();
+			$enrolled = isset($enrollment);
+		?>
+			<li>
+				<div class="checkbox">
+					<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked disabled' : '' ?>><?=strftime('%A', $day->getTimestamp())?></label>
+				</div>
+			</li>
+
+
+		<?php } ?>
+		<ul>
+		<input type="submit" class="btn btn-sm btn-primary" value="<?=__('session.index.quick_btn')?>" />
+	</form>
 </div>
 
 

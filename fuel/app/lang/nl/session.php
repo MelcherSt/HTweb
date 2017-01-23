@@ -75,9 +75,11 @@ return [
 		],
 	],
 	'index' => [
-		'msg' => 'Deze lijst laat onverrekende sessies zijn. Voor een lijst met verrekende sessie, kijk op de pagina',
+		'msg' => 'Deze lijst laat onverrekende sessies zijn. Voor een lijst met verrekende sessies, zie de pagina',
 		'cooked_for_me' => 'Maaltijden die anderen voor mij kookten',
 		'cooked_by_me' => 'Maaltijden die ik kookte',
+		'quick_enroll' => 'Snel inschrijven',
+		'quick_btn' => 'Inschrijven voor geselecteerde dagen',
 	],
 	'view' => [
 		'msg' => 'Er zijn :p_count deelnemers waaronder :g_count gast(en).',

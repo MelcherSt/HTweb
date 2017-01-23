@@ -79,6 +79,8 @@ return [
 		'msg' => 'This list only shows unsettled sessions. For a list of settled session you participated in, please see',
 		'cooked_for_me' => 'Meals others cooked for me',
 		'cooked_by_me' => 'Meals I cooked',
+		'quick_enroll' => 'Quick enrollment',
+		'quick_btn' => 'Enroll for selected',
 	],
 	'view' => [
 		'msg' => 'There are :p_count participants of whom :g_count are guests.',

@@ -3,7 +3,38 @@
 namespace Sessions;
 
 class Controller_Enrollments extends \Controller_Gate {
-		
+	
+	/**
+	 * Handle quick enrollment creation. Only supports basic enrollments.
+	 */
+	public function post_quick() {
+		$dates = \Input::post('dates', []);
+		foreach($dates as $date) {
+			if(!\Utils::valid_date($date)) { continue;	}
+			
+			$session = Model_Session::get_by_date($date);
+			if(empty($session)) {
+				$session = Model_Session::forge([
+					'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,
+					'date' => $date,
+				]);
+				$session->save();
+			}
+			
+			$enrollment = $session->current_enrollment();
+			$context = Auth_Context_Session::forge($session);
+			
+			if (empty($enrollment) && $context->has_access(['enroll.create'])) {
+				$enrollment = Model_Enrollment_Session::forge([
+					'user_id' => \Auth::get_user()->id,
+					'session_id' => $session->id,
+				]);
+				$enrollment->save();
+			}
+		}
+		\Response::redirect('/sessions');
+	}
+	
 	/**
 	 * Handle enrollment creation
 	 * @param type $date
