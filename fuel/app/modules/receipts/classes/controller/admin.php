@@ -107,7 +107,7 @@ class Controller_Admin extends \Controller_Admin {
 				$product->delete();
 				continue;
 			} else {
-				$avg_cost = $product->cost / (float)$total_count;
+				$avg_cost = $product->cost / $total_count;
 			}
 			
 			// Create a product receipt to relate the product to this receipt
@@ -228,10 +228,10 @@ class Controller_Admin extends \Controller_Admin {
 	
 	/**
 	 * Update the user receipt for given user on given receipt with given deltas
-	 * @param type $receipt_id
-	 * @param type $user_id 
-	 * @param type $p_delta Point delta
-	 * @param type $b_delta Balance delta
+	 * @param type $user_id
+	 * @param type $receipt_id 
+	 * @param float $b_delta Point delta
+	 * @param float $p_delta Balance delta
 	 */
 	private function update_user_receipt($user_id, $receipt_id, $b_delta, $p_delta=0) {
 		$user_receipt = Model_User_Receipt::get_by_user($user_id, $receipt_id);

@@ -2,25 +2,25 @@
 
 <form method="post" action="/receipts/admin/create">
 	<div class="form-group">
-		<label for="comment">Notes</label>
+		<label for="comment"><?=__('receipt.field.notes')?></label>
 		<textarea name="notes" class="form-control" rows="3" placeholder="Tell something about this receipt"></textarea>
 	</div>
 
 	<h2><?=__('session.title_admin')?></h2>
 	<div class="btn-group btn-group-sm">
-		<a class="btn btn-primary" onClick="checkAllSessions()">Select all</a>
-		<a class="btn btn-primary" onClick="uncheckAllSessions()">Deselect all</a>
+		<a class="btn btn-primary" onClick="checkAllSessions()"><?=__('actions.select_all')?></a>
+		<a class="btn btn-primary" onClick="uncheckAllSessions()"><?=__('actions.deselect_all')?></a>
 	</div>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
-				<tr>
+				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<th>Id</th>
-					<th>Date</th>
-					<th>Participant(s)</th>
-					<th>Cook(s)</th>
-					<th>Dishwasher(s)</th>
-					<th>Cost</th>
+					<th><?=__('session.field.date')?></th>
+					<th><?=__('session.role.participant_plural')?></th>
+					<th><?=__('session.role.cook_plural')?></th>
+					<th><?=__('session.role.dishwasher_plural')?></th>
+					<th><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,18 +50,19 @@
 	
 	<h2><?=__('product.title_admin')?></h2>
 	<div class="btn-group btn-group-sm">
-		<a class="btn btn-primary" onClick="checkAllProducts()">Select all</a>
-		<a class="btn btn-primary" onClick="uncheckAllProducts()">Deselect all</a>
+		<a class="btn btn-primary" onClick="checkAllProducts()"><?=__('actions.select_all')?></a>
+		<a class="btn btn-primary" onClick="uncheckAllProducts()"><?=__('actions.deselect_all')?></a>
 	</div>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr>
 					<th>Id</th>
-					<th>Name</th>
-					<th>Payer</th>
-					<th>Participants</th>
-					<th>Cost</th>
+					<th><?=__('product.field.name')?></th>
+					<th><?=__('product.field.date')?></th>		
+					<th><?=__('product.field.paid_by')?></th>
+					<th><?=__('product.field.participant_plural')?></th>
+					<th><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -72,15 +73,16 @@
 				}
 			
 				foreach($products as $product): ?>
-				<tr>
+				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td>
 						<label class="checkbox-inline">
 							<input type="checkbox" class="product-select" name="products[]" value="<?=$product->id?>"> <?=$product->id?>
 						</label>
 					</td>
 					<td><?=$product->name?></td>
+					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->get_payer()->name?></td>
-					<td><?=$product->count_participants()?></td>
+					<td><?=$product->get_nicified_participants()?></td>
 					<td>€ <?=$product->cost?></td>
 				</tr>
 				<?php endforeach; ?>

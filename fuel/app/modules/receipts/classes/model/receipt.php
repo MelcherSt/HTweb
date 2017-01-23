@@ -67,7 +67,7 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Calculate points checksum. Should be 0.
-	 * @return int
+	 * @return float
 	 */
 	public function validate_points() {
 		return array_values(\DB::select(\DB::expr('SUM(points)'))
@@ -78,7 +78,7 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Calculate balance checksum over all raw balance values (rounded to 10 decimals). Should be as close to 0 as possible.
-	 * @return int Typically balance checksum is in the area of 0.0000X
+	 * @return float Typically balance checksum is in the area of 0.0000X
 	 */
 	public function validate_balance() {
 		return array_values(\DB::select(\DB::expr('SUM(balance)'))
@@ -89,7 +89,7 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Calculate balance checksum over all balance rounded to 2 decimals. 
-	 * @return int When positive: rounding error is spread among all participants.
+	 * @return float When positive: rounding error is spread among all participants.
 	 * When negative: rounding error is paid by creditors.
 	 */
 	public function validate_balance_rounded() {
@@ -115,7 +115,7 @@ class Model_Receipt extends \Orm\Model
 	
 	/**
 	 * Retrieve a list of all people with a negative balance sorted highest debt first
-	 * @return [Model_User_Receipt]
+	 * @return array Model_User_Receipt
 	 */
 	public function get_debtors() {
 		return Model_User_Receipt::find('all', array(
@@ -130,7 +130,7 @@ class Model_Receipt extends \Orm\Model
 	/**
 	 * Get a list of lists [from user_id, to user_id, amount] describing transactions.
 	 * Warning: This changes the balance value for debtors.
-	 * @return array
+	 * @return array [from user_id, to user_id, amount]
 	 */
 	public function get_transaction_schema() {
 		$creditors = $this->get_creditors();
