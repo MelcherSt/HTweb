@@ -1,1 +1,1 @@
-<p>The page you requested was not found on this server. </p>
+<p>The page you requested was not found on this server or you do not have sufficient privileges to access the requested page.</p>

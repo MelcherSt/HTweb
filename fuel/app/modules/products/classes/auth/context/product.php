@@ -6,7 +6,7 @@ class Auth_Context_Product extends \Auth_Context_Base {
 	
 	private $product;
 	
-	private function __construct(Model_Product $product, $user) {
+	protected function __construct(Model_Product $product, $user) {
 		parent::__construct($user);
 		
 		$this->product = $product;
@@ -27,4 +27,9 @@ class Auth_Context_Product extends \Auth_Context_Base {
 		if(!$result) { $this->push_message('Cannot delete product. You do not have sufficient privilleges.'); }
 		return $result;
 	}
+
+	protected function override_access() {
+		return false;
+	}
+
 }

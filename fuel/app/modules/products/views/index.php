@@ -27,7 +27,7 @@
 						<th class="col-md-2"><?=__('product.field.date')?></th>		
 						<th class="col-md-2"><?=__('product.field.participant_plural')?></th>
 						<th class="col-md-1"><?=__('product.field.cost')?></th>
-						<td class="col-md-1"><?=__('action.name')?></td>
+						<th class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
 				<tbody>

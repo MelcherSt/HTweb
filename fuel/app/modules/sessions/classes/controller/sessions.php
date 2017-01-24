@@ -4,11 +4,11 @@ namespace Sessions;
 
 class Controller_Sessions extends \Controller_Gate {
 	
-	public function action_index() {
-		
+	public function action_index() {		
 		Model_Session::scrub_empty_or_invalid();
 		
 		$this->template->title = __('session.title');
+		$this->template->page_title = __('session.title');
 		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id);			
 		$this->template->content = \View::forge('index', $data);
 	}
