@@ -66,7 +66,7 @@
 		$week_start = $date->modify('-' . $day_of_week . 'days');
 
 
-		for ($i = 0; $i < 7; $i++) { 
+		for ($i = 0; $i < (7 + $day_of_week -1); $i++) { 
 			$day = $week_start->modify('+1day');
 			$date = $day->format('Y-m-d');
 			if($day < $now) { continue; }
@@ -77,7 +77,7 @@
 		?>
 			<li>
 				<div class="checkbox">
-					<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked disabled' : '' ?>><?=strftime('%A', $day->getTimestamp())?></label>
+					<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked disabled' : '' ?>><?=strftime('%A (%e/%m)', $day->getTimestamp())?></label>
 				</div>
 			</li>
 
