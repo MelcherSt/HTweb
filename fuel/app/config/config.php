@@ -294,7 +294,8 @@ return array(
 			'products',
 			'receipts', 
 			'stats', 
-			'content'),
+			'content',
+			'privileges'),
 
 		/**
 		 * Classes to autoload & initialize even when not used

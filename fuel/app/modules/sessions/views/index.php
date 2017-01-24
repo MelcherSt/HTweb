@@ -5,15 +5,16 @@
 		
 		<!-- Basic session navigation -->
 		<div class="panel panel-default">
-			<ul class="nav nav-pills nav-stacked">
-				<li role="presentation"><a href="/sessions/yesterday"><i class="fa fa-chevron-left" aria-hidden="true"></i> <?=__('session.day.yesterday')?></a></li>
-				<li role="presentation"><a href="/sessions/today"><i class="fa fa-cutlery" aria-hidden="true"></i> <?=__('session.day.today')?></a></li>
-				<li role="presentation"><a href="/sessions/tomorrow"><i class="fa fa-chevron-right" aria-hidden="true"></i> <?=__('session.day.tomorrow')?></a></li>
-			</ul>
+			<div class="panel-heading"><?=__('actions.name')?></div>
+			<div class="list-group">
+				<a class="list-group-item" href="/sessions/yesterday"><i class="fa fa-chevron-left" aria-hidden="true"></i> <?=__('session.day.yesterday')?></a>
+				<a class="list-group-item" href="/sessions/today"><i class="fa fa-cutlery" aria-hidden="true"></i> <?=__('session.day.today')?></a>
+				<a class="list-group-item" href="/sessions/tomorrow"><i class="fa fa-chevron-right" aria-hidden="true"></i> <?=__('session.day.tomorrow')?></a>
+			</div>
 		</div>
 		
 		<!-- Quick enrollment form -->
-		<div class="panel panel-grey">
+		<div class="panel panel-default">
 			<div class="panel-heading">
 				<?=__('session.index.quick_enroll')?>
 			</div>
@@ -49,6 +50,9 @@
 				</form>
 			</div>
 		</div>	
+		
+		<?=Request::forge('/privileges/sessions/nav')->execute();?>
+		
 	</div>
 		
 	<!-- BODY -->
@@ -70,30 +74,26 @@
 				<tbody>
 					<?php 
 					$sessions_cooked = \Sessions\Model_Session::get_by_cook($current_user->id);
-
-					if(sizeof($sessions_cooked) == 0) {
-						echo '<tr><td>' . __('session.empty_list') . '</td></tr>';
-					}
-
 					foreach($sessions_cooked as $session): ?>
 					<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-						<td><?=strftime('%F - %A', strtotime($session->date))?></td>
+						<td><?=strftime('%A (%e/%m)', strtotime($session->date))?></td>
 						<td><?=$session->count_total_participants()?></td>
 						<td>
 							<?php foreach($session->get_cook_enrollments() as $enrollment):?>
-								<?=$enrollment->user->get_fullname();?>			
+								<?=$enrollment->user->name;?>			
 							<?php endforeach; ?>	
 						</td>
 						<td>
 							<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
-								<?=$enrollment->user->get_fullname();?>			
+								<?=$enrollment->user->name;?> 	
 							<?php endforeach; ?>
 						</td>
 						<td><?='€ ' . $session->cost?></td>
 					</tr>
 					<?php endforeach; ?>
-				</tbody>
+				</tbody>	
 			</table>
+			<?=sizeof($sessions_cooked) == 0 ? __('session.empty_list') : ''?>
 		</div>
 
 
@@ -111,24 +111,18 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php 
-
-					if(sizeof($sessions) == 0) {
-						echo '<tr><td>' . __('session.empty_list') . '</td></tr>';
-					}
-
-					foreach($sessions as $session): ?>
+					<?php foreach($sessions as $session): ?>
 					<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-						<td><?=strftime('%F - %A', strtotime($session->date))?></td>
+						<td><?=strftime('%A (%e/%m)', strtotime($session->date))?></td>
 						<td><?=$session->count_total_participants()?></td>
 						<td>
 							<?php foreach($session->get_cook_enrollments() as $enrollment):?>
-								<?=$enrollment->user->get_fullname();?>			
+								<?=$enrollment->user->name;?>			
 							<?php endforeach; ?>	
 						</td>
 						<td>
 							<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
-								<?=$enrollment->user->get_fullname();?>			
+								<?=$enrollment->user->name;?> 	
 							<?php endforeach; ?>
 						</td>
 						<td><?='€ ' . $session->cost?></td>
@@ -136,6 +130,7 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?>
 		</div>
 	</div>
 </div>
