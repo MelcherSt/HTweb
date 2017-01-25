@@ -3,9 +3,9 @@
  * @author Melcher
  */
 
-$(document).ready(function($) {
+$(document).ready(function(e) {
 	// Make rows clickable while maintaing anchors
-    $(".clickable-row").click(function(e) {
+    $('.clickable-row').click(function(e) {
 		// event target will always retrieve the anchor when clicked.
 		if(e.target.tagName !== 'A') {
 			window.location = $(this).data("href");
@@ -14,13 +14,33 @@ $(document).ready(function($) {
 	
 	// Hide IBANs by default
 	$('.iban').hide();
+		
+	if($('#alert-success-msg').text().trim().length > 0) {
+		alertSuccess();
+	}
 	
-	// Fade in all alerts
-	$(".alert").addClass("in");
-	// Fade out success alerts
-	$("#alert-success").delay(2000).fadeOut("slow", function () { $(this).remove(); });	
+	if($('#alert-error-msg').text().trim().length > 0) {
+		alertError();
+	}
 });
 
+function alertSuccess(msg) {
+	if(arguments.length === 1) {
+		$('#alert-success-msg').text(msg);
+	}
+	
+	$('#alert-success').show('slow');
+	$("#alert-success").delay(2000).hide('slow');	
+}
+
+
+function alertError(msg) {
+	if(arguments.length === 1) {
+		$('#alert-error-msg').text(msg);
+	}
+	
+	$('#alert-error').show('slow');
+}
 
 // Show iban with given id number			
 function showIban($id) {				

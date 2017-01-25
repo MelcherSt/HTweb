@@ -9,4 +9,5 @@ return array(
 	'cancel' => 'Cancel',
 	'select_all' => 'Select all',
 	'deselect_all' => 'Deselect all',
+	'no_actions' => 'There are no actions available one this page',
   );

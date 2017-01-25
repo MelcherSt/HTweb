@@ -33,6 +33,9 @@ class Controller_Sessions extends \Controller_Gate {
 	public function action_view($date=null) {
 		$this->template->title = __('session.title');
 		
+		$this->push_css('jquery.timepicker-1.3.5.min');
+		$this->push_js('jquery.timepicker-1.3.5.min');
+		
 		if (\Utils::valid_date($date)) {
 			$session = Model_Session::get_by_date($date);
 

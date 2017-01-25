@@ -75,7 +75,6 @@
 			</table>
 			<?=sizeof($products) == 0 ? __('product.empty_list') : ''?>
 		</div>
-		
 	</div>
 </div>
 

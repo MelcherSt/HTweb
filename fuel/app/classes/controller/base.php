@@ -6,6 +6,50 @@
 class Controller_Base extends Controller_Template {
 	const DEFAULT_LANGUAGE = 'en';
 	
+	/**
+	 * List of additional scripts to be loaded
+	 * @var array
+	 */
+	protected $add_js = [];
+	
+	/**
+	 * List of additional stylesheets to be loaded
+	 * @var array
+	 */
+	protected $add_css = [];
+	
+	/**
+	 * Add additional css
+	 * @param mixed $sheet Either stylesheet name (excluding extension) or array of stylesheets.
+	 */
+	public function push_css($sheet) {
+		if (is_array($sheet)) {
+			foreach ($sheet as $single_sheet) {
+				$this->push_css($single_sheet);
+			}
+		} else {
+			if (!in_array($sheet, $this->add_css)) {
+				array_push($this->add_css, $sheet);
+			}
+		}
+	}
+	
+	/**
+	 * Add additional script
+	 * @param mixed $script Either scriptname (excluding extension) or array of scriptnames.
+	 */
+	public function push_js($script) {
+		if (is_array($script)) {
+			foreach ($script as $single_script) {
+				$this->push_js($single_script);
+			}
+		} else {
+			if (!in_array($script, $this->add_js)) {
+				array_push($this->add_js, $script);
+			}
+		}
+	}
+	
 	public function before() {		
 		$this->current_user = null;
 
@@ -20,7 +64,7 @@ class Controller_Base extends Controller_Template {
 		
 		$lang = Controller_Base::DEFAULT_LANGUAGE;
 		
-		if(!empty($this->current_user)) {
+		if(isset($this->current_user)) {
 			if (!empty($lang_temp = $this->current_user->lang)){
 				$lang = $lang_temp;
 			}
@@ -48,8 +92,16 @@ class Controller_Base extends Controller_Template {
 
 		// Set a global variable so views can use it
 		View::set_global('current_user', $this->current_user);
+		View::set_global('language', $lang);
 		
 		parent::before();
+	}
+	
+	public function after($reponse) {
+		$this->template->add_js = $this->add_js;
+		$this->template->add_css = $this->add_css;
+		
+		return parent::after($reponse);
 	}
 
 }

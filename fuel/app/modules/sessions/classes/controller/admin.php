@@ -20,7 +20,21 @@ class Controller_Admin extends \Controller_Gate {
 		$this->template->content = \View::forge('admin/index', $data);
 	}
 	
+	public function delete_index() {
+		$id = \Input::delete('session_id', null);
+		$session = Model_Session::find($id);
+		
+		if(isset($session)) {
+			$session->delete();
+		} else {
+			throw new \HttpNotFoundException();
+		}
+		return \Response::forge('', 204);
+	}
+	
 	public function action_view($date=null) {
+		$this->push_css('jquery.timepicker-1.3.5.min');
+		$this->push_js('jquery.timepicker-1.3.5.min');
 		
 		if (\Utils::valid_date($date)) {
 			$session = Model_Session::get_by_date($date);

@@ -30,6 +30,12 @@ td a {
 	font-size: 18px;
 }
 
+/* Element hidden by default */
+.hidden-default {
+	display: none;
+}
+
+
 /* Additional non-bootstrap panel colors */
 .panel-grey {
   border-color: #dedede;
