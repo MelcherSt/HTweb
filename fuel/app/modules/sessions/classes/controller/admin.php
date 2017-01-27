@@ -14,6 +14,8 @@ class Controller_Admin extends \Controller_Gate {
 	
 	
 	public function action_index() {
+		$this->push_js(['sessions-lang', 'admin/sessions-delete']);
+		
 		$this->template->title = __('session.title_admin');
 		$this->template->page_title = __('session.title_admin');
 		$data['sessions'] = Model_Session::query()->where('settled', 0)->get();			
@@ -32,9 +34,28 @@ class Controller_Admin extends \Controller_Gate {
 		return \Response::forge('', 204);
 	}
 	
+	public function put_index($id=null) {
+		$session = Model_Session::find($id);
+
+		if(empty($session)) {
+			throw new \HttpNotFoundException();
+		} 
+		
+		
+		$session->notes = \Input::put('notes', '');
+		$session->deadline = date(date('Y-m-d'). ' ' . \Input::put('deadline', Model_Session::DEADLINE_TIME));
+		$session->cost = \Input::put('cost', 0.0);
+		$session->paid_by = \Input::put('payer_id', null);
+		$session->save();
+		
+		return \Response::forge('', 200);
+	}
+	
 	public function action_view($date=null) {
 		$this->push_css('jquery.timepicker-1.3.5.min');
-		$this->push_js('jquery.timepicker-1.3.5.min');
+		$this->push_js(['jquery.timepicker-1.3.5.min',
+			'sessions-lang', 'sessions-timepicker', 'admin/sessions-delete']);
+		
 		
 		if (\Utils::valid_date($date)) {
 			$session = Model_Session::get_by_date($date);

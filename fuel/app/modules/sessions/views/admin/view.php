@@ -16,7 +16,6 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			<div class="list-group">
 				<a class="list-group-item" href="/sessions/view/<?=$session->date?>"><i class="fa fa-eye" aria-hidden="true"></i> View original</a>
 				<a class="list-group-item" href="#" onClick="showEnrollAddModal()"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a>
-				<a class="list-group-item" href="#" onClick="showSessionDeleteModal()"><i class="fa fa-trash" aria-hidden="true"></i> <?=__('actions.remove')?></a>
 			</div>
 		</div>
 		
@@ -43,7 +42,9 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			<div class="panel-heading">Properties</div>
 			
 			<div class="panel-body">
-				<form method="post" action="/sessions/admin/update">
+				<form id="update-session-form" action="/sessions/admin/index/<?=$session->id?>">
+					
+					
 					
 					<div class="form-group ">
 						<textarea name="notes" class="form-control" rows="2" placeholder="<?=__('session.field.notes')?>"><?=$session->notes?></textarea>
@@ -58,7 +59,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 						<label for="cost"><?=__('product.field.cost')?></label>
 						<div class="input-group">
 							<div class="input-group-addon">€</div>
-							<input name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
+							<input style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
 						</div>
 						<br>
 						<label><?=__('product.field.paid_by')?></label>
@@ -248,9 +249,30 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 	</div>
 </div>
 
-
 <!-- //TODO: externalize -->
 <script>
+		
+$('document').ready(function() {
+	$('#update-session-form').submit(function(event) {
+		event.preventDefault();
+		var form = $('#update-session-form');
+		
+		$.ajax({
+			type: 'PUT',
+			data: form.serialize(),
+			success: function() { 
+				alertSuccess(LANG.session.alert.success.update);
+			},
+			error: function(){ 
+				alertError(LANG.session.alert.error.update);
+			},
+			url: form.attr('action'),
+			cache:false
+		  });
+		  $("#delete-session-modal").modal('hide');
+	});
+});	
+	
 function showEnrollAddModal(canCook, canDish) {
 	$("#add-enrollment-modal").modal();
 	$("#add-cook").attr('disabled', canCook === 0);

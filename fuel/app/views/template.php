@@ -60,9 +60,8 @@
 		<hr/>
 		<footer>
 			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>© 2016-2017</small><br>
-				<small><?= __('fuel') . e(Fuel::VERSION); ?></small>
-			</p>
-			<p class="pull-right"><?=__('render')?></p>
+				<small class="pull-right"><?= __('fuel') . e(Fuel::VERSION); ?></small>
+			</p>		
 		</footer>
 	</div>
 </body>

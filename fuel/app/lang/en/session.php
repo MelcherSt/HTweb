@@ -74,6 +74,11 @@ return [
 			'msg' => 'You are editing the enrollment of',
 			'btn' => 'Update enrollment',
 		],
+		'remove' => [
+			'title' => 'Remove session',
+			'msg' => 'Are you sure you want to remove this session',
+			'btn' => 'Remove session',
+		]
 	],
 	'index' => [
 		'msg' => 'This list only shows unsettled sessions. For a list of settled session you participated in, please see',
