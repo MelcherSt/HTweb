@@ -40,7 +40,7 @@
 					?>
 						<li>
 							<div class="checkbox">
-								<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked disabled' : '' ?>><?=strftime('%A (%e/%m)', $day->getTimestamp())?></label>
+								<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked disabled' : '' ?>><?=strftime('%A (%d/%m)', $day->getTimestamp())?></label>
 							</div>
 						</li>
 
@@ -76,7 +76,7 @@
 					$sessions_cooked = \Sessions\Model_Session::get_by_cook($current_user->id);
 					foreach($sessions_cooked as $session): ?>
 					<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-						<td><?=strftime('%A (%e/%m)', strtotime($session->date))?></td>
+						<td><?=strftime('%A (%d/%m)', strtotime($session->date))?></td>
 						<td><?=$session->count_total_participants()?></td>
 						<td>
 							<?php foreach($session->get_cook_enrollments() as $enrollment):?>
@@ -113,7 +113,7 @@
 				<tbody>
 					<?php foreach($sessions as $session): ?>
 					<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-						<td><?=strftime('%A (%e/%m)', strtotime($session->date))?></td>
+						<td><?=strftime('%A (%d/%m)', strtotime($session->date))?></td>
 						<td><?=$session->count_total_participants()?></td>
 						<td>
 							<?php foreach($session->get_cook_enrollments() as $enrollment):?>

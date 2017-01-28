@@ -25,7 +25,7 @@
 				<tbody>
 					<?php foreach($sessions as $session): ?>
 					<tr id="session-<?=$session->id?>" class="clickable-row" data-href="/sessions/admin/view/<?=$session->date?>">
-						<td><?=strftime('%A (%e/%m)', strtotime($session->date))?></td>
+						<td><?=strftime('%A (%d/%m)', strtotime($session->date))?></td>
 						<td><?=$session->count_total_participants()?></td>
 						<td>
 							<?php foreach($session->get_cook_enrollments() as $enrollment):?>

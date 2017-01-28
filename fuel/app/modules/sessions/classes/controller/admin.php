@@ -64,7 +64,7 @@ class Controller_Admin extends \Controller_Gate {
 				\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
 			}
 			
-			$formatted_date = strftime('%A %e %B %Y', strtotime($date));
+			$formatted_date = strftime('%A %d %B %Y', strtotime($date));
 			$this->template->page_title = __('session.name');
 			$this->template->title = $formatted_date . ' - ' . __('session.title_admin');
 			$this->template->subtitle = $formatted_date;		
