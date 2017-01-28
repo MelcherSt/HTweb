@@ -33,7 +33,7 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<?=sizeof($permissions) == 0 ? __('session.empty_list') : ''?>
+			<em><?=sizeof($permissions) == 0 ? __('privileges.empty_list') : ''?></em>
 		</div>
 	</div>
 </div>

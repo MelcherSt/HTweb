@@ -91,7 +91,7 @@
 					<?php endforeach; ?>
 				</tbody>	
 			</table>
-			<?=sizeof($sessions_cooked) == 0 ? __('session.empty_list') : ''?>
+			<em><?=sizeof($sessions_cooked) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
 
 		<h4><?=__('session.index.cooked_for_me')?></h4>
@@ -126,7 +126,7 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?>
+			<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
 	</div>
 </div>

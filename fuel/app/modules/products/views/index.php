@@ -44,7 +44,7 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<?=sizeof($products_paid) == 0 ? __('product.empty_list') : ''?>
+			<em><?=sizeof($products_paid) == 0 ? __('product.empty_list') : ''?></em>
 		</div>
 		
 		<h4><?=__('product.index.paid_for_me')?></h4>
@@ -73,7 +73,7 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<?=sizeof($products) == 0 ? __('product.empty_list') : ''?>
+			<em><?=sizeof($products) == 0 ? __('product.empty_list') : ''?></em>
 		</div>
 	</div>
 </div>

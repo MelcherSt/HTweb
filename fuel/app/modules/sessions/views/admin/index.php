@@ -43,7 +43,7 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?>
+			<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
 	</div>
 </div>
