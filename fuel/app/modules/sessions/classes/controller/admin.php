@@ -5,10 +5,9 @@ namespace Sessions;
 class Controller_Admin extends \Controller_Gate {
 	
 	function before() {
-		if(!\Auth::has_access('session.management')) {
+		if(!\Auth::has_access('sessions.management')) {
 			throw new \HttpNoAccessException();
 		}
-		
 		parent::before();
 	}
 	
@@ -55,7 +54,6 @@ class Controller_Admin extends \Controller_Gate {
 		$this->push_css('jquery.timepicker-1.3.5.min');
 		$this->push_js(['jquery.timepicker-1.3.5.min',
 			'sessions-lang', 'sessions-timepicker', 'admin/sessions-delete']);
-		
 		
 		if (\Utils::valid_date($date)) {
 			$session = Model_Session::get_by_date($date);

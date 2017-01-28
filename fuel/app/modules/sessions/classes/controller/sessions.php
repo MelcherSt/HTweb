@@ -8,7 +8,6 @@ class Controller_Sessions extends \Controller_Gate {
 		Model_Session::scrub_empty_or_invalid();
 		
 		$this->template->title = __('session.title');
-		$this->template->page_title = __('session.title');
 		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id);			
 		$this->template->content = \View::forge('index', $data);
 	}

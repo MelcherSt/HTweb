@@ -42,7 +42,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			<div class="panel-heading">Properties</div>
 			
 			<div class="panel-body">
-				<form id="update-session-form" action="/sessions/admin/index/<?=$session->id?>">
+				<form id="update-session-form" action="/sessions/admin/<?=$session->id?>">
 					
 					
 					

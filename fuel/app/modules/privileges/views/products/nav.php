@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		Privileges
+		<?=__('privileges.title')?>
 	</div>
 	<div class="list-group">
 		<?php if(\Auth::has_access('products.management')) { ?>

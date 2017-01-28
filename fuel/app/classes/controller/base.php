@@ -89,6 +89,7 @@ class Controller_Base extends Controller_Template {
 		\Lang::load('content', 'content');
 		\Lang::load('dashboard', 'dashboard');
 		\Lang::load('stats', 'stats'); 	
+		\Lang::load('privileges', 'privileges');
 
 		// Set a global variable so views can use it
 		View::set_global('current_user', $this->current_user);

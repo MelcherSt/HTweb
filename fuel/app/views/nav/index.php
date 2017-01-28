@@ -33,6 +33,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="/users/me"><span class="fa fa-user-circle"></span> <?=__('me')?></a></li>
 						<li><a href="/users/edit"><span class="fa fa-cogs"></span> <?=__('settings')?></a></li>
+						<li><a href="/privileges"><span class="fa fa-shield"></span> <?=__('privileges.title')?></a></li>
 						<li><a href="/gate/logout"><span class="fa fa-sign-out"></span> <?=__('logout')?></a></li>
 					</ul>
 				</li>

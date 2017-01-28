@@ -5,7 +5,7 @@ namespace Sessions;
 class Controller_Enroll extends \Controller_Gate {
 	
 	function before() {
-		if(!\Auth::has_access('session.management')) {
+		if(!\Auth::has_access('sessions.management')) {
 			throw new \HttpNoAccessException();
 		}
 		

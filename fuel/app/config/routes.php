@@ -4,5 +4,5 @@ return array(
 	'_404_'   => 'errorhandler/404',    // The main 404 route
 	'_403_'	  => 'errorhandler/403',
 	
-	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
+	'sessions/admin/(:segment)' => 'sessions/admin/index/$1', // Fixes HTTP verb routes on _index
 );

@@ -28,23 +28,21 @@
 					$day_of_week = $date->format('w');
 					$week_start = $date->modify('-' . ($day_of_week + 1) . 'days');
 
-
-					for ($i = 0; $i < (7 + $day_of_week); $i++) { 
+					// Print 7 days
+					for ($i = 0; $i < (7 + $day_of_week); $i++): 
 						$day = $week_start->modify('+1day');
 						$date = $day->format('Y-m-d');
 						if($day < $now) { continue; }
 
 						$session = \Sessions\Model_Session::get_by_date($date);
 						$enrollment = empty($session) ? null : $session->current_enrollment();
-						$enrolled = isset($enrollment);
 					?>
 						<li>
 							<div class="checkbox">
-								<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=$enrolled ? 'checked disabled' : '' ?>><?=strftime('%A (%d/%m)', $day->getTimestamp())?></label>
+								<label><input name="dates[]" value="<?=$day->format('Y-m-d')?>" type="checkbox" <?=isset($enrollment) ? 'checked disabled' : '' ?>><?=strftime('%A (%d/%m)', $day->getTimestamp())?></label>
 							</div>
 						</li>
-
-					<?php } ?>
+					<?php endfor; ?>
 					</ul>
 					<input type="submit" class="btn btn-sm btn-primary" value="<?=__('session.index.quick_btn')?>" />
 				</form>
@@ -95,8 +93,6 @@
 			</table>
 			<?=sizeof($sessions_cooked) == 0 ? __('session.empty_list') : ''?>
 		</div>
-
-
 
 		<h4><?=__('session.index.cooked_for_me')?></h4>
 		<div class="table-responsive">

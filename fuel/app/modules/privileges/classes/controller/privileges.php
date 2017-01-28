@@ -3,9 +3,11 @@
 namespace Privileges;
 
 class Controller_Privileges extends \Controller_Gate {
-	
+		
 	public function action_index() {
-		return \Response::forge('Placeholder for privileges');
-	
+		$this->template->title = __('privileges.title');
+		
+		$permissions = \Auth::get_user()->permissions;
+		$this->template->content = \View::forge('index', ['permissions' => $permissions]);
 	}
 }
