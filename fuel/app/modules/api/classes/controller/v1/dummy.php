@@ -2,9 +2,11 @@
 
 namespace Api;
 
-class Controller_V1_Dummy extends Controller_Auth {
+class Controller_V1_Dummy extends \Fuel\Core\Controller_Rest {
 	
 	function action_index() {	
-		return \Response::forge('dummy endpoint'. \Input::get('name'));
+		$this->http_status = 404;
+		return ['dummy endpoint'];
+		return \Response::forge('hoi');
 	}
 }
