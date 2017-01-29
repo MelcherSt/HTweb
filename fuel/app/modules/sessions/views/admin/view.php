@@ -42,10 +42,12 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			<div class="panel-heading">Properties</div>
 			
 			<div class="panel-body">
-				<form id="update-session-form" action="/sessions/admin/<?=$session->id?>">
-					
-					
-					
+				<form id="update-session-form" 
+					  action="/sessions/admin/<?=$session->id?>" 
+					  method="put"
+					  data-alert-success="<?=__('session.alert.success.update_session')?>"
+					  data-alert-error="<?=__('session.alert.error.update_session')?>"
+				>
 					<div class="form-group ">
 						<textarea name="notes" class="form-control" rows="2" placeholder="<?=__('session.field.notes')?>"><?=$session->notes?></textarea>
 					</div>
@@ -258,13 +260,14 @@ $('document').ready(function() {
 		var form = $('#update-session-form');
 		
 		$.ajax({
-			type: 'PUT',
+			type: form.attr('method'),
 			data: form.serialize(),
 			success: function() { 
-				alertSuccess(LANG.session.alert.success.update);
+				alertSuccess(form.data('alert-success'));
+				$('#session-' + sessionId).fadeOut();
 			},
-			error: function(){ 
-				alertError(LANG.session.alert.error.update);
+			error: function(e){ 
+				alertError(form.data('alert-error'));
 			},
 			url: form.attr('action'),
 			cache:false

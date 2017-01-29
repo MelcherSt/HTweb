@@ -23,7 +23,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	const DINER_TIME = '18:00';
 	
 	protected  function __construct(Model_Session $session, $user) {
-		parent::__construct($user);
+		parent::__construct($user);	
 		
 		$this->session = $session;
 		$this->enrollment = $session->current_enrollment();

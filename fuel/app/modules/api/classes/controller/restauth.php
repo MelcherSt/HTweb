@@ -2,7 +2,7 @@
 
 namespace Api;
 
-class Controller_Auth extends \Controller_Rest {
+class Controller_RestAuth extends \Controller_Rest {
 	
 	
 	public function before() {

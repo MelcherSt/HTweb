@@ -45,6 +45,7 @@ return [
 			'update_enroll' => 'Enrollment for </strong>:name</strong> has been updated.',
 			'remove_enroll' => 'Enrollment for <strong>:name</strong> has been removed.',
 			'update_session' => 'Session has been updated',
+			'remove_session' => 'Session has been removed',
 		],
 		'error' => [
 			'create_enroll' => 'Cannot enroll <strong>:name</strong>.',
@@ -54,6 +55,7 @@ return [
 			'no_enrollment' => 'There is no known enrollment for <strong>:name</strong>',
 			'deadline_passed' => 'Cannot (un)enroll after deadline.',
 			'update_session' => 'Cannot update session',
+			'remove_session' => 'Cannot remove session',
 			'guests' => 'Cannot bring less than 0 or more than :max_guests guests.',
 			'no_perm' => 'You do not have sufficient permissions to perform this action <strong>:action</strong>',
 		],

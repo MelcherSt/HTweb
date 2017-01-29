@@ -2,7 +2,7 @@
 
 namespace Api;
 
-class Controller_v1_Users extends Controller_Auth {
+class Controller_v1_Users extends Controller_RestAuth {
 	
 	public function action_index() {
 		// Explicitly return all (in)active users

@@ -9,16 +9,16 @@ $('document').ready(function() {
 		var form = $('#delete-session-form');
 		var sessionId = $('#delete-session-id').val();
 		$.ajax({
-			type: 'DELETE',
+			type: form.attr('method'),
 			data: form.serialize(),
 			success: function() { 
-				alertSuccess(LANG.session.alert.success.remove);
+				alertSuccess(form.data('alert-success'));
 				$('#session-' + sessionId).fadeOut();
 			},
 			error: function(e){ 
-				alertError(LANG.session.alert.error.remove);
+				alertError(form.data('alert-error'));
 			},
-			url: '/sessions/admin/',
+			url: form.attr('action'),
 			cache:false
 		  });
 		  $("#delete-session-modal").modal('hide');
