@@ -58,7 +58,7 @@ class Model_Session extends \Orm\Model
 		
 		$query = \DB::select('s.id')
 				->from(['sessions', 's'], ['enrollment_sessions', 'es'])
-				->where('s.id', 'es.session_id')
+				->where('s.id', '=', 'es.session_id')
 				->where('date', '<', $today)
 				->group_by('s.id')
 				->having(\DB::query('sum(es.cook'), 0)
@@ -70,10 +70,10 @@ class Model_Session extends \Orm\Model
 		}
 		
 		// Remove all orphaned sessions
-		$query2 = \DB::delete('sessions')
-				->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
-				->where('date', '<', $today)
-				->execute();
+		\DB::delete('sessions')
+			->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
+			->where('date', '<', $today)
+			->execute();
 	}
 	
 	/**
@@ -149,6 +149,7 @@ class Model_Session extends \Orm\Model
 		return Model_Enrollment_Session::query()
 			->related('user')
 			->where('session_id', $this->id)
+			->order_by('user.name', 'asc')
 			->get();
 	}
 	
