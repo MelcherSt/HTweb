@@ -4,6 +4,7 @@ namespace Sessions;
 
 class Dto_SessionListItem {
 	
+	public $id;
 	public $date;
 	public $participants;
 	public $cooks;
@@ -11,6 +12,7 @@ class Dto_SessionListItem {
 	public $cost;
 	
 	public function __construct(\Sessions\Model_Session $session) {
+		$this->id = $session->id;
 		$this->date = $session->date;
 		$this->participants = $session->count_participants();
 		$this->cost = $session->cost;

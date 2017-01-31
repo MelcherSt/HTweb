@@ -2,14 +2,32 @@
 
 namespace Api;
 
+/**
+ * Controller for dealing with basic paginated API requests.
+ * This controller accepts request in the form of '/$endpoint?limit=x&offset=y&order=(asc|desc)
+ */
 class Controller_RestPaginated extends Controller_RestAuth {
 	
+	/**
+	 * Rows offset 
+	 * @var int 
+	 */
 	protected $offset = null;
+	
+	/**
+	 * Row limit
+	 * @var int 
+	 */
 	protected $limit = null;
+	
+	/**
+	 * Ordering
+	 * @var string Either 'asc' for ascending or 'desc' for descending order. 
+	 */
 	protected $order = 'asc';
 			
 	
-	function before() {
+	final function before() {
 		parent::before();
 		
 		/* 
@@ -20,25 +38,27 @@ class Controller_RestPaginated extends Controller_RestAuth {
 		$this->limit = \Input::get('limit');
 		
 		// Only set order when appropriate
-		$order_param = \Input::get('order');
-		if(in_array($order_param, ['asc', 'desc'])){
+		if(in_array(($order_param = \Input::get('order')), ['asc', 'desc'])){
 			$this->order =$order_param;
 		}	
 	}
 	
 	/**
-	 * Subsequently paginate and execute query
-	 * @param \Orm\Query $query
-	 * @return array
+	 * Execute given query with the pagination details as requested.
+	 * @param \Orm\Query $query The query
+	 * @param string $order_column Column name on which to order rows. Defaults to id.
+	 * @return array Query result
 	 */
-	protected final function paginate_query(\Orm\Query $query) : array {
+	protected final function paginate_query(\Orm\Query $query, string $order_column = 'id') : array {
 		return $query->rows_offset($this->offset)
 			->rows_limit($this->limit)
-			->order_by('date', $this->order)
+			->order_by($order_column, $this->order)
 			->get();
 	}
 	
 	public final function after($array) : \Response {
+		$array = empty($array) ? [] : $array;
+		
 		// Wrap return body
 		return parent::after([
 			'total' => sizeof($array),

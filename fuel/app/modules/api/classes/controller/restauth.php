@@ -2,8 +2,12 @@
 
 namespace Api;
 
+/**
+ * Controller dealing with API authentication.  * Yes, this 'rest' API is not 
+ * stateless and relies on the session for authentication by default.
+ * Deal with it.
+ */
 class Controller_RestAuth extends \Controller_Rest {
-	
 	
 	public function before() {
 		parent::before();
@@ -16,10 +20,11 @@ class Controller_RestAuth extends \Controller_Rest {
 	}
 	
 	/**
-	 * Authentication function
+	 * Authenticator function. 
+	 * Override this function to change individual controller behavior.
 	 * @return boolean
 	 */
-	public function _authenticate() {
+	protected function _authenticate() {
 		return \Auth::check();
 	}
 }
