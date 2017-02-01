@@ -115,25 +115,29 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><?=__('session.modal.remove_enroll.title')?></h4>
-			</div>
-			<div class="modal-body">
-				<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
-				<div class="form-group">
-					<input id="delete-user-id" type="hidden" class="form-control" name="enrollment_id">
+			<form id="delete-enrollment-form" 
+				  action="/api/v1//sessions/<?=$session->id?>/enrollments/" 
+				  method="delete"
+				  data-alert-error="<?=__('session.alert.error.remove_enroll')?>"
+				  data-alert-success="<?=__('session.alert.success.remove_enroll')?>"
+			>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><?=__('session.modal.remove_enroll.title')?></h4>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<form id="delete-enrollment-form" 
-					action="/api/v1//sessions/<?=$session->id?>/enrollments/" 
-					method="delete">
+				<div class="modal-body">
+					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
+					<div class="form-group">
+						<input id="delete-user-id" type="hidden" class="form-control" name="enrollment_id">
+					</div>
+				</div>
+				<div class="modal-footer">
 					<input type="submit" class="btn btn-danger" value="<?=__('session.modal.remove_enroll.btn')?>" />
-					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
-				</form>
-			</div>
+					<button type="button" class="btn btn-default"
+						data-dismiss="modal"><?=__('actions.cancel')?></button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -142,7 +146,12 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="edit-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="edit-enrollment-form" action="/sessions/enrollments/update/<?=$session->id?>" method="POST">
+			<form id="edit-enrollment-form" 
+				  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
+				  method="put"
+				  data-alert-error="<?=__('session.alert.error.update_enroll')?>"
+				  data-alert-success="<?=__('session.alert.success.update_enroll')?>"
+			>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -151,7 +160,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<div class="modal-body">
 					<p><?=__('session.modal.edit_enroll.msg')?> <strong><span id="edit-user-name"></span></strong>.</p>
 					<div class="form-group">
-						<input id="edit-enrollment-id" type="hidden" class="form-control" name="user_id">
+						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
 						<label for="edit-guests"><?=__('session.fied.guest_plural')?> </label>
 						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
 					</div>
@@ -180,7 +189,12 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="add-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/admin/enroll/<?=$session->date?>" method="POST">
+			<form id="add-enrollment-form" 
+				  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
+				  method="post"
+				  data-alert-error="<?=__('session.alert.error.create_enroll')?>"
+				  data-alert-success="<?=__('session.alert.success.create_enroll')?>"	  
+			>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -200,7 +214,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 					<br>
 					<div class="form-group">
 						<label for="add-guests"><?=__('session.field.guest_plural')?></label>
-						<input id="add-guests" name="guests" type="number" step="1" max="10" min="0" value="0"/>
+						<input id="add-guests" name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="0"/>
 					</div>
 					
 					<div class="form-group">

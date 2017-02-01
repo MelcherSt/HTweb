@@ -71,6 +71,55 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		return Response_Status::_404();
 	}
 	
+	
+	public function post_index($session_id=null) {
+		$session = \Sessions\Model_Session::find($session_id);
+		
+		if(isset($session)) {
+			$context = new \Sessions\SessionContext($session);
+			
+			// Booleans indication if we're at max
+			$max_cooks = $session->count_cooks() == \Sessions\Model_Session::MAX_COOKS;
+			$max_dish = $session->count_dishwashers() == \Sessions\Model_Session::MAX_DISHWASHER;
+			
+			$user_id = \Input::post('user_id');
+			$guests = \Input::post('guests', 0);
+			$cook = \Input::post('cook') == 'on' ? true : false;
+			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
+			$later = \Input::post('later') == 'on' ? true : false;
+			
+			if(empty(\Model_User::find($user_id))) {
+				return Response_Status::_422(': invalid user id in data');
+			}
+			
+			if($guests > \Sessions\Model_Session::MAX_GUESTS) {
+				return Response_Status::_422(': exceeded maximum amount of guests');
+			}
+			
+			// create new enrollment
+			if ($context->can_enrollment(\Auth_PermissionType::CREATE, $user_id)) {				
+				if(($cook && $max_cooks) || ($dishwasher && $max_dish)) {
+					// Can only have so much cooks/dishwashers
+					return Response_Status::_422(': reached maximum amount of cooks and/or dishwashers');
+				}
+
+				$enrollment = \Sessions\Model_Enrollment_Session::forge([
+					'user_id' => $user_id,
+					'session_id' => $session->id,
+					'later' => $later,
+					'dishwasher' => $dishwasher,
+					'cook' => $cook,
+					'guests' => $guests,
+				]);
+				$enrollment->save();	
+				return null;
+			} else {
+				return Response_Status::_405();
+			}
+		} 
+		return Response_Status::_404();
+	}
+	
 	/**
 	 * Create / update enrollment for given user for session
 	 * @param int $session_id
@@ -82,26 +131,38 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		
 		if(isset($session)) {
 			$context = new \Sessions\SessionContext($session);
+			
+			// Booleans indication if we're at max
+			$max_cooks = $session->count_cooks() == \Sessions\Model_Session::MAX_COOKS;
+			$max_dish = $session->count_dishwashers() == \Sessions\Model_Session::MAX_DISHWASHER;
+			
+			$guests = \Input::put('guests', 0);
+			$cook = \Input::put('cook') == 'on' ? true : false;
+			$dishwasher = \Input::put('dishwasher') == 'on' ? true : false;
+			$later = \Input::put('later') == 'on' ? true : false;
+			
+			if($guests > \Sessions\Model_Session::MAX_GUESTS) {
+				return Response_Status::_422(': exceeded maximum amount of guests');
+			}
+			
 			if(isset($enrollment)) {
 				// update enrollment
 				if ($context->can_enrollment(\Auth_PermissionType::UPDATE, $user_id)) {			
+					if((!$enrollment->cook && $cook && $max_cooks) || (!$enrollment->dishwasher && $dishwasher && $max_dish)) {
+						// Can only have so much cooks/dishwashers
+						return Response_Status::_422(': reached maximum amount of cooks and/or dishwashers');
+					}
 					
-					
-					
+					$enrollment->dishwasher = $dishwasher;
+					$enrollment->cook = $cook;
+					$enrollment->guests = $guests;
+					$enrollment->later = $later;
+					$enrollment->save();
+					return null;
 				} else {
 					return Response_Status::_405();
 				}
-
-			} else {
-				// create new enrollment
-				if ($context->can_enrollment(\Auth_PermissionType::CREATE, $user_id)) {			
-					
-					
-					
-				} else {
-					return Response_Status::_405();
-				}
-			}
+			} 
 		} 
 		return Response_Status::_404();
 	}

@@ -12,7 +12,7 @@ class Response_Status extends Response_Base {
 	public $message;
 	
 	public function __construct($status, $message='') {
-		$this->status = (int)$status;
+		$this->status = $status;
 		$this->message = $message;
 	}
 	
@@ -60,8 +60,8 @@ class Response_Status extends Response_Base {
 	 * When the request could not be understood by the server due to malformed syntax. 
 	 * @return \Api\Response_Status
 	 */
-	public static function _422() {
-		return new \Api\Response_Status(422, "Unprocessable Entity");
+	public static function _422($message='') {
+		return new \Api\Response_Status(422, "Unprocessable Entity" . $message);
 	}
 	
 	

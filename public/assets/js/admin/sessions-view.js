@@ -4,6 +4,47 @@
  */
 
 $('document').ready(function() {
+	
+	$('#add-enrollment-form').submit(function(event) {
+		event.preventDefault();
+		var form = $('#add-enrollment-form');	
+		var table = $('#enrollments-table');
+		$.ajax({
+			data: form.serialize(),
+			type: form.attr('method'),
+			success: function() { 
+				alertSuccess(form.data('alert-success'));
+			},
+			error: function(e){ 
+				alertError(form.data('alert-error'));
+			},
+			url: form.attr('action'),
+			cache:false
+		  });
+		  table.bootstrapTable('refresh');
+		  $("#add-enrollment-modal").modal('hide');
+	});
+	
+	$('#edit-enrollment-form').submit(function(event) {
+		event.preventDefault();
+		var form = $('#edit-enrollment-form');	
+		var table = $('#enrollments-table');
+		$.ajax({
+			data: form.serialize(),
+			type: form.attr('method'),
+			success: function() { 
+				alertSuccess(form.data('alert-success'));
+			},
+			error: function(e){ 
+				alertError(form.data('alert-error'));
+			},
+			url: form.attr('action') + $("#edit-user-id").val(),
+			cache:false
+		  });
+		  table.bootstrapTable('refresh');
+		  $("#edit-enrollment-modal").modal('hide');
+	});
+	
 	$('#delete-enrollment-form').submit(function(event) {
 		event.preventDefault();
 		var form = $('#delete-enrollment-form');	
@@ -85,7 +126,7 @@ function showEnrollDeleteModal(enrollment) {
 function showEnrollEditModal(enrollment) {
 	$("#edit-enrollment-modal").modal();
 	$("#edit-user-name").html(enrollment.user.name);
-	$("#edit-enrollment-id").val(enrollment.id);
+	$("#edit-user-id").val(enrollment.user.id);
 	$("#edit-guests").val(enrollment.guests);
 	$("#edit-cook").prop('checked', enrollment.cook);
 	$("#edit-dishwasher").prop('checked', enrollment.dishwasher);

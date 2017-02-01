@@ -5,6 +5,8 @@ class Model_Session extends \Orm\Model
 {
 	const DEADLINE_TIME = '16:00';
 	const MAX_GUESTS = 20;
+	const MAX_COOKS = 1;
+	const MAX_DISHWASHER = 2;
 	
 	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions in days
 	

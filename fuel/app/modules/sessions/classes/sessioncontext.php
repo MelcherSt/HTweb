@@ -22,8 +22,7 @@ class SessionContext extends \Auth_Context{
 	const COST_GRACE = '+5days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
 	
-	const MAX_COOKS = 1;
-	const MAX_DISHWASHER = 2;
+	
 	const DINER_TIME = '18:00';
 	
 	public function __construct(\Sessions\Model_Session $session, \Auth\Model_User $user=null) {
@@ -52,6 +51,10 @@ class SessionContext extends \Auth_Context{
 		if(\Auth::has_access('sessions.management')) {
 			return true;
 		} 
+		
+		if($this->session->settled) {
+			return false;
+		}
 		
 		switch($perm) {
 			case \Auth_PermissionType::CREATE:	
@@ -90,6 +93,10 @@ class SessionContext extends \Auth_Context{
 		if(\Auth::has_access('sessions.management')) {
 			return true;
 		} 
+		
+		if($this->session->settled) {
+			return false;
+		}
 		
 		switch($perm) {
 			case \Auth_PermissionType::CREATE:	
