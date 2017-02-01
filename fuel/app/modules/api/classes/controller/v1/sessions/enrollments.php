@@ -174,6 +174,6 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	private function map_to_dto($array) : \Api\Response_Paginated {
 		return new Response_Paginated(array_map(function($item) {
 				if($item instanceof \Sessions\Model_Enrollment_Session ) { return new \Sessions\Dto_SessionEnrollmentListItem($item); }
-			}, $array));	
+			}, $array[0]), $array[1]);	
 	}
 }

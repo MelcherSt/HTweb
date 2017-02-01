@@ -54,12 +54,15 @@ class Controller_RestPaginated extends Controller_RestAuth {
 	 * Execute given query with the pagination details as requested.
 	 * @param \Orm\Query $query The query
 	 * @param string $order_column Column name on which to order rows. Defaults to id.
-	 * @return array Query result
+	 * @return array [query result array, total records]
 	 */
 	protected final function paginate_query(\Orm\Query $query) : array {
-		return $query->rows_offset($this->offset)
+		$count = $query->count();
+		
+		
+		return [$query->rows_offset($this->offset)
 			->rows_limit($this->limit)
 			->order_by($this->sort, $this->order)
-			->get();
+			->get(), $count];
 	}
 }

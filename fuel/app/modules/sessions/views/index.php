@@ -86,7 +86,7 @@
 			<table
 				id="sessions-table"
 				data-toggle="table"
-				data-url="/api/v1/sessions/byuser/<?=$current_user->id?>"
+				data-url="/api/v1/sessions/byothers/<?=$current_user->id?>"
 				data-sort-name="date"
 				data-pagination="true"
 				data-side-pagination="server"

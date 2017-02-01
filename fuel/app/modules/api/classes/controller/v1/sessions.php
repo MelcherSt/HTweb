@@ -14,7 +14,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 				->where('settled', 0)
 				->related('enrollments')
 				->where('enrollments.user_id', $user_id)
-				->where('enrollments.cook', 1);		
+				->where('enrollments.cook', true);		
 		return $this->map_to_dto($this->paginate_query($query));
 	}
 	
@@ -25,7 +25,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	 */
 	public function get_byothers($user_id) : \Api\Response_Base {
 		$query = \Sessions\Model_Session::query()
-				->where('settled', 0)
+				->where('settled', false)
 				->related('enrollments')
 				->where('enrollments.user_id', $user_id)
 				->where('enrollments.cook', false);	
@@ -39,7 +39,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	 */
 	public function get_byuser($user_id) : \Api\Response_Base {
 		$query = \Sessions\Model_Session::query()
-				->where('settled', 0)
+				->where('settled', false)
 				->related('enrollments')
 				->where('enrollments.user_id', $user_id);
 		return $this->map_to_dto($this->paginate_query($query));
@@ -51,7 +51,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	 */
 	public function get_index() : \Api\Response_Base {
 		$query = \Sessions\Model_Session::query()
-				->where('settled', 0);		
+				->where('settled', false);		
 		
 		return $this->map_to_dto($this->paginate_query($query));
 	}
@@ -61,7 +61,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	 * @param int $session_id
 	 * @return mixed 
 	 */
-	public function get_single(int $session_id) : \Sessions\Dto_Session {		
+	public function get_single(int $session_id) {		
 		$session = \Sessions\Model_Session::find($session_id);		
 		if (isset($session)) {
 			return new \Sessions\Dto_Session($session);
@@ -122,7 +122,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	private function map_to_dto($array) : \Api\Response_Paginated {
 		return new Response_Paginated(array_map(function($item) {
 				if($item instanceof \Sessions\Model_Session) { return new \Sessions\Dto_SessionListItem($item);	}
-			}, $array));
+			}, $array[0]), $array[1]);
 	}
 }
 

@@ -22,7 +22,7 @@ class Controller_Admin extends \Controller_Gate {
 	}
 	
 	public function action_view($date=null) {
-		$this->push_css('jquery.timepicker-1.3.5.min', 'bootstrap-table.min');
+		$this->push_css(['jquery.timepicker-1.3.5.min', 'bootstrap-table.min']);
 		$this->push_js(['jquery.timepicker-1.3.5.min',
 			'sessions-timepicker', 'admin/sessions-view', 'bootstrap-table.min']);
 		
