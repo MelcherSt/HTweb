@@ -17,10 +17,11 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 			$query->where('session.id', $session_id);
 		}
 		
-		$result = $this->paginate_query($query);
-		if(sizeof($result) == 0) {
+		if(empty(\Sessions\Model_Session::find($session_id))) {
 			return Response_Status::_404();
 		}
+ 		
+		$result = $this->paginate_query($query);
 		
 		return $this->map_to_dto($result);
 	}
@@ -28,9 +29,9 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	/**
 	 * Single enrollment
 	 * @param int $session_id
-	 * @return mixed \Api\Response_Base
+	 * @return mixed 
 	 */
-	public function get_single($session_id=null) : \Api\Response_Base {		
+	public function get_single($session_id=null){		
 		$user_id = $this->param('user_id');	
 		$session = \Sessions\Model_Session::find($session_id);
 		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);
@@ -45,19 +46,63 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		return Response_Status::_404();
 	}
 	
+	/**
+	 * Delete enrollment for given user from session
+	 * @param int $session_id
+	 * @return type
+	 */
 	public function delete_single($session_id=null) {
 		$user_id = $this->param('user_id');		
 		$session = \Sessions\Model_Session::find($session_id);
-		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);
-		
+		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);	
 		if(isset($session) && isset($enrollment)) {
 			if($enrollment->session_id == $session->id) {
-				//return new \Sessions\Dto_SessionEnrollmentListItem($enrollment);
-				// TODO : auth & delete
+				$context = new \Sessions\SessionContext($session);
+				if ($context->can_enrollment(\Auth_PermissionType::DELETE, $user_id)) {				
+					$enrollment->delete();		
+					return null; // Nothing to return			
+				} else {
+					return Response_Status::_405();
+				}
 			} else {
 				return Response_Status::_400();
 			}
 		}
+		return Response_Status::_404();
+	}
+	
+	/**
+	 * Create / update enrollment for given user for session
+	 * @param int $session_id
+	 */
+	public function put_single($session_id=null) {
+		$user_id = $this->param('user_id');		
+		$session = \Sessions\Model_Session::find($session_id);
+		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);	
+		
+		if(isset($session)) {
+			$context = new \Sessions\SessionContext($session);
+			if(isset($enrollment)) {
+				// update enrollment
+				if ($context->can_enrollment(\Auth_PermissionType::UPDATE, $user_id)) {			
+					
+					
+					
+				} else {
+					return Response_Status::_405();
+				}
+
+			} else {
+				// create new enrollment
+				if ($context->can_enrollment(\Auth_PermissionType::CREATE, $user_id)) {			
+					
+					
+					
+				} else {
+					return Response_Status::_405();
+				}
+			}
+		} 
 		return Response_Status::_404();
 	}
 	

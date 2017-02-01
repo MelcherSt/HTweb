@@ -19,14 +19,13 @@ $('document').ready(function() {
 		var table = $('#sessions-table');
 		$.ajax({
 			type: form.attr('method'),
-			data: form.serialize(),
 			success: function() { 
 				alertSuccess(form.data('alert-success'));
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
 			},
-			url: form.attr('action'),
+			url: form.attr('action') + $("#delete-session-id").val(),
 			cache:false
 		  });
 		  table.bootstrapTable('refresh');

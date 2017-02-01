@@ -52,18 +52,63 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	public function get_index() : \Api\Response_Base {
 		$query = \Sessions\Model_Session::query()
 				->where('settled', 0);		
+		
 		return $this->map_to_dto($this->paginate_query($query));
 	}
 	
 	/**
 	 * Single session
 	 * @param int $session_id
-	 * @return mixed \Api\Response_Base 
+	 * @return mixed 
 	 */
-	public function get_single($session_id) : \Api\Response_Base {			
-		$session = \Sessions\Model_Session::find($session_id);
+	public function get_single(int $session_id) : \Sessions\Dto_Session {		
+		$session = \Sessions\Model_Session::find($session_id);		
 		if (isset($session)) {
 			return new \Sessions\Dto_Session($session);
+		} else {
+			return Response_Status::_404();
+		}		
+	}
+	
+	/**
+	 * Delete a session
+	 * @param int $session_id
+	 * @return mixed
+	 */
+	public function delete_single(int $session_id) {
+		$session = \Sessions\Model_Session::find($session_id);	
+		if (isset($session)) {
+			$context = new \Sessions\SessionContext($session);
+			if ($context->can_session(\Auth_PermissionType::DELETE)) {			
+				$session->delete();			
+				return null; // Nothing to return			
+			} else {
+				return Response_Status::_403();
+			}
+		} else {
+			return Response_Status::_404();
+		}		
+	}
+	
+	/**
+	 * Update session
+	 * @param int $session_id
+	 * @return mixed
+	 */
+	public function put_single(int $session_id) {		
+		$session = \Sessions\Model_Session::find($session_id);
+		if (isset($session)) {
+			$context = new \Sessions\SessionContext($session);
+			if ($context->can_session(\Auth_PermissionType::UPDATE)) {		
+				$session->notes = \Input::put('notes', '');
+				$session->deadline = date(date('Y-m-d'). ' ' . \Input::put('deadline', \Sessions\Model_Session::DEADLINE_TIME));
+				$session->cost = \Input::put('cost', 0.0);
+				$session->paid_by = \Input::put('payer_id', null);
+				$session->save();		
+				return null; // Nothing to return		
+			} else {
+				return Response_Status::_403();
+			}
 		} else {
 			return Response_Status::_404();
 		}		

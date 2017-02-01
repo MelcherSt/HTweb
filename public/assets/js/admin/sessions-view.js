@@ -6,9 +6,21 @@
 $('document').ready(function() {
 	$('#delete-enrollment-form').submit(function(event) {
 		event.preventDefault();
-		
-		//TODO!
-		
+		var form = $('#delete-enrollment-form');	
+		var table = $('#enrollments-table');
+		$.ajax({
+			type: form.attr('method'),
+			success: function() { 
+				alertSuccess(form.data('alert-success'));
+			},
+			error: function(e){ 
+				alertError(form.data('alert-error'));
+			},
+			url: form.attr('action') + $("#delete-user-id").val(),
+			cache:false
+		  });
+		  table.bootstrapTable('refresh');
+		  $("#delete-enrollment-modal").modal('hide');
 	});
 	
 	
@@ -67,7 +79,7 @@ function showEnrollAddModal(canCook, canDish) {
 function showEnrollDeleteModal(enrollment) {
 	$("#delete-enrollment-modal").modal();
 	$("#delete-user-name").html(enrollment.user.name);
-	$("#delete-enrollment-id").val(enrollment.id);
+	$("#delete-user-id").val(enrollment.user.id);
 }
 
 function showEnrollEditModal(enrollment) {

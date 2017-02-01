@@ -41,7 +41,7 @@
 	<div class="modal-dialog active">
 		<div class="modal-content">
 			<form id="delete-session-form" 
-				action="/sessions/admin/" 
+				  action="/api/v1/sessions/"
 				method="delete"
 				data-alert-success="<?=__('session.alert.success.remove_session')?>"
 				data-alert-error="<?=__('session.alert.error.remove_session')?>"

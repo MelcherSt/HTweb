@@ -19,11 +19,11 @@ class Controller_Base extends Controller_Template {
 	protected $add_css = [];
 	
 	public function router($resource, $arguments) {
-		
+		/*
 		echo 'arg: ' . var_dump($arguments) . '<br>';
 		echo 'res: ' . $resource . '<br>';
 		echo '<br>';
-		
+		*/
 		
 		// check if a input specific method exists
 		$controller_method = strtolower(\Input::method()) . '_' . $resource;

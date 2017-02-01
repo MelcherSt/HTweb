@@ -43,7 +43,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			
 			<div class="panel-body">
 				<form id="update-session-form" 
-					  action="/sessions/admin/<?=$session->id?>" 
+					  action="/api/v1/sessions/<?=$session->id?>" 
 					  method="put"
 					  data-alert-success="<?=__('session.alert.success.update_session')?>"
 					  data-alert-error="<?=__('session.alert.error.update_session')?>"
@@ -89,20 +89,20 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 	<div class="col-md-8">
 		<div class="table-responsive">
 			<table
-				id="sessions-table"
+				id="enrollments-table"
 				data-toggle="table"
 				data-url="/api/v1/sessions/<?=$session->id?>/enrollments"
-				data-sort-name="name"
-				data-pagination="false"
+				data-sort-name="id"
+				data-pagination="true"
 				data-side-pagination="server"
 				data-page-list="[5, 10, 20, 50, 100, 200]"
 				data-sort-order="desc"
 			>				
 				<thead>
 					<tr>
-						<th data-field="user.name" data-formatter="enrollmentFormatter" data-sortable="true" class="col-md-2"><?=__('user.field.name')?></th>
-						<th data-field="points"  data-sortable="true" class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
-						<th data-field="guests"  class="col-md-2"><?=__('session.field.guest_plural')?></th>
+						<th data-field="user.name" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
+						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
+						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
 						<th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
@@ -115,24 +115,25 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="delete-enrollment-form" action="/sessions/enrollments/delete/<?=$session->date?>" method="POST">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
-					<h4 class="modal-title"><?=__('session.modal.remove_enroll.title')?></h4>
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><?=__('session.modal.remove_enroll.title')?></h4>
+			</div>
+			<div class="modal-body">
+				<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
+				<div class="form-group">
+					<input id="delete-user-id" type="hidden" class="form-control" name="enrollment_id">
 				</div>
-				<div class="modal-body">
-					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
-					<div class="form-group">
-						<input id="delete-enrollment-id" type="hidden" class="form-control" name="enrollment_id">
-					</div>
-				</div>
-				<div class="modal-footer">
+			</div>
+			<div class="modal-footer">
+				<form id="delete-enrollment-form" 
+					action="/api/v1//sessions/<?=$session->id?>/enrollments/" 
+					method="delete">
 					<input type="submit" class="btn btn-danger" value="<?=__('session.modal.remove_enroll.btn')?>" />
-					<button type="button" class="btn btn-default"
-						data-dismiss="modal"><?=__('actions.cancel')?></button>
-				</div>
-			</form>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
@@ -141,7 +142,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="edit-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="edit-enrollment-form" action="/sessions/enrollments/update/<?=$session->date?>" method="POST">
+			<form id="edit-enrollment-form" action="/sessions/enrollments/update/<?=$session->id?>" method="POST">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
