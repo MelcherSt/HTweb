@@ -132,9 +132,9 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 			$max_dish = $session->count_dishwashers() == \Sessions\Model_Session::MAX_DISHWASHER;
 			
 			$guests = \Input::put('guests', 0);
-			$cook = \Input::post('cook') == 'on' ? true : false;
-			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
-			$later = \Input::post('later') == 'on' ? true : false;
+			$cook = \Input::put('cook') == 'on' ? true : false;
+			$dishwasher = \Input::put('dishwasher') == 'on' ? true : false;
+			$later = \Input::put('later') == 'on' ? true : false;
 			
 			if($guests > \Sessions\Model_Session::MAX_GUESTS) {
 				return Response_Status::_422(': exceeded maximum amount of guests');
@@ -153,7 +153,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 					$enrollment->guests = $guests;
 					$enrollment->later = $later;
 					$enrollment->save();
-					return ['hoi'];
+					return [$cook, $dishwasher];
 				} else {
 					return Response_Status::_405();
 				}
