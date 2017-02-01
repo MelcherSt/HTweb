@@ -11,8 +11,8 @@ class Controller_Admin extends \Controller_Gate {
 		parent::before();
 	}
 	
-	
 	public function action_index() {
+		$this->push_css('bootstrap-table.min');
 		$this->push_js(['admin/sessions-index', 'bootstrap-table.min']);
 		
 		$this->template->title = __('session.title_admin');
@@ -21,37 +21,8 @@ class Controller_Admin extends \Controller_Gate {
 		$this->template->content = \View::forge('admin/index', $data);
 	}
 	
-	public function delete_index() {
-		$id = \Input::delete('session_id', null);
-		$session = Model_Session::find($id);
-		
-		if(isset($session)) {
-			$session->delete();
-		} else {
-			throw new \HttpNotFoundException();
-		}
-		return \Response::forge('', 204);
-	}
-	
-	public function put_index($id=null) {
-		$session = Model_Session::find($id);
-
-		if(empty($session)) {
-			throw new \HttpNotFoundException();
-		} 
-		
-		
-		$session->notes = \Input::put('notes', '');
-		$session->deadline = date(date('Y-m-d'). ' ' . \Input::put('deadline', Model_Session::DEADLINE_TIME));
-		$session->cost = \Input::put('cost', 0.0);
-		$session->paid_by = \Input::put('payer_id', null);
-		$session->save();
-		
-		return \Response::forge('', 200);
-	}
-	
 	public function action_view($date=null) {
-		$this->push_css('jquery.timepicker-1.3.5.min');
+		$this->push_css('jquery.timepicker-1.3.5.min', 'bootstrap-table.min');
 		$this->push_js(['jquery.timepicker-1.3.5.min',
 			'sessions-timepicker', 'admin/sessions-view', 'bootstrap-table.min']);
 		

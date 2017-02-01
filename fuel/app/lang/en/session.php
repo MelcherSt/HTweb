@@ -105,6 +105,15 @@ return [
 			'unenroll_dish' => 'Actually, I did not do the dishes',
 		],
 	],
+	'admin' => [
+		'index' => [
+			
+		],
+		'view' => [
+			'original' => 'View original',
+			'settled' => 'Cannot edit session since it has been settled',
+		],
+	],
 	'widget' => [
 		'msg' => [
 			'enrolled_single' => 'And that\'s you!',

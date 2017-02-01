@@ -14,16 +14,17 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 		<div class="panel panel-default">
 			<div class="panel-heading"><?=__('actions.name')?></div>
 			<div class="list-group">
-				<a class="list-group-item" href="/sessions/view/<?=$session->date?>"><i class="fa fa-eye" aria-hidden="true"></i> View original</a>
-				<a class="list-group-item" href="#" onClick="showEnrollAddModal()"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a>
+				<a class="list-group-item" href="/sessions/<?=$session->date?>"><i class="fa fa-eye" aria-hidden="true"></i> <?=__('session.admin.view.original')?></a>
+				<?php if(! $session->settled) {?><a class="list-group-item" href="#" onClick="showEnrollAddModal()"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a> <?php } ?>
 			</div>
 		</div>
 		
-		<?php if($session->settled) {?>
+		
 		<div class="panel panel-default">
-			<div class="panel-heading">Properties</div>
+			<div class="panel-heading"><?=__('actions.properties')?></div>
 			<div class="panel-body">
-				<p>You cannot edit this session since it has been settled.</p>	
+			<?php if($session->settled) {?>
+				<p><?=__('session.admin.view.settled')?></p>	
 				<div class="well">
 					<?=$session->notes?>
 				</div>
@@ -35,54 +36,49 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 					<dt><?=__('product.field.paid_by')?></dt>
 					<dd><?=$session->get_payer()->get_fullname() ?></dd>
 				</dl>
-			</div>
+			<?php } else { ?>	
+		
+			<form id="update-session-form" 
+				  action="/api/v1/sessions/<?=$session->id?>" 
+				  method="put"
+				  data-alert-success="<?=__('session.alert.success.update_session')?>"
+				  data-alert-error="<?=__('session.alert.error.update_session')?>"
+			>
+				<div class="form-group ">
+					<textarea name="notes" class="form-control" rows="2" placeholder="<?=__('session.field.notes')?>"><?=$session->notes?></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="deadline"><?=__('session.field.deadline')?></label>
+					<input class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" value="<?=$deadline?>"required/>
+				</div>
+
+				<div class="form-group">
+					<label for="cost"><?=__('product.field.cost')?></label>
+					<div class="input-group">
+						<div class="input-group-addon">€</div>
+						<input style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
+					</div>
+					<br>
+					<label><?=__('product.field.paid_by')?></label>
+					<select class="form-control" id="add-user-id" name="payer_id">
+						<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
+
+						<?php foreach($session->enrollments as $enrollment):
+								$user_id = $enrollment->user->id;
+								if($user_id == $session->paid_by) { continue; }
+						?>
+						<option value="<?=$user_id?>"><?=$enrollment->user->get_fullname()?></option>
+						<?php endforeach;  ?>
+					</select>	
+				</div>
+
+				<button class="btn btn-sm btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
+
+			</form>
+			<?php } ?>
+			</div>	
 		</div>
-		<?php } else { ?>	
-		<div class="panel panel-default">
-			<div class="panel-heading">Properties</div>
-			
-			<div class="panel-body">
-				<form id="update-session-form" 
-					  action="/api/v1/sessions/<?=$session->id?>" 
-					  method="put"
-					  data-alert-success="<?=__('session.alert.success.update_session')?>"
-					  data-alert-error="<?=__('session.alert.error.update_session')?>"
-				>
-					<div class="form-group ">
-						<textarea name="notes" class="form-control" rows="2" placeholder="<?=__('session.field.notes')?>"><?=$session->notes?></textarea>
-					</div>
-					
-					<div class="form-group">
-						<label for="deadline"><?=__('session.field.deadline')?></label>
-						<input class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" value="<?=$deadline?>"required/>
-					</div>
-
-					<div class="form-group">
-						<label for="cost"><?=__('product.field.cost')?></label>
-						<div class="input-group">
-							<div class="input-group-addon">€</div>
-							<input style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
-						</div>
-						<br>
-						<label><?=__('product.field.paid_by')?></label>
-						<select class="form-control" id="add-user-id" name="payer_id">
-							<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
-
-							<?php foreach($session->enrollments as $enrollment):
-									$user_id = $enrollment->user->id;
-									if($user_id == $session->paid_by) { continue; }
-							?>
-							<option value="<?=$user_id?>"><?=$enrollment->user->get_fullname()?></option>
-							<?php endforeach;  ?>
-						</select>	
-					</div>
-
-					<button class="btn btn-sm btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
-
-				</form>
-			</div>
-		</div>
-		<?php } ?>
 	</div>
 	
 	<!-- BODY -->
@@ -103,7 +99,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 						<th data-field="user.name" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
 						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
 						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
-						<th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
+						<?php if(! $session->settled) {?><th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th><?php } ?>
 					</tr>
 				</thead>
 			</table>

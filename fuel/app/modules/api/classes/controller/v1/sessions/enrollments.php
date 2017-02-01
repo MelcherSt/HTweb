@@ -10,8 +10,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	 */
 	public function get_index($session_id=null) : \Api\Response_Base{
 		$query = \Sessions\Model_Enrollment_Session::query()
-				->related('session')
-				->where('session.settled', 0);
+				->related('session');
 		
 		if(isset($session_id)) {
 			$query->where('session.id', $session_id);

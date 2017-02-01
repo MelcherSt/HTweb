@@ -21,8 +21,7 @@ class SessionContext extends \Auth_Context{
 	const ENROLLMENT_GRACE = '+5days';
 	const COST_GRACE = '+5days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
-	
-	
+
 	const DINER_TIME = '18:00';
 	
 	public function __construct(\Sessions\Model_Session $session, \Auth\Model_User $user=null) {
@@ -48,13 +47,13 @@ class SessionContext extends \Auth_Context{
 			throw new \InvalidArgumentException($perm + ' is not a valid permission type.');
 		}
 		
-		if(\Auth::has_access('sessions.management')) {
-			return true;
-		} 
-		
 		if($this->session->settled) {
 			return false;
 		}
+		
+		if(\Auth::has_access('sessions.management')) {
+			return true;
+		} 
 		
 		switch($perm) {
 			case \Auth_PermissionType::CREATE:	
@@ -90,14 +89,14 @@ class SessionContext extends \Auth_Context{
 			throw new \InvalidArgumentException($perm + ' is not a valid permission type.');
 		}
 		
-		if(\Auth::has_access('sessions.management')) {
-			return true;
-		} 
-		
 		if($this->session->settled) {
 			return false;
 		}
 		
+		if(\Auth::has_access('sessions.management')) {
+			return true;
+		} 
+	
 		switch($perm) {
 			case \Auth_PermissionType::CREATE:	
 			case \Auth_PermissionType::DELETE:

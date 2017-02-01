@@ -28,7 +28,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 				->where('settled', 0)
 				->related('enrollments')
 				->where('enrollments.user_id', $user_id)
-				->where('enrollments.cook', 0);	
+				->where('enrollments.cook', false);	
 		return $this->map_to_dto($this->paginate_query($query));
 	}
 	

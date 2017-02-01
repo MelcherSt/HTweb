@@ -59,74 +59,50 @@
 
 		<h4><?=__('session.index.cooked_by_me')?></h4>
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table
+				id="sessions-cooked-table"
+				data-toggle="table"
+				data-url="/api/v1/sessions/bycook/<?=$current_user->id?>"
+				data-sort-name="date"
+				data-pagination="true"
+				data-side-pagination="server"
+				data-page-list="[5, 10, 20, 50, 100, 200]"
+				data-sort-order="desc"
+			>				
 				<thead>
 					<tr>
-						<th class="col-md-2"><?=__('session.field.date')?></th>
-						<th class="col-md-1"><?=__('session.role.participant_plural')?></th>
-						<th class="col-md-2"><?=__('session.role.cook_plural')?></th>
-						<th class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
-						<th class="col-md-1"><?=__('product.field.cost')?></th>
+						<th data-field="date"  data-sortable="true" class="col-md-2"><?=__('session.field.date')?></th>
+						<th data-field="participants"  data-sortable="true" class="col-md-1"><?=__('session.role.participant_plural')?></th>
+						<th data-field="cooks"  class="col-md-2"><?=__('session.role.cook_plural')?></th>
+						<th data-field="dishwashers"  class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
+						<th data-formatter="costFormatter" data-field="cost"  data-sortable="true" class="col-md-1"><?=__('product.field.cost')?></th>
 					</tr>
 				</thead>
-				<tbody>
-					<?php 
-					$sessions_cooked = \Sessions\Model_Session::get_by_cook($current_user->id);
-					foreach($sessions_cooked as $session): ?>
-					<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-						<td><?=strftime('%A (%d/%m)', strtotime($session->date))?></td>
-						<td><?=$session->count_total_participants()?></td>
-						<td>
-							<?php foreach($session->get_cook_enrollments() as $enrollment):?>
-								<?=$enrollment->user->name;?>			
-							<?php endforeach; ?>	
-						</td>
-						<td>
-							<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
-								<?=$enrollment->user->name;?> 	
-							<?php endforeach; ?>
-						</td>
-						<td><?='€ ' . $session->cost?></td>
-					</tr>
-					<?php endforeach; ?>
-				</tbody>	
 			</table>
-			<em><?=sizeof($sessions_cooked) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
 
 		<h4><?=__('session.index.cooked_for_me')?></h4>
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table
+				id="sessions-table"
+				data-toggle="table"
+				data-url="/api/v1/sessions/byuser/<?=$current_user->id?>"
+				data-sort-name="date"
+				data-pagination="true"
+				data-side-pagination="server"
+				data-page-list="[5, 10, 20, 50, 100, 200]"
+				data-sort-order="desc"
+			>				
 				<thead>
 					<tr>
-						<th class="col-md-2"><?=__('session.field.date')?></th>
-						<th class="col-md-1"><?=__('session.role.participant_plural')?></th>
-						<th class="col-md-2"><?=__('session.role.cook_plural')?></th>
-						<th class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
-						<th class="col-md-1"><?=__('product.field.cost')?></th>
+						<th data-field="date"  data-sortable="true" class="col-md-2"><?=__('session.field.date')?></th>
+						<th data-field="participants"  data-sortable="true" class="col-md-1"><?=__('session.role.participant_plural')?></th>
+						<th data-field="cooks"  class="col-md-2"><?=__('session.role.cook_plural')?></th>
+						<th data-field="dishwashers"  class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
+						<th data-formatter="costFormatter" data-field="cost"  data-sortable="true" class="col-md-1"><?=__('product.field.cost')?></th>
 					</tr>
 				</thead>
-				<tbody>
-					<?php foreach($sessions as $session): ?>
-					<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-						<td><?=strftime('%A (%d/%m)', strtotime($session->date))?></td>
-						<td><?=$session->count_total_participants()?></td>
-						<td>
-							<?php foreach($session->get_cook_enrollments() as $enrollment):?>
-								<?=$enrollment->user->name;?>			
-							<?php endforeach; ?>	
-						</td>
-						<td>
-							<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
-								<?=$enrollment->user->name;?> 	
-							<?php endforeach; ?>
-						</td>
-						<td><?='€ ' . $session->cost?></td>
-					</tr>
-					<?php endforeach; ?>
-				</tbody>
 			</table>
-			<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
 	</div>
 </div>

@@ -4,7 +4,9 @@ namespace Sessions;
 
 class Controller_Sessions extends \Controller_Gate {
 	
-	public function action_index() {		
+	public function action_index() {	
+		$this->push_css('bootstrap-table.min');
+		$this->push_js(['bootstrap-table.min', 'sessions-index']);
 		Model_Session::scrub_empty_or_invalid();
 		
 		$this->template->title = __('session.title');

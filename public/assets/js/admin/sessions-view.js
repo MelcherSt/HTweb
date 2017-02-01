@@ -1,5 +1,5 @@
 /**
- * Sessions admin delete functionality
+ * Sessions view for admin
  * @author Melcher
  */
 

@@ -1,5 +1,5 @@
 /**
- * Sessions admin delete functionality
+ * Sessions index for admin
  * @author Melcher
  */
 
