@@ -1,12 +1,12 @@
 <?php
 $enrollments = $session->get_enrollments(); 
 $unenrolled_users = $session->get_unenrolled();
-$context = \Sessions\Auth_Context_Session::forge($session, $current_user);
+$context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
-<?php if ($context->has_access(['enroll.other']) && sizeof($unenrolled_users > 0)) {?>
+<?php if ($context_old->has_access(['enroll.other']) && sizeof($unenrolled_users > 0)) {?>
 		<button type="button" class="btn btn-primary pull-right" onClick="showAddModal(
-					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
-					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
+					<?=(int)$context_old->has_access(['enroll.other[cook]'])?>, 
+					<?=(int)$context_old->has_access(['enroll.other[dishwasher]'])?>
 				)"><span class="fa fa-user-plus"></span>
 		 <?=__('session.view.btn.add_enroll')?>
 		</button>
@@ -20,7 +20,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<th><?=__('user.field.name')?></th>
 				<th>∆ <?=__('session.field.point_plural')?></th>
 				<th><?=__('session.field.guest_plural')?></th>	
-				<?php if ($context->has_access(['session.manage'])): ?>
+				<?php if ($context_old->has_access(['session.manage'])): ?>
 				<th><?=__('actions.name')?></th>
 				<?php endif; ?>
 			</tr>
@@ -44,14 +44,14 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				</td>
 				<td><?=$enrollment->get_point_prediction()?>  </td>
 				<td><?=$enrollment->guests?></td>
-				<?php if ($context->has_access(['enroll.other'])): ?>
+				<?php if ($context_old->has_access(['enroll.other'])): ?>
 				<td>			
 					<a href="#" onclick="showEditModal(
 								<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', 
 								<?=$enrollment->guests?>, <?=$enrollment->cook?>, 
 								<?=$enrollment->dishwasher?>,
-								<?=(int)$context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
-								<?=(int)$context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
+								<?=(int)$context_old->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
+								<?=(int)$context_old->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
 							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
 					<?php if ($current_user->id != $enrollment->user_id): ?> |
 					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>

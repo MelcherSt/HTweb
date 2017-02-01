@@ -70,6 +70,15 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 		}		
 	}
 	
+	public function get_roles(int $session_id) {
+		$session = \Sessions\Model_Session::find($session_id);		
+		if (isset($session)) {
+			return new \Sessions\Dto_SessionRoles($session);
+		} else {
+			return Response_Status::_404();
+		}	
+	}
+	
 	/**
 	 * Delete a session
 	 * @param int $session_id

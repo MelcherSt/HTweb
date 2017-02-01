@@ -33,7 +33,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	public function get_single($session_id=null){		
 		$user_id = $this->param('user_id');	
 		$session = \Sessions\Model_Session::find($session_id);
-		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);
+		$enrollment = $session->get_enrollment($user_id);
 		
 		if(isset($session) && isset($enrollment)) {
 			if($enrollment->session_id == $session->id) {
@@ -53,19 +53,15 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	public function delete_single($session_id=null) {
 		$user_id = $this->param('user_id');		
 		$session = \Sessions\Model_Session::find($session_id);
-		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);	
+		$enrollment = $session->get_enrollment($user_id);	
 		if(isset($session) && isset($enrollment)) {
-			if($enrollment->session_id == $session->id) {
-				$context = new \Sessions\SessionContext($session);
-				if ($context->can_enrollment(\Auth_PermissionType::DELETE, $user_id)) {				
-					$enrollment->delete();		
-					return null; // Nothing to return			
-				} else {
-					return Response_Status::_405();
-				}
+			$context = new \Sessions\SessionContext($session);
+			if ($context->can_enrollment(\Auth_PermissionType::DELETE, $user_id)) {				
+				$enrollment->delete();		
+				return null; // Nothing to return			
 			} else {
-				return Response_Status::_400();
-			}
+				return Response_Status::_405();
+			}	
 		}
 		return Response_Status::_404();
 	}
@@ -126,7 +122,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	public function put_single($session_id=null) {
 		$user_id = $this->param('user_id');		
 		$session = \Sessions\Model_Session::find($session_id);
-		$enrollment = \Sessions\Model_Enrollment_Session::get_by_user($user_id);	
+		$enrollment = $session->get_enrollment($user_id);	
 		
 		if(isset($session)) {
 			$context = new \Sessions\SessionContext($session);
@@ -136,9 +132,9 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 			$max_dish = $session->count_dishwashers() == \Sessions\Model_Session::MAX_DISHWASHER;
 			
 			$guests = \Input::put('guests', 0);
-			$cook = \Input::put('cook') == 'on' ? true : false;
-			$dishwasher = \Input::put('dishwasher') == 'on' ? true : false;
-			$later = \Input::put('later') == 'on' ? true : false;
+			$cook = \Input::post('cook') == 'on' ? true : false;
+			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
+			$later = \Input::post('later') == 'on' ? true : false;
 			
 			if($guests > \Sessions\Model_Session::MAX_GUESTS) {
 				return Response_Status::_422(': exceeded maximum amount of guests');
@@ -157,7 +153,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 					$enrollment->guests = $guests;
 					$enrollment->later = $later;
 					$enrollment->save();
-					return null;
+					return ['hoi'];
 				} else {
 					return Response_Status::_405();
 				}

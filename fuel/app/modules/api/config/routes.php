@@ -7,4 +7,5 @@ return array(
 	'api/v1/sessions/(:num)' => 'api/v1/sessions/single/$1',
 	'api/v1/sessions/(:num)/enrollments' => 'api/v1/sessions/enrollments/index/$1',
 	'api/v1/sessions/(:num)/enrollments/:user_id' => 'api/v1/sessions/enrollments/single/$1',
+	'api/v1/sessions/(:num)/roles' => 'api/v1/sessions/roles/$1',
 );

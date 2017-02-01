@@ -124,13 +124,26 @@ function showEnrollDeleteModal(enrollment) {
 }
 
 function showEnrollEditModal(enrollment) {
+	// Reset to default state
+	$('#edit-enrollment-form').trigger("reset");
+	$("#edit-cook").prop('disabled', false);
+	$("#edit-dishwasher").prop('disabled', false);
+	
+	// Pop modal and fill fields
 	$("#edit-enrollment-modal").modal();
 	$("#edit-user-name").html(enrollment.user.name);
 	$("#edit-user-id").val(enrollment.user.id);
 	$("#edit-guests").val(enrollment.guests);
 	$("#edit-cook").prop('checked', enrollment.cook);
 	$("#edit-dishwasher").prop('checked', enrollment.dishwasher);
-	//$("#edit-cook").attr('disabled', 0);
-	//$("#edit-dishwasher").attr('disabled', 0);
 	
+	$.get( "/api/v1/sessions/"  + enrollment.session_id + "/roles", function( roles ) {
+		if((roles.cooks === roles.max_cooks) && !enrollment.cook) {
+				$("#edit-cook").prop('disabled', true);	
+		}
+		
+		if((roles.dishwashers === roles.max_dishwashers && !enrollment.dishwasher)) {
+				$("#edit-dishwasher").prop('disabled', true);
+		}
+	});	
 }

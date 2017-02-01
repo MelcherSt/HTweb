@@ -5,11 +5,14 @@ namespace Api;
 class Controller_v1_Users extends Controller_RestPaginated {
 		
 	public function get_index() {		
-		$array = $this->paginate_query(\Model_User::query());
+		$query = \Model_User::query()
+				->where('active', true);		
 		
-		return array_map(function($item) {
-				return new \Dto_User($item);
-			}, $array);	
+		$array = $this->paginate_query($query);
+		
+		return new Response_Paginated(array_map(function($item) {
+				if($item instanceof \Model_User) { return new \Dto_UserListItem($item);	}
+			}, $array[0]), $array[1]);
 	}
 	
 	public function get_single($user_id) {
