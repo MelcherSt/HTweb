@@ -88,53 +88,24 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 	<!-- BODY -->
 	<div class="col-md-8">
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table
+				id="sessions-table"
+				data-toggle="table"
+				data-url="/api/v1/sessions/<?=$session->id?>/enrollments"
+				data-sort-name="name"
+				data-pagination="false"
+				data-side-pagination="server"
+				data-page-list="[5, 10, 20, 50, 100, 200]"
+				data-sort-order="desc"
+			>				
 				<thead>
 					<tr>
-						<th><?=__('user.field.name')?></th>
-						<th>∆ <?=__('session.field.point_plural')?></th>
-						<th><?=__('session.field.guest_plural')?></th>	
-						<th><?=__('actions.name')?></th>
+						<th data-field="user.name" data-formatter="enrollmentFormatter" data-sortable="true" class="col-md-2"><?=__('user.field.name')?></th>
+						<th data-field="points"  data-sortable="true" class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
+						<th data-field="guests"  class="col-md-2"><?=__('session.field.guest_plural')?></th>
+						<th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
-				<tbody>
-				<?php 			
-					foreach($enrollments as $enrollment): ?>
-					<tr>
-						<td><?=$enrollment->user->get_fullname()?> 
-						<?php 
-						if($enrollment->later) { ?>
-							*
-						<?php }
-						
-						if ($enrollment->cook) { ?>
-							<span class="fa fa-cutlery"></span> 
-						<?php } 
-						
-						if ($enrollment->dishwasher) { ?>
-							<span class="fa fa-shower"></span> 
-						<?php } ?>
-
-						</td>
-						<td><?=$enrollment->get_point_prediction()?>  </td>
-						<td><?=$enrollment->guests?></td>
-						<td>			
-							<a href="#" onclick="showEnrollEditModal(
-										<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', 
-										<?=$enrollment->guests?>, <?=$enrollment->cook?>, 
-										<?=$enrollment->dishwasher?>,
-										<?=(int)$context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
-										<?=(int)$context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
-									)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
-							| <a href="#" onclick="showEnrollDeleteModal(
-										<?=$enrollment->user->id?>,
-										'<?=$enrollment->user->name?>'
-									)"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
-
-						</td>
-					</tr>
-					<?php endforeach; ?>
-				</tbody>
 			</table>
 		</div>
 	</div>
@@ -144,7 +115,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/delete/<?=$session->date?>" method="POST">
+			<form id="delete-enrollment-form" action="/sessions/enrollments/delete/<?=$session->date?>" method="POST">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -153,7 +124,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<div class="modal-body">
 					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
 					<div class="form-group">
-						<input id="delete-user-id" type="hidden" class="form-control" name="user_id">
+						<input id="delete-enrollment-id" type="hidden" class="form-control" name="enrollment_id">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -170,7 +141,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="edit-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/update/<?=$session->date?>" method="POST">
+			<form id="edit-enrollment-form" action="/sessions/enrollments/update/<?=$session->date?>" method="POST">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -179,8 +150,8 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<div class="modal-body">
 					<p><?=__('session.modal.edit_enroll.msg')?> <strong><span id="edit-user-name"></span></strong>.</p>
 					<div class="form-group">
-						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
-						<label for="edit-guests">Guests </label>
+						<input id="edit-enrollment-id" type="hidden" class="form-control" name="user_id">
+						<label for="edit-guests"><?=__('session.fied.guest_plural')?> </label>
 						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
 					</div>
 					
@@ -250,53 +221,3 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 		</div>
 	</div>
 </div>
-
-<!-- //TODO: externalize -->
-<script>
-		
-$('document').ready(function() {
-	$('#update-session-form').submit(function(event) {
-		event.preventDefault();
-		var form = $('#update-session-form');
-		
-		$.ajax({
-			type: form.attr('method'),
-			data: form.serialize(),
-			success: function() { 
-				alertSuccess(form.data('alert-success'));
-				$('#session-' + sessionId).fadeOut();
-			},
-			error: function(e){ 
-				alertError(form.data('alert-error'));
-			},
-			url: form.attr('action'),
-			cache:false
-		  });
-		  $("#delete-session-modal").modal('hide');
-	});
-});	
-	
-function showEnrollAddModal(canCook, canDish) {
-	$("#add-enrollment-modal").modal();
-	$("#add-cook").attr('disabled', canCook === 0);
-	$("#add-dishwasher").attr('disabled', canDish === 0);
-}
-
-function showEnrollDeleteModal(userId, userName) {
-	$("#delete-enrollment-modal").modal();
-	$("#delete-user-name").html(userName);
-	$("#delete-user-id").val(userId);
-}
-
-function showEnrollEditModal(userId, userName, guests, cook, dishwasher, canCook, canDish) {
-	$("#edit-enrollment-modal").modal();
-	$("#edit-user-name").html(userName);
-	$("#edit-user-id").val(userId);
-	$("#edit-guests").val(guests);
-	$("#edit-cook").prop('checked', cook === 1);
-	$("#edit-dishwasher").prop('checked', dishwasher === 1);
-	$("#edit-cook").attr('disabled', canCook === 0);
-	$("#edit-dishwasher").attr('disabled', canDish === 0);
-	
-}
-</script>

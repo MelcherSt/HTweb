@@ -17,6 +17,7 @@ class Controller_RestAuth extends \Controller_Rest {
 		
 		// Set default return format
 		$this->rest_format = 'json';
+		$this->format = 'json';
 	}
 	
 	/**
@@ -26,6 +27,20 @@ class Controller_RestAuth extends \Controller_Rest {
 	 */
 	protected function _authenticate() {
 		return \Auth::check();
+	}
+	
+	public function after($response) {
+		if($response instanceof Response_Status) {
+			// Set http status and return response body
+			$this->http_status($response->status);
+		} 
+
+		if ($response instanceof \Response) {
+			return parent::after($response);
+		} else {
+			return parent::after((array)$response);
+		}
+		
 	}
 }
 

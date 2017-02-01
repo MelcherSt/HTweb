@@ -12,9 +12,9 @@ class Dto_Session {
 	public $cost;
 	
 	public function __construct(\Sessions\Model_Session $session) {
-		$this->id = $session->id;
+		$this->id = (int)$session->id;
 		$this->date = $session->date;
-		$this->paid_by = $session->paid_by;
+		$this->paid_by = (int)$session->paid_by;
 		$this->deadline = $session->deadline;
 		$this->notes = $session->notes;
 		$this->cost = $session->cost;

@@ -4,17 +4,21 @@ namespace Sessions;
 
 class Dto_SessionEnrollmentListItem {
 	
-	public $id;
+	public $user_id;
 	public $session_id;
-	public $name;
+	public $user;
 	public $points;
 	public $guests;
+	public $cook;
+	public $dishwasher;
 	
 	public function __construct(\Sessions\Model_Enrollment_Session $enrollment) {
-		$this->id = $enrollment->id;
-		$this->session_id = $enrollment->session_id;
-		$this->name = \Model_User::find($enrollment->user_id)->name;
+		$this->user_id = (int)$enrollment->user_id;
+		$this->session_id = (int)$enrollment->session_id;
+		$this->user = new \Dto_UserListItem(\Model_User::find($enrollment->user_id));
 		$this->points = $enrollment->get_point_prediction();
-		$this->guests = $enrollment->guests;
+		$this->guests = (int)$enrollment->guests;
+		$this->cook = (int)$enrollment->cook;
+		$this->dishwasher = (int)$enrollment->dishwasher;
 	}
 }

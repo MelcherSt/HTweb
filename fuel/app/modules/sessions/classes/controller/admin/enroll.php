@@ -17,6 +17,14 @@ class Controller_Enroll extends \Controller_Gate {
 	}
 	
 	public function delete_index() {
+		$id = \Input::delete('enrollment_id', null);
+		$enrollment = Model_Enrollment_Session::find($id);
 		
+		if(isset($enrollment)) {
+			$enrollment->delete();
+		} else {
+			throw new \HttpNotFoundException();
+		}
+		return \Response::forge('', 204);
 	}
 }

@@ -2,18 +2,19 @@
 
 namespace Api;
 
-class Controller_v1_Users extends Controller_RestAuth {
-	
-	public function action_index() {
-		// Explicitly return all (in)active users
-		$active = \Input::get('active', null);
+class Controller_v1_Users extends Controller_RestPaginated {
 		
-		if(isset($active)) {
-			return array_values(Model_User::find('all', array(
-			'where' => array(
-				array('active', $active)))));
-		} else {
-			return array_values(Model_User::find('all'));
-		}
+	public function get_index() {		
+		$array = $this->paginate_query(\Model_User::query());
+		
+		return array_map(function($item) {
+				return new \Dto_User($item);
+			}, $array);	
 	}
+	
+	public function get_single($user_id) {
+		return ['user' => new \Dto_User(\Model_User::find($user_id))];
+	}
+
 }
+

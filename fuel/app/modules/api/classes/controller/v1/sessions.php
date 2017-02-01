@@ -6,82 +6,78 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	
 	/**
 	 * Session listing where user cooked.
-	 * @param type $user_id
-	 * @return type
+	 * @param int $user_id
+	 * @return \Api\Response_Base
 	 */
-	public function action_bycook($user_id) {
-		$array = $this->paginate_query(\Sessions\Model_Session::query()
+	public function get_bycook($user_id) : \Api\Response_Base {
+		$query = \Sessions\Model_Session::query()
 				->where('settled', 0)
 				->related('enrollments')
 				->where('enrollments.user_id', $user_id)
-				->where('enrollments.cook', 1));
-		
-		return array_map(function($item) {
-				return new \Sessions\Dto_SessionListItem($item);
-			}, $array);	
+				->where('enrollments.cook', 1);		
+		return $this->map_to_dto($this->paginate_query($query));
 	}
 	
 	/**
 	 * Session listing by user, but where user did not cook.
-	 * @param type $user_id
-	 * @return type
+	 * @param int $user_id
+	 * @return \Api\Response_Base
 	 */
-	public function action_byothers($user_id) {
-		$array = $this->paginate_query(\Sessions\Model_Session::query()
+	public function get_byothers($user_id) : \Api\Response_Base {
+		$query = \Sessions\Model_Session::query()
 				->where('settled', 0)
 				->related('enrollments')
 				->where('enrollments.user_id', $user_id)
-				->where('enrollments.cook', 0));
-		
-		return array_map(function($item) {
-				return new \Sessions\Dto_SessionListItem($item);
-			}, $array);
+				->where('enrollments.cook', 0);	
+		return $this->map_to_dto($this->paginate_query($query));
 	}
 	
 	/**
 	 * Session listing by user
-	 * @param type $user_id
-	 * @return type
+	 * @param int $user_id
+	 * @return \Api\Response_Base
 	 */
-	public function action_byuser($user_id) {
-		$array = $this->paginate_query(\Sessions\Model_Session::query()
+	public function get_byuser($user_id) : \Api\Response_Base {
+		$query = \Sessions\Model_Session::query()
 				->where('settled', 0)
 				->related('enrollments')
-				->where('enrollments.user_id', $user_id));
-		
-		return array_map(function($item) {
-				return new \Sessions\Dto_SessionListItem($item);
-			}, $array);
+				->where('enrollments.user_id', $user_id);
+		return $this->map_to_dto($this->paginate_query($query));
 	}
 	
 	/**
 	 * Session listing
-	 * @param type $session_id
-	 * @return type
+	 * @return \Api\Response_Base
 	 */
-	public function action_index($session_id=null) {
+	public function get_index() : \Api\Response_Base {
 		$query = \Sessions\Model_Session::query()
-				->where('settled', 0);
-		
-		if(isset($session_id)) {
-			$query = $query->where('id', $session_id);
-		}
-		
-		$array = $this->paginate_query($query);
-	
-		return array_map(function($item) {
-				return new \Sessions\Dto_SessionListItem($item);
-			}, $array);
+				->where('settled', 0);		
+		return $this->map_to_dto($this->paginate_query($query));
 	}
 	
 	/**
 	 * Single session
-	 * @param type $session_id
-	 * @return type
+	 * @param int $session_id
+	 * @return mixed \Api\Response_Base 
 	 */
-	public function action_single($session_id) {
-		return ['session' => new \Sessions\Dto_Session(\Sessions\Model_Session::find($session_id))];
-				
+	public function get_single($session_id) : \Api\Response_Base {			
+		$session = \Sessions\Model_Session::find($session_id);
+		if (isset($session)) {
+			return new \Sessions\Dto_Session($session);
+		} else {
+			return Response_Status::_404();
+		}		
+	}
+	
+	/**
+	 * Map array of \Sessions\Model_Session to \Sessions\Dto_SessionListItem
+	 * @param array $array \Sessions\Model_Session 
+	 * @return \Api\Response_Paginated
+	 */
+	private function map_to_dto($array) : \Api\Response_Paginated {
+		return new Response_Paginated(array_map(function($item) {
+				if($item instanceof \Sessions\Model_Session) { return new \Sessions\Dto_SessionListItem($item);	}
+			}, $array));
 	}
 }
 

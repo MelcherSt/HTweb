@@ -11,44 +11,27 @@
 	
 	<div class="col-md-8">
 		<div class="table-responsive">
-			<table class="table table-hover" 
-				<!--data-toggle="table"
-				data-url="/api/v1/sessions/admin"
+			<table
+				id="sessions-table"
+				data-toggle="table"
+				data-url="/api/v1/sessions/"
 				data-sort-name="date"
-				data-sort-order="desc"-->
-				   >
+				data-pagination="true"
+				data-side-pagination="server"
+				data-page-list="[5, 10, 20, 50, 100, 200]"
+				data-sort-order="desc"
+			>				
 				<thead>
 					<tr>
 						<th data-field="date"  data-sortable="true" class="col-md-2"><?=__('session.field.date')?></th>
-						<th class="col-md-1"><?=__('session.role.participant_plural')?></th>
-						<th class="col-md-2"><?=__('session.role.cook_plural')?></th>
-						<th class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
-						<th data-field="cost"  data-sortable="true" class="col-md-1"><?=__('product.field.cost')?></th>
-						<th class="col-md-2"><?=__('actions.name')?></th>
+						<th data-field="participants"  data-sortable="true" class="col-md-1"><?=__('session.role.participant_plural')?></th>
+						<th data-field="cooks"  class="col-md-2"><?=__('session.role.cook_plural')?></th>
+						<th data-field="dishwashers"  class="col-md-2"><?=__('session.role.dishwasher_plural')?></th>
+						<th data-formatter="costFormatter" data-field="cost"  data-sortable="true" class="col-md-1"><?=__('product.field.cost')?></th>
+						<th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
-				<tbody>
-					<?php foreach($sessions as $session): ?>
-					<tr id="session-<?=$session->id?>" class="clickable-row" data-href="/sessions/admin/view/<?=$session->date?>">
-						<td><?=strftime('%A (%d/%m)', strtotime($session->date))?></td>
-						<td><?=$session->count_total_participants()?></td>
-						<td>
-							<?php foreach($session->get_cook_enrollments() as $enrollment):?>
-								<?=$enrollment->user->name;?>			
-							<?php endforeach; ?>	
-						</td>
-						<td>
-							<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
-								<?=$enrollment->user->name;?> 	
-							<?php endforeach; ?>
-						</td>
-						<td><?='€ ' . $session->cost?></td>
-						<td><a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$session->id?>, '<?=$session->date?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
-					</tr>
-					<?php endforeach; ?>
-				</tbody>
 			</table>
-			<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
 	</div>
 </div>

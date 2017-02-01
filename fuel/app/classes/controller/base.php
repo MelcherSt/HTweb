@@ -18,36 +18,30 @@ class Controller_Base extends Controller_Template {
 	 */
 	protected $add_css = [];
 	
-	/**
-	 * Add additional css
-	 * @param mixed $sheet Either stylesheet name (excluding extension) or array of stylesheets.
-	 */
-	public function push_css($sheet) {
-		if (is_array($sheet)) {
-			foreach ($sheet as $single_sheet) {
-				$this->push_css($single_sheet);
-			}
-		} else {
-			if (!in_array($sheet, $this->add_css)) {
-				array_push($this->add_css, $sheet);
-			}
+	public function router($resource, $arguments) {
+		
+		echo 'arg: ' . var_dump($arguments) . '<br>';
+		echo 'res: ' . $resource . '<br>';
+		echo '<br>';
+		
+		
+		// check if a input specific method exists
+		$controller_method = strtolower(\Input::method()) . '_' . $resource;
+
+		// fall back to action_ if no rest method is provided
+		if ( ! method_exists($this, $controller_method))
+		{
+			$controller_method = 'action_'.$resource;
 		}
-	}
-	
-	/**
-	 * Add additional script
-	 * @param mixed $script Either scriptname (excluding extension) or array of scriptnames.
-	 */
-	public function push_js($script) {
-		if (is_array($script)) {
-			foreach ($script as $single_script) {
-				$this->push_js($single_script);
-			}
-		} else {
-			if (!in_array($script, $this->add_js)) {
-				array_push($this->add_js, $script);
-			}
+
+		// check if the action method exists
+		if (method_exists($this, $controller_method))
+		{
+			return call_fuel_func_array(array($this, $controller_method), $arguments);
 		}
+
+		// if not, we got ourselfs a genuine 404!
+		throw new \HttpNotFoundException();
 	}
 	
 	public function before() {		
@@ -98,11 +92,46 @@ class Controller_Base extends Controller_Template {
 		parent::before();
 	}
 	
+	
 	public function after($reponse) {
+		// Set variables in template
 		$this->template->add_js = $this->add_js;
 		$this->template->add_css = $this->add_css;
 		
+		// Hand response object over to parent
 		return parent::after($reponse);
+	}
+	
+	/**
+	 * Add additional css
+	 * @param mixed $sheet Either stylesheet name (excluding extension) or array of stylesheets.
+	 */
+	public function push_css($sheet) {
+		if (is_array($sheet)) {
+			foreach ($sheet as $single_sheet) {
+				$this->push_css($single_sheet);
+			}
+		} else {
+			if (!in_array($sheet, $this->add_css)) {
+				array_push($this->add_css, $sheet);
+			}
+		}
+	}
+	
+	/**
+	 * Add additional script
+	 * @param mixed $script Either scriptname (excluding extension) or array of scriptnames.
+	 */
+	public function push_js($script) {
+		if (is_array($script)) {
+			foreach ($script as $single_script) {
+				$this->push_js($single_script);
+			}
+		} else {
+			if (!in_array($script, $this->add_js)) {
+				array_push($this->add_js, $script);
+			}
+		}
 	}
 
 }
