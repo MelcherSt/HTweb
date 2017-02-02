@@ -15,7 +15,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			<div class="panel-heading"><?=__('actions.name')?></div>
 			<div class="list-group">
 				<a class="list-group-item" href="/sessions/<?=$session->date?>"><i class="fa fa-eye" aria-hidden="true"></i> <?=__('session.admin.view.original')?></a>
-				<?php if(! $session->settled) {?><a class="list-group-item" href="#" onClick="showEnrollAddModal()"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a> <?php } ?>
+				<?php if(! $session->settled) {?><a class="list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a> <?php } ?>
 			</div>
 		</div>
 		

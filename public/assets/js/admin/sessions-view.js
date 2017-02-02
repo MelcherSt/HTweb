@@ -111,10 +111,24 @@ function enrollmentFormatter(value, row, index) {
 	return value + ' ' + badges.join(' ');
 }
 
-function showEnrollAddModal(canCook, canDish) {
+function showEnrollAddModal(sessionId) {
+	// Reset to default state
+	$('#add-enrollment-form').trigger('reset');
+	$("#add-cook").prop('disabled', false);
+	$("#add-dishwasher").prop('disabled', false);
+	
+	// Pop modal and fill fields
 	$("#add-enrollment-modal").modal();
-	$("#add-cook").attr('disabled', canCook === 0);
-	$("#add-dishwasher").attr('disabled', canDish === 0);
+	
+	$.get( "/api/v1/sessions/"  + sessionId + "/roles", function( roles ) {
+		if(roles.cooks === roles.max_cooks) {
+			$("#add-cook").prop('disabled', true);	
+		}
+		
+		if(roles.dishwashers === roles.max_dishwashers) {
+			$("#add-dishwasher").prop('disabled', true);
+		}
+	});		
 }
 
 function showEnrollDeleteModal(enrollment) {
@@ -125,7 +139,7 @@ function showEnrollDeleteModal(enrollment) {
 
 function showEnrollEditModal(enrollment) {
 	// Reset to default state
-	$('#edit-enrollment-form').trigger("reset");
+	$('#edit-enrollment-form').trigger('reset');
 	$("#edit-cook").prop('disabled', false);
 	$("#edit-dishwasher").prop('disabled', false);
 	
@@ -142,7 +156,7 @@ function showEnrollEditModal(enrollment) {
 				$("#edit-cook").prop('disabled', true);	
 		}
 		
-		if((roles.dishwashers === roles.max_dishwashers && !enrollment.dishwasher)) {
+		if((roles.dishwashers === roles.max_dishwashers) && !enrollment.dishwasher) {
 				$("#edit-dishwasher").prop('disabled', true);
 		}
 	});	
