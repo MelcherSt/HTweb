@@ -10,7 +10,8 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	 */
 	public function get_index($session_id=null) : \Api\Response_Base{
 		$query = \Sessions\Model_Enrollment_Session::query()
-				->related('session');
+				->related('session')
+				->related('user');
 		
 		if(isset($session_id)) {
 			$query->where('session.id', $session_id);
@@ -45,22 +46,30 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		return Response_Status::_404();
 	}
 	
-	public function get_notenrolled($session_id=null) {
-		$query = \Model_User::query()
+	/**
+	 * Users not enlisted in given session
+	 * @param int $session_id
+	 * @return \Api\Response_Paginated
+	 */
+	public function get_notenrolled($session_id=null) : \Api\Response_Base {	
+		if(isset($session_id)) {
+			$query = \Model_User::query()
 				->where('id', 'not in', \DB::query('select es.user_id from enrollment_sessions es, sessions s where es.session_id = ' . $session_id . ' and s.id = ' . $session_id))
-				->where('id', '!=', 0)
+				->where('id', '!=', 0) // Exclude guest user
 				->where('active', true);	
-		$array = $this->paginate_query($query);
-		
-		return new Response_Paginated(array_map(function($item) {
-				if($item instanceof \Model_User) { return new \Dto_UserListItem($item);	}
-			}, $array[0]), $array[1]);
+			$array = $this->paginate_query($query);
+
+			return new Response_Paginated(array_map(function($item) {
+					if($item instanceof \Model_User) { return new \Dto_UserListItem($item);	}
+				}, $array[0]), $array[1]);
+		} 
+		return Response_Status::_404();
 	}
 	
 	/**
 	 * Delete enrollment for given user from session
 	 * @param int $session_id
-	 * @return type
+	 * @return mixed
 	 */
 	public function delete_single($session_id=null) {
 		$user_id = $this->param('user_id');		
@@ -78,7 +87,11 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		return Response_Status::_404();
 	}
 	
-	
+	/**
+	 * Create enrollment for given user for session
+	 * @param int $session_id
+	 * @return mixed
+	 */
 	public function post_index($session_id=null) {
 		$session = \Sessions\Model_Session::find($session_id);
 		
@@ -128,8 +141,9 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	}
 	
 	/**
-	 * Create / update enrollment for given user for session
+	 * Update enrollment for given user for session
 	 * @param int $session_id
+	 * @return mixed
 	 */
 	public function put_single($session_id=null) {
 		$user_id = $this->param('user_id');		

@@ -88,15 +88,15 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				id="enrollments-table"
 				data-toggle="table"
 				data-url="/api/v1/sessions/<?=$session->id?>/enrollments"
-				data-sort-name="id"
+				data-sort-name="user.name"
 				data-pagination="true"
 				data-side-pagination="server"
 				data-page-list="[5, 10, 20, 50, 100, 200]"
-				data-sort-order="desc"
+				data-sort-order="asc"
 			>				
 				<thead>
 					<tr>
-						<th data-field="user.name" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
+						<th data-field="user.name" data-sortable="true" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
 						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
 						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
 						<?php if(! $session->settled) {?><th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th><?php } ?>
