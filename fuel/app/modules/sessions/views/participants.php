@@ -1,75 +1,46 @@
 <?php
-$enrollments = $session->get_enrollments(); 
-$unenrolled_users = $session->get_unenrolled();
-$context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
-?>
-<?php if ($context_old->has_access(['enroll.other']) && sizeof($unenrolled_users > 0)) {?>
-		<button type="button" class="btn btn-primary pull-right" onClick="showAddModal(
-					<?=(int)$context_old->has_access(['enroll.other[cook]'])?>, 
-					<?=(int)$context_old->has_access(['enroll.other[dishwasher]'])?>
-				)"><span class="fa fa-user-plus"></span>
-		 <?=__('session.view.btn.add_enroll')?>
-		</button>
-	<?php } ?>
+$context = new \Sessions\Auth_SessionContext($session);
+
+if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?><a class="list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a> <?php } ?>
 <h3><?=__('session.role.participant_plural')?></h3>
 <p><?=__('session.view.msg', ['p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()])?></p>	
+
+
 <div class="table-responsive">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th><?=__('user.field.name')?></th>
-				<th>∆ <?=__('session.field.point_plural')?></th>
-				<th><?=__('session.field.guest_plural')?></th>	
-				<?php if ($context_old->has_access(['session.manage'])): ?>
-				<th><?=__('actions.name')?></th>
-				<?php endif; ?>
-			</tr>
-		</thead>
-		<tbody>
-		<?php 			
-			foreach($enrollments as $enrollment): ?>
-			<tr>
-				<td><?=$enrollment->user->get_fullname()?> 
-				<?php 
-				if($enrollment->later) : ?>
-					*
-				<?php endif;
-				if ($enrollment->cook): ?>
-					<span class="fa fa-cutlery"></span> 
-				<?php endif; 
-				if ($enrollment->dishwasher): ?>
-					<span class="fa fa-shower"></span> 
-				<?php endif; ?>
-					
-				</td>
-				<td><?=$enrollment->get_point_prediction()?>  </td>
-				<td><?=$enrollment->guests?></td>
-				<?php if ($context_old->has_access(['enroll.other'])): ?>
-				<td>			
-					<a href="#" onclick="showEditModal(
-								<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', 
-								<?=$enrollment->guests?>, <?=$enrollment->cook?>, 
-								<?=$enrollment->dishwasher?>,
-								<?=(int)$context_old->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
-								<?=(int)$context_old->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
-							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
-					<?php if ($current_user->id != $enrollment->user_id): ?> |
-					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
-					<?php endif; ?>
-				</td>
-				<?php endif; ?>
-			</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-</div>
+			<table
+				id="enrollments-table"
+				data-toggle="table"
+				data-url="/api/v1/sessions/<?=$session->id?>/enrollments"
+				data-sort-name="user.name"
+				data-pagination="true"
+				data-side-pagination="server"
+				data-page-list="[5, 10, 20, 50, 100, 200]"
+				data-sort-order="asc"
+			>				
+				<thead>
+					<tr>
+						<th data-field="user.name" data-sortable="true" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
+						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
+						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
+						<?php if($context->canview_session(\Sessions\Auth_SessionUIItem::COLUMN_ACTIONS)) {?><th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th><?php } ?>
+					</tr>
+				</thead>
+			</table>
+		</div>
+
+
 
 
 <!-- Modal dialog for enrollment deletion -->
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/delete/<?=$session->date?>" method="POST">
+			<form id="delete-enrollment-form" 
+				  action="/api/v1//sessions/<?=$session->id?>/enrollments/" 
+				  method="delete"
+				  data-alert-error="<?=__('session.alert.error.remove_enroll')?>"
+				  data-alert-success="<?=__('session.alert.success.remove_enroll')?>"
+			>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -78,7 +49,7 @@ $context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<div class="modal-body">
 					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
 					<div class="form-group">
-						<input id="delete-user-id" type="hidden" class="form-control" name="user_id">
+						<input id="delete-user-id" type="hidden" class="form-control" name="enrollment_id">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -95,7 +66,12 @@ $context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="edit-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/update/<?=$session->date?>" method="POST">
+			<form id="edit-enrollment-form" 
+				  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
+				  method="put"
+				  data-alert-error="<?=__('session.alert.error.update_enroll')?>"
+				  data-alert-success="<?=__('session.alert.success.update_enroll')?>"
+			>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -105,7 +81,7 @@ $context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 					<p><?=__('session.modal.edit_enroll.msg')?> <strong><span id="edit-user-name"></span></strong>.</p>
 					<div class="form-group">
 						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
-						<label for="edit-guests">Guests </label>
+						<label for="edit-guests"><?=__('session.fied.guest_plural')?> </label>
 						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
 					</div>
 					
@@ -133,7 +109,12 @@ $context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="add-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/create/<?=$session->date?>" method="POST">
+			<form id="add-enrollment-form" 
+				  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
+				  method="post"
+				  data-alert-error="<?=__('session.alert.error.create_enroll')?>"
+				  data-alert-success="<?=__('session.alert.success.create_enroll')?>"	  
+			>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -143,17 +124,14 @@ $context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 					<p><?=__('session.modal.create_enroll.msg')?></p>					
 					<div class="form-group">
 						<label for="add-user-id"><?=__('user.name')?>:</label>
-						<select class="form-control" id="add-user-id" name="user_id">
-							<?php 
-							foreach($unenrolled_users as $user):?>
-							<option value="<?=$user->id?>"><?=$user->get_fullname()?></option>
-							<?php endforeach; ?>
+						<select class="form-control" id="add-user-id-combobox" name="user_id">
+							
 						</select>
 					</div>	
 					<br>
 					<div class="form-group">
 						<label for="add-guests"><?=__('session.field.guest_plural')?></label>
-						<input id="add-guests" name="guests" type="number" step="1" max="10" min="0" value="0"/>
+						<input id="add-guests" name="guests" type="number" step="1" max="<?=\Sessions\Model_Session::MAX_GUESTS?>" min="0" value="0"/>
 					</div>
 					
 					<div class="form-group">
@@ -175,31 +153,3 @@ $context_old = \Sessions\Auth_Context_Session::forge($session, $current_user);
 		</div>
 	</div>
 </div>
-
-
-<!-- //TODO: externalize -->
-<script>
-function showAddModal(canCook, canDish) {
-	$("#add-enrollment-modal").modal('show');
-	$("#add-cook").attr('disabled', canCook === 0);
-	$("#add-dishwasher").attr('disabled', canDish === 0);
-}
-
-function showDeleteModal(userId, userName) {
-	$("#delete-enrollment-modal").modal('show');
-	$("#delete-user-name").html(userName);
-	$("#delete-user-id").val(userId);
-}
-
-function showEditModal(userId, userName, guests, cook, dishwasher, canCook, canDish) {
-	$("#edit-enrollment-modal").modal('show');
-	$("#edit-user-name").html(userName);
-	$("#edit-user-id").val(userId);
-	$("#edit-guests").val(guests);
-	$("#edit-cook").prop('checked', cook === 1);
-	$("#edit-dishwasher").prop('checked', dishwasher === 1);
-	$("#edit-cook").attr('disabled', canCook === 0);
-	$("#edit-dishwasher").attr('disabled', canDish === 0);
-	
-}
-</script>

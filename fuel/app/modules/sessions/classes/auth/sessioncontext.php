@@ -2,7 +2,7 @@
 
 namespace Sessions;
 
-class SessionContext extends \Auth_Context{
+class Auth_SessionContext extends \Auth_Context{
 	
 	/**
 	 * Context user. By default the current user.
@@ -142,9 +142,43 @@ class SessionContext extends \Auth_Context{
 		return false;		
 	}
 	
+	/**
+	 * Session UI visibility evaluation
+	 * @param int $ui_item_id from Auth_SessionUIItem
+	 * @return boolean
+	 * @throws \InvalidArgumentException
+	 */
+	public function canview_session($ui_item_id) {
+		if(!Auth_SessionUIItem::isValidValue($ui_item_id)) {
+			throw new \InvalidArgumentException($ui_item_id + ' is not a valid ui item.');
+		}
+		
+		$cur_enrollment = $this->session->get_enrollment($this->user->id);
+		
+		switch($ui_item_id) {
+			case Auth_SessionUIItem::BTN_ENROLL:
+				return $this->_in_enroll_period() && empty($cur_enrollment);
+			case Auth_SessionUIItem::BTN_UNROLL:
+				return $this->_in_enroll_period() && isset($cur_enrollment);
+			case Auth_SessionUIItem::BTN_ENROLL_DISHWASHER:
+				return $this->_in_dishwasher_grace() && isset($cur_enrollment); // MORE!
+			case Auth_SessionUIItem::COLUMN_ACTIONS:
+			case Auth_SessionUIItem::BTN_ENROLL_ADD:
+				return $this->_in_enroll_mod_grace() && $this->_is_cook();
+			case Auth_SessionUIItem::BTN_SESSION_UPDATE:
+				return $this->_is_cook() && ($this->_in_enroll_period() || $this->_in_enroll_mod_grace());
+			case Auth_SessionUIItem::INPUT_DEADLINE:
+			case Auth_SessionUIItem::INPUT_COST:
+			case Auth_SessionUIItem::INPUT_PAYER_SELECT:
+				return false;
+			case Auth_SessionUIItem::ALERT_DEADLINE_CHANGED:
+				return $this->_in_enroll_period() && (\Sessions\Model_Session::DEADLINE_TIME != (new \DateTime($this->session->deadline))->format('H:i'));
+		}
+		
+	}
 	
 	private function _is_cook() {
-		$cur_enrollment = \Sessions\Model_Enrollment_Session::get_by_user($this->user->id);
+		$cur_enrollment = $this->session->get_enrollment($this->user->id);
 		if(isset($cur_enrollment)) {
 			return $cur_enrollment->cook;
 		}

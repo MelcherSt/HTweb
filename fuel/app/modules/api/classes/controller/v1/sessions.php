@@ -87,7 +87,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	public function delete_single(int $session_id) {
 		$session = \Sessions\Model_Session::find($session_id);	
 		if (isset($session)) {
-			$context = new \Sessions\SessionContext($session);
+			$context = new \Sessions\Auth_SessionContext($session);
 			if ($context->can_session(\Auth_PermissionType::DELETE)) {			
 				$session->delete();			
 				return null; // Nothing to return			
@@ -107,12 +107,12 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 	public function put_single(int $session_id) {		
 		$session = \Sessions\Model_Session::find($session_id);
 		if (isset($session)) {
-			$context = new \Sessions\SessionContext($session);
+			$context = new \Sessions\Auth_SessionContext($session);
 			if ($context->can_session(\Auth_PermissionType::UPDATE)) {		
-				$session->notes = \Input::put('notes', '');
-				$session->deadline = date(date('Y-m-d'). ' ' . \Input::put('deadline', \Sessions\Model_Session::DEADLINE_TIME));
-				$session->cost = \Input::put('cost', 0.0);
-				$session->paid_by = \Input::put('payer_id', null);
+				$session->notes = \Input::put('notes', $session->notes);
+				$session->deadline = date(date('Y-m-d'). ' ' . \Input::put('deadline', $session->deadline));
+				$session->cost = \Input::put('cost', $session->cost);
+				$session->paid_by = \Input::put('payer_id', $session->paid_by);
 				$session->save();		
 				return null; // Nothing to return		
 			} else {

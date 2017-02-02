@@ -104,6 +104,7 @@ return [
 			'enroll_dish' => 'I did the dishes',
 			'unenroll_dish' => 'Actually, I did not do the dishes',
 		],
+		'enrollment' => 'Enrollment',
 	],
 	'admin' => [
 		'index' => [

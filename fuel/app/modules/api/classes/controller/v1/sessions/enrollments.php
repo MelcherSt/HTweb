@@ -13,16 +13,14 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 				->related('session')
 				->related('user');
 		
-		if(isset($session_id)) {
+		if(isset($session_id)) {			
+			if(\Sessions\Model_Session::find($session_id)->count() == 0) {
+				return Response_Status::_404();
+			}
 			$query->where('session.id', $session_id);
-		}
-		
-		if(empty(\Sessions\Model_Session::find($session_id))) {
-			return Response_Status::_404();
-		}
+		}	
  		
 		$result = $this->paginate_query($query);
-		
 		return $this->map_to_dto($result);
 	}
 	
@@ -76,7 +74,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		$session = \Sessions\Model_Session::find($session_id);
 		$enrollment = $session->get_enrollment($user_id);	
 		if(isset($session) && isset($enrollment)) {
-			$context = new \Sessions\SessionContext($session);
+			$context = new \Sessions\Auth_SessionContext($session);
 			if ($context->can_enrollment(\Auth_PermissionType::DELETE, $user_id)) {				
 				$enrollment->delete();		
 				return null; // Nothing to return			
@@ -96,7 +94,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		$session = \Sessions\Model_Session::find($session_id);
 		
 		if(isset($session)) {
-			$context = new \Sessions\SessionContext($session);
+			$context = new \Sessions\Auth_SessionContext($session);
 			
 			// Booleans indication if we're at max
 			$max_cooks = $session->count_cooks() == \Sessions\Model_Session::MAX_COOKS;
@@ -151,7 +149,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 		$enrollment = $session->get_enrollment($user_id);	
 		
 		if(isset($session)) {
-			$context = new \Sessions\SessionContext($session);
+			$context = new \Sessions\Auth_SessionContext($session);
 			
 			// Booleans indication if we're at max
 			$max_cooks = $session->count_cooks() == \Sessions\Model_Session::MAX_COOKS;

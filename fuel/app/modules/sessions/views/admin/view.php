@@ -19,7 +19,6 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			</div>
 		</div>
 		
-		
 		<div class="panel panel-default">
 			<div class="panel-heading"><?=__('actions.properties')?></div>
 			<div class="panel-body">
@@ -63,18 +62,16 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 					<label><?=__('product.field.paid_by')?></label>
 					<select class="form-control" id="add-user-id" name="payer_id">
 						<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
-
-						<?php foreach($session->enrollments as $enrollment):
-								$user_id = $enrollment->user->id;
+						<!-- TODO: use XHR. For now show all active users as possible payers to avoid problems when changing enrollments -->	
+						<?php foreach(\Model_User::get_by_state() as $enrollment):
+								$user_id = $enrollment->id;
 								if($user_id == $session->paid_by) { continue; }
 						?>
-						<option value="<?=$user_id?>"><?=$enrollment->user->get_fullname()?></option>
+						<option value="<?=$user_id?>"><?=$enrollment->get_fullname()?></option>
 						<?php endforeach;  ?>
 					</select>	
 				</div>
-
 				<button class="btn btn-sm btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
-
 			</form>
 			<?php } ?>
 			</div>	
