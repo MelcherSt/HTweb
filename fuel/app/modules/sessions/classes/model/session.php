@@ -275,7 +275,6 @@ class Model_Session extends \Orm\Model
 			'where' => array(
 				array('cook', 1), array('session_id', $this->id)),
 		));
-		
 		return $enrollments;
 	}
 	
@@ -288,7 +287,6 @@ class Model_Session extends \Orm\Model
 			'where' => array(
 				array('dishwasher', 1), array('session_id', $this->id)),
 		));
-		
 		return $enrollments;
 	}
 }

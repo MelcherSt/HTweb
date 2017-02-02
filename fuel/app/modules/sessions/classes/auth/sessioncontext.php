@@ -36,6 +36,10 @@ class Auth_SessionContext extends \Auth_Context{
 		$this->user = $user;
 		$this->session = $session;
 	}
+	
+	public static function forge(\Sessions\Model_Session $session, \Auth\Model_User $user=null) {
+		return new Auth_SessionContext($session, $user);
+	}
 	/**
 	 * Session CRUD permission evaluation
 	 * @param int $perm from \Auth_PermissionType
@@ -152,6 +156,22 @@ class Auth_SessionContext extends \Auth_Context{
 			return $this->_is_cook();
 		}
 		return false;
+	}
+	
+	/**
+	 * Determines if the session can be delayed (e.g. alter deadline).
+	 * For a delay to be possible, there should be at least 1 participant.
+	 * @return boolean
+	 */
+	public function can_delay() {
+		// The deadline must be past-due and there should be 0 cooks
+		if ($this->session->count_participants() > 0) {
+			return !$this->_in_enroll_period() && 
+				($this->session->count_cooks() == 0) && 
+				$this->_in_deadline_mod_grace();
+		} else {
+			return false;
+		}
 	}
 	
 	/**

@@ -16,15 +16,15 @@ class Controller_Sessions extends \Controller_Gate {
 	
 	/* Some shortcuts */
 	public function action_yesterday() {
-		\Response::redirect('sessions/view/'.date('Y-m-d', strtotime('-1day')));
+		\Response::redirect('sessions/'.date('Y-m-d', strtotime('-1day')));
 	}
 	
 	public function action_today() {
-		\Response::redirect('sessions/view/'.date('Y-m-d'));
+		\Response::redirect('sessions/'.date('Y-m-d'));
 	}
 	
 	public function action_tomorrow() {
-		\Response::redirect('sessions/view/'.date('Y-m-d', strtotime('+1day')));
+		\Response::redirect('sessions/'.date('Y-m-d', strtotime('+1day')));
 	}
 		
 	/**
@@ -49,20 +49,16 @@ class Controller_Sessions extends \Controller_Gate {
 				$session->save();
 			}
 			
-			// Automatically delay a session without cook
-			$context = Auth_Context_Session::forge($session);
-			if ($context->has_access(['session.delay'])) {
+			/**
+			 * This code automatically delays the session whenever the deadline is past-due
+			 * and there is more than 1 enrollment, but no cook.
+			 */
+			if (Auth_SessionContext::forge($session)->can_delay()) {
 				$session->deadline = date('Y-m-d H:i:s', strtotime($session->deadline . '+1hour'));
 				$session->save();
 			}
-			
-			//$enrollment = $session->current_enrollment();		
-			//if(!empty($enrollment) || $context->has_access(['session.manage[all]'])) {
-			$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session]);
-			//} else {
-			//	$data['left_content'] = \View::forge('details/notenrolled', ['session'=>$session]);
-			//}
 
+			$data['left_content'] = \View::forge('view', ['session'=>$session]);
 			$data['right_content'] = \View::forge('participants', ['session'=>$session]);	
 			$formatted_date = strftime('%A %d %B %Y', strtotime($date));
 			
