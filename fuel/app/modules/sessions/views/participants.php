@@ -3,11 +3,12 @@ $context = new \Sessions\Auth_SessionContext($session);
 ?>
 
 <h3><?=__('session.role.participant_plural')?></h3>
-<p><?=__('session.view.msg', ['p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()])?></p>	
+<p>
+	<span id="participant-count"><?=__('session.view.participant_count')?></span>
+	<span id="guest-count"><?=__('session.view.guest_count')?></span>
+</p>
 
-<?php 
-
-
+<?php
 $view_actions = $context->canview_session(\Sessions\Auth_SessionUIItem::COLUMN_ACTIONS);
 
 if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
@@ -17,28 +18,26 @@ if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
 <?php } ?>
 
 <div class="table-responsive">
-			<table
-				id="enrollments-table"
-				data-toggle="table"
-				data-url="/api/v1/sessions/<?=$session->id?>/enrollments"
-				data-sort-name="user.name"
-				data-pagination="true"
-				data-side-pagination="server"
-				data-page-list="[5, 10, 20, 50, 100, 200]"
-				data-sort-order="asc"
-			>				
-				<thead>
-					<tr>
-						<th data-field="user.name" data-sortable="true" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
-						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
-						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
-						<th id="actions" class="actions-col <?= $view_actions ? '' : 'hidden-default'?>" data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-
-
+	<table
+		id="enrollments-table"
+		data-toggle="table"
+		data-url="/api/v1/sessions/<?=$session->id?>/enrollments"
+		data-sort-name="user.name"
+		data-pagination="true"
+		data-side-pagination="server"
+		data-page-list="[5, 10, 20, 50, 100, 200]"
+		data-sort-order="asc"
+	>				
+		<thead>
+			<tr>
+				<th data-field="user.name" data-sortable="true" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
+				<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
+				<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
+				<th id="actions" class="actions-col <?= $view_actions ? '' : 'hidden-default'?>" data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
+			</tr>
+		</thead>
+	</table>
+</div>
 
 
 <!-- Modal dialog for enrollment deletion -->

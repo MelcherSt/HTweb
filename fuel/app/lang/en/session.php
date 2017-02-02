@@ -90,6 +90,9 @@ return [
 		'quick_btn' => 'Enroll for selected',
 	],
 	'view' => [
+		'participant_count' => 'There are :var participants',
+		'guest_count' => 'of whom :var are guests',
+		
 		'msg' => 'There are :p_count participants of whom :g_count are guests.',
 		'label' => [
 			'cook' => 'I feel like cooking',

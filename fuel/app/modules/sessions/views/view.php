@@ -141,7 +141,7 @@
 			</div>
 			
 			<div id="static-session-properties-panel">
-				<div id="s" class="well">
+				<div id="static-session-notes" class="well">
 					<?=$session->notes?>
 				</div>
 				<dl>

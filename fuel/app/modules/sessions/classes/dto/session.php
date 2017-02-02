@@ -10,6 +10,8 @@ class Dto_Session {
 	public $deadline;
 	public $notes;
 	public $cost;
+	public $participants;
+	public $guests;
 	
 	public function __construct(\Sessions\Model_Session $session) {
 		$this->id = (int)$session->id;
@@ -18,5 +20,7 @@ class Dto_Session {
 		$this->deadline = date('H:i', strtotime($session->deadline));
 		$this->notes = $session->notes;
 		$this->cost = $session->cost;
+		$this->participants = (int)$session->count_total_participants();
+		$this->guests = (int)$session->count_guests();
 	}
 }
