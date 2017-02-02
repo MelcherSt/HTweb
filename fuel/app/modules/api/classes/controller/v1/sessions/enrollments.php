@@ -30,7 +30,7 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	 * @param int $session_id
 	 * @return mixed 
 	 */
-	public function get_single($session_id=null){		
+	public function get_single($session_id=null) {		
 		$user_id = $this->param('user_id');	
 		$session = \Sessions\Model_Session::find($session_id);
 		$enrollment = $session->get_enrollment($user_id);
@@ -43,6 +43,18 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 			}
 		}
 		return Response_Status::_404();
+	}
+	
+	public function get_notenrolled($session_id=null) {
+		$query = \Model_User::query()
+				->where('id', 'not in', \DB::query('select es.user_id from enrollment_sessions es, sessions s where es.session_id = ' . $session_id . ' and s.id = ' . $session_id))
+				->where('id', '!=', 0)
+				->where('active', true);	
+		$array = $this->paginate_query($query);
+		
+		return new Response_Paginated(array_map(function($item) {
+				if($item instanceof \Model_User) { return new \Dto_UserListItem($item);	}
+			}, $array[0]), $array[1]);
 	}
 	
 	/**

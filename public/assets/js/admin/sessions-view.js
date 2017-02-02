@@ -111,16 +111,31 @@ function enrollmentFormatter(value, row, index) {
 	return value + ' ' + badges.join(' ');
 }
 
+function populateEnrollAddCombobox(sessionId) {
+	$("#add-user-id-combobox").empty();
+    $.get('/api/v1/sessions/' + sessionId + '/notenrolled', function(data)
+    {
+        $.each(data.rows, function(i,obj)
+        {
+            $("#add-user-id-combobox").append(
+                 $('<option></option>')
+                        .val(obj.id)
+                        .html(obj.name));
+        });
+    });
+}
+
 function showEnrollAddModal(sessionId) {
 	// Reset to default state
 	$('#add-enrollment-form').trigger('reset');
 	$("#add-cook").prop('disabled', false);
 	$("#add-dishwasher").prop('disabled', false);
+	populateEnrollAddCombobox(sessionId);
 	
 	// Pop modal and fill fields
 	$("#add-enrollment-modal").modal();
 	
-	$.get( "/api/v1/sessions/"  + sessionId + "/roles", function( roles ) {
+	$.get( '/api/v1/sessions/'  + sessionId + "/roles", function(roles) {
 		if(roles.cooks === roles.max_cooks) {
 			$("#add-cook").prop('disabled', true);	
 		}

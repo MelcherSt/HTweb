@@ -200,11 +200,8 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 					<p><?=__('session.modal.create_enroll.msg')?></p>					
 					<div class="form-group">
 						<label for="add-user-id"><?=__('user.name')?>:</label>
-						<select class="form-control" id="add-user-id" name="user_id">
-							<?php 
-							foreach($unenrolled_users as $user):?>
-							<option value="<?=$user->id?>"><?=$user->get_fullname()?></option>
-							<?php endforeach; ?>
+						<select class="form-control" id="add-user-id-combobox" name="user_id">
+							
 						</select>
 					</div>	
 					<br>
