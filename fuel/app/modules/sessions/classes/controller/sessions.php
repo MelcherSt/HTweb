@@ -34,7 +34,7 @@ class Controller_Sessions extends \Controller_Gate {
 	public function action_view($date=null) {
 		$this->push_css(['jquery.timepicker-1.3.5.min', 'bootstrap-table.min']);
 		$this->push_js(['jquery.timepicker-1.3.5.min', 'sessions-timepicker',
-			'sessions-view', 'bootstrap-table.min']);
+			'sessions-view', 'bootstrap-table.min', 'admin/sessions-view']);
 		
 		$this->template->title = __('session.title');
 		
@@ -56,12 +56,12 @@ class Controller_Sessions extends \Controller_Gate {
 				$session->save();
 			}
 			
-			$enrollment = $session->current_enrollment();		
-			if(!empty($enrollment) || $context->has_access(['session.manage[all]'])) {
-				$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session, 'enrollment' => $enrollment]);
-			} else {
-				$data['left_content'] = \View::forge('details/notenrolled', ['session'=>$session]);
-			}
+			//$enrollment = $session->current_enrollment();		
+			//if(!empty($enrollment) || $context->has_access(['session.manage[all]'])) {
+			$data['left_content'] = \View::forge('details/enrolled', ['session'=>$session]);
+			//} else {
+			//	$data['left_content'] = \View::forge('details/notenrolled', ['session'=>$session]);
+			//}
 
 			$data['right_content'] = \View::forge('participants', ['session'=>$session]);	
 			$formatted_date = strftime('%A %d %B %Y', strtotime($date));

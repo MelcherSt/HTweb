@@ -110,7 +110,7 @@ class Controller_v1_Sessions extends Controller_RestPaginated {
 			$context = new \Sessions\Auth_SessionContext($session);
 			if ($context->can_session(\Auth_PermissionType::UPDATE)) {		
 				$session->notes = \Input::put('notes', $session->notes);
-				$session->deadline = date(date('Y-m-d'). ' ' . \Input::put('deadline', $session->deadline));
+				$session->deadline = date($session->date . ' ' . \Input::put('deadline', $session->deadline));
 				$session->cost = \Input::put('cost', $session->cost);
 				$session->paid_by = \Input::put('payer_id', $session->paid_by);
 				$session->save();		

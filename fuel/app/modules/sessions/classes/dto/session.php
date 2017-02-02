@@ -6,7 +6,7 @@ class Dto_Session {
 	
 	public $id;
 	public $date;
-	public $paid_by;
+	public $payer;
 	public $deadline;
 	public $notes;
 	public $cost;
@@ -14,8 +14,8 @@ class Dto_Session {
 	public function __construct(\Sessions\Model_Session $session) {
 		$this->id = (int)$session->id;
 		$this->date = $session->date;
-		$this->paid_by = (int)$session->paid_by;
-		$this->deadline = $session->deadline;
+		$this->payer = new \Dto_UserListItem(\Model_User::find($session->paid_by));
+		$this->deadline = date('H:i', strtotime($session->deadline));
 		$this->notes = $session->notes;
 		$this->cost = $session->cost;
 	}

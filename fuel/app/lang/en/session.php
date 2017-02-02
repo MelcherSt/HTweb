@@ -33,7 +33,7 @@ return [
 	],
 	'alert' => [
 		'deadline' => [
-			'changed' => 'The deadline has been changed! The new deadline is today at <strong>:time</strong>.',
+			'changed' => 'The deadline has been changed! The new deadline is today at ',
 			'passed' => 'The deadline is past due.',
 			'no_join' => 'You can no longer enroll.',
 			'no_leave' => 'You can no longer unenroll.',

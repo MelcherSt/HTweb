@@ -1,10 +1,20 @@
 <?php
-$context = new \Sessions\Auth_SessionContext($session);
+$context = new \Sessions\Auth_SessionContext($session); 
+?>
 
-if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?><a class="list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)"><i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?></a> <?php } ?>
 <h3><?=__('session.role.participant_plural')?></h3>
 <p><?=__('session.view.msg', ['p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()])?></p>	
 
+<?php 
+
+
+$view_actions = $context->canview_session(\Sessions\Auth_SessionUIItem::COLUMN_ACTIONS);
+
+if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
+<a class="action-col list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)">
+	<i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?>
+</a> 
+<?php } ?>
 
 <div class="table-responsive">
 			<table
@@ -22,7 +32,7 @@ if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?><
 						<th data-field="user.name" data-sortable="true" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
 						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
 						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
-						<?php if($context->canview_session(\Sessions\Auth_SessionUIItem::COLUMN_ACTIONS)) {?><th data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th><?php } ?>
+						<th id="actions" class="action-col <?= $view_actions ? '' : 'hidden-default'?>" data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
 			</table>
@@ -36,7 +46,7 @@ if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?><
 	<div class="modal-dialog active">
 		<div class="modal-content">
 			<form id="delete-enrollment-form" 
-				  action="/api/v1//sessions/<?=$session->id?>/enrollments/" 
+				  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
 				  method="delete"
 				  data-alert-error="<?=__('session.alert.error.remove_enroll')?>"
 				  data-alert-success="<?=__('session.alert.success.remove_enroll')?>"

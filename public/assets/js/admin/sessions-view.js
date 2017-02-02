@@ -138,10 +138,9 @@ function populatePayerCombobox(sessionId) {
     });
 }
 
-
 function showEnrollAddModal(sessionId) {
 	// Reset to default state
-	$('#add-enrollment-form').trigger('reset');
+	$("#add-enrollment-form").trigger('reset');
 	$("#add-cook").prop('disabled', false);
 	$("#add-dishwasher").prop('disabled', false);
 	populateEnrollAddCombobox(sessionId);

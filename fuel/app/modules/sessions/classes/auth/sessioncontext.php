@@ -114,10 +114,16 @@ class Auth_SessionContext extends \Auth_Context{
 	 * @return boolean
 	 */
 	private function _can_enrollment_create($user_id) {
+		/**
+		 * Permission was simplified to allow cook to enroll anyone 
+		 * at any time during enroll and mod grace
+		 */
 		if($this->_in_enroll_period()) { 
 			if($user_id == $this->user->id) {
 				return true; // My enrollment
-			} 
+			} else {
+				return $this->_is_cook();
+			}
 		} else if ($this->_in_enroll_mod_grace()) {
 			return $this->_is_cook();
 		}
@@ -130,16 +136,22 @@ class Auth_SessionContext extends \Auth_Context{
 	 * @return boolean
 	 */
 	private function _can_enrollment_update($user_id) {
+		/**
+		 * Permission was simplified to allow cook to enroll anyone 
+		 * at any time during enroll and mod grace
+		 */
 		if($this->_in_enroll_period()) { 
 			if($user_id == $this->user->id) {
 				return true; // My enrollment
-			}						
-		} else if ($this->_in_enroll_mod_grace()) {
-			return $this->_is_cook();
+			} else {
+				return $this->_is_cook();
+			}					
 		} else if ($this->_in_dishwasher_grace()) {
 			return true;
+		} else if ($this->_in_enroll_mod_grace()) {
+			return $this->_is_cook();
 		}
-		return false;		
+		return false;
 	}
 	
 	/**
@@ -164,17 +176,18 @@ class Auth_SessionContext extends \Auth_Context{
 				return $this->_in_dishwasher_grace() && isset($cur_enrollment); // MORE!
 			case Auth_SessionUIItem::COLUMN_ACTIONS:
 			case Auth_SessionUIItem::BTN_ENROLL_ADD:
-				return $this->_in_enroll_mod_grace() && $this->_is_cook();
+				return $this->_is_cook();
 			case Auth_SessionUIItem::BTN_SESSION_UPDATE:
 				return $this->_is_cook() && ($this->_in_enroll_period() || $this->_in_enroll_mod_grace());
 			case Auth_SessionUIItem::INPUT_DEADLINE:
+				return $this->canview_session(3) && $this->_in_deadline_mod_grace();
 			case Auth_SessionUIItem::INPUT_COST:
+				return $this->canview_session(3) && $this->_in_cost_mod_grace();
 			case Auth_SessionUIItem::INPUT_PAYER_SELECT:
-				return false;
+				return false; // Generally only for administration purposes
 			case Auth_SessionUIItem::ALERT_DEADLINE_CHANGED:
 				return $this->_in_enroll_period() && (\Sessions\Model_Session::DEADLINE_TIME != (new \DateTime($this->session->deadline))->format('H:i'));
-		}
-		
+		}	
 	}
 	
 	private function _is_cook() {
@@ -217,6 +230,14 @@ class Auth_SessionContext extends \Auth_Context{
 	}
 	
 	/**
+	 * Determine whether the cost of this session may be changed by the cooks
+	 * @return boolean
+	 */
+	private function _in_cost_mod_grace() {
+		return !$this->_in_enroll_period() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::COST_GRACE));
+	}
+	
+	/**
 	 * Determine if we're past diner time (by default diner time is at 18:00)
 	 * @return boolean
 	 */
@@ -228,6 +249,20 @@ class Auth_SessionContext extends \Auth_Context{
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * Determine whether the deadline of this session may changed. Sets both upper and lower boundary.
+	 * @return boolean
+	 */
+	private function _in_deadline_mod_grace() {
+		if ($this->_in_enroll_period()) { 
+			// Deadline may be changed during enrollment period just alright.
+			return true;
+		} else {
+			// If the deadline already passed
+			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::DEADLINE_GRACE);
 		}
 	}
 }

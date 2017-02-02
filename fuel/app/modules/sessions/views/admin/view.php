@@ -109,7 +109,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 	<div class="modal-dialog active">
 		<div class="modal-content">
 			<form id="delete-enrollment-form" 
-				  action="/api/v1//sessions/<?=$session->id?>/enrollments/" 
+				  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
 				  method="delete"
 				  data-alert-error="<?=__('session.alert.error.remove_enroll')?>"
 				  data-alert-success="<?=__('session.alert.success.remove_enroll')?>"

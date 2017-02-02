@@ -308,7 +308,7 @@ class Auth_Context_Session extends \Auth_Context_Base{
 	 * @return boolean
 	 */
 	private function _in_enroll_mod_grace() {
-		return !$this->_in_enroll_period() && (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE));
+		return (strtotime(date('Y-m-d H:i:s')) < strtotime($this->session->date . static::ENROLLMENT_GRACE)) && !$this->_in_enroll_period();
 
 	}
 }
