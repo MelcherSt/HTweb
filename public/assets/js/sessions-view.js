@@ -97,80 +97,26 @@ $('document').ready(function() {
 	});
 });
 
-// Action event
-actionEvents = {
-	'click .remove': function(e, value, row, index) {
-	   showEnrollDeleteModal(row);
-   },
-   'click .edit': function(e, value, row, index) {
-	   showEnrollEditModal(row);
-   }
-};
-
-// Table formatter functions
-function actionFormatter(value, row, index) {
-	return ['<a class="edit action" href="javascript:void(0)"><span class="fa fa-pencil"><span></a>',
-			'  |  ',
-			'<a class="remove action" href="javascript:void(0)"><span class="fa fa-close"></span></a>'
-			].join('');
-}
-
-function enrollmentFormatter(value, row, index) {
-	var badges = [];
-	if(row.cook) { badges.push('<span class="fa fa-cutlery"> </span>'); }
-	if(row.dishwasher) { badges.push('<span class="fa fa-shower"> </span>'); }
-	if(row.later) { badges.push('*'); }
-	return value + ' ' + badges.join(' ');
-}
-
-function populateEnrollAddCombobox(sessionId) {
-	$("#page-add-user-id-combobox").empty();
-    $.get('/api/v1/sessions/' + sessionId + '/notenrolled', function(data)
-    {
-        $.each(data.rows, function(i,obj)
-        {
-            $("#page-add-user-id-combobox").append(
-                 $('<option></option>')
-                        .val(obj.id)
-                        .html(obj.name));
-        });
-    });
-}
-
-function populatePayerCombobox(sessionId) {
-	$("#payer-user-id-combobox").empty();
-    $.get('/api/v1/sessions/' + sessionId + '/enrollments', function(data)
-    {
-        $.each(data.rows, function(i,obj) {
-            $("#payer-user-id-combobox").append(
-                 $('<option></option>')
-                        .val(obj.user.id)
-                        .html(obj.user.name));
-        });
-    });
-}
-
 function populateOnEnrollUpdate(sessionId, userId) {	
 	$.get( "/api/v1/sessions/"  + sessionId + "/enrollments/" + userId, function( data ) {		
 		$("#page-edit-cook").prop('checked', data.cook);	
-		$("#page-edit-ater").prop('checked', data.later);
+		$("#page-edit-later").prop('checked', data.later);
 		$("#page-edit-guests").val(data.guests);
 		
 		if(data.cook) {
 			$("#update-session-btn").show();
-			$(".action-col").fadeIn(); 
+			$(".actions-col").fadeIn(); 
 		} else {
 			$("#update-session-btn").hide();
-			$("#page-edit-session-properties").hide('slow');
-			$("#session-properties").show('slow');
-			$(".action-col").fadeOut(); 
+			$("#edit-session-properties-panel").hide('slow');
+			$("#static-session-properties-panel").show('slow');
+			$(".actions-col").fadeOut(); 
 		}
 	});	
 }
 
 function populateOnSessionUpdate(sessionId) {
 	$.get( "/api/v1/sessions/"  + sessionId, function( data ) {	
-		
 		if(data.deadline !== "16:00") {
 			$("#new-deadline").html(data.deadline);
 			$("#deadline-alert").show('slow');
@@ -192,17 +138,21 @@ function populateOnSessionUpdate(sessionId) {
 
 function populateOnUnroll() {
 	$("#update-session-btn").hide();
-	$("#page-edit-session-properties").hide('slow');
-	$("#session-properties").show('slow');
+	$("#edit-session-properties-panel").hide('slow');
+	$("#static-session-properties-panel").show('slow');
 }
 
-function showSessionProperties() {
-	if ($("#page-edit-session-properties").is(':visible')) {
-		$("#page-edit-session-properties").hide('slow');
-		$("#session-properties").show('slow');
+/**
+ * Toggle between static and editable session properties view.
+ * @returns {undefined}
+ */
+function toggleSessionPropertiesPanel() {
+	if ($("#edit-session-properties-panel").is(':visible')) {
+		$("#edit-session-properties-panel").hide('slow');
+		$("#static-session-properties-panel").show('slow');
 	} else {
-		$("#page-edit-session-properties").show('slow');
-		$("#session-properties").hide('slow');
+		$("#edit-session-properties-panel").show('slow');
+		$("#static-session-properties-panel").hide('slow');
 	}
 }
 

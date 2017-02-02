@@ -19,7 +19,6 @@
 		<div class="panel-heading"><?=__('session.view.enrollment')?></div>
 		<div class="panel-body">
 			
-			
 			<div id="page-add-enrollment" class="<?=$view_ses_enroll ? '' : 'hidden-default'?>">
 				<!-- Create enrollment form -->
 				<form id="page-add-enrollment-form-page" 
@@ -93,10 +92,10 @@
 			$view_ses_cost = $context->canview_session(\Sessions\Auth_SessionUIItem::INPUT_COST);
 			$view_ses_deadline = $context->canview_session(\Sessions\Auth_SessionUIItem::INPUT_DEADLINE);
 			?>	
-			<button id="update-session-btn" onclick="showSessionProperties()" class="btn btn-xs pull-right <?=$view_ses_upd ? '' : 'hidden-default'?>"><span class="fa fa-pencil"></span></button></div>
+			<button id="update-session-btn" onclick="toggleSessionPropertiesPanel()" class="btn btn-xs pull-right <?=$view_ses_upd ? '' : 'hidden-default'?>"><span class="fa fa-pencil"></span></button></div>
 		<div class="panel-body">
 		
-			<div id="page-edit-session-properties" class="hidden-default">
+			<div id="edit-session-properties-panel" class="hidden-default">
 				<form id="update-session-form-page" 
 
 					  action="/api/v1/sessions/<?=$session->id?>" 
@@ -141,7 +140,7 @@
 				</form>
 			</div>
 			
-			<div id="session-properties">
+			<div id="static-session-properties-panel">
 				<div id="s" class="well">
 					<?=$session->notes?>
 				</div>

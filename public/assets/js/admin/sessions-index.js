@@ -44,10 +44,6 @@ actionEvents = {
 function actionFormatter(value, row, index) {
 	return '<a class="remove action" href="javascript:void(0)"><span class="fa fa-trash"></span></a>';
 }
-
-function costFormatter(value, row, index) {
-	return '€ ' + value;
-}
 		
 // Modal functions
 function showDeleteModal(sessionId, sessionDate) {

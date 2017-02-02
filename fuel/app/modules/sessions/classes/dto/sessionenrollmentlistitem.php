@@ -11,6 +11,7 @@ class Dto_SessionEnrollmentListItem {
 	public $guests;
 	public $cook;
 	public $dishwasher;
+	public $later;
 	
 	public function __construct(\Sessions\Model_Enrollment_Session $enrollment) {
 		$this->user_id = (int)$enrollment->user_id;
@@ -20,5 +21,6 @@ class Dto_SessionEnrollmentListItem {
 		$this->guests = (int)$enrollment->guests;
 		$this->cook = (int)$enrollment->cook;
 		$this->dishwasher = (int)$enrollment->dishwasher;
+		$this->later = (int)$enrollment->later;
 	}
 }

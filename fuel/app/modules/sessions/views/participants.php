@@ -11,7 +11,7 @@ $context = new \Sessions\Auth_SessionContext($session);
 $view_actions = $context->canview_session(\Sessions\Auth_SessionUIItem::COLUMN_ACTIONS);
 
 if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
-<a class="action-col list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)">
+<a class="actions-col list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)">
 	<i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?>
 </a> 
 <?php } ?>
@@ -32,7 +32,7 @@ if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
 						<th data-field="user.name" data-sortable="true" data-formatter="enrollmentFormatter" class="col-md-2"><?=__('user.field.name')?></th>
 						<th data-field="points"  class="col-md-1">∆ <?=__('session.field.point_plural')?></th>
 						<th data-field="guests"  data-sortable="true" class="col-md-2"><?=__('session.field.guest_plural')?></th>
-						<th id="actions" class="action-col <?= $view_actions ? '' : 'hidden-default'?>" data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
+						<th id="actions" class="actions-col <?= $view_actions ? '' : 'hidden-default'?>" data-field="actions" data-formatter="actionFormatter" data-events="actionEvents" class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
 			</table>
@@ -133,10 +133,8 @@ if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
 				<div class="modal-body">
 					<p><?=__('session.modal.create_enroll.msg')?></p>					
 					<div class="form-group">
-						<label for="add-user-id"><?=__('user.name')?>:</label>
-						<select class="form-control" id="add-user-id-combobox" name="user_id">
-							
-						</select>
+						<label for="add-user-id-combobox"><?=__('user.name')?>:</label>
+						<select class="form-control" id="add-user-id-combobox" name="user_id"></select>
 					</div>	
 					<br>
 					<div class="form-group">

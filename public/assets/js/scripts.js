@@ -47,3 +47,7 @@ function showIban($id) {
 	$('.iban-' + $id).show();
 	$('.iban-show-' + $id).hide();
 }
+
+function costFormatter(value, row, index) {
+	return '€ ' + value;
+}

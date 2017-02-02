@@ -34,7 +34,7 @@ class Controller_Sessions extends \Controller_Gate {
 	public function action_view($date=null) {
 		$this->push_css(['jquery.timepicker-1.3.5.min', 'bootstrap-table.min']);
 		$this->push_js(['jquery.timepicker-1.3.5.min', 'sessions-timepicker',
-			'sessions-view', 'bootstrap-table.min', 'admin/sessions-view']);
+			'sessions-view', 'bootstrap-table.min', 'admin/sessions-view', 'sessions']);
 		
 		$this->template->title = __('session.title');
 		
