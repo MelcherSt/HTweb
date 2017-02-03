@@ -172,6 +172,23 @@
 			$("#static-session-deadline").html(data.deadline);
 			$("#static-session-cost").html(data.cost);
 			$("#static-session-payer").html(data.payer.name);
+	
+			if(data.roles.cooks === data.roles.max_cooks) {
+				$("#add-cook").prop('disabled', true);	
+				$("#page-add-cook").prop('disabled', true);	
+				$("#page-edit-cook").prop('disabled', true);	
+			} else {
+				$("#page-edit-cook").prop('disabled', false);
+				$("#page-add-cook").prop('disabled', false);	
+			}
+
+			if(data.roles.dishwashers === data.roles.max_dishwashers) {
+				$("#add-dishwasher").prop('disabled', true);
+			}
+		
+			
+	
+	
 		});	
 	}
 
@@ -192,8 +209,6 @@
 			$("#guest-count").html(guest_str);
 		}
 	}
-	
-	
 
 	function populatePayerCombobox(sessionId) {
 		$("#payer-user-id-combobox").empty();
@@ -208,8 +223,6 @@
 			});
 		});
 	}
-	
-	
 
 	function showEnrollAddModal(sessionId) {
 		// Reset to default state
@@ -217,19 +230,10 @@
 		$("#add-cook").prop('disabled', false);
 		$("#add-dishwasher").prop('disabled', false);
 		populateEnrollAddCombobox(sessionId);
+		populateOnSessionUpdate(sessionId);
 
 		// Pop modal and fill fields
 		$("#add-enrollment-modal").modal();
-
-		$.get( '/api/v1/sessions/'  + sessionId + "/roles", function(roles) {
-			if(roles.cooks === roles.max_cooks) {
-				$("#add-cook").prop('disabled', true);	
-			}
-
-			if(roles.dishwashers === roles.max_dishwashers) {
-				$("#add-dishwasher").prop('disabled', true);
-			}
-		});		
 	}
 
 	function showEnrollDeleteModal(enrollment) {
@@ -250,15 +254,15 @@
 		$("#edit-user-id").val(enrollment.user.id);
 		$("#edit-guests").val(enrollment.guests);
 		$("#edit-cook").prop('checked', enrollment.cook);
-		$("#edit-dishwasher").prop('checked', enrollment.dishwasher);
-
-		$.get( "/api/v1/sessions/"  + enrollment.session_id + "/roles", function( roles ) {
-			if((roles.cooks === roles.max_cooks) && !enrollment.cook) {
+		$("#edit-dishwasher").prop('checked', enrollment.dishwasher);	
+		
+		$.get( "/api/v1/sessions/"  + enrollment.session_id, function( data ) {
+			if((data.roles.cooks === data.roles.max_cooks) && !enrollment.cook) {
 					$("#edit-cook").prop('disabled', true);	
 			}
 
-			if((roles.dishwashers === roles.max_dishwashers) && !enrollment.dishwasher) {
+			if((data.roles.dishwashers === data.roles.max_dishwashers) && !enrollment.dishwasher) {
 					$("#edit-dishwasher").prop('disabled', true);
 			}
-		});	
+		});
 	}

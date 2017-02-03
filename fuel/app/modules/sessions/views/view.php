@@ -22,7 +22,7 @@
 			
 			<div id="page-add-enrollment" class="<?=$view_ses_enroll ? '' : 'hidden-default'?>">
 				<!-- Create enrollment form -->
-				<form id="page-add-enrollment-form-page" 
+				<form id="add-enrollment-form-page" 
 					  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
 					  method="post"
 					  data-alert-error="<?=__('session.alert.error.create_enroll')?>"

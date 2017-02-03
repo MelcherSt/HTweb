@@ -12,6 +12,7 @@ class Dto_Session {
 	public $cost;
 	public $participants;
 	public $guests;
+	public $roles;
 	
 	public function __construct(\Sessions\Model_Session $session) {
 		$this->id = (int)$session->id;
@@ -22,5 +23,6 @@ class Dto_Session {
 		$this->cost = $session->cost;
 		$this->participants = (int)$session->count_total_participants();
 		$this->guests = (int)$session->count_guests();
+		$this->roles = new Dto_SessionRoles($session);
 	}
 }

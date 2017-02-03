@@ -6,14 +6,14 @@
 $('document').ready(function() {
 	var sessionId = $("#session-id").val();
 	var userId = $("#user-id").val();
+	var table = $('#enrollments-table');
 	
 	populateOnSessionUpdate(sessionId);
 	populateOnEnrollUpdate(sessionId, userId);
 	
-	$('#page-add-enrollment-form-page').submit(function(event) {
+	$('#add-enrollment-form-page').submit(function(event) {
 		event.preventDefault();
-		var form = $('#page-add-enrollment-form-page');	
-		var table = $('#enrollments-table');
+		var form = $('#add-enrollment-form-page');	
 		$.ajax({
 			data: form.serialize(),
 			type: form.attr('method'),
@@ -29,13 +29,11 @@ $('document').ready(function() {
 			cache:false
 		  });
 		  table.bootstrapTable('refresh');
-		  $("#page-add-enrollment-modal").modal('hide');
 	});
 	
 	$('#dishwasher-enrollment-form-page').submit(function(event) {
 		event.preventDefault();
 		var form = $('#dishwasher-enrollment-form-page');	
-		var table = $('#enrollments-table');
 		$.ajax({
 			data: form.serialize(),
 			type: form.attr('method'),
@@ -50,14 +48,12 @@ $('document').ready(function() {
 			cache:false
 		  });
 		  table.bootstrapTable('refresh');
-		  $("#page-edit-enrollment-modal").modal('hide');
 	});
 	
 	
 	$('#edit-enrollment-form-page').submit(function(event) {
 		event.preventDefault();
 		var form = $('#edit-enrollment-form-page');	
-		var table = $('#enrollments-table');
 		$.ajax({
 			data: form.serialize(),
 			type: form.attr('method'),
@@ -72,13 +68,11 @@ $('document').ready(function() {
 			cache:false
 		  });
 		  table.bootstrapTable('refresh');
-		  $("#page-edit-enrollment-modal").modal('hide');
 	});
 	
 	$('#delete-enrollment-form-page').submit(function(event) {
 		event.preventDefault();
 		var form = $('#delete-enrollment-form-page');	
-		var table = $('#enrollments-table');
 		$.ajax({
 			type: form.attr('method'),
 			success: function() { 
@@ -94,7 +88,6 @@ $('document').ready(function() {
 			cache:false
 		  });
 		  table.bootstrapTable('refresh');
-		  $("#delete-enrollment-modal").modal('hide');
 	});
 });
 
