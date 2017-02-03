@@ -17,9 +17,9 @@ $('document').ready(function() {
 		$.ajax({
 			data: form.serialize(),
 			type: form.attr('method'),
-			success: function() { 
-				populateOnEnrollUpdate(sessionId, userId);
+			success: function() { 		
 				populateOnSessionUpdate(sessionId);
+				populateOnEnrollUpdate(sessionId, userId);
 				toggleEnrollPanel();
 			},
 			error: function(e){ 
@@ -37,9 +37,9 @@ $('document').ready(function() {
 		$.ajax({
 			data: form.serialize(),
 			type: form.attr('method'),
-			success: function() { 
-				populateOnEnrollUpdate(sessionId, userId);
+			success: function() { 	
 				populateOnSessionUpdate(sessionId);
+				populateOnEnrollUpdate(sessionId, userId);
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
@@ -58,8 +58,8 @@ $('document').ready(function() {
 			data: form.serialize(),
 			type: form.attr('method'),
 			success: function() { 
-				populateOnEnrollUpdate(sessionId, userId);
 				populateOnSessionUpdate(sessionId);
+				populateOnEnrollUpdate(sessionId, userId);
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
@@ -77,8 +77,8 @@ $('document').ready(function() {
 			type: form.attr('method'),
 			success: function() { 
 				$("#page-add-enrollment-form").trigger('reset');
+				ppopulateOnSessionUpdate(sessionId);
 				populateOnEnrollUpdate(sessionId, userId);
-				populateOnSessionUpdate(sessionId);
 				toggleEnrollPanel();
 			},
 			error: function(e){ 
@@ -105,7 +105,9 @@ $('document').ready(function() {
 				// Set appropriate UI elements
 				$("#page-edit-cook").prop('checked', data.cook);	
 				$("#page-edit-later").prop('checked', data.later);
+				$("#page-edit-dishwasher").prop('checked', data.dishwasher);
 				$("#page-edit-guests").val(data.guests);
+				
 				if(data.cook) {
 					$("#update-session-btn").show();
 					$(".actions-col").fadeIn(); 
@@ -113,9 +115,16 @@ $('document').ready(function() {
 					$("#update-session-btn").hide();
 					toggleSessionPropertiesPanel(true);
 					$(".actions-col").fadeOut(); 
+				}				
+				
+				if($("#page-edit-cook").is(':disabled') && data.cook) {
+					$("#page-edit-cook").prop('disabled', false);
 				}
-			
-				$("#page-edit-dishwasher").prop('checked', data.dishwasher);
+				
+				if($("#page-edit-dishwasher").is(':disabled') && data.cook) {
+					$("#page-edit-dishwasher").prop('disabled', false);
+				}
+				
 			},
 			error: function(data) {
 				// Hide some UI as we are no longer enrolled.

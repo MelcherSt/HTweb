@@ -184,11 +184,12 @@
 
 			if(data.roles.dishwashers === data.roles.max_dishwashers) {
 				$("#add-dishwasher").prop('disabled', true);
+				$("#page-edit-dishwasher").prop('disabled', true);	
+			} else {
+				$("#page-edit-dishwasher").prop('disabled', false);	
 			}
+
 		
-			
-	
-	
 		});	
 	}
 
