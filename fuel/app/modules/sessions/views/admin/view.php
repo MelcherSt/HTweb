@@ -6,6 +6,8 @@ $unenrolled_users = $session->get_unenrolled();
 $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 ?>
 
+<input type="hidden" id="session-id" value="<?=$session->id?>">
+<input type="hidden" id="user-id" value="<?=$current_user->id?>">
 
 <div class="row">
 	
@@ -24,55 +26,64 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 			<div class="panel-body">
 			<?php if($session->settled) {?>
 				<p><?=__('session.admin.view.settled')?></p>	
-				<div class="well">
-					<?=$session->notes?>
-				</div>
-				<dl>
-					<dt><?=__('session.field.deadline')?></dt>
-					<dd><?=$deadline?></dd>
-					<dt><?=__('product.field.cost')?></dt>
-					<dd>€ <?=$session->cost?></dd>
-					<dt><?=__('product.field.paid_by')?></dt>
-					<dd><?=$session->get_payer()->get_fullname() ?></dd>
-				</dl>
+				<div id="static-session-properties-panel">
+					<div id="static-session-notes" class="well">
+						<?=$session->notes?>
+					</div>
+					<dl>
+						<dt><?=__('session.field.deadline')?></dt>
+						<dd id="static-session-deadline"></dd>
+						<dt><?=__('product.field.cost')?></dt>
+						<dd>€ <span id="static-session-cost"></span></dd>
+						<dt><?=__('product.field.paid_by')?></dt>
+						<dd id="static-session-payer"></dd>
+					</dl>
+				</div>	
 			<?php } else { ?>	
 		
-			<form id="update-session-form" 
-				  action="/api/v1/sessions/<?=$session->id?>" 
-				  method="put"
-				  data-alert-success="<?=__('session.alert.success.update_session')?>"
-				  data-alert-error="<?=__('session.alert.error.update_session')?>"
-			>
-				<div class="form-group ">
-					<textarea name="notes" class="form-control" rows="2" placeholder="<?=__('session.field.notes')?>"><?=$session->notes?></textarea>
-				</div>
-
-				<div class="form-group">
-					<label for="deadline"><?=__('session.field.deadline')?></label>
-					<input class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" value="<?=$deadline?>"required/>
-				</div>
-
-				<div class="form-group">
-					<label for="cost"><?=__('product.field.cost')?></label>
-					<div class="input-group">
-						<div class="input-group-addon">€</div>
-						<input style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
+			<div id="edit-session-properties-panel">
+				<form id="update-session-form"
+					  action="/api/v1/sessions/<?=$session->id?>" 
+					  method="put"
+					  data-alert-success="<?=__('session.alert.success.update_session')?>"
+					  data-alert-error="<?=__('session.alert.error.update_session')?>"
+				>
+					<div class="form-group ">
+						<textarea id="session-notes" name="notes" class="form-control" rows="1" placeholder="<?=__('session.field.notes')?>"></textarea>
 					</div>
-					<br>
-					<label><?=__('product.field.paid_by')?></label>
-					<select class="form-control" id="add-user-id" name="payer_id">
-						<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
-						<!-- TODO: use XHR. For now show all active users as possible payers to avoid problems when changing enrollments -->	
-						<?php foreach(\Model_User::get_by_state() as $enrollment):
-								$user_id = $enrollment->id;
-								if($user_id == $session->paid_by) { continue; }
-						?>
-						<option value="<?=$user_id?>"><?=$enrollment->get_fullname()?></option>
-						<?php endforeach;  ?>
-					</select>	
-				</div>
-				<button class="btn btn-sm btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
-			</form>
+
+					<div class="form-inline">
+						<span id="page-edit-session-deadline">
+							<label for="deadline"><?=__('session.field.deadline')?></label>
+							<input id="session-deadline" class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" required/>
+						</span>
+
+						<span id="page-edit-session-cost">
+							<label for="cost"><?=__('product.field.cost')?></label>
+							<div class="input-group">
+								<div class="input-group-addon">€</div>
+								<input id="session-cost" style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" required/>	
+							</div>
+						</span>
+						<br>
+					</div>
+
+					<div class="form-group">
+						<label><?=__('product.field.paid_by')?></label>
+						<select class="form-control" id="session-payer" name="payer_id">
+							<option value="<?=$session->paid_by?>"><?=$session->get_payer()->get_fullname()?></option>
+							<!-- TODO: use XHR. For now show all active users as possible payers to avoid problems when changing enrollments -->	
+							<?php foreach(\Model_User::get_by_state() as $enrollment):
+									$user_id = $enrollment->id;
+									if($user_id == $session->paid_by) { continue; }
+							?>
+							<option value="<?=$user_id?>"><?=$enrollment->get_fullname()?></option>
+							<?php endforeach;  ?>
+						</select>	
+					</div>
+					<button class="btn btn-sm btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_session')?></button>
+				</form>
+			</div>
 			<?php } ?>
 			</div>	
 		</div>
@@ -80,6 +91,11 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 	
 	<!-- BODY -->
 	<div class="col-md-8">
+		<h3><?=__('session.role.participant_plural')?></h3>
+		<p>
+			<span id="participant-count"><?=__('session.view.participant_count')?></span>
+			<span id="guest-count"><?=__('session.view.guest_count')?></span>
+		</p>
 		<div class="table-responsive">
 			<table
 				id="enrollments-table"

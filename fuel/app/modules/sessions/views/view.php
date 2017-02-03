@@ -4,6 +4,7 @@
 	
 	$view_ses_enroll = $context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL);
 	$view_ses_unenroll = $context->canview_session(\Sessions\Auth_SessionUIItem::BTN_UNROLL);
+	$view_ses_dish = $context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_DISHWASHER);
 	
 	// Show deadline changed alert
 	if($view_ses_enroll || $view_ses_unenroll) { ?>
@@ -48,7 +49,7 @@
 			
 			<div id="page-edit-enrollment" class="<?=$view_ses_unenroll ? '' : 'hidden-default'?>">
 				<!-- Update enrollment form -->
-				<form id="page-edit-enrollment-form-page" 
+				<form id="edit-enrollment-form-page"
 					  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
 					  method="put"
 					  data-alert-error="<?=__('session.alert.error.update_enroll')?>"
@@ -82,6 +83,24 @@
 					<button class="btn btn-danger btn-sm pull-right" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
 				</form>
 			</div>
+			
+			<div id="page-add-dishwasher-enrollment" class="<?=$view_ses_dish ? '' : 'hidden-default'?>">
+				<form id="dishwasher-enrollment-form-page" 
+					  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
+					  method="put"
+					  data-alert-error="<?=__('session.alert.error.update_enroll')?>"
+					  data-alert-success="<?=__('session.alert.success.update_enroll')?>"
+				>
+					<input id="page-edit-user-id" type="hidden" class="form-control" name="user_id" value="<?=$current_user->id?>">
+					
+					<div class="form-group">
+						<div class="checkbox">
+							<label><input id="page-edit-dishwasher" name="dishwasher" type="checkbox"> <?=__('session.view.label.dishes')?></label>
+						</div>
+					</div>
+					<button class="btn btn-primary btn-sm pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -96,8 +115,7 @@
 		<div class="panel-body">
 		
 			<div id="edit-session-properties-panel" class="hidden-default">
-				<form id="update-session-form-page" 
-
+				<form id="update-session-form"
 					  action="/api/v1/sessions/<?=$session->id?>" 
 					  method="put"
 					  data-alert-success="<?=__('session.alert.success.update_session')?>"

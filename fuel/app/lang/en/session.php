@@ -98,6 +98,7 @@ return [
 			'cook' => 'I feel like cooking',
 			'guests'=> 'I\'m bringing guests',
 			'later' => 'I\'ll be eating later',
+			'dishes' => 'I did the dishes',
 		],
 		'btn'=> ['enroll' => 'Enroll',
 			'update_session' => 'Update session',

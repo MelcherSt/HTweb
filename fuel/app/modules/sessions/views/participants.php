@@ -10,12 +10,12 @@ $context = new \Sessions\Auth_SessionContext($session);
 
 <?php
 $view_actions = $context->canview_session(\Sessions\Auth_SessionUIItem::COLUMN_ACTIONS);
+?>
 
-if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_ADD)) {?>
-<a class="actions-col list-group-item" href="#" onClick="showEnrollAddModal(<?=$session->id?>)">
+<a class="actions-col list-group-item <?= $view_actions ? '' : 'hidden-default'?>" href="#" onClick="showEnrollAddModal(<?=$session->id?>)">
 	<i class="fa fa-user-plus" aria-hidden="true"></i> <?=__('session.view.btn.add_enroll')?>
 </a> 
-<?php } ?>
+
 
 <div class="table-responsive">
 	<table

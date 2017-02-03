@@ -19,9 +19,8 @@ $('document').ready(function() {
 			type: form.attr('method'),
 			success: function() { 
 				populateOnEnrollUpdate(sessionId, userId);
-				alertSuccess(form.data('alert-success'));
-				$("#page-add-enrollment").hide('slow');
-				$("#page-edit-enrollment").show('slow');
+				populateOnSessionUpdate(sessionId);
+				toggleEnrollPanel();
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
@@ -33,16 +32,38 @@ $('document').ready(function() {
 		  $("#page-add-enrollment-modal").modal('hide');
 	});
 	
-	$('#page-edit-enrollment-form-page').submit(function(event) {
+	$('#dishwasher-enrollment-form-page').submit(function(event) {
 		event.preventDefault();
-		var form = $('#page-edit-enrollment-form-page');	
+		var form = $('#dishwasher-enrollment-form-page');	
 		var table = $('#enrollments-table');
 		$.ajax({
 			data: form.serialize(),
 			type: form.attr('method'),
 			success: function() { 
 				populateOnEnrollUpdate(sessionId, userId);
-				alertSuccess(form.data('alert-success'));
+				populateOnSessionUpdate(sessionId);
+			},
+			error: function(e){ 
+				alertError(form.data('alert-error'));
+			},
+			url: form.attr('action') + $("#page-edit-user-id").val(),
+			cache:false
+		  });
+		  table.bootstrapTable('refresh');
+		  $("#page-edit-enrollment-modal").modal('hide');
+	});
+	
+	
+	$('#edit-enrollment-form-page').submit(function(event) {
+		event.preventDefault();
+		var form = $('#edit-enrollment-form-page');	
+		var table = $('#enrollments-table');
+		$.ajax({
+			data: form.serialize(),
+			type: form.attr('method'),
+			success: function() { 
+				populateOnEnrollUpdate(sessionId, userId);
+				populateOnSessionUpdate(sessionId);
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
@@ -62,9 +83,9 @@ $('document').ready(function() {
 			type: form.attr('method'),
 			success: function() { 
 				$("#page-add-enrollment-form").trigger('reset');
-				$("#page-edit-enrollment").hide('slow');
-				$("#page-add-enrollment").show('slow');
-				populateOnUnroll(sessionId);
+				populateOnEnrollUpdate(sessionId, userId);
+				populateOnSessionUpdate(sessionId);
+				toggleEnrollPanel();
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
@@ -75,100 +96,68 @@ $('document').ready(function() {
 		  table.bootstrapTable('refresh');
 		  $("#delete-enrollment-modal").modal('hide');
 	});
-	
-	$('#update-session-form-page').submit(function(event) {
-		event.preventDefault();
-		var form = $('#update-session-form-page');
-		
-		$.ajax({
-			type: form.attr('method'),
-			data: form.serialize(),
-			success: function() { 
-				alertSuccess(form.data('alert-success'));
-				populateOnSessionUpdate(sessionId);
-			},
-			error: function(e){ 
-				alertError(form.data('alert-error'));
-			},
-			url: form.attr('action'),
-			cache:false
-		  });
-		  $("#delete-session-modal").modal('hide');
-	});
 });
 
-function populateOnEnrollUpdate(sessionId, userId) {	
-	$.get( "/api/v1/sessions/"  + sessionId + "/enrollments/" + userId, function( data ) {		
-		$("#page-edit-cook").prop('checked', data.cook);	
-		$("#page-edit-later").prop('checked', data.later);
-		$("#page-edit-guests").val(data.guests);
-		if(data.cook) {
-			$("#update-session-btn").show();
-			$(".actions-col").fadeIn(); 
-		} else {
-			$("#update-session-btn").hide();
+	/**
+	 * Update all enrollment related UI
+	 * @param {int} sessionId
+	 * @param {int} userId
+	 * @returns {undefined}
+	 */
+	function populateOnEnrollUpdate(sessionId, userId) {	
+		$.ajax({
+			url: '/api/v1/sessions/'  + sessionId + '/enrollments/' + userId,
+			type: 'get',
+			success: function(data) {
+				// Set appropriate UI elements
+				$("#page-edit-cook").prop('checked', data.cook);	
+				$("#page-edit-later").prop('checked', data.later);
+				$("#page-edit-guests").val(data.guests);
+				if(data.cook) {
+					$("#update-session-btn").show();
+					$(".actions-col").fadeIn(); 
+				} else {
+					$("#update-session-btn").hide();
+					toggleSessionPropertiesPanel(true);
+					$(".actions-col").fadeOut(); 
+				}
+			
+				$("#page-edit-dishwasher").prop('checked', data.dishwasher);
+			},
+			error: function(data) {
+				// Hide some UI as we are no longer enrolled.
+				$("#update-session-btn").hide();
+				$("#edit-session-properties-panel").hide('slow');
+				$("#static-session-properties-panel").show('slow');
+				$(".actions-col").fadeOut(); 
+			}
+		});
+	}
+
+	/**
+	 * Toggle between static and editable session properties view.
+	 * @param {boolean} hide Always hide panel
+	 * @returns {undefined}
+	 */
+	function toggleSessionPropertiesPanel(hide=false) {
+		if ($("#edit-session-properties-panel").is(':visible') || hide) {
 			$("#edit-session-properties-panel").hide('slow');
 			$("#static-session-properties-panel").show('slow');
-			$(".actions-col").fadeOut(); 
-		}
-	});
-	
-	updateParticipantString(sessionId);
-}
-
-function populateOnSessionUpdate(sessionId) {
-	$.get( "/api/v1/sessions/"  + sessionId, function( data ) {	
-		if(data.deadline !== "16:00") {
-			$("#new-deadline").html(data.deadline);
-			$("#deadline-alert").show('slow');
 		} else {
-			$("#deadline-alert").hide();
+			$("#edit-session-properties-panel").show('slow');
+			$("#static-session-properties-panel").hide('slow');
 		}
-		
-		$("#session-notes").html(data.notes);
-		$("#session-deadline").val(data.deadline);
-		$("#session-cost").val(data.cost);
-		$("#session-payer").val(data.payer.id);
-		
-		$("#static-session-notes").html(data.notes);
-		$("#static-session-deadline").html(data.deadline);
-		$("#static-session-cost").html(data.cost);
-		$("#static-session-payer").html(data.payer.name);
-	});	
-}
-
-function populateOnUnroll(sessionId) {
-	$("#update-session-btn").hide();
-	$("#edit-session-properties-panel").hide('slow');
-	$("#static-session-properties-panel").show('slow');
-	updateParticipantString(sessionId);
-}
-
-/**
- * Toggle between static and editable session properties view.
- * @returns {undefined}
- */
-function toggleSessionPropertiesPanel() {
-	if ($("#edit-session-properties-panel").is(':visible')) {
-		$("#edit-session-properties-panel").hide('slow');
-		$("#static-session-properties-panel").show('slow');
-	} else {
-		$("#edit-session-properties-panel").show('slow');
-		$("#static-session-properties-panel").hide('slow');
 	}
-}
-
-function updateParticipantString(sessionId) {
-	$.get( "/api/v1/sessions/"  + sessionId, function( data ) {	
-		var str = $("#participant-count").html().replace(/\d+|:var/ , data.participants);	
-		$("#participant-count").html(str);
-		if(data.guests === 0) {
-			$("#guest-count").hide();
+	
+	function toggleEnrollPanel() {
+		if ($("#page-add-enrollment").is(':visible')) {
+			$("#page-add-enrollment").hide('slow');
+			$("#page-edit-enrollment").show('slow');
 		} else {
-			var guest_str = $("#guest-count").html().replace(/\d+|:var/, data.guests);
-			$("#guest-count").show();
-			$("#guest-count").html(guest_str);
+			$("#page-add-enrollment").show('slow');
+			$("#page-edit-enrollment").hide('slow');
 		}
-	});
-}
+	}
+
+	
 
