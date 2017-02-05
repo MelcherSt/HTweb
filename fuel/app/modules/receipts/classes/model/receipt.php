@@ -62,6 +62,7 @@ class Model_Receipt extends \Orm\Model
 		return Model_User_Receipt::query()
 			->related('user')
 			->where('receipt_id', $this->id)
+			->order_by('user.name')
 			->get();
 	}
 	

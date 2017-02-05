@@ -149,6 +149,7 @@ class Model_Session extends \Orm\Model
 		return Model_Enrollment_Session::query()
 			->related('user')
 			->where('session_id', $this->id)
+			->order_by('user.name', 'asc')
 			->get();
 	}
 	

@@ -50,10 +50,6 @@ class Model_Enrollment_Session extends \Orm\Model {
 		)
 	);
 	
-	protected static $_conditions = array(
-        'order_by' => array('user.name' => 'asc'),
-    );
-	
 	/**
 	 * Retrieve all enrollments for the given user
 	 * @param type $user_id

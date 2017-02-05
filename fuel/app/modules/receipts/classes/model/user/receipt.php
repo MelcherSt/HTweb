@@ -46,10 +46,6 @@ class Model_User_Receipt extends \Orm\Model {
 		)
 	);
 	
-	protected static $_conditions = array(
-        'order_by' => array('user.name' => 'asc'),
-    );
-	
 	public static function get_by_user($user_id, $receipt_id) {
 		return \Receipts\Model_User_Receipt::find('first', array(
 			'where' => array(
