@@ -14,7 +14,7 @@
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
-				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
+				<tr>
 					<th>Id</th>
 					<th><?=__('session.field.date')?></th>
 					<th><?=__('session.role.participant_plural')?></th>
@@ -31,7 +31,7 @@
 				}
 				
 				foreach($sessions as $session): ?>
-				<tr>
+				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td>
 						<label class="checkbox-inline">
 							<input type="checkbox" class="session-select" name="sessions[]" value="<?=$session->id?>"> <?=$session->id?>

@@ -12,11 +12,6 @@
 	<div class="col-md-8">
 		<div class="table-responsive">
 			<table class="table table-hover" 
-				<!--data-toggle="table"
-				data-url="/api/v1/sessions/admin"
-				data-sort-name="date"
-				data-sort-order="desc"-->
-				   >
 				<thead>
 					<tr>
 						<th data-field="date"  data-sortable="true" class="col-md-2"><?=__('session.field.date')?></th>
