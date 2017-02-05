@@ -86,19 +86,11 @@
 			
 			<div id="page-add-dishwasher-enrollment" class="<?=$view_ses_dish ? '' : 'hidden-default'?>">
 				<form id="dishwasher-enrollment-form-page" 
-					  action="/api/v1/sessions/<?=$session->id?>/enrollments/" 
-					  method="put"
+					  action="/api/v1/sessions/<?=$session->id?>/dishwashers/" 
+					  method="post"
 					  data-alert-error="<?=__('session.alert.error.update_enroll')?>"
-					  data-alert-success="<?=__('session.alert.success.update_enroll')?>"
 				>
-					<input id="page-edit-user-id" type="hidden" class="form-control" name="user_id" value="<?=$current_user->id?>">
-					
-					<div class="form-group">
-						<div class="checkbox">
-							<label><input id="page-edit-dishwasher" name="dishwasher" type="checkbox"> <?=__('session.view.label.dishes')?></label>
-						</div>
-					</div>
-					<button class="btn btn-primary btn-sm pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
+					<button id="page-edit-dishwasher" class="btn btn-primary btn-sm pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> Enroll as dishwasher</button>
 				</form>
 			</div>
 		</div>
@@ -106,12 +98,7 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading"><?=__('actions.properties')?> 
-			<?php 
-			$view_ses_upd = $context->canview_session(\Sessions\Auth_SessionUIItem::BTN_SESSION_UPDATE); 
-			$view_ses_cost = $context->canview_session(\Sessions\Auth_SessionUIItem::INPUT_COST);
-			$view_ses_deadline = $context->canview_session(\Sessions\Auth_SessionUIItem::INPUT_DEADLINE);
-			?>	
-			<button id="update-session-btn" onclick="toggleSessionPropertiesPanel()" class="btn btn-xs pull-right <?=$view_ses_upd ? '' : 'hidden-default'?>"><span class="fa fa-pencil"></span></button></div>
+			<button id="update-session-btn" onclick="toggleSessionPropertiesPanel()" class="btn btn-xs pull-right hidden-default"><span class="fa fa-pencil"></span></button></div>
 		<div class="panel-body">
 		
 			<div id="edit-session-properties-panel" class="hidden-default">
@@ -125,20 +112,17 @@
 						<textarea id="session-notes" name="notes" class="form-control" rows="1" placeholder="<?=__('session.field.notes')?>"></textarea>
 					</div>
 
-					<div class="form-inline">
-						<span id="page-edit-session-deadline">
-							<label for="deadline"><?=__('session.field.deadline')?></label>
-							<input id="session-deadline" class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" required/>
-						</span>
-
-						<span id="page-edit-session-cost">
-							<label for="cost"><?=__('product.field.cost')?></label>
-							<div class="input-group">
-								<div class="input-group-addon">€</div>
-								<input id="session-cost" style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" required/>	
-							</div>
-						</span>
-						<br>
+					<div class="form-group" id="edit-session-deadline">
+						<label for="deadline"><?=__('session.field.deadline')?></label>
+						<input id="session-deadline" class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" required/>
+					</div>
+					
+					<div class="form-group" id="edit-session-cost">
+						<label for="cost"><?=__('product.field.cost')?></label>
+						<div class="input-group">
+							<div class="input-group-addon">€</div>
+							<input id="session-cost" style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" required/>	
+						</div>
 					</div>
 
 					<div class="form-group">

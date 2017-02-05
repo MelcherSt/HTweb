@@ -9,4 +9,5 @@ return array(
 	'api/v1/sessions/(:num)/enrollments/:user_id' => 'api/v1/sessions/enrollments/single/$1',
 	'api/v1/sessions/(:num)/roles' => 'api/v1/sessions/roles/$1',
 	'api/v1/sessions/(:num)/notenrolled' => 'api/v1/sessions/enrollments/notenrolled/$1',
+	'api/v1/sessions/(:num)/dishwashers' => 'api/v1/sessions/enrollments/dishwashers/$1',
 );

@@ -187,6 +187,38 @@ class Controller_v1_Sessions_Enrollments extends Controller_RestPaginated {
 	}
 	
 	/**
+	 * Quick and easy way for current user to enroll as dishwasher
+	 * @param int $session_id
+	 * @return type
+	 */
+	public function post_dishwashers($session_id=null) {
+		$user_id = \Auth::get_user()->id;
+		$session = \Sessions\Model_Session::find($session_id);
+		$enrollment = $session->get_enrollment($user_id);	
+		
+		if(isset($session) && isset($enrollment)) {		
+			// Booleans indication if we're at max
+			$max_dish = $session->count_dishwashers() == \Sessions\Model_Session::MAX_DISHWASHER;
+			
+			if(!$enrollment->dishwasher && $max_dish) {
+				// Can only have so much cooks/dishwashers
+				return Response_Status::_422(': reached maximum amount of cooks and/or dishwashers');
+			}
+			$context = new \Sessions\Auth_SessionContext($session);
+			
+			if($context->canview_session(\Sessions\Auth_SessionUIItem::BTN_ENROLL_DISHWASHER)) {
+				$enrollment->dishwasher = !$enrollment->dishwasher;
+				$enrollment->save();
+				return null;
+			} else {
+				return Response_Status::_405();
+			}		
+		}
+		return Response_Status::_404();
+	}
+
+	
+	/**
 	 * Map array of \Sessions\Model_Enrollment_Session to \Sessions\Dto_SessionEnrollmentListItem
 	 * @param array $array \Sessions\Dto_SessionEnrollmentListItem 
 	 * @return \Api\Response_Paginated

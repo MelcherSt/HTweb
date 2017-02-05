@@ -188,8 +188,6 @@
 			} else {
 				$("#page-edit-dishwasher").prop('disabled', false);	
 			}
-
-		
 		});	
 	}
 

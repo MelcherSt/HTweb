@@ -52,20 +52,17 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 						<textarea id="session-notes" name="notes" class="form-control" rows="1" placeholder="<?=__('session.field.notes')?>"></textarea>
 					</div>
 
-					<div class="form-inline">
-						<span id="page-edit-session-deadline">
-							<label for="deadline"><?=__('session.field.deadline')?></label>
-							<input id="session-deadline" class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" required/>
-						</span>
-
-						<span id="page-edit-session-cost">
-							<label for="cost"><?=__('product.field.cost')?></label>
-							<div class="input-group">
-								<div class="input-group-addon">€</div>
-								<input id="session-cost" style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" required/>	
-							</div>
-						</span>
-						<br>
+					<div class="form-group" id="edit-session-deadline">
+						<label for="deadline"><?=__('session.field.deadline')?></label>
+						<input id="session-deadline" class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" required/>
+					</div>
+					
+					<div class="form-group" id="edit-session-cost">
+						<label for="cost"><?=__('product.field.cost')?></label>
+						<div class="input-group">
+							<div class="input-group-addon">€</div>
+							<input id="session-cost" style="z-index: 0;" name="cost" class="form-control" type="number" step="0.01" max="100" min="0" required/>	
+						</div>
 					</div>
 
 					<div class="form-group">

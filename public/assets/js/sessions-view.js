@@ -35,21 +35,19 @@ $('document').ready(function() {
 		event.preventDefault();
 		var form = $('#dishwasher-enrollment-form-page');	
 		$.ajax({
-			data: form.serialize(),
 			type: form.attr('method'),
 			success: function() { 	
-				populateOnSessionUpdate(sessionId);
-				populateOnEnrollUpdate(sessionId, userId);
+				$("#page-edit-dishwasher").hide();
 			},
 			error: function(e){ 
 				alertError(form.data('alert-error'));
+				
 			},
-			url: form.attr('action') + $("#page-edit-user-id").val(),
+			url: form.attr('action'),
 			cache:false
 		  });
 		  table.bootstrapTable('refresh');
-	});
-	
+	});	
 	
 	$('#edit-enrollment-form-page').submit(function(event) {
 		event.preventDefault();
@@ -77,7 +75,7 @@ $('document').ready(function() {
 			type: form.attr('method'),
 			success: function() { 
 				$("#page-add-enrollment-form").trigger('reset');
-				ppopulateOnSessionUpdate(sessionId);
+				populateOnSessionUpdate(sessionId);
 				populateOnEnrollUpdate(sessionId, userId);
 				toggleEnrollPanel();
 			},
@@ -105,7 +103,6 @@ $('document').ready(function() {
 				// Set appropriate UI elements
 				$("#page-edit-cook").prop('checked', data.cook);	
 				$("#page-edit-later").prop('checked', data.later);
-				$("#page-edit-dishwasher").prop('checked', data.dishwasher);
 				$("#page-edit-guests").val(data.guests);
 				
 				if(data.cook) {
@@ -121,7 +118,7 @@ $('document').ready(function() {
 					$("#page-edit-cook").prop('disabled', false);
 				}
 				
-				if($("#page-edit-dishwasher").is(':disabled') && data.cook) {
+				if($("#page-edit-dishwasher").is(':disabled') && data.dishwasher) {
 					$("#page-edit-dishwasher").prop('disabled', false);
 				}
 				
