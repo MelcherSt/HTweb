@@ -97,11 +97,11 @@
 				</div>
 				<?php } ?>
 			</div>
-			<button class="btn btn-primary pull-left" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
+			<button class="btn btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> <?=__('session.view.btn.update_enrollment')?></button>
 		</form> 
 
 		<form action="/sessions/enrollments/delete/<?=$session->date?>" method="post" >
-			<button class="btn btn-danger pull-right" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
+			<button class="btn btn-danger" type="submit"><span class="fa fa-sign-out"></span> <?=__('session.view.btn.unenroll')?></button>
 		</form> 
 	<?php } else { ?>
 		<dl>

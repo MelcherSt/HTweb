@@ -25,6 +25,7 @@ class Controller_Admin_Users extends Controller_Admin
 
 			if ($val->run())
 			{
+				$salt = \Utils::rand_str(12);
 				$user = \Model_User::forge(array(
 					'username' => Input::post('username'),
 					'surname' => Input::post('surname'),
@@ -35,7 +36,8 @@ class Controller_Admin_Users extends Controller_Admin
 					'end_year' => Input::post('end_year'),
 					'points' => Input::post('points', 0),
 					'iban' => Input::post('iban', ''),
-					'password' => Auth::instance()->hash_password(Input::post('password' . \Utils::rand_str(12))),
+					'password' => Auth::instance()->hash_password(Input::post('password' . $salt)),
+					'salt' => $salt,
 					'group_id' => Input::post('group_id', 3),
 					'email' => Input::post('email'),
 					'last_login'      => 0,

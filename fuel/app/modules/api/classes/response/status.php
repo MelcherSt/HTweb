@@ -72,6 +72,4 @@ class Response_Status extends Response_Base {
 	public static function _500($message='') {
 		return new \Api\Response_Status(500, "Internal Error" . $message);
 	}
-	
-	
 }
