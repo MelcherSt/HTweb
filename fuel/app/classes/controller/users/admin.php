@@ -39,7 +39,7 @@ class Controller_Users_Admin extends Controller_Gate
 					'end_year' => Input::post('end_year'),
 					'points' => Input::post('points', 0),
 					'iban' => Input::post('iban', ''),
-					'password' => Auth::instance()->hash_password(Input::post('password' . $salt)),
+					'password' => Auth::instance()->hash_password(Input::post('password') . $salt),
 					'salt' => $salt,
 					'group_id' => Input::post('group_id', 3),
 					'email' => Input::post('email'),
@@ -90,7 +90,7 @@ class Controller_Users_Admin extends Controller_Gate
 			$user->end_year = Input::post('end_year', 0);
 			$user->points = Input::post('points', 0);
 			$user->iban = Input::post('iban', '');
-			$user->password = (Auth::instance()->hash_password(Input::post('password' . $salt)));
+			$user->password = (Auth::instance()->hash_password(Input::post('password') . $salt));
 			$user->salt = $salt;
 			$user->group_id = Input::post('group_id', 3);
 			$user->email = Input::post('email', '');
