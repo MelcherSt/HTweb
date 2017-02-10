@@ -87,17 +87,21 @@ final class Context_Sessions {
 			return false;
 		}
 		
+		if($this->_is_administrator()) {
+			// Admin may always create enroll
+			return true;
+		}
+		
 		if($self) {
-			// Create for current user
-			return $this->_in_normal_enrollment_period();
-		} else {
-			// Create for other user
-			if($this->_is_administrator()) {
-				// Admin may always create enroll
-				return true;
+			// Enroll ourself
+			if($this->_is_cook()) {
+				return $this->_in_normal_enrollment_period() || $this->_in_extended_enrollment_period();
 			} else {
-				return $this->_is_cook() && $this->_in_extended_enrollment_period();
+				return $this->_in_normal_enrollment_period();
 			}	
+		} else {
+			// Enroll someone else
+			return $this->_is_cook() && $this->_in_extended_enrollment_period();	
 		}
 	}
 	
@@ -111,6 +115,15 @@ final class Context_Sessions {
 	
 	public function delete_enroll($user_id=null) {
 		return $this->create_enroll($user_id);
+	}
+	
+	public function show_create_enroll() {
+		$result = [];
+		
+		array_push($this->_in_normal_enrollment_period(), $result);
+		array_push($this->session->count_cooks() != static::MAX_COOKS, $result);
+		
+		//[show panel, show cook]
 	}
 	
 	/**

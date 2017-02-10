@@ -1,22 +1,25 @@
 <?php
-class Controller_Admin_Users extends Controller_Admin
+class Controller_Users_Admin extends Controller_Gate
 {
 
+	public function before() {
+		if(!\Auth::has_access('users.administration')) {
+			throw new \HttpNoAccessException();
+		}
+		parent::before();
+	}
+	
 	public function action_index()
 	{
 		$data['users'] = \Model_User::find('all');
 		$this->template->title = "Users";
-		$this->template->content = View::forge('admin/users/index', $data);
+		$this->template->content = View::forge('users/admin/index', $data);
 
 	}
 
 	public function action_view($id = null)
 	{
-		$data['user'] = \Model_User::find($id);
-
-		$this->template->title = "User";
-		$this->template->content = View::forge('admin/users/view', $data);
-
+		\Response::redirect('/users/view/'. $id);
 	}
 
 	public function action_create() {
@@ -66,7 +69,7 @@ class Controller_Admin_Users extends Controller_Admin
 		}
 
 		$this->template->title = "Users";
-		$this->template->content = View::forge('admin/users/create');
+		$this->template->content = View::forge('users/admin/create');
 
 	}
 
@@ -127,7 +130,7 @@ class Controller_Admin_Users extends Controller_Admin
 		}
 
 		$this->template->title = "Users";
-		$this->template->content = View::forge('admin/users/edit');
+		$this->template->content = View::forge('users/admin/edit');
 
 	}
 

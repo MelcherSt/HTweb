@@ -3,7 +3,7 @@
 		<?=__('privileges.title')?>
 	</div>
 	<div class="list-group">
-		<?php if(\Auth::has_access('sessions.management')) { ?>
+		<?php if(\Auth::has_access('sessions.administration')) { ?>
 		<a href="/sessions/admin" class="list-group-item"><i class="fa fa-list-alt" aria-hidden="true"></i> Manage sessions</a>
 		<?php } ?>
 	</div>

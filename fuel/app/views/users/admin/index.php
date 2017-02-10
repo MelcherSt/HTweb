@@ -32,9 +32,9 @@
 			<td><?php echo $item->group_id; ?></td>
 			<td><?php echo $item->email; ?></td>
 			<td>
-				<?php echo Html::anchor('admin/users/view/'.$item->id, 'View'); ?> |
-				<?php echo Html::anchor('admin/users/edit/'.$item->id, 'Edit'); ?> |
-				<?php echo Html::anchor('admin/users/delete/'.$item->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
+				<?php echo Html::anchor('users/admin/view/'.$item->id, 'View'); ?> |
+				<?php echo Html::anchor('users/admin/edit/'.$item->id, 'Edit'); ?> |
+				<?php echo Html::anchor('users/admin/delete/'.$item->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 
 			</td>
 		</tr>
@@ -45,6 +45,6 @@
 <p>No Users.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/users/create', 'Add new User', array('class' => 'btn btn-success')); ?>
+	<?php echo Html::anchor('users/admin/create', 'Add new User', array('class' => 'btn btn-success')); ?>
 
 </p>

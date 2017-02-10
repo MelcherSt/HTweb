@@ -5,7 +5,7 @@ namespace Sessions;
 class Controller_Admin extends \Controller_Gate {
 	
 	function before() {
-		if(!\Auth::has_access('sessions.management')) {
+		if(!\Auth::has_access('sessions.administration')) {
 			throw new \HttpNoAccessException();
 		}
 		parent::before();

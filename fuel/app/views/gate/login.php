@@ -3,8 +3,8 @@
 	<div class="col-md-3">
 		<?php echo Form::open(array()); ?>
 
-			<?php if (isset($_GET['destination'])): ?>
-				<?php echo Form::hidden('destination', $_GET['destination']); ?>
+			<?php if (Input::get('destination') !== null): ?>
+				<?php echo Form::hidden('destination', Input::get('destination')); ?>
 			<?php endif; ?>
 
 			<?php if (isset($login_error)): ?>
@@ -32,7 +32,7 @@
 			<div class="from-group">
 				<div class="checkbox">
 				<label>
-				<?php echo Form::checkbox('rememberme'); ?>
+				<input name="rememberme" type="checkbox">
 				Remember me
 				</label>
 				</div>

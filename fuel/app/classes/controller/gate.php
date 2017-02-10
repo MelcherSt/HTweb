@@ -52,7 +52,7 @@ class Controller_Gate extends Controller_Base
 					if (Auth::login(Input::post('email'), Input::post('password'))) {
 						if (($id = Auth::get_user_id()) !== false) {			
 							// Does the user want to be remembered?
-							if(Input::post('rememberme', false) == 'on' ? true : false) {
+							if((Input::post('rememberme') == 'on' ? true : false)) {
 								Auth::remember_me();
 							} else {
 								Auth::dont_remember_me();
@@ -75,6 +75,7 @@ class Controller_Gate extends Controller_Base
 	}
 
 	public function action_logout() {
+		Auth::dont_remember_me();
 		Auth::logout();
 		Response::redirect('/');
 	}
