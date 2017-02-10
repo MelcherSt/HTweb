@@ -80,6 +80,7 @@ class Controller_Users_Admin extends Controller_Gate
 
 		if ($val->run())
 		{
+			$salt = \Utils::rand_str(12);
 			$user->username = Input::post('username');
 			$user->surname = Input::post('surname');
 			$user->name = Input::post('name');
@@ -89,7 +90,8 @@ class Controller_Users_Admin extends Controller_Gate
 			$user->end_year = Input::post('end_year', 0);
 			$user->points = Input::post('points', 0);
 			$user->iban = Input::post('iban', '');
-			$user->password = Input::post('password');
+			$user->password = (Auth::instance()->hash_password(Input::post('password' . $salt)));
+			$user->salt = $salt;
 			$user->group_id = Input::post('group_id', 3);
 			$user->email = Input::post('email', '');
 
