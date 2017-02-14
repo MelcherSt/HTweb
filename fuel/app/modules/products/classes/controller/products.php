@@ -7,8 +7,6 @@ class Controller_Products extends \Controller_Gate {
 	public function action_index() {
 		$this->template->title = __('product.title');
 		$this->template->content = \View::forge('index');
-		
-		
 	}
 	
 	public function action_view($id=null) {
