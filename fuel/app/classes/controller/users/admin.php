@@ -34,7 +34,7 @@ class Controller_Users_Admin extends Controller_Gate
 					'surname' => Input::post('surname'),
 					'name' => Input::post('name'),
 					'phone' => Input::post('phone', ''),
-					'active' => Input::post('active'),
+					'active' => (Input::post('active') == 'on'),
 					'start_year' => Input::post('start_year'),
 					'end_year' => Input::post('end_year'),
 					'points' => Input::post('points', 0),
@@ -54,7 +54,7 @@ class Controller_Users_Admin extends Controller_Gate
 				{
 					Session::set_flash('success', e('Added user #'.$user->id.'.'));
 
-					Response::redirect('admin/users');
+					Response::redirect('users/admin');
 				}
 
 				else
@@ -73,85 +73,63 @@ class Controller_Users_Admin extends Controller_Gate
 
 	}
 
-	public function action_edit($id = null)
-	{
+	public function action_edit($id = null)	{
 		$user = \Model_User::find($id);
-		$val = \Model_User::validate('edit');
-
-		if ($val->run())
-		{
-			$salt = \Utils::rand_str(12);
+		
+		if(!isset($user)) {
+			\Utils::handle_irrecoverable_error(__('user.alert.error.no_id', ['id' => $id]));
+		}
+		
+		$data['user'] = $user;	
+		$this->template->title = "Users";
+		$this->template->content = View::forge('users/admin/edit', $data);			
+	}
+	
+	public function post_edit($id = null) {
+		$user = \Model_User::find($id);
+		$val = \Model_User::validate('edit');		
+		$val->add('password', 'new password')->add_rule('min_length', 5);
+		$val->add('password2', 're-type Password')->add_rule('match_field', 'password');
+		
+		if ($val->run()) {	
 			$user->username = Input::post('username');
 			$user->surname = Input::post('surname');
 			$user->name = Input::post('name');
 			$user->phone = Input::post('phone', '');
-			$user->active = Input::post('active', 1);
+			$user->group_id = Input::post('group_id', 3);
+			$user->active = (Input::post('active') == 'on');
 			$user->start_year = Input::post('start_year', 0);
 			$user->end_year = Input::post('end_year', 0);
 			$user->points = Input::post('points', 0);
-			$user->iban = Input::post('iban', '');
-			$user->password = (Auth::instance()->hash_password(Input::post('password') . $salt));
-			$user->salt = $salt;
-			$user->group_id = Input::post('group_id', 3);
 			$user->email = Input::post('email', '');
-
-			if ($user->save())
-			{
-				Session::set_flash('success', e('Updated user #' . $id));
-
-				Response::redirect('admin/users');
+			$user->iban = Input::post('iban', null);
+			$user->lang = Input::post('lang', null);
+			
+			if ($user->save()) {
+				Session::set_flash('success', __('user.alert.success.update'));
+				Response::redirect('users/admin/edit/'. $id);
+			} else {
+				Session::set_flash('error', __('user.alert.error.update'));
 			}
-
-			else
-			{
-				Session::set_flash('error', e('Could not update user #' . $id));
-			}
-		}
-
-		else
-		{
-			if (Input::method() == 'POST')
-			{
-				$user->username = $val->validated('username');
-				$user->surname = $val->validated('surname');
-				$user->name = $val->validated('name');
-				$user->phone = $val->validated('phone');
-				$user->active = $val->validated('active');
-				$user->start_year = $val->validated('start_year');
-				$user->end_year = $val->validated('end_year');
-				$user->points = $val->validated('points');
-				$user->iban = $val->validated('iban');
-				$user->password = $val->validated('password');
-				$user->group_id = $val->validated('group_id');
-				$user->email = $val->validated('email');
-
-				Session::set_flash('error', $val->error());
+		} else {
+			if (Input::method() == 'POST') {		
+				\Session::set_flash('error', $val->error());
 			}
 
 			$this->template->set_global('user', $user, false);
 		}
-
-		$this->template->title = "Users";
-		$this->template->content = View::forge('users/admin/edit');
-
 	}
 
 	public function action_delete($id = null)
 	{
-		if ($user = \Model_User::find($id))
-		{
+		$user = \Model_User::find($id);
+		if (isset($user)) {
 			$user->delete();
 
 			Session::set_flash('success', e('Deleted user #'.$id));
-		}
-
-		else
-		{
+		} else {
 			Session::set_flash('error', e('Could not delete user #'.$id));
 		}
-
-		Response::redirect('admin/users');
-
+		Response::redirect('users/admin');
 	}
-
 }
