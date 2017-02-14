@@ -7,6 +7,9 @@
 				<em><?=__('actions.no_actions')?></em>
 			</div>
 		</div>
+		
+		<?=Request::forge('/privileges/receipts/nav')->execute();?>
+		
 	</div>
 	
 	<div class="col-md-8">
@@ -31,4 +34,5 @@
 			<em><?=sizeof($receipts) == 0 ? __('receipt.empty_list') : ''?></em>
 		</div>
 	</div>
+</div>
 

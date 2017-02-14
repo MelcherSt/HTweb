@@ -2,7 +2,14 @@
 
 namespace Receipts;
 
-class Controller_Admin extends \Controller_Admin {
+class Controller_Admin extends \Controller_Gate {
+	
+	public function before() {
+		if(!\Auth::has_access('receipts.administration')) {
+			throw new \HttpNoAccessException();
+		}
+		parent::before();
+	}
 	
 	public function action_create() {
 		$this->template->title = 'Receipts';
