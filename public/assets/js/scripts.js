@@ -7,7 +7,7 @@ $(document).ready(function(e) {
 	// Make rows clickable while maintaing anchors
     $('.clickable-row').click(function(e) {
 		// event target will always retrieve the anchor when clicked.
-		if(e.target.tagName !== 'A') {
+		if(e.target.tagName !== 'A' && e.target.tagName !== 'INPUT') {
 			window.location = $(this).data("href");
 		}
     });
