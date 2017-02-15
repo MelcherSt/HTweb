@@ -89,30 +89,39 @@ class Controller_Gate_Forgot extends Controller_Gate {
 				->get_one();
 				
 		// Generate token
-		$token = uniqid('', true);
+		$token = bin2hex(openssl_random_pseudo_bytes(15));
 		
 		if(empty($user)) {
 			// Do nothing?
 		} else {
-			// Save token to db
-			Model_ResetToken::forge([
-				'user_id' => $user->id,
-				'token' => $token,
-			])->save();
+			// Check for existing token
 			
-			// Send mail - or don't
-			$email = Email::forge();
-			$email->to($mail, $user->get_fullname());
-			$email->subject('Password reset requested');
-			$email->body('A password reset was requested for the account using this mail addresss on Het Tribunaal Web. \n'
-					. 'Visit the link below to reset your password: \n'
-					. 'https://hettribunaal.nl/gate/forgot?token=' . $token);
-			$email->send();
+			$reset_token = Model_ResetToken::query()
+				->where('user_id', $user->id)
+				->get_one();
+			
+			if(isset($reset_token)) {
+				// Already a reset in-progess. Stop it.
+			} else {
+				// Save token to db
+				Model_ResetToken::forge([
+					'user_id' => $user->id,
+					'token' => $token,
+				])->save();
 
-			
+				// Send mail - or don't
+				$email = Email::forge();
+				$email->to($mail, $user->get_fullname());
+				$email->subject('Password reset requested');
+				$email->body('A password reset was requested for the account registered using this mail addresss on Het Tribunaal Web. '
+						. 'If you did not request a password reset please ignore this mail. Otherwise, '
+						. 'visit this link to reset your password: www.hettribunaal.nl/gate/forgot?token=' . $token
+						. ' Note that the link is only valid for one hour after the inital request! \n\n Administator');
+				$email->send();
+			}
 		}
 			
-		\Session::set_flash('success','An email has been send to the specified address');
+		\Session::set_flash('success','If the give address is associated with an account, you will receive a password reset link.');
 		Response::redirect('/');
 	}
 }
