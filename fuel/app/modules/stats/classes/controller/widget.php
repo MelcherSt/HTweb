@@ -17,7 +17,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 		$this->template->style = '';
 		$this->template->icon = 'fa-balance-scale';
 		$this->template->notice = '';
-		$this->template->message = '~' . $unsettled_points_delta . ' ' . strtolower(__('session.field.point_plural')) . ' ' . __('stats.widget');
+		$this->template->message = $unsettled_points_delta . ' ' . strtolower(__('session.field.point_plural')) . ' ' . __('stats.widget');
 		$this->template->kind = strtolower($count == 1 ? __('session.field.point') : __('session.field.point_plural'));
 		$this->template->count = $count;
 		$this->template->details = false;
