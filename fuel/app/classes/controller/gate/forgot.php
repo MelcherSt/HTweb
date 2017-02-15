@@ -116,12 +116,12 @@ class Controller_Gate_Forgot extends Controller_Gate {
 				$email->body('A password reset was requested for the account registered using this mail addresss on Het Tribunaal Web. '
 						. 'If you did not request a password reset please ignore this mail. Otherwise, '
 						. 'visit this link to reset your password: www.hettribunaal.nl/gate/forgot?token=' . $token
-						. ' Note that the link is only valid for one hour after the inital request! \n\n Administator');
+						. ' Note that the link is only valid for one hour after the inital request!');
 				$email->send();
 			}
 		}
 			
-		\Session::set_flash('success','If the give address is associated with an account, you will receive a password reset link.');
+		\Session::set_flash('success','If the given mail address is associated with an account, you will receive a password reset link.');
 		Response::redirect('/');
 	}
 }
