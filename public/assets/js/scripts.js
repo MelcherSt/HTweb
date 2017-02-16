@@ -30,7 +30,7 @@ function alertSuccess(msg) {
 	}
 	
 	$('#alert-success').show('slow');
-	$("#alert-success").delay(2000).hide('slow');	
+	$("#alert-success").delay(4000).hide('slow');	
 }
 
 
