@@ -1,5 +1,5 @@
 /**
- * Default templete script collection
+ * Default template script collection
  * @author Melcher
  */
 

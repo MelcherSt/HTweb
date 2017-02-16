@@ -53,7 +53,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$val = Model_Enrollment_Session::validate('create');
 			if($val->run()) {
 				/* Input variables */
-				$user_id = \Input::post('user_id', null);
+				$user_id = \Input::post('user-id', null);
 				$guests = \Input::post('guests', 0);
 				$cook = \Input::post('cook') == 'on' ? true : false;
 				$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
@@ -125,7 +125,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$val = Model_Enrollment_Session::validate('update');
 			if($val->run()) {	
 				/* Input variables */
-				$user_id = \Input::post('user_id', null);
+				$user_id = \Input::post('user-id', null);
 				$guests = \Input::post('guests', 0);
 				$cook = \Input::post('cook') == 'on' ? true : false;
 				$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
@@ -196,7 +196,7 @@ class Controller_Enrollments extends \Controller_Gate {
 			$redirect = '/sessions/view/'.$date;	
 			
 			/* Input variable */
-			$user_id = \Input::post('user_id', null);	
+			$user_id = \Input::post('user-id', null);	
 			
 			if(isset($user_id)) {
 				// Request rights to delete other user

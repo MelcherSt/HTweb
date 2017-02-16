@@ -56,11 +56,9 @@ class Model_Enrollment_Session extends \Orm\Model {
 	 * @return \Sessions\Model_Enrollment
 	 */
 	public static function get_by_user($user_id) {
-		return Model_Enrollment_Session::find('first', array(
-			'where' => array(
-				array('user_id', $user_id)
-			)
-		));
+		return Model_Enrollment_Session::query()
+				->where('user_id', $user_id)
+				->get_one();
 	}
 	
 	/**

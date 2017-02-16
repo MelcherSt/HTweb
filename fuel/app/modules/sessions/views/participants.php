@@ -1,12 +1,15 @@
 <?php
 $enrollments = $session->get_enrollments(); 
-$unenrolled_users = $session->get_unenrolled();
-$context = \Sessions\Auth_Context_Session::forge($session, $current_user);
+$context = \Sessions\Context_Sessions::forge($session);
+
+foreach($session->get_unenrolled() as $user) {
+	$options[$user->id] = $user->get_fullname();
+}
 ?>
-<?php if ($context->has_access(['enroll.other']) && sizeof($unenrolled_users > 0)) {?>
+<?php if ($context->view_enroll_other()) {?>
 		<button type="button" class="btn btn-primary pull-right" onClick="showAddModal(
-					<?=(int)$context->has_access(['enroll.other[cook]'])?>, 
-					<?=(int)$context->has_access(['enroll.other[dishwasher]'])?>
+					<?=(int)$context->view_enroll_create()[1]?>, 
+					<?=(int)$context->view_enroll_create()[2]?>
 				)"><span class="fa fa-user-plus"></span>
 		 <?=__('session.view.btn.add_enroll')?>
 		</button>
@@ -20,14 +23,14 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<th><?=__('user.field.name')?></th>
 				<th>∆ <?=__('session.field.point_plural')?></th>
 				<th><?=__('session.field.guest_plural')?></th>	
-				<?php if ($context->has_access(['session.manage'])): ?>
+				<?php if ($context->view_enroll_other()){ ?>
 				<th><?=__('actions.name')?></th>
-				<?php endif; ?>
+				<?php } ?>
 			</tr>
 		</thead>
 		<tbody>
 		<?php 			
-			foreach($enrollments as $enrollment): ?>
+			foreach($enrollments as $enrollment){ ?>
 			<tr>
 				<td><?=$enrollment->user->get_fullname()?> 
 				<?php 
@@ -44,14 +47,14 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				</td>
 				<td><?=$enrollment->get_point_prediction()?>  </td>
 				<td><?=$enrollment->guests?></td>
-				<?php if ($context->has_access(['enroll.other'])): ?>
+				<?php if ($context->view_enroll_other()): ?>
 				<td>			
 					<a href="#" onclick="showEditModal(
 								<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>', 
 								<?=$enrollment->guests?>, <?=$enrollment->cook?>, 
 								<?=$enrollment->dishwasher?>,
-								<?=(int)$context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]'])?>, 
-								<?=(int)$context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]'])?>
+								<?=(int)$context->view_enroll_update($enrollment->user->id)[1]?>, 
+								<?=(int)$context->view_enroll_update($enrollment->user->id)[2]?>
 							)"><span class="fa fa-pencil"></span> <?=__('actions.edit')?></a>  
 					<?php if ($current_user->id != $enrollment->user_id): ?> |
 					<a href="#" onclick="showDeleteModal(<?=$enrollment->user->id?>, '<?=$enrollment->user->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
@@ -59,7 +62,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				</td>
 				<?php endif; ?>
 			</tr>
-			<?php endforeach; ?>
+			<?php } ?>
 		</tbody>
 	</table>
 </div>
@@ -69,7 +72,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/delete/<?=$session->date?>" method="POST">
+			<?=Form::open('/sessions/enrollments/delete')?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -77,16 +80,13 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				</div>
 				<div class="modal-body">
 					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
-					<div class="form-group">
-						<input id="delete-user-id" type="hidden" class="form-control" name="user_id">
-					</div>
+					<?=Form::hidden('user-id', null, ['id' => 'delete-user-id'])?>
 				</div>
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-danger" value="<?=__('session.modal.remove_enroll.btn')?>" />
-					<button type="button" class="btn btn-default"
-						data-dismiss="modal"><?=__('actions.cancel')?></button>
+				<div class="modal-footer">	
+					<?=Form::submit(['value'=> __('session.modal.remove_enroll.btn'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
-			</form>
+			<?=Form::close()?>
 		</div>
 	</div>
 </div>
@@ -95,7 +95,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="edit-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/update/<?=$session->date?>" method="POST">
+			<?=Form::open('/sessions/enrollments/update/'. $session->date)?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -104,27 +104,32 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<div class="modal-body">
 					<p><?=__('session.modal.edit_enroll.msg')?> <strong><span id="edit-user-name"></span></strong>.</p>
 					<div class="form-group">
-						<input id="edit-user-id" type="hidden" class="form-control" name="user_id">
-						<label for="edit-guests">Guests </label>
-						<input id="edit-guests" name="guests" type="number" step="1" max="10" min="0" value=""/>
-					</div>
-					
+						<?=Form::hidden('user-id', null, ['id' => 'edit-user-id'])?>
+						<?=Form::label(__('session.field.guest_plural'), 'edit-guests')?>
+						<?=Form::input('guests', null, ['id' => 'edit-guests', 'class' => 'form-control', 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
+					</div>			
 					<div class="form-group">
 						<label><?=__('session.role.name_plural')?></label>
 						<div class="checkbox">
-							<label><input id="edit-cook" name="cook" type="checkbox"><?=__('session.role.cook')?></label>
+							<label>
+								<?=Form::checkbox('cook', 'on', ['id' => 'edit-cook'])?>
+								<?=__('session.role.cook')?>
+							</label>
 						</div>
 						<div class="checkbox">
-							<label><input id="edit-dishwasher" name="dishwasher" type="checkbox"><?=__('session.role.dishwasher')?></label>
+							<label>
+								<?=Form::checkbox('dishwasher', 'on', ['id' => 'edit-dishwasher'])?>
+								<?=__('session.role.dishwasher')?>
+							</label>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="<?=__('session.modal.edit_enroll.btn')?>" />
+					<?=Form::submit(['value'=> __('session.modal.edit_enroll.btn'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
 					<button type="button" class="btn btn-default"
 						data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
-			</form>
+			<?=Form::close()?>
 		</div>
 	</div>
 </div>
@@ -133,7 +138,7 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 <div id="add-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/sessions/enrollments/create/<?=$session->date?>" method="POST">
+			<?=Form::open('/sessions/enrollments/create/'. $session->date)?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -142,64 +147,37 @@ $context = \Sessions\Auth_Context_Session::forge($session, $current_user);
 				<div class="modal-body">
 					<p><?=__('session.modal.create_enroll.msg')?></p>					
 					<div class="form-group">
-						<label for="add-user-id"><?=__('user.name')?>:</label>
-						<select class="form-control" id="add-user-id" name="user_id">
-							<?php 
-							foreach($unenrolled_users as $user):?>
-							<option value="<?=$user->id?>"><?=$user->get_fullname()?></option>
-							<?php endforeach; ?>
-						</select>
+						<?=Form::label(__('user.name'), 'user-id')?>
+						<?=Form::select('user-id', null, $options, ['class' => 'form-control'])?>
 					</div>	
 					<br>
 					<div class="form-group">
-						<label for="add-guests"><?=__('session.field.guest_plural')?></label>
-						<input id="add-guests" name="guests" type="number" step="1" max="10" min="0" value="0"/>
+						<?=Form::label(__('session.field.guest_plural'), 'add-guests')?>
+						<?=Form::input('guests', null, ['id' => 'add-guests', 'class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
 					</div>
 					
 					<div class="form-group">
 						<label><?=__('session.role.name_plural')?></label>
 						<div class="checkbox">
-							<label><input id="add-cook" name="cook" type="checkbox"><?=__('session.role.cook')?></label>
+							<label>
+								<?=Form::checkbox('cook', 'on', ['id' => 'add-cook'])?>
+								<?=__('session.role.cook')?>
+							</label>
 						</div>
 						<div class="checkbox">
-							<label><input id="add-dishwasher" name="dishwasher" type="checkbox"><?=__('session.role.dishwasher')?></label>
+							<label>
+								<?=Form::checkbox('dishwasher', 'on', ['id' => 'add-dishwasher'])?>
+								<?=__('session.role.dishwasher')?>
+							</label>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="<?=__('session.modal.create_enroll.btn')?>" />
+					<?=Form::submit(['value'=> __('session.modal.create_enroll.btn'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
 					<button type="button" class="btn btn-default"
 						data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
-			</form>
+			<?=Form::close()?>
 		</div>
 	</div>
 </div>
-
-
-<!-- //TODO: externalize -->
-<script>
-function showAddModal(canCook, canDish) {
-	$("#add-enrollment-modal").modal('show');
-	$("#add-cook").attr('disabled', canCook === 0);
-	$("#add-dishwasher").attr('disabled', canDish === 0);
-}
-
-function showDeleteModal(userId, userName) {
-	$("#delete-enrollment-modal").modal('show');
-	$("#delete-user-name").html(userName);
-	$("#delete-user-id").val(userId);
-}
-
-function showEditModal(userId, userName, guests, cook, dishwasher, canCook, canDish) {
-	$("#edit-enrollment-modal").modal('show');
-	$("#edit-user-name").html(userName);
-	$("#edit-user-id").val(userId);
-	$("#edit-guests").val(guests);
-	$("#edit-cook").prop('checked', cook === 1);
-	$("#edit-dishwasher").prop('checked', dishwasher === 1);
-	$("#edit-cook").attr('disabled', canCook === 0);
-	$("#edit-dishwasher").attr('disabled', canDish === 0);
-	
-}
-</script>

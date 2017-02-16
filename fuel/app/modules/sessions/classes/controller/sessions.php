@@ -31,7 +31,7 @@ class Controller_Sessions extends \Controller_Gate {
 	 */
 	public function action_view($date=null) {
 		$this->push_css('jquery.timepicker-1.3.5.min');
-		$this->push_js(['jquery.timepicker-1.3.5.min', 'sessions-timepicker']);
+		$this->push_js(['jquery.timepicker-1.3.5.min', 'sessions-timepicker', 'sessions-modals']);
 		
 		$this->template->title = __('session.title');
 		
@@ -66,7 +66,8 @@ class Controller_Sessions extends \Controller_Gate {
 			$this->template->page_title = __('session.name');
 			$this->template->title = $formatted_date . ' - ' . __('session.title');
 			$this->template->subtitle = $formatted_date;		
-			$this->template->content = \View::forge('layout/splitview', $data);
+			//$this->template->content = \View::forge('layout/splitview', $data);
+			$this->template->content = \View::forge('view', ['session' => $session]);
 			return;
 		}
 		\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
@@ -98,7 +99,7 @@ class Controller_Sessions extends \Controller_Gate {
 				$payer_id_alt = \Input::post('payer_id', null);
 
 				if(isset($payer_id_alt) && $context->has_access(['session.manage[payer]'])) {
-					$payer_id = \Input::post('payer_id');
+					$payer_id = \Input::post('payer-id');
 					$session->paid_by = $payer_id;
 				}
 				

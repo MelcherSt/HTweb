@@ -33,7 +33,7 @@ final class Context_Sessions {
 	 * @param \Model_User $user
 	 * @return \Sessions\Context_Sessions
 	 */
-	public static function forge(Model_Session $session, \Model_User $user=null) : Context_Session {
+	public static function forge(Model_Session $session, \Model_User $user=null) {
 		if(empty($user)) {
 			$user = \Model_User::find(\Auth::get_user()->id);
 		}	
@@ -63,6 +63,19 @@ final class Context_Sessions {
 	public function view() {
 		// Everyone may view
 		return true;
+	}
+	
+	/**
+	 * Is session editUI visible? 
+	 * @return array panel, notes, cost, deadline
+	 */
+	public function view_update() {
+		$result = [];					
+		array_push($result, $this->_is_cook() && ($this->_in_normal_enrollment_period() || $this->_in_extended_enrollment_period()));	
+		array_push($result, $this->_in_normal_enrollment_period());
+		array_push($result, true);
+		array_push($result, true);
+		return $result;
 	}
 	
 	public function delete() {
@@ -105,7 +118,7 @@ final class Context_Sessions {
 		}
 	}
 	
-	public function edit_enroll($user_id=null) {
+	public function update_enroll($user_id=null) {
 		return $this->create_enroll($user_id);
 	}
 	
@@ -113,17 +126,53 @@ final class Context_Sessions {
 		return true;
 	}
 	
-	public function delete_enroll($user_id=null) {
-		return $this->create_enroll($user_id);
+	/**
+	 * Is create enroll UI visible? 
+	 * @return array panel, cook, dishwasher
+	 */
+	public function view_enroll_create() {
+		$result = [];					
+		array_push($result, $this->_in_normal_enrollment_period() && ($this->session->current_enrollment()) == null);	
+		array_push($result, $this->session->count_cooks() != static::MAX_COOKS);
+		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER);		
+		return $result;
 	}
 	
-	public function show_create_enroll() {
-		$result = [];
+	/**
+	 * Is update enroll UI visible?
+	 * @return array panel, cook, dishwasher
+	 */
+	public function view_enroll_update($user_id=null) {
+		if(empty($user_id)) {
+			$self = true;
+		} else {
+			$self = $this->user->id == $user_id;
+		}
 		
-		array_push($this->_in_normal_enrollment_period(), $result);
-		array_push($this->session->count_cooks() != static::MAX_COOKS, $result);
+		if($self) {
+			$enrollment = $this->session->current_enrollment();
+		} else {
+			$enrollment = Model_Enrollment_Session::get_by_user($user_id);
+		}
 		
-		//[show panel, show cook]
+		$result = [];					
+		array_push($result, $this->_in_normal_enrollment_period() && ($this->session->current_enrollment() !== null));	
+		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || $enrollment->cook);
+		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || $enrollment->dishwasher);
+		return $result;
+	}
+	
+	/**
+	 * Is the enroll other UI visible?
+	 * @return boolean
+	 */
+	public function view_enroll_other() {
+		return $this->_is_cook() && $this->_in_extended_enrollment_period();
+	}
+	
+	
+	public function delete_enroll($user_id=null) {
+		return $this->create_enroll($user_id);
 	}
 	
 	/**
