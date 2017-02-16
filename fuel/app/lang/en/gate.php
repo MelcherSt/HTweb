@@ -21,9 +21,9 @@ return [
 		],
 		'mail' => [
 			'subject' => 'Password reset requested',
-			'body' => 'A password reset was requested for the account on ' . __('site_title') . ' which was registered using this mail address.' .
-			'If you did not request your password to be reset, please ignore this mail. Otherwise, visit this link within the next hour to reset your password:' .
-			':link',
+			'body' => 'A password reset was requested for the account on ' . __('site_title') . ' ' . __('site_sub') . ' which was registered using this mail address.' .
+			'If you did not request your password to be reset, please ignore this mail. Otherwise, visit this link within the next hour to reset your password: <br><br>' .
+			'http://:link <br><br> --Admin',
 		],
 	],
 	'alert' => [
