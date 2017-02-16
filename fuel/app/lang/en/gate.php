@@ -4,7 +4,7 @@ return [
 	'login' => [
 		'title' => 'Login',
 		'msg' => 'You are about the enter the protected area of the site.',
-		'reset' => 'I forgot my password',
+		'reset' => 'I lost my password',
 		'btn' => 'Login',
 		'label' => [
 			'username' => 'Email or username',
