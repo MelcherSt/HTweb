@@ -59,30 +59,11 @@ class Controller_Users extends Controller_Gate
 				}
 			}
 			
-			// Custom configuration for this upload
-			$config = array(
-				'path' => DOCROOT.'files/users/avatar/',
-				'randomize' => true,
-				'max_size' => 1024 * 1000,
-				'ext_whitelist' => array('jpg', 'jpeg', 'gif', 'png'),
-			);
-
-			/*
-			// process the uploaded files in $_FILES
-			Upload::process($config);
-
-			// if there are any valid files
-			if (Upload::is_valid()) {
-				// save them according to the config
-				Upload::save(0);
-				$value = Upload::get_files();  
-				$user->avatar =  $value[0]['saved_as'];
-			} */
-			
-			if ($user->save()) {
+			try {
+				\Security::htmlentities($user)->save();
 				Session::set_flash('success', __('user.alert.success.update'));
 				Response::redirect('users/edit');
-			} else {
+			} catch (Exception $ex) {
 				Session::set_flash('error', __('user.alert.error.update'));
 			}
 		} else {

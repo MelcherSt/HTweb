@@ -43,7 +43,7 @@ class Controller_Sessions extends \Controller_Gate {
 					'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,
 					'date' => $date,
 				]);
-				$session->save();
+				\Security::htmlentities($session)->save();
 			}
 			
 			// Automatically delay a session without cook
@@ -120,7 +120,7 @@ class Controller_Sessions extends \Controller_Gate {
 			}
 
 			try {
-				$session->save();
+				\Security::htmlentities($session)->save();
 				\Session::set_flash('success', __('session.alert.success.update_session'));
 			} catch(\Database_Exception $ex) {
 				\Utils::handle_recoverable_error(__('session.alert.error.update_session'), $redirect);	

@@ -16,7 +16,7 @@ class Controller_Create extends \Controller_Gate {
 				'cost' => \Input::post('cost'),		
 				'approved' => 1, // Products are approved upon receipt creation
 			]);
-			$product->save();
+			\Security::htmlentities($product)->save();
 			
 			foreach($user_ids as $user_id) {
 				$amount = \Input::post($user_id, 1);	
@@ -29,8 +29,7 @@ class Controller_Create extends \Controller_Gate {
 					'product_id' => $product->id,
 					'amount' => $amount,
 				]);
-				
-				$user_product->save();
+				\Security::htmlentities($user_product)->save();
 			}
 			
 			

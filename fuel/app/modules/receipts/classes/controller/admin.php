@@ -38,7 +38,7 @@ class Controller_Admin extends \Controller_Gate {
 		$receipt = \Receipts\Model_Receipt::forge();
 		$receipt->notes = \Input::post('notes', '');
 		$receipt->date = date('Y-m-d');
-		$receipt->save();
+		\Security::htmlentities($receipt)->save();
 
 		$this->handle_sessions($session_ids, $receipt);
 		$this->handle_products($product_ids, $receipt);

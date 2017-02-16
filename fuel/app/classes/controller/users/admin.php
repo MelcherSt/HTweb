@@ -50,16 +50,12 @@ class Controller_Users_Admin extends Controller_Gate
 					'updated_at'      => 0,
 				));
 
-				if ($user and $user->save())
-				{
-					Session::set_flash('success', e('Added user #'.$user->id.'.'));
-
+				try {
+					\Security::htmlentities($user)->save();
+					Session::set_flash('success', __('user.alert.success.update'));
 					Response::redirect('users/admin');
-				}
-
-				else
-				{
-					Session::set_flash('error', e('Could not save user.'));
+				} catch (Exception $ex) {
+					Session::set_flash('error', __('user.alert.error.update'));
 				}
 			}
 			else
@@ -105,10 +101,12 @@ class Controller_Users_Admin extends Controller_Gate
 			$user->iban = Input::post('iban', null);
 			$user->lang = Input::post('lang', null);
 			
-			if ($user->save()) {
+			
+			try {
+				\Security::htmlentities($user)->save();
 				Session::set_flash('success', __('user.alert.success.update'));
-				Response::redirect('users/admin/edit/'. $id);
-			} else {
+				Response::redirect('users/admin');
+			} catch (Exception $ex) {
 				Session::set_flash('error', __('user.alert.error.update'));
 			}
 		} else {
