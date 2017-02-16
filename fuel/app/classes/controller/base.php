@@ -68,7 +68,7 @@ class Controller_Base extends Controller_Template {
 			if (!empty($lang_temp = $this->current_user->lang)){
 				$lang = $lang_temp;
 			}
-		}
+		} 
 		
 		// Set language based on preferences
 		\Config::set('language', $lang);
@@ -80,6 +80,7 @@ class Controller_Base extends Controller_Template {
 		
 		// Pre-load all localization files
 		\Lang::load('template'); 
+		\Lang::load('gate', 'gate');
 		\Lang::load('session', 'session');
 		\Lang::load('product', 'product');
 		\Lang::load('receipt', 'receipt');
