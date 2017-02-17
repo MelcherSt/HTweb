@@ -22,32 +22,31 @@ foreach($enrollments as $enrollment) {
 	<!-- SIDENAV -->
 	<div class="col-md-4">
 		<div class="panel panel-default">
-			<div class="panel-heading"><?=__('session.name')?></div>
+			<div class="panel-heading"><?=__('session.name')?></div>			
 			<div class="panel-body">
 				<?php if($view_update[0]) { ?>
 					<!-- Editable session properties -->
 					<?=Form::open('/sessions/update/'. $session->date)?>	
-					<div class="form-group ">
+					<div class="form-group form-group-sm">
 						<?=Form::label(__('session.field.notes'), 'notes')?>
 						<?=Form::textarea('notes', $session->notes, ['class' => 'form-control'])?>
-					</div>
-				
-					<div class="form-group">
-						<label for="deadline"><?=__('session.field.deadline')?></label>
-						<input class="timepicker form-control" name="deadline" type="text" id="deadline" maxlength="5" size="5" value="<?=$deadline?>"required/>
-					</div>
-				
-					<div class="form-group">
+					</div>	
+					<div class="form-group form-group-sm">
+						<?=Form::label(__('session.field.deadline'), 'deadline')?>
+						<?=Form::input('deadline', $deadline, ['type' => 'text', 'id' => 'deadline', 'class' => 'timepicker form-control', 'size' => '5'])?>
+					</div>	
+					<div class="form-group form-group-sm">
 						<?=Form::label(__('product.field.cost'), 'cost')?>
 						<div class="input-group">
 							<div class="input-group-addon">€</div>
 							<input name="cost" class="form-control" type="number" step="0.01" max="100" min="0" value="<?=$session->cost?>"required/>	
 						</div>
+					</div>		
+					<div class="form-group form-group-sm">
 						<?=Form::label(__('product.field.paid_by'), 'payer-id')?>
 						<?=Form::select('payer-id', $session->paid_by, $enroll_options, ['class' => 'form-control'])?>	
-					</div>
-	
-					<?=Form::submit(['value'=> __('session.view.btn.update_session'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
+					</div>	
+					<?=Form::submit(['value'=> __('session.view.btn.update_session'), 'name'=>'submit', 'class' => 'btn btn-sm btn-primary btn-block'])?>
 					<?=Form::close()?>
 				<?php } else { ?>
 					<!-- Static session properties -->
@@ -115,13 +114,13 @@ foreach($enrollments as $enrollment) {
 					<!-- Update enrollment -->
 					<?=Form::open('/sessions/enrollments/update/'. $session->date)?>
 					
-					<div class="form-group">
+					<div class="form-group form-group-sm">
 						<?=Form::label(__('session.view.label.guests'), 'add-guests')?>
 						<?=Form::input('guests', $cur_enrollment->guests, ['class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
 					</div>
 					
 					<?php if($view_enroll_update[1]) { ?>
-						<div class="form-group">
+						<div class="form-group form-group-sm">
 							<div class="checkbox">
 								<label>
 									<?=Form::checkbox('cook', 'on', (bool)$cur_enrollment->cook)?>
@@ -131,7 +130,7 @@ foreach($enrollments as $enrollment) {
 						</div>	
 					<?php } ?>
 					
-					<div class="form-group">
+					<div class="form-group form-group-sm">
 						<div class="checkbox">
 							<label>
 								<?=Form::checkbox('later', 'on', (bool)$cur_enrollment->later)?>
@@ -140,12 +139,12 @@ foreach($enrollments as $enrollment) {
 						</div>
 					</div>	
 					
-					<?=Form::submit(['value'=> __('session.view.btn.update_enrollment'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>	
+					<?=Form::submit(['value'=> __('session.view.btn.update_enrollment'), 'name'=>'submit', 'class' => 'btn btn-sm btn-block btn-primary'])?>	
 					<?=Form::close()?>	
 					
 					<!-- Unroll -->
 					<?=Form::open('/sessions/enrollments/delete/' . $session->date)?>	
-					<?=Form::submit(['value'=> __('session.view.btn.unenroll'), 'name'=>'submit', 'class' => 'btn btn-danger'])?>	
+					<?=Form::submit(['value'=> __('session.view.btn.unenroll'), 'name'=>'submit', 'class' => 'btn btn-sm btn-block btn-danger'])?>	
 					<?=Form::close()?>
 					
 				<?php } else if($view_enroll_create[3]) { ?>
@@ -159,7 +158,7 @@ foreach($enrollments as $enrollment) {
 					<?=Form::hidden('dishwasher', ($cur_enrollment->dishwasher ? '' : 'on'))?>						
 					<?=Form::submit( [
 						'value' => ($cur_enrollment->dishwasher ? __('session.view.btn.unenroll_dish') : __('session.view.btn.enroll_dish')),
-						'class' => 'btn' . ' ' .  ($cur_enrollment->dishwasher ? 'btn-danger' : 'btn-primary'),
+						'class' => 'btn btn-sm btn-block' . ' ' .  ($cur_enrollment->dishwasher ? 'btn-danger' : 'btn-primary'),
 						'name' => 'submit',
 						])?>								
 					<?=Form::close()?>
