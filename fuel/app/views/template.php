@@ -59,9 +59,7 @@
 		</div>
 		<hr/>
 		<footer>
-			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>© 2016-2017</small><br>
-				<small class="pull-right"><?= __('fuel') . e(Fuel::VERSION); ?></small>
-			</p>		
+			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>by Melcher © 2016-2017</small></p>		
 		</footer>
 	</div>
 </body>
