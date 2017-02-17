@@ -3,7 +3,7 @@ $enrollments = $session->get_enrollments();
 $cur_enrollment = $session->current_enrollment();
 $context = \Sessions\Context_Sessions::forge($session);
 $deadline = (new DateTime($session->deadline))->format('H:i');
-
+$has_action = false;
 $view_update = $context->view_update();
 $view_enroll_create = $context->view_enroll_create();
 $view_enroll_update = $context->view_enroll_update();
@@ -69,7 +69,9 @@ foreach($enrollments as $enrollment) {
 		<div class="panel panel-default">
 			<div class="panel-heading"><?=__('actions.name')?></div>
 			<div class="list-group">
-				<?php if($context->view_enroll_other()) {?>
+				<?php if($context->view_enroll_other()) { 
+					$has_action = true;
+					?>
 					<a class="list-group-item" onClick="showAddModal(
 						<?=(int)$context->view_enroll_create()[1]?>, 
 						<?=(int)$context->view_enroll_create()[2]?>
@@ -161,7 +163,7 @@ foreach($enrollments as $enrollment) {
 						'name' => 'submit',
 						])?>								
 					<?=Form::close()?>
-				<?php } else { ?>
+				<?php } else if(!$has_action) { ?>
 					<em><?=__('actions.no_actions')?></em>
 				<?php } ?>
 			</div>
