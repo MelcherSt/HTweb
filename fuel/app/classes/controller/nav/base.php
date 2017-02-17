@@ -24,12 +24,11 @@ class Controller_Nav_Base extends Controller_Gate {
 			if(Auth::get_user()->group->id == 6) {
 				$menu_items = array_merge($menu_items, [
 					//['stats', __('stats.title'), 'fa-line-chart'],
-					//['content/posts', __('content.post.title'), 'fa-file-text'],
 				] );
 			} 
 		}
 		
-		// Override template
+		// Override template (i.e. need to explicitly return view)
 		return \View::forge('nav/index', [
 			'menu_items' => $menu_items,
 			'active_item' => $active_item,

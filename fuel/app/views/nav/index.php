@@ -10,28 +10,24 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<?php					
-					
+				<?php			
+				foreach($menu_items as $item) {
+					$section_segment = $item[0];
+					$section_title = $item[1];
+					$section_icon = $item[2];
 
-					foreach($menu_items as $item) {
-						$section_segment = $item[0];
-						$section_title = $item[1];
-						$section_icon = $item[2];
-
-						?>
-						<li class="<?php echo $active_item == $section_segment ? 'active' : '' ?>">
-							<a href="/<?=$section_segment?>"><span class="fa <?=$section_icon?>"></span> <?=$section_title?> </a>
-						</li>
-						<?php
-					}
-				?>
+					?>
+					<li class="<?php echo $active_item == $section_segment ? 'active' : '' ?>">
+						<a href="/<?=$section_segment?>"><span class="fa <?=$section_icon?>"></span> <?=$section_title?> </a>
+					</li>
+					<?php
+				} ?>
 			</ul>
 			<ul class="nav navbar-nav pull-right">
 				<?php if (isset($current_user)){ ?>
 				<li class="dropdown">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->name . ' ' . $current_user->surname; ?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="/users/me"><span class="fa fa-user-circle"></span> <?=__('me')?></a></li>
 						<li><a href="/users/edit"><span class="fa fa-cogs"></span> <?=__('settings')?></a></li>
 						<li><a href="/privileges"><span class="fa fa-shield"></span> <?=__('privileges.title')?></a></li>
 						<li><a href="/gate/logout"><span class="fa fa-sign-out"></span> <?=__('logout')?></a></li>

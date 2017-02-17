@@ -4,6 +4,10 @@ $cur_enrollment = $session->current_enrollment();
 $context = \Sessions\Context_Sessions::forge($session);
 $deadline = (new DateTime($session->deadline))->format('H:i');
 
+$view_update = $context->view_update();
+$view_enroll_create = $context->view_enroll_create();
+$view_enroll_update = $context->view_enroll_update();
+
 foreach($session->get_unenrolled() as $user) {
 	$unenrolled_options[$user->id] = $user->get_fullname();
 }
@@ -12,20 +16,17 @@ foreach($enrollments as $enrollment) {
 	$user = $enrollment->user;
 	$enroll_options[$user->id] = $user->get_fullname();
 }
-
 ?>
 
 <div class="row">	
 	<!-- SIDENAV -->
 	<div class="col-md-4">
-		
 		<div class="panel panel-default">
-			<div class="panel-heading">Session properties</div>
+			<div class="panel-heading"><?=__('session.name')?></div>
 			<div class="panel-body">
-				<?php if($context->view_update()[0]) { ?>
+				<?php if($view_update[0]) { ?>
 					<!-- Editable session properties -->
-					<?=Form::open('/sessions/update/'. $session->date)?>
-				
+					<?=Form::open('/sessions/update/'. $session->date)?>	
 					<div class="form-group ">
 						<?=Form::label(__('session.field.notes'), 'notes')?>
 						<?=Form::textarea('notes', $session->notes, ['class' => 'form-control'])?>
@@ -45,9 +46,8 @@ foreach($enrollments as $enrollment) {
 						<?=Form::label(__('product.field.paid_by'), 'payer-id')?>
 						<?=Form::select('payer-id', $session->paid_by, $enroll_options, ['class' => 'form-control'])?>	
 					</div>
-					
+	
 					<?=Form::submit(['value'=> __('session.view.btn.update_session'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
-				
 					<?=Form::close()?>
 				<?php } else { ?>
 					<!-- Static session properties -->
@@ -67,29 +67,103 @@ foreach($enrollments as $enrollment) {
 		</div>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading">Enrollment</div>
-			<div class="panel-body">
-				<?php if($context->view_enroll_create()[0]) {?>
-					<!-- Create enrollment -->
-				
-				
-				<?php } else if($context->view_enroll_update()[0]) { ?>
-					<!-- Update enrollment -->
-				<?php } ?>
-			</div>
-		</div>
-		
-		<div class="panel panel-default">
 			<div class="panel-heading"><?=__('actions.name')?></div>
 			<div class="list-group">
 				<?php if($context->view_enroll_other()) {?>
 					<a class="list-group-item" onClick="showAddModal(
 						<?=(int)$context->view_enroll_create()[1]?>, 
 						<?=(int)$context->view_enroll_create()[2]?>
-					)" href="#"><i class="fa fa-cart-plus" aria-hidden="true"></i>  
+					)" href="#"><i class="fa fa-plus" aria-hidden="true"></i>  
 						<?=__('session.view.btn.add_enroll')?>
 					</a>
 				<?php } ?>	
+			</div>
+			<div class="panel-body">
+				<?php if($view_enroll_create[0]) {?>
+					<!-- Create enrollment -->	
+					<?=Form::open('/sessions/enrollments/create/'. $session->date)?>
+					<div class="form-group">
+						<?=Form::label(__('session.view.label.guests'), 'add-guests')?>
+						<?=Form::input('guests', null, ['class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
+					</div>
+
+					<?php if($view_enroll_create[1]) { ?>
+						<div class="form-group">
+							<div class="checkbox">
+								<label>
+									<?=Form::checkbox('cook', 'on')?>
+									<?=__('session.view.label.cook')?>
+								</label>
+							</div>
+						</div>	
+					<?php } ?>
+					
+					<div class="form-group">
+						<div class="checkbox">
+							<label>
+								<?=Form::checkbox('later', 'on')?>
+								<?=__('session.view.label.later')?>
+							</label>
+						</div>
+					</div>	
+					<?=Form::submit(['value'=> __('session.view.btn.enroll'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>	
+					<?=Form::close()?>
+					
+				<?php } else if($view_enroll_update[0]) { ?>
+					<!-- Update enrollment -->
+					<?=Form::open('/sessions/enrollments/update/'. $session->date)?>
+					
+					<div class="form-group">
+						<?=Form::label(__('session.view.label.guests'), 'add-guests')?>
+						<?=Form::input('guests', $cur_enrollment->guests, ['class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
+					</div>
+					
+					<?php if($view_enroll_update[1]) { ?>
+						<div class="form-group">
+							<div class="checkbox">
+								<label>
+									<?=Form::checkbox('cook', 'on', (bool)$cur_enrollment->cook)?>
+									<?=__('session.view.label.cook')?>
+								</label>
+							</div>
+						</div>	
+					<?php } ?>
+					
+					<div class="form-group">
+						<div class="checkbox">
+							<label>
+								<?=Form::checkbox('later', 'on', (bool)$cur_enrollment->later)?>
+								<?=__('session.view.label.later')?>
+							</label>
+						</div>
+					</div>	
+					
+					<?=Form::submit(['value'=> __('session.view.btn.update_enrollment'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>	
+					<?=Form::close()?>	
+					
+					<!-- Unroll -->
+					<?=Form::open('/sessions/enrollments/delete/' . $session->date)?>	
+					<?=Form::submit(['value'=> __('session.view.btn.unenroll'), 'name'=>'submit', 'class' => 'btn btn-danger'])?>	
+					<?=Form::close()?>
+					
+				<?php } else if($view_enroll_create[3]) { ?>
+					<!-- Create dishwasher enrollment -->
+					<div class="alert alert-warning">
+						<strong><?=__('alert.call.alert')?></strong> <?=__('session.alert.dishes')?>
+					</div>
+
+					<?=Form::open('/sessions/enrollments/update/' . $session->date)?>
+					<?=Form::hidden('method', 'dishwasher')?>
+					<?=Form::hidden('dishwasher', ($cur_enrollment->dishwasher ? '' : 'on'))?>						
+					<?=Form::submit( [
+						'value' => ($cur_enrollment->dishwasher ? __('session.view.btn.unenroll_dish') : __('session.view.btn.enroll_dish')),
+						'class' => 'btn' . ' ' .  ($cur_enrollment->dishwasher ? 'btn-danger' : 'btn-primary'),
+						'name' => 'submit',
+						])?>								
+					<?=Form::close()?>
+				<?php } else { ?>
+					<em><?=__('actions.no_actions')?></em>
+				<?php } ?>
 			</div>
 		</div>
 	</div>

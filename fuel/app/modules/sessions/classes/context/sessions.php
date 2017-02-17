@@ -128,13 +128,14 @@ final class Context_Sessions {
 	
 	/**
 	 * Is create enroll UI visible? 
-	 * @return array panel, cook, dishwasher
+	 * @return array panel, cook, dishwasher, dishwasher-panel
 	 */
 	public function view_enroll_create() {
 		$result = [];					
 		array_push($result, $this->_in_normal_enrollment_period() && ($this->session->current_enrollment()) == null);	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS);
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER);		
+		array_push($result, $this->_in_dishwasher_enrollment_period());	
 		return $result;
 	}
 	
@@ -157,8 +158,8 @@ final class Context_Sessions {
 		
 		$result = [];					
 		array_push($result, $this->_in_normal_enrollment_period() && ($this->session->current_enrollment() !== null));	
-		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || $enrollment->cook);
-		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || $enrollment->dishwasher);
+		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || (isset($enrollment) ? $enrollment->cook : false));
+		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || (isset($enrollment) ? $enrollment->dishwasher : false));
 		return $result;
 	}
 	
