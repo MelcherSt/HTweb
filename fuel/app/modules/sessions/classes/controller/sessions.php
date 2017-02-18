@@ -39,8 +39,11 @@ class Controller_Sessions extends \Controller_Gate {
 			$session = Model_Session::forge([
 				'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,
 				'date' => $date,
-			])->save();
-		} else if ($session->can_delay()) {
+			]);
+			$session->save();
+		} 
+		
+		if ($session->can_delay()) {
 			// Automatically delay existing session
 			$session->deadline = date('Y-m-d H:i:s', strtotime($session->deadline . '+1hour'));
 			$session->save();
