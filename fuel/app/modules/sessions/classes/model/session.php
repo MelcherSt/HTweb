@@ -58,7 +58,7 @@ class Model_Session extends \Orm\Model
 	/**
 	 * Delete all (incomplete) session entries created before today
 	 */
-	public static function scrub_empty_or_invalid() {
+	public static function scrub() {
 		$today = date('Y-m-d');
 				
 		// Remove all orphaned sessions

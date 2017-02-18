@@ -129,20 +129,19 @@ final class Context_Sessions {
 	
 	/**
 	 * Is create enroll UI visible? 
-	 * @return array panel, cook, dishwasher, dishwasher-panel
+	 * @return array panel, cook, dishwasher, 
 	 */
 	public function view_enroll_create() {
 		$result = [];					
 		array_push($result, $this->session->in_enrollment_period() && ($this->session->current_enrollment()) == null);	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS);
-		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER);		
-		array_push($result, $this->session->in_dishwasher_enrollment_period());	
+		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER);			
 		return $result;
 	}
 	
 	/**
 	 * Is update enroll UI visible?
-	 * @return array panel, cook, dishwasher
+	 * @return array panel, cook, dishwasher, dishwasher-panel
 	 */
 	public function view_enroll_update($user_id=null) {
 		if(empty($user_id)) {
@@ -158,9 +157,10 @@ final class Context_Sessions {
 		}
 		
 		$result = [];					
-		array_push($result, $this->session->in_enrollment_period() && ($this->session->current_enrollment() !== null));	
+		array_push($result, $this->session->in_enrollment_period() && isset($enrollment));	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || (isset($enrollment) ? $enrollment->cook : false));
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || (isset($enrollment) ? $enrollment->dishwasher : false));
+		array_push($result, $this->session->in_dishwasher_enrollment_period() && isset($enrollment));	
 		return $result;
 	}
 	

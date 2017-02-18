@@ -12,7 +12,7 @@ class Controller_Enrollments extends \Controller_Gate {
 		foreach($dates as $date) {
 			if(!\Utils::valid_date($date)) { continue;	}
 			
-			$session = Model_Session::get_by_date($date);
+			$session = \Utils::valid_session($date, false);
 			if(empty($session)) {
 				$session = Model_Session::forge([
 					'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,
@@ -22,9 +22,9 @@ class Controller_Enrollments extends \Controller_Gate {
 			}
 			
 			$enrollment = $session->current_enrollment();
-			$context = Auth_Context_Session::forge($session);
+			$context = Context_Sessions::forge($session);
 			
-			if (empty($enrollment) && $context->has_access(['enroll.create'])) {
+			if(empty($enrollment) && $context->create_enroll()) {
 				$enrollment = Model_Enrollment_Session::forge([
 					'user_id' => \Auth::get_user()->id,
 					'session_id' => $session->id,
@@ -32,7 +32,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				$enrollment->save();
 			}
 		}
-		\Response::redirect('/sessions');
+		\Response::redirect_back();
 	}
 	
 	/**
@@ -40,6 +40,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function post_create($date=null) {		
+		//TODO: switch to new context
 		$session = \Utils::valid_session($date);
 					
 		$cur_user = \Auth::get_user();
@@ -108,9 +109,10 @@ class Controller_Enrollments extends \Controller_Gate {
 	 * @param type $date
 	 */
 	public function post_update($date=null) {	
+		//TODO: switch to new context
 		$session = \Utils::valid_session($date);
 			
-		$context = Auth_Context_Session::forge($session);
+		$old_context = Auth_Context_Session::forge($session);
 		
 		// Run validation to validate amount of guests
 		$val = Model_Enrollment_Session::validate('update');
@@ -124,8 +126,8 @@ class Controller_Enrollments extends \Controller_Gate {
 
 			if(isset($user_id)) {
 				// Trying to update other user. Check rights
-				if(!$context->has_access(['enroll.other'], true)) {
-					\Utils::handle_recoverable_error($context->get_message());
+				if(!$old_context->has_access(['enroll.other'], true)) {
+					\Utils::handle_recoverable_error($old_context->get_message());
 				}	
 
 				if (empty($user = \Model_User::find($user_id))) {
@@ -133,17 +135,17 @@ class Controller_Enrollments extends \Controller_Gate {
 				}
 
 				$enrollment = $session->get_enrollment($user_id);	
-				$dishwasher = $context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]']) ? $dishwasher : $enrollment->dishwasher;
-				$cook = $context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]']) ? $cook : $enrollment->cook;	
+				$dishwasher = $old_context->has_access(['enroll.other[' . ($enrollment->dishwasher ? 'set-dishwasher,' : '') . 'dishwasher]']) ? $dishwasher : $enrollment->dishwasher;
+				$cook = $old_context->has_access(['enroll.other[' . ($enrollment->cook ? 'set-cook,' : '') . 'cook]']) ? $cook : $enrollment->cook;	
 			} else {
 				// Trying to update our enrollment.			
-				if(!$context->has_access(['enroll.update'], true)) {
-					\Utils::handle_recoverable_error($context->get_message());
+				if(!$old_context->has_access(['enroll.update'], true)) {
+					\Utils::handle_recoverable_error($old_context->get_message());
 				}
 
 				$enrollment = $session->current_enrollment();		
-				$dishwasher = $context->has_access(['enroll.update[dishwasher]'], true) ? $dishwasher : $enrollment->dishwasher;
-				$cook = $context->has_access(['enroll.update[cook]'], true) ? $cook : $enrollment->cook;	
+				$dishwasher = $old_context->has_access(['enroll.update[dishwasher]'], true) ? $dishwasher : $enrollment->dishwasher;
+				$cook = $old_context->has_access(['enroll.update[cook]'], true) ? $cook : $enrollment->cook;	
 			} 
 
 			if(empty($enrollment)) {

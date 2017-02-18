@@ -5,7 +5,7 @@ namespace Sessions;
 class Controller_Sessions extends \Controller_Gate {
 	
 	public function action_index() {		
-		Model_Session::scrub_empty_or_invalid();
+		Model_Session::scrub();
 		
 		$this->template->title = __('session.title');
 		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id);			
@@ -14,18 +14,16 @@ class Controller_Sessions extends \Controller_Gate {
 	
 	/* Some shortcuts */
 	public function action_yesterday() {
-		\Response::redirect('sessions/view/'.date('Y-m-d', strtotime('-1day')));
+		\Response::redirect('sessions/'.date('Y-m-d', strtotime('-1day')));
 	}
 	
 	public function action_today() {
-		\Response::redirect('sessions/view/'.date('Y-m-d'));
+		\Response::redirect('sessions/'.date('Y-m-d'));
 	}
 	
 	public function action_tomorrow() {
-		\Response::redirect('sessions/view/'.date('Y-m-d', strtotime('+1day')));
+		\Response::redirect('sessions/'.date('Y-m-d', strtotime('+1day')));
 	}
-	
-
 		
 	/**
 	 * View a session with given date

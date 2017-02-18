@@ -77,14 +77,14 @@ foreach($enrollments as $enrollment) {
 					</div>
 					
 					<?php if($view_enroll_update[1]) { ?>
-						<div class="form-group form-group-sm">
-							<div class="checkbox">
-								<label>
-									<?=Form::checkbox('cook', 'on', (bool)$cur_enrollment->cook)?>
-									<?=__('session.view.label.cook')?>
-								</label>
-							</div>
-						</div>	
+					<div class="form-group form-group-sm">
+						<div class="checkbox">
+							<label>
+								<?=Form::checkbox('cook', 'on', (bool)$cur_enrollment->cook)?>
+								<?=__('session.view.label.cook')?>
+							</label>
+						</div>
+					</div>	
 					<?php } ?>
 					
 					<div class="form-group form-group-sm">
@@ -104,10 +104,10 @@ foreach($enrollments as $enrollment) {
 					<?=Form::submit(['value'=> __('session.view.btn.unenroll'), 'name'=>'submit', 'class' => 'btn btn-sm btn-block btn-danger'])?>	
 					<?=Form::close()?>
 					
-				<?php } else if($view_enroll_create[3]) { ?>
+				<?php } else if($view_enroll_update[3]) { ?>
 					<!-- Create dishwasher enrollment -->
 					<div class="alert alert-warning">
-						<strong><?=__('alert.call.alert')?></strong> <?=__('session.alert.dishes')?>
+						<strong><?=__('alert.call.attention')?></strong> <?=__('session.alert.dishes')?>
 					</div>
 
 					<?=Form::open('/sessions/enrollments/update/' . $session->date)?>
@@ -200,8 +200,7 @@ foreach($enrollments as $enrollment) {
 					</tr>
 				</thead>
 				<tbody>
-				<?php 			
-					foreach($enrollments as $enrollment){ ?>
+					<?php foreach($enrollments as $enrollment){ ?>
 					<tr>
 						<td><?=$enrollment->user->get_fullname()?> 
 						<?php 
@@ -242,6 +241,6 @@ foreach($enrollments as $enrollment) {
 
 <?php if($context->view_enroll_other()) {
 	// Render necessary modals
-	View::forge('modals', ['session' => $session])->render();
+	echo View::forge('modals', ['session' => $session])->render();
 } ?>
 
