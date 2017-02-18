@@ -14,7 +14,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 		$link = '/sessions/today';
 		
 		if(isset($session)) {
-			$context = \Sessions\Auth_Context_Session::forge($session, \Auth::get_user());
+			$context = Context_Sessions::forge($session);
 			$enrollment = $session->current_enrollment();
 			$count = $session->count_total_participants();	
 			
@@ -34,7 +34,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 				$link_text = __('session.widget.link.no_cook');
 			}	
 
-			 if(!$context->has_access(['enroll.create']) && !$context->has_access(['session.delay'])) {
+			 if(!$context->create_enroll() && !$session->can_delay()) {
 				$style = 'panel-grey';
 				$message = __('session.widget.msg.deadline_passed');
 				$link_text = __('session.widget.link.deadline_passed');
