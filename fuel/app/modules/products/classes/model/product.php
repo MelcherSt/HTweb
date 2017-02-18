@@ -36,6 +36,10 @@ class Model_Product extends \Orm\Model
 		),
 	);
 	
+	protected static $_conditions = array(
+        'order_by' => array('created_at' => 'desc'),
+    );
+	
 	public static function validate($factory) {
 		$val = \Validation::forge($factory);
 		$val->add_field('name', 'Name', 'required|max_length[50]');
@@ -82,7 +86,7 @@ class Model_Product extends \Orm\Model
 	 * Retrieve all products that have been approved and haven't been settled
 	 * @return array \Products\Model_Product
 	 */
-	public static function get_ready_for_settlement() {
+	public static function get_settleable() {
 		return Model_Product::query()
 				->where('approved', true)
 				->where('settled', false)

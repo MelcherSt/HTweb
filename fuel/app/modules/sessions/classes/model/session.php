@@ -56,7 +56,7 @@ class Model_Session extends \Orm\Model
 	);
 	
 	/**
-	 * Delete all (incomplete) session entries created before today
+	 * Delete all orphaned sessions
 	 */
 	public static function scrub() {
 		$today = date('Y-m-d');
@@ -113,7 +113,7 @@ class Model_Session extends \Orm\Model
 	 * Retrieve all session older than 5 days that have not been settled yet
 	 * @return array \Sessions\Model_Session
 	 */
-	public static function get_ready_for_settlement() {
+	public static function get_settleable() {
 		return Model_Session::find('all', array(
 			'where' => array(
 				array(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<', date('Y-m-d')),
