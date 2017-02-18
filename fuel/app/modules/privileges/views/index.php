@@ -27,8 +27,8 @@
 						<td><?=$permission->id?></td>
 						<td><?=$permission->area?></td>
 						<td><?=$permission->permission?></td>
-						<td><?=$permission->actions?></td>
-						<td><?=$permission->description?></td>
+						<td><?= implode(' | ', $permission->actions)?></td>
+						<td><?=__($permission->description)?></td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>

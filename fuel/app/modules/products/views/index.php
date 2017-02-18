@@ -39,7 +39,7 @@
 						<td><?=date('Y-m-d', $product->created_at)?></td>
 						<td><?=$product->get_nicified_participants()?></td>
 						<td><?='€ ' . $product->cost?></td>
-						<td><a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$product->id?>, '<?=$product->name?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
+						<td><a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$product->id?>, '<?=e($product->name)?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>
