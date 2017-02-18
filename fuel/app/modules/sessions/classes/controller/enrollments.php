@@ -160,7 +160,7 @@ class Controller_Enrollments extends \Controller_Gate {
 	public function post_delete($date=null) {		
 		$session = \Utils::valid_session($date);
 		$context = Context_Sessions::forge($session);	
-		$user_id = \Input::post('user-id', null);	
+		$user_id = \Input::post('user-id', \Auth::get_user()->id);	
 		
 		if ($context->delete_enroll($user_id)) {
 			$enrollment = $session->get_enrollment($user_id);
@@ -170,7 +170,7 @@ class Controller_Enrollments extends \Controller_Gate {
 				$enrollment->delete();	
 				\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
 			} else {
-				\Utils::handle_recoverable_error(__('sesion.alert.error.no_enrollment', ['name' => '']));
+				\Utils::handle_recoverable_error(__('session.alert.error.no_enrollment', ['name' => '']));
 			}	
 		} else {
 			\Utils::handle_recoverable_error(__('actions.no_perm'));

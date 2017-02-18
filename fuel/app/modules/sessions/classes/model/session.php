@@ -223,11 +223,10 @@ class Model_Session extends \Orm\Model
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
 	public function get_enrollment($user_id) {		
-		$enrollment = Model_Enrollment_Session::find('first', array(
-					'where' => array(
-						array('user_id', $user_id), array('session_id', $this->id))
-				));
-		return $enrollment;
+		return Model_Enrollment_Session::query()
+				->where('user_id', $user_id)
+				->where('session_id', $this->id)
+				->get_one();
 	}
 	
 	
