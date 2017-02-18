@@ -3,6 +3,11 @@ namespace Sessions;
 
 class Model_Session extends \Orm\Model
 {
+	
+	const DEADLINE_GRACE = '+19hours';
+	const ENROLLMENT_GRACE = '+5days';
+	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
+	
 	const DEADLINE_TIME = '16:00';
 	const MAX_GUESTS = 20;
 	
@@ -57,10 +62,10 @@ class Model_Session extends \Orm\Model
 		$today = date('Y-m-d');
 				
 		// Remove all orphaned sessions
-		$query = \DB::delete('sessions')
-				->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
-				->where('date', '<', $today)
-				->execute();
+		\DB::delete('sessions')
+			->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
+			->where('date', '<', $today)
+			->execute();
 	}
 	
 	/**
@@ -79,7 +84,7 @@ class Model_Session extends \Orm\Model
 	 * @param int $user_id
 	 * @param boolean $include_self Include sessions in which user cooked
 	 * @param boolean $settled Query settled session only
-	 * @return /Sessions/Model_Session[]
+	 * @return array \Sessions\Model_Session
 	 */
 	public static function get_by_user($user_id, $include_self=false, $settled=false) {
 		$query = Model_Session::query()
@@ -91,7 +96,6 @@ class Model_Session extends \Orm\Model
 		if(!$include_self) {
 			$query = $query->where('enrollments.cook', false);
 		}
-		
 		return $query->get();
 	}
 	
@@ -107,7 +111,7 @@ class Model_Session extends \Orm\Model
 
 	/**
 	 * Retrieve all session older than 5 days that have not been settled yet
-	 * @return \Sessions\Model_Session[]
+	 * @return array \Sessions\Model_Session
 	 */
 	public static function get_ready_for_settlement() {
 		return Model_Session::find('all', array(
@@ -121,6 +125,65 @@ class Model_Session extends \Orm\Model
 	/* Below this line you will find instance methods */
 	
 	/**
+	 * Determines if the session can be delayed.
+	 * For a delay to be possible, there should be at least 1 participant and no cook.
+	 * @return boolean
+	 */
+	public function can_delay() {
+		// The deadline must be past-due and there should be 0 cooks
+		if ($this->count_participants() > 0) {
+			return !$this->in_enrollment_period() && 
+				($this->count_cooks() == 0) && 
+				$this->in_deadline_mod_grace();
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Determine if now is before the deadline
+	 * @return boolean
+	 */
+	public function in_enrollment_period() {
+		// Before deadline
+		$now = new \DateTime();
+		$deadline = new \DateTime($this->deadline);	
+		return $now <= $deadline;
+	}
+	
+	/**
+	 * Determine if now is after deadline, but before 4 days after deadline
+	 * @return boolean
+	 */
+	public function in_extended_enrollment_period() {
+		// After deadline. Before 4 days after.
+		$now = new \DateTime();
+		$deadline = new \DateTime($this->deadline);		
+		if($now > $deadline) {
+			$end_extended_period = (new \DateTime($this->date))->modify(static::ENROLLMENT_GRACE);
+			return $now < $end_extended_period;
+		}
+		return false;
+	}
+	
+	/**
+	 * Determine if now is after diner time (18:00), but before end of day
+	 * @return boolean
+	 */
+	public function in_dishwasher_enrollment_period() {
+		// After diner time. Before end of the day.
+		$now = new \DateTime();
+		$diner_time = (new \DateTime($this->date))->setTime(18, 00, 00);
+		
+		if($now > $diner_time) {
+			$end_dishwasher_period = (new \DateTime($this->date))->modify(static::DISHWASHER_ENROLLMENT_GRACE);
+			return $now < $end_dishwasher_period;
+		} 
+		return false;
+	}
+	
+	
+	/**
 	 * Retrieve user model for paying user
 	 * @return \Model_User
 	 */
@@ -130,7 +193,7 @@ class Model_Session extends \Orm\Model
 	
 	/**
 	 * Retrieve a list of user enrollments in this session
-	 * @return \Sessions\Model_Enrollment_Session[]
+	 * @return array \Sessions\Model_Enrollment_Session
 	 */
 	public function get_enrollments() {
 		return Model_Enrollment_Session::query()
@@ -143,7 +206,7 @@ class Model_Session extends \Orm\Model
 	/**
 	 * Retrieve a list of all active users not unrolled in this session
 	 * Guest user (id 0) is excluded from the list.
-	 * @return \Model_User[]
+	 * @return array \Model_User
 	 */
 	public function get_unenrolled() {
 		//select u.id, u.name from users u where u.id not in (select es.user_id from enrollment_sessions es, sessions s where es.session_id = 2 and s.id = 2);
@@ -153,22 +216,6 @@ class Model_Session extends \Orm\Model
 				->where('active', true)
 				->get();		
 	}
-	
-	/**
-	 * Determine if the given user is enrolled
-	 * @param int $user_id
-	 * @return boolean
-	 */
-	public function is_enrolled($user_id) {
-		$user = \Auth::get_user($user_id);
-		
-		$enrollment = Model_Enrollment_Session::find('first', array(
-					'where' => array(
-						array('user_id', $user->id), array('session_id', $this->id))
-				));
-
-		return isset($enrollment);
-	}	
 	
 	/**
 	 * Retrieve the enrollment (if any) for the given user
@@ -181,6 +228,29 @@ class Model_Session extends \Orm\Model
 						array('user_id', $user_id), array('session_id', $this->id))
 				));
 		return $enrollment;
+	}
+	
+	
+	/**
+	 * Get the enrollments for all cooks enrolled in this session
+	 * @return array \Sessions\Model_Enrollment_Session
+	 */
+	public function get_cook_enrollments() {
+		return Model_Enrollment_Session::query()
+				->where('cook', true)
+				->where('session_id', $this->id)
+				->get();
+	}
+	
+	/**
+	 * Get the enrollments for all cooks enrolled in this session
+	 * @return array \Sessions\Model_Enrollment_Session
+	 */
+	public function get_dishwasher_enrollments() {
+		return Model_Enrollment_Session::query()
+				->where('dishwasher', true)
+				->where('session_id', $this->id)
+				->get();
 	}
 	
 	/**
@@ -249,31 +319,5 @@ class Model_Session extends \Orm\Model
 	 */
 	public function count_total_participants() {
 		return $this->count_participants() + $this->count_guests();
-	}
-	
-	/**
-	 * Get the enrollments for all cooks enrolled in this session
-	 * @return array \Sessions\Model_Enrollment_Session
-	 */
-	public function get_cook_enrollments() {
-		$enrollments = Model_Enrollment_Session::find('all', array(
-			'where' => array(
-				array('cook', 1), array('session_id', $this->id)),
-		));
-		
-		return $enrollments;
-	}
-	
-	/**
-	 * Get the enrollments for all cooks enrolled in this session
-	 * @return array \Sessions\Model_Enrollment_Session
-	 */
-	public function get_dishwasher_enrollments() {
-		$enrollments = Model_Enrollment_Session::find('all', array(
-			'where' => array(
-				array('dishwasher', 1), array('session_id', $this->id)),
-		));
-		
-		return $enrollments;
 	}
 }

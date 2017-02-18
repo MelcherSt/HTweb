@@ -6,7 +6,7 @@ class Utils {
 	
 	/**
 	 * Redirect to 404 and show given error message
-	 * @param string $message
+	 * @param string $message Error message
 	 * @throws \HttpNotFoundException
 	 */
 	public static function handle_irrecoverable_error($message=null) {
@@ -18,18 +18,23 @@ class Utils {
 	
 	/**
 	 * Redirect and show error message
-	 * @param string $message
-	 * @param string $redirect
+	 * @param string $message Error message 
+	 * @param string $redirect If empty, redirect back to last page
 	 * @return \Response
 	 */
-	public static function handle_recoverable_error($message, $redirect) {
+	public static function handle_recoverable_error($message, $redirect=null) {
 		\Session::set_flash('error', ($message));
-		return \Response::redirect($redirect);
+		
+		if(empty($redirect)) {
+			return \Response::redirect_back();
+		} else {
+				return \Response::redirect($redirect);
+		}
 	}
 	
 	/**
 	 * Check if given string can be date formatted Y-m-d
-	 * @param type $date
+	 * @param string $date
 	 * @return boolean
 	 */
 	public static function valid_date($date) {
@@ -37,7 +42,7 @@ class Utils {
 			return false;
 		}
 		
-		$d = \DateTime::createFromFormat('Y-m-d', $date);
+		$d = DateTime::createFromFormat('Y-m-d', $date);
 		return $d && $d->format('Y-m-d') === $date;
 	}
 	
@@ -49,6 +54,26 @@ class Utils {
 			$result .= "".$charArray[$randItem];
 		}
 		return $result;
+	}
+	
+	/**
+	 * Check if the given date string is valid and has a session associated
+	 * @param string $date String with session's date
+	 * @param boolean $enforce_existance If true, when no session is associated report error
+	 * @return mixed
+	 */
+	public static function valid_session($date, $enforce_existance=true) {
+		if(!\Utils::valid_date($date)) {
+			// Invalid date string
+			\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
+		}
+		
+		$session = \Sessions\Model_Session::get_by_date($date);		
+		if($enforce_existance && empty($session)) {
+			// If there is no session and session is enforced, report error
+			\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
+		}
+		return $session;
 	}
 	
 

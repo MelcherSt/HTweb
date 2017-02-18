@@ -43,8 +43,8 @@
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 		</div>
+		<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 	</div>
 </div>
 
@@ -52,12 +52,7 @@
 <div id="delete-session-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="delete-session-form" 
-				action="/sessions/admin/" 
-				method="delete"
-				data-alert-success="<?=__('session.alert.success.remove_session')?>"
-				data-alert-error="<?=__('session.alert.error.remove_session')?>"
-			>
+			<?=Form::open('/sessions/delete')?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -65,16 +60,13 @@
 				</div>
 				<div class="modal-body">
 					<p><?=__('session.modal.remove.msg')?> <strong><span id="delete-session-date"></span></strong>?</p>
-					<div class="form-group">
-						<input id="delete-session-id" type="hidden" class="form-control" name="session_id">
-					</div>
+					<?=Form::hidden('session-id', null, ['id' => 'delete-session-id'])?>
 				</div>
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-danger" value="<?=__('session.modal.remove.btn')?>" />
-					<button type="button" class="btn btn-default"
-						data-dismiss="modal"><?=__('actions.cancel')?></button>
+				<div class="modal-footer">					
+					<?=Form::submit(['value'=> __('session.modal.remove.btn'), 'name'=>'submit', 'class' => 'btn btn-danger'])?>	
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
-			</form>
+			<?=Form::close()?>
 		</div>
 	</div>
 </div>

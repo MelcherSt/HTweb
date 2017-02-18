@@ -13,11 +13,7 @@ final class Context_Sessions {
 	 * @var type 
 	 */
 	private $mgmt_perm_name = 'sessions.administration';
-	
-	const DEADLINE_GRACE = '+19hours';
-	const ENROLLMENT_GRACE = '+5days';
-	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
-	
+
 	const MAX_COOKS = 1;
 	const MAX_DISHWASHER = 2;
 	
@@ -45,7 +41,11 @@ final class Context_Sessions {
 		return false;
 	}
 	
-	public function edit() {	
+	/**
+	 * Determine if session can be updated/edited
+	 * @return boolean
+	 */
+	public function update() {	
 		if ($this->_is_settled()) {
 			// A settled session may never be edited
 			return false;
@@ -56,7 +56,7 @@ final class Context_Sessions {
 			return true;
 		} else {
 			// Cook may edit until 4 days after
-			return $this->_is_cook() && $this->_in_extended_enrollment_period();
+			return $this->_is_cook() && $this->session->in_extended_enrollment_period();
 		}
 	}
 	
@@ -67,12 +67,13 @@ final class Context_Sessions {
 	
 	/**
 	 * Is session editUI visible? 
-	 * @return array panel, notes, cost, deadline
+	 * @return array panel, notes, deadline, cost, payer
 	 */
 	public function view_update() {
-		$result = [];					
-		array_push($result, $this->_is_cook() && ($this->_in_normal_enrollment_period() || $this->_in_extended_enrollment_period()));	
-		array_push($result, $this->_in_normal_enrollment_period());
+		$result = [];
+		array_push($result, $this->_is_cook() && ($this->session->in_enrollment_period() || $this->session->in_extended_enrollment_period()));	
+		array_push($result, $this->session->in_enrollment_period());
+		array_push($result, true);
 		array_push($result, true);
 		array_push($result, true);
 		return $result;
@@ -108,13 +109,13 @@ final class Context_Sessions {
 		if($self) {
 			// Enroll ourself
 			if($this->_is_cook()) {
-				return $this->_in_normal_enrollment_period() || $this->_in_extended_enrollment_period();
+				return $this->session->in_enrollment_period() || $this->session->in_extended_enrollment_period();
 			} else {
-				return $this->_in_normal_enrollment_period();
+				return $this->session->in_enrollment_period();
 			}	
 		} else {
 			// Enroll someone else
-			return $this->_is_cook() && $this->_in_extended_enrollment_period();	
+			return $this->_is_cook() && $this->session->in_extended_enrollment_period();	
 		}
 	}
 	
@@ -132,10 +133,10 @@ final class Context_Sessions {
 	 */
 	public function view_enroll_create() {
 		$result = [];					
-		array_push($result, $this->_in_normal_enrollment_period() && ($this->session->current_enrollment()) == null);	
+		array_push($result, $this->session->in_enrollment_period() && ($this->session->current_enrollment()) == null);	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS);
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER);		
-		array_push($result, $this->_in_dishwasher_enrollment_period());	
+		array_push($result, $this->session->in_dishwasher_enrollment_period());	
 		return $result;
 	}
 	
@@ -157,7 +158,7 @@ final class Context_Sessions {
 		}
 		
 		$result = [];					
-		array_push($result, $this->_in_normal_enrollment_period() && ($this->session->current_enrollment() !== null));	
+		array_push($result, $this->session->in_enrollment_period() && ($this->session->current_enrollment() !== null));	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || (isset($enrollment) ? $enrollment->cook : false));
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || (isset($enrollment) ? $enrollment->dishwasher : false));
 		return $result;
@@ -168,7 +169,7 @@ final class Context_Sessions {
 	 * @return boolean
 	 */
 	public function view_enroll_other() {
-		return $this->_is_cook() && $this->_in_extended_enrollment_period();
+		return $this->_is_cook() && $this->session->in_extended_enrollment_period();
 	}
 	
 	
@@ -199,36 +200,5 @@ final class Context_Sessions {
 	 */
 	private function _is_settled() {
 		return $this->session->settled;
-	}
-	
-	private function _in_normal_enrollment_period() {
-		// Before deadline
-		$now = new \DateTime();
-		$deadline = new \DateTime($this->session->deadline);
-		
-		return $now <= $deadline;
-	}
-	
-	private function _in_extended_enrollment_period() {
-		// After deadline. Before 4 days after.
-		$now = new \DateTime();
-		$deadline = new \DateTime($this->session->deadline);		
-		if($now > $deadline) {
-			$end_extended_period = (new \DateTime($this->session->date))->modify(static::ENROLLMENT_GRACE);
-			return $now < $end_extended_period;
-		}
-		return false;
-	}
-	
-	private function _in_dishwasher_enrollment_period() {
-		// After diner time. Before end of the day.
-		$now = new \DateTime();
-		$diner_time = (new \DateTime($this->session->date))->setTime(18, 00, 00);
-		
-		if($now > $diner_time) {
-			$end_dishwasher_period = (new \DateTime($this->session->date))->modify(static::DISHWASHER_ENROLLMENT_GRACE);
-			return $now < $end_dishwasher_period;
-		} 
-		return false;
 	}
 }
