@@ -76,6 +76,19 @@ class Utils {
 		return $session;
 	}
 	
+	/**
+	 * Check if the given user-id is associated with a user
+	 * @param int $user_id
+	 * @param boolean $enforce_existance If true, when no user report error
+	 * @return mixed
+	 */
+	public static function valid_user($user_id, $enforce_existance=true) {
+		$user = \Model_User::find($user_id);
+		if($enforce_existance && empty($user)) {
+			\Utils::handle_irrecoverable_error(__('user.alert.error.no_id', ['id' => $user_id]));
+		}
+		return $user;
+	}	
 
 }
 	

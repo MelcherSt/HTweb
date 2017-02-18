@@ -56,7 +56,7 @@ final class Context_Sessions {
 			return true;
 		} else {
 			// Cook may edit until 4 days after
-			return $this->_is_cook() && $this->session->in_extended_enrollment_period();
+			return $this->_is_cook() && ($this->session->in_enrollment_period() || $this->session->in_extended_enrollment_period());
 		}
 	}
 	
@@ -114,17 +114,21 @@ final class Context_Sessions {
 				return $this->session->in_enrollment_period();
 			}	
 		} else {
-			// Enroll someone else
+			// Enrolling other user, cur user must be a cook in ext-period
 			return $this->_is_cook() && $this->session->in_extended_enrollment_period();	
 		}
 	}
 	
 	public function update_enroll($user_id=null) {
-		return $this->create_enroll($user_id);
+		return $this->create_enroll($user_id) || $this->session->in_dishwasher_enrollment_period();
 	}
 	
 	public function view_enroll() {
 		return true;
+	}
+	
+	public function delete_enroll($user_id=null) {
+		return $this->create_enroll($user_id);
 	}
 	
 	/**
@@ -153,14 +157,14 @@ final class Context_Sessions {
 		if($self) {
 			$enrollment = $this->session->current_enrollment();
 		} else {
-			$enrollment = Model_Enrollment_Session::get_by_user($user_id);
+			$enrollment = Model_Enrollment_Session::get_by_user($user_id, $this->session->id);
 		}
 		
 		$result = [];					
 		array_push($result, $this->session->in_enrollment_period() && isset($enrollment));	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || (isset($enrollment) ? $enrollment->cook : false));
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || (isset($enrollment) ? $enrollment->dishwasher : false));
-		array_push($result, $this->session->in_dishwasher_enrollment_period() && isset($enrollment));	
+		array_push($result, $this->session->in_dishwasher_enrollment_period() && isset($enrollment) && $result[2]);	
 		return $result;
 	}
 	
@@ -173,9 +177,7 @@ final class Context_Sessions {
 	}
 	
 	
-	public function delete_enroll($user_id=null) {
-		return $this->create_enroll($user_id);
-	}
+
 	
 	/**
 	 * Has the current user administration privileges

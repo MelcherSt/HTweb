@@ -55,9 +55,10 @@ class Model_Enrollment_Session extends \Orm\Model {
 	 * @param type $user_id
 	 * @return \Sessions\Model_Enrollment
 	 */
-	public static function get_by_user($user_id) {
+	public static function get_by_user($user_id, $session_id) {
 		return Model_Enrollment_Session::query()
 				->where('user_id', $user_id)
+				->where('session_id', $session_id)
 				->get_one();
 	}
 	
