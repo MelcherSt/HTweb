@@ -2,7 +2,7 @@
 
 namespace Privileges;
 
-class Controller_Admin extends \Controller_Gate {
+class Controller_Admin extends \Controller_Secure {
 	
 	function before() {
 		if(!\Auth::has_access('privileges.management')) {

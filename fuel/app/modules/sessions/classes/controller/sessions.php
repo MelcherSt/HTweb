@@ -2,7 +2,7 @@
 
 namespace Sessions;
 
-class Controller_Sessions extends \Controller_Gate {
+class Controller_Sessions extends \Controller_Secure {
 	
 	public function action_index() {		
 		Model_Session::scrub();

@@ -2,7 +2,7 @@
 
 namespace Privileges;
 
-class Controller_Privileges extends \Controller_Gate {
+class Controller_Privileges extends \Controller_Secure {
 		
 	public function action_index() {
 		$this->template->title = __('privileges.title');

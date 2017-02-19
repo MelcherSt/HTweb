@@ -1,5 +1,5 @@
 <?php
-class Controller_Users extends Controller_Gate
+class Controller_Users extends Controller_Secure
 {
 	public function action_index() {
 		$data['users'] = Model_User::get_by_state();

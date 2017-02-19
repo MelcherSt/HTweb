@@ -2,7 +2,7 @@
 
 namespace Receipts;
 
-class Controller_Admin extends \Controller_Gate {
+class Controller_Admin extends \Controller_Secure {
 	
 	public function before() {
 		if(!\Auth::has_access('receipts.administration')) {

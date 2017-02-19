@@ -2,7 +2,7 @@
 
 namespace Products;
 
-class Controller_Products extends \Controller_Gate {
+class Controller_Products extends \Controller_Secure {
 	
 	public function action_index() {
 		$this->template->title = __('product.title');

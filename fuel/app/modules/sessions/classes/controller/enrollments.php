@@ -2,7 +2,7 @@
 
 namespace Sessions;
 
-class Controller_Enrollments extends \Controller_Gate {
+class Controller_Enrollments extends \Controller_Secure {
 	
 	/**
 	 * Handle quick enrollment creation. Only supports basic enrollments.

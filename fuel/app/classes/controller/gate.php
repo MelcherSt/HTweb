@@ -3,36 +3,8 @@
  * Controller regulating access to protected pages. 
  * Implement this controller when a page needs logging in. 
  */
-class Controller_Gate extends Controller_Base
+class Controller_Gate extends Controller_Secure
 {
-	/**
-	 * Set by child when it serves public content
-	 * @var boolean 
-	 */
-	protected $public_access = false; 
-	
-	/**
-	 * Set when incoming request is made by a user not currently logged-in
-	 * @var boolean 
-	 */
-	protected $public_request = false; 
-	
-	public function before() {		
-		parent::before();
-
-		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout'))) {
-			if (!Auth::check()) {
-				// No user is logged in, this is a public request
-				$this->public_request = true;
-				
-				if(!$this->public_access) {
-					// If the page is not publicly accessible and we're not logged-in, redirect to login
-					Response::redirect('gate/login');
-				}	
-			}
-		}
-	}
-
 	public function action_login() {
 		// Already logged in
 		Auth::check() and Response::redirect('gate');

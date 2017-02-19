@@ -2,7 +2,7 @@
  
 namespace Receipts;
 
-class Controller_Receipts extends \Controller_Gate {
+class Controller_Receipts extends \Controller_Secure {
 	
 	public function action_index() {
 		$this->template->title = __('receipt.title');

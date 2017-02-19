@@ -2,7 +2,7 @@
 
 namespace Stats;
 
-class Controller_Stats extends \Controller_Gate {
+class Controller_Stats extends \Controller_Secure {
 	
 	public function action_index() {	
 		$this->template->title = 'Statistics';

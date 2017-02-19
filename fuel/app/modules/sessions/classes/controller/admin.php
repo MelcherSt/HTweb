@@ -2,12 +2,10 @@
 
 namespace Sessions;
 
-class Controller_Admin extends \Controller_Gate {
+class Controller_Admin extends \Controller_Secure {
 	
 	function before() {
-		if(!\Auth::has_access('sessions.administration')) {
-			throw new \HttpNoAccessException();
-		}
+		$this->permission_required = 'sessions.administration';
 		parent::before();
 	}
 	

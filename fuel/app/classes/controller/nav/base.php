@@ -3,7 +3,7 @@
 /**
  * Renders the navigation bar which is included in the default template
  */
-class Controller_Nav_Base extends Controller_Gate {
+class Controller_Nav_Base extends Controller_Secure {
 	
 	public function before() {
 		$this->public_access = true;

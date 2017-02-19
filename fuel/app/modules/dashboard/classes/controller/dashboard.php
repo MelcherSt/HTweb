@@ -2,7 +2,7 @@
 
 namespace Dashboard;
 
-class Controller_Dashboard extends \Controller_Gate {
+class Controller_Dashboard extends \Controller_Secure {
 	
 	public function before() {
 		$this->public_access = true;

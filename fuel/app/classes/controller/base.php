@@ -1,7 +1,7 @@
 <?php
 /**
- * Base controller injecting user information in the $current_user variable
- * as well as settings the user's preferred language.
+ * Base controller
+ * Loads localization for all modules, sets global current user variable
  */
 class Controller_Base extends Controller_Template {
 	const DEFAULT_LANGUAGE = 'en';
