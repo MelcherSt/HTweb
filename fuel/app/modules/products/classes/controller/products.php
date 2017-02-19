@@ -5,6 +5,8 @@ namespace Products;
 class Controller_Products extends \Controller_Secure {
 	
 	public function action_index() {
+		$this->push_js('products-modals');
+		
 		$this->template->title = __('product.title');
 		$this->template->content = \View::forge('index');
 	}
@@ -68,7 +70,7 @@ class Controller_Products extends \Controller_Secure {
 	}
 	
 	public function post_delete() {
-		$product_id = \Input::post('product_id', null);
+		$product_id = \Input::post('product-id', null);
 		$product = Model_Product::find($product_id);
 		
 		if(empty($product)) {

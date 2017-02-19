@@ -78,28 +78,25 @@
 	</div>
 </div>
 
-<!-- Modal dialog for product deletion -->
+<!-- Modal dialog for session deletion -->
 <div id="delete-product-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="remove-package" action="/products/delete/" method="POST">
+			<?=Form::open('/products/delete')?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
 					<h4 class="modal-title"><?=__('product.modal.remove.title')?></h4>
 				</div>
 				<div class="modal-body">
-					<p><?=__('product.modal.remove.msg')?> <strong><span id="delete-product-name"></span></strong>?</p>
-					<div class="form-group">
-						<input id="delete-product-id" type="hidden" class="form-control" name="product_id">
-					</div>
+					<p><?=__('product.modal.remove.msg')?> <strong><span id="delete-product-date"></span></strong>?</p>
+					<?=Form::hidden('product-id', null, ['id' => 'delete-product-id'])?>
 				</div>
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-danger" value="<?=__('product.modal.remove.btn')?>" />
-					<button type="button" class="btn btn-default"
-						data-dismiss="modal"><?=__('actions.cancel')?></button>
+				<div class="modal-footer">					
+					<?=Form::submit(['value'=> __('product.modal.remove.btn'), 'name'=>'submit', 'class' => 'btn btn-danger'])?>	
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
-			</form>
+			<?=Form::close()?>
 		</div>
 	</div>
 </div>
@@ -108,7 +105,7 @@
 <div id="add-product-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<form id="add-product" action="/products/create/" method="POST">
+			<?=Form::open('/products/create')?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -118,20 +115,20 @@
 					<p><?=__('product.modal.create.msg')?></p>					
 					
 					<div class="form-group">
-						<label for="name"><?=__('product.field.name')?></label>
-						<input name="name" class="form-control" required></input>
+						<?=Form::label(__('product.field.name'), 'name')?>
+						<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'required'])?>
 					</div>
 					
 					<div class="form-group">
-						<label for="notes"><?=__('product.field.notes')?></label>
-						<textarea name="notes" class="form-control" rows="2"></textarea>
+						<?=Form::label(__('product.field.notes'), 'notes')?>
+						<?=Form::textarea('notes', '', ['class' => 'form-control'])?>
 					</div>
 					
 					<div class="form-group">
-						<label for="cost"><?=__('product.field.cost')?></label>
+						<?=Form::label(__('product.field.cost'), 'cost')?>
 						<div class="input-group">
 							<div class="input-group-addon">€</div>
-							<input id="cost" class="form-control" name="cost" type="number" step="0.01" max="500" min="0" value="0" required/>
+							<?=Form::input('cost', $session->cost, ['class' => 'form-control', 'type' => 'number', 'max' => 1000, 'min' => 0, 'step' => '0.01'])?>
 						</div>
 					</div>
 					
@@ -177,28 +174,7 @@
 					<button type="button" class="btn btn-default"
 						data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
-			</form>
+			<?=Form::close()?>
 		</div>
 	</div>
 </div>
-
-
-<script>
-function checkAll() {
-	$(".user-select").prop('checked', true);
-}
-
-function uncheckAll() {
-	$(".user-select").prop('checked', false);
-}
-
-function showAddModal() {
-	$("#add-product-modal").modal('show');
-}
-
-function showDeleteModal(productId, productName) {
-	$("#delete-product-modal").modal('show');
-	$("#delete-product-name").html(productName);
-	$("#delete-product-id").val(productId);
-}
-</script>

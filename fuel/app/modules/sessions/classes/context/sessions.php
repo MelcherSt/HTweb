@@ -66,7 +66,7 @@ final class Context_Sessions {
 	}
 	
 	/**
-	 * Is session editUI visible? 
+	 * Is session edit UI visible? 
 	 * @return array panel, notes, deadline, cost, payer
 	 */
 	public function view_update() {

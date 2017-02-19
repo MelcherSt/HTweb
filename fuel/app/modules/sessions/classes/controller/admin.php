@@ -12,8 +12,7 @@ class Controller_Admin extends \Controller_Secure {
 	public function action_index() {
 		Model_Session::scrub();
 		
-		$this->push_css('bootstrap-table.min');
-		$this->push_js(['admin/sessions-delete', 'bootstrap-table.min']);
+		$this->push_js('admin/sessions-delete');
 		
 		$this->template->title = __('session.title_admin');
 		$this->template->page_title = __('session.title_admin');
