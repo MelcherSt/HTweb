@@ -12,6 +12,8 @@ class Controller_Admin extends \Controller_Gate {
 	}
 	
 	public function action_index() {
+		Model_Session::scrub();
+		
 		$this->push_css('bootstrap-table.min');
 		$this->push_js(['admin/sessions-delete', 'bootstrap-table.min']);
 		

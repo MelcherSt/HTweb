@@ -11,6 +11,7 @@ if(empty($paid_by)) {
 	$paid_by = $current_user->id;
 }
 
+$enroll_options = [];
 foreach($enrollments as $enrollment) {
 	$user = $enrollment->user;
 	$enroll_options[$user->id] = $user->get_fullname();

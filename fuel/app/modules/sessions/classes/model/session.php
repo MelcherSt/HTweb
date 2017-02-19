@@ -59,11 +59,18 @@ class Model_Session extends \Orm\Model
 	 * Delete all orphaned sessions
 	 */
 	public static function scrub() {
-		$today = date('Y-m-d');
+		$today = (new \DateTime())->format('Y-m-d');
 				
 		// Remove all orphaned sessions
 		\DB::delete('sessions')
-			->where('id', 'not in', \DB::query('select session_id from enrollment_sessions'))
+			->where('id', 'not in', \DB::query('select distinct session_id from enrollment_sessions'))
+			->where('date', '<', $today)
+			->execute();
+		
+		// Remove all sessions without cook
+		\DB::delete('sessions')
+			->where('id', 'in', \DB::query('select distinct session_id from '
+					. 'enrollment_sessions where session_id = sessions.id group by sessions.id having sum(cook) = 0'))
 			->where('date', '<', $today)
 			->execute();
 	}
