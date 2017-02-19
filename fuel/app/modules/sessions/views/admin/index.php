@@ -11,7 +11,7 @@
 	
 	<div class="col-md-8">
 		<div class="table-responsive">
-			<table class="table table-hover" 
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th data-field="date"  data-sortable="true" class="col-md-2"><?=__('session.field.date')?></th>

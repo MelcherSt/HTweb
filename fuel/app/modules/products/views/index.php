@@ -20,7 +20,7 @@
 
 		<h4><?=__('product.index.paid_by_me')?></h4>
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th class="col-md-2"><?=__('product.field.name')?></th>

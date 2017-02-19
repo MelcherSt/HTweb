@@ -36,7 +36,7 @@
 	<div class="col-md-4"> 
 		<h3><?=__('receipt.view.detail')?></h3>
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th><?=__('user.field.name')?></th>

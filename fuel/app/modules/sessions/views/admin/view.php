@@ -92,7 +92,7 @@ foreach($enrollments as $enrollment) {
 		<h3><?=__('session.role.participant_plural')?></h3>
 		<p><?=__('session.view.msg', ['p_count' => $session->count_total_participants(), 'g_count' => $session->count_guests()])?></p>	
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th><?=__('user.field.name')?></th>

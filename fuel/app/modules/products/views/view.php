@@ -32,7 +32,7 @@ $participants = $product->get_participants_sorted();
 	<div class="col-md-8">
 		<h3><?=__('product.field.participant_plural')?></h3>
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th><?=__('user.field.name')?></th>

@@ -15,7 +15,7 @@
 
 	<!-- BODY -->
 	<div class="col-md-8">
-		<table class="table table-striped">
+		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
 					<th><?=__('user.field.name')?></th>

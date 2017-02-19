@@ -15,7 +15,7 @@
 	<div class="col-md-8">
 		<p><?=__('receipt.index.msg')?></p>
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th class='col-md-2'><?=__('receipt.field.date')?></th>
