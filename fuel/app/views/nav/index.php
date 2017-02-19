@@ -6,7 +6,8 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> <?=__('site_title')?> <small><?=__('site_sub')?></small></a>
+			<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> <?=__('site_title')?> <small><?=__('site_sub')?></small>   <sup><span class="badge"><?=__('state')?></span></sup></a>
+			
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">

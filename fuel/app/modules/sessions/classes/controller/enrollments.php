@@ -18,18 +18,30 @@ class Controller_Enrollments extends \Controller_Secure {
 					'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,
 					'date' => $date,
 				]);
-				$session->save();
+				
+				try {
+					$session->save();
+				} catch (\Database_Exception $ex) {
+					\Session::set_flash('error', __('session.alert.error.update_session') . '<br>' . $ex->getMessage());	
+				}
+				
 			}
 			
 			$enrollment = $session->current_enrollment();
 			$context = Context_Sessions::forge($session);
 			
 			if(empty($enrollment) && $context->create_enroll()) {
+				$user = \Auth::get_user();
 				$enrollment = Model_Enrollment_Session::forge([
-					'user_id' => \Auth::get_user()->id,
+					'user_id' => $user->id,
 					'session_id' => $session->id,
 				]);
-				$enrollment->save();
+				
+				try {
+					$enrollment->save();
+				} catch (\Database_Exception $ex) {
+					\Session::set_flash('error', __('session.alert.error.create_enroll', ['name' => $user->name]) . '<br>' . $ex->getMessage());	
+				}
 			}
 		}
 		\Response::redirect_back();
@@ -47,7 +59,7 @@ class Controller_Enrollments extends \Controller_Secure {
 		if($val->run()) {
 			/* Input variables */
 			$user_id = \Input::post('user-id', null);
-			$guests = \Input::post('guests', 0);
+			$guests = \Input::post('guests', null);
 			$cook = \Input::post('cook') == 'on' ? true : false;
 			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
 			$later = \Input::post('later') == 'on' ? true : false;
@@ -84,7 +96,7 @@ class Controller_Enrollments extends \Controller_Secure {
 				$enrollment->save();
 				\Session::set_flash('success', __('session.alert.success.create_enroll', ['name' => $user->name]));
 			} catch (\Database_Exception $ex) {
-				\Session::set_flash('error', __('session.alert.error.create_enroll', ['name' => $user->name]));	
+				\Session::set_flash('error', __('session.alert.error.create_enroll', ['name' => $user->name]) . '<br>' . $ex->getMessage());	
 			}
 		} else {	
 			\Session::set_flash('error', $val->error('guests')->get_message());
@@ -145,7 +157,7 @@ class Controller_Enrollments extends \Controller_Secure {
 				$enrollment->save();
 				\Session::set_flash('success', __('session.alert.success.update_enroll', ['name' => $user->name]));
 			} catch (\Database_Exception $ex) {
-				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $user->name]));	
+				\Session::set_flash('error', __('session.alert.error.update_enroll', ['name' => $user->name]) . '<br>' . $ex->getMessage());	
 			}
 		} else {	
 			\Session::set_flash('error', $val->error('guests')->get_message());
@@ -167,8 +179,13 @@ class Controller_Enrollments extends \Controller_Secure {
 			
 			if(isset($enrollment)) {
 				$name = $enrollment->user->name;
-				$enrollment->delete();	
-				\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
+				
+				try {
+					$enrollment->delete();	
+					\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
+				} catch (\Database_Exception $ex) {
+					\Session::set_flash('error', __('session.alert.error.remove_enroll', ['name' => $name]) . '<br>' . $ex->getMessage());	
+				}	
 			} else {
 				\Utils::handle_recoverable_error(__('session.alert.error.no_enrollment', ['name' => '']));
 			}	

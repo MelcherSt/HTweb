@@ -53,9 +53,9 @@
 					</div>
 					
 					<div class="btn-group btn-group-sm pull-right">
-							<a class="btn btn-primary" onClick="checkAll()"><?=__('actions.select_all')?></a>
-							<a class="btn btn-primary" onClick="uncheckAll()"><?=__('actions.deselect_all')?></a>
-						</div>
+						<a class="btn btn-primary" onClick="checkAll()"><?=__('actions.select_all')?></a>
+						<a class="btn btn-primary" onClick="uncheckAll()"><?=__('actions.deselect_all')?></a>
+					</div>
 					<div class="form-group">
 						<p><?=__('product.modal.create.participants')?></p>
 						

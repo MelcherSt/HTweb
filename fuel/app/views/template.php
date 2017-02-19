@@ -36,7 +36,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="row">
-				<h1><?php if(isset($page_title)) { echo $page_title; }?> <small><?php if(isset($subtitle)) { echo $subtitle; } ?></small></h1>
+				<h1><?php if(isset($page_title)) { echo $page_title; }?> <small><?php if(isset($subtitle)) { echo $subtitle; } ?></small></h1>		 
 				<hr>
 
 				<div class="alert alert-success alert-dismissable hidden-default" id="alert-success" data-dismiss="alert">

@@ -43,7 +43,7 @@ foreach($enrollments as $enrollment) {
 					<?=Form::open('/sessions/enrollments/create/'. $session->date)?>
 					<div class="form-group">
 						<?=Form::label(__('session.view.label.guests'), 'add-guests')?>
-						<?=Form::input('guests', null, ['class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
+						<?=Form::input('guests', 0, ['class' => 'form-control', 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
 					</div>
 
 					<?php if($view_enroll_create[1]) { ?>

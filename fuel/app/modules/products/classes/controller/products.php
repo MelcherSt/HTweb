@@ -5,7 +5,8 @@ namespace Products;
 class Controller_Products extends \Controller_Secure {
 	
 	public function action_index() {
-		$this->push_js('products-modals');
+		$this->push_css('select2.min');
+		$this->push_js(['products-modals', 'select2.min']);
 		
 		$this->template->title = __('product.title');
 		$this->template->content = \View::forge('index');
@@ -82,7 +83,7 @@ class Controller_Products extends \Controller_Secure {
 			$name = $product->name;
 			$product->delete();
 			
-			\Session::set_flash('success', __('product.alert.success.remove_[product', ['name' => $name]));
+			\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $name]));
 			\Response::redirect_back();
 		} else {
 			\Utils::handle_recoverable_error(__('actions.no_perm'));
