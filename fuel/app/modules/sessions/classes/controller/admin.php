@@ -5,7 +5,7 @@ namespace Sessions;
 class Controller_Admin extends \Controller_Secure {
 	
 	function before() {
-		$this->permission_required = 'sessions.administration';
+		$this->permission_required = Context_Sessions::MGMT_PERM;
 		parent::before();
 	}
 	

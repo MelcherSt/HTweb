@@ -12,7 +12,7 @@ final class Context_Sessions {
 	 * Name of the ORMAuth permission granting complete administration privileges.
 	 * @var type 
 	 */
-	private $mgmt_perm_name = 'sessions.administration';
+	const MGMT_PERM = 'sessions.administration';
 
 	const MAX_COOKS = 1;
 	const MAX_DISHWASHER = 2;
@@ -184,7 +184,7 @@ final class Context_Sessions {
 	 * @return boolean
 	 */
 	private function _is_administrator(){
-		return \Auth::has_access($this->mgmt_perm_name);
+		return \Auth::has_access(static::MGMT_PERM);
 	}
 	
 	/**

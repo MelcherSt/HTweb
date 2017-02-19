@@ -102,6 +102,18 @@ class Model_Product extends \Orm\Model
 	}
 	
 	/**
+	 * Retrieve the enrollment (if any) for the given user
+	 * @param int $user_id
+	 * @return \Products\Model_User_Product
+	 */
+	public function get_enrollment($user_id) {		
+		return Model_User_Product::query()
+				->where('user_id', $user_id)
+				->where('product_id', $this->id)
+				->get_one();
+	}
+	
+	/**
 	 * Get the amount of users paying for this product
 	 * @deprecated since version .1+alpha2
 	 * @return int

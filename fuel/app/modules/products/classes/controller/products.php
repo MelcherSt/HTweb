@@ -14,6 +14,10 @@ class Controller_Products extends \Controller_Secure {
 			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $id]));
 		}
 		
+		if(!Context_Products::forge($product)->view()) {
+			throw new \HttpNoAccessException();
+		}
+		
 		$this->template->page_title = __('product.name');
 		$this->template->title = $product->name . ' - ' . __('product.title');
 		$this->template->subtitle = $product->name;		
@@ -24,6 +28,8 @@ class Controller_Products extends \Controller_Secure {
 		$user_ids = \Input::post('users', []);
 		$val = Model_Product::validate('create');	
 		
+		
+		
 		if($val->run() && sizeof($user_ids) != 0) {
 			$product = Model_Product::forge([
 				'name' => \Input::post('name'),
@@ -32,6 +38,11 @@ class Controller_Products extends \Controller_Secure {
 				'cost' => \Input::post('cost'),		
 				'approved' => 1, // Products are approved upon receipt creation
 			]);
+			
+			if(!Context_Products::forge($product)->create()) {
+				throw new \HttpNoAccessException();
+			}
+			
 			\Security::htmlentities($product)->save();
 			
 			foreach($user_ids as $user_id) {
@@ -59,23 +70,20 @@ class Controller_Products extends \Controller_Secure {
 	public function post_delete() {
 		$product_id = \Input::post('product_id', null);
 		$product = Model_Product::find($product_id);
-		$redirect = '/products';
 		
 		if(empty($product)) {
-			// Drop out
 			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $id]));
 		}
 		
-		$context = Auth_Context_Product::forge($product);	
-		if($context->has_access(['product.delete'], true)) {
+		$context = Context_Products::forge($product);	
+		if($context->delete()) {
 			$name = $product->name;
 			$product->delete();
 			
 			\Session::set_flash('success', __('product.alert.success.remove_[product', ['name' => $name]));
-			\Response::redirect($redirect);
+			\Response::redirect_back();
 		} else {
-			// Report error
-			\Utils::handle_recoverable_error($context->get_message(), $redirect);
+			\Utils::handle_recoverable_error(__('actions.no_perm'));
 		}
 		
 	
