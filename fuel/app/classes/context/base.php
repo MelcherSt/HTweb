@@ -13,6 +13,14 @@ class Context_Base {
 		$this->user = $user;
 	}
 	
+	public function create() { return false; }
+	
+	public function update() { return false; }
+	
+	public function view() { return false; }
+	
+	public function delete() { return false; }
+	
 	/**
 	 * Is the current user active
 	 * @return type

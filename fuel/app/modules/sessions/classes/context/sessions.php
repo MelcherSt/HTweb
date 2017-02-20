@@ -16,7 +16,7 @@ final class Context_Sessions extends \Context_Base {
 	const MAX_COOKS = 1;
 	const MAX_DISHWASHER = 2;
 	
-	private function __construct(Model_Session $session, \Model_User $user) {
+	protected function __construct(Model_Session $session, \Model_User $user) {
 		parent::__construct($user);
 		$this->session = $session;
 		$this->cur_enrollment = $session->get_enrollment($user->id);
@@ -33,11 +33,6 @@ final class Context_Sessions extends \Context_Base {
 			$user = \Model_User::find(\Auth::get_user()->id);
 		}	
 		return new Context_Sessions($session, $user);
-	}
-	
-	public function create() {
-		// Sessions are created by the system, not manually.
-		return false;
 	}
 	
 	/**

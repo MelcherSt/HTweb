@@ -5,8 +5,7 @@ namespace Products;
 class Controller_Products extends \Controller_Secure {
 	
 	public function action_index() {
-		$this->push_css('select2.min');
-		$this->push_js(['products-modals', 'select2.min']);
+		$this->push_js('products-modals');
 		
 		$this->template->title = __('product.title');
 		$this->template->content = \View::forge('index');
