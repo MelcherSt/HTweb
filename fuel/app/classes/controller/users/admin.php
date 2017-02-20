@@ -9,17 +9,12 @@ class Controller_Users_Admin extends Controller_Secure
 		parent::before();
 	}
 	
-	public function action_index()
-	{
-		$data['users'] = \Model_User::find('all');
+	public function action_index() {
 		$this->template->title = "Users";
+		$this->template->page_title = "Users";
+		$this->template->subtitle = __('privileges.perm.manage');	
+		$data['users'] = \Model_User::find('all');	
 		$this->template->content = View::forge('users/admin/index', $data);
-
-	}
-
-	public function action_view($id = null)
-	{
-		\Response::redirect('/users/view/'. $id);
 	}
 
 	public function action_create() {

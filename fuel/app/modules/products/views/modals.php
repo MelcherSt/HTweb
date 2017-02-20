@@ -13,7 +13,7 @@ $active_users = Model_User::get_by_state();
 					<h4 class="modal-title"><?=__('product.modal.remove.title')?></h4>
 				</div>
 				<div class="modal-body">
-					<p><?=__('product.modal.remove.msg')?> <strong><span id="delete-product-date"></span></strong>?</p>
+					<p><?=__('product.modal.remove.msg')?> <strong><span id="delete-product-name"></span></strong>?</p>
 					<?=Form::hidden('product-id', null, ['id' => 'delete-product-id'])?>
 				</div>
 				<div class="modal-footer">					

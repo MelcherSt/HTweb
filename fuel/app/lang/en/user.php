@@ -3,9 +3,12 @@
 return array(
 	'name' => 'User',
 	'name_plural' => 'Users',
+	'empty_list' => 'There are no users to show here',
 	'field' => array(
 		'name' => 'Name',
 		'username' => 'Username',
+		'surname' => 'Surname',
+		'active' => 'Active',
 		'iban' => [
 			'' => 'IBAN',
 			'show' => 'Show IBAN',
@@ -54,4 +57,7 @@ return array(
 		],
 		'btn' => 'Save settings',
 	],
+	'create' => [
+		'btn' => 'Add user'
+	]
   );

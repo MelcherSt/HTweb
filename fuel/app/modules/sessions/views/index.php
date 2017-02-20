@@ -11,6 +11,11 @@
 				<a class="list-group-item" href="/sessions/today"><i class="fa fa-cutlery" aria-hidden="true"></i> <?=__('session.day.today')?></a>
 				<a class="list-group-item" href="/sessions/tomorrow"><i class="fa fa-chevron-right" aria-hidden="true"></i> <?=__('session.day.tomorrow')?></a>
 			</div>
+			<div class="list-group">
+				<?php if(\Auth::has_access('sessions.administration')) { ?>
+				<a href="/sessions/admin" class="list-group-item"><i class="fa fa-list-alt" aria-hidden="true"></i> <?=__('privileges.perm.manage')?></a>
+				<?php } ?>
+			</div>
 		</div>
 		
 		<!-- Quick enrollment form -->
@@ -48,18 +53,6 @@
 				</form>
 			</div>
 		</div>	
-		
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<?=__('privileges.title')?>
-			</div>
-			<div class="list-group">
-				<?php if(\Auth::has_access('sessions.administration')) { ?>
-				<a href="/sessions/admin" class="list-group-item"><i class="fa fa-list-alt" aria-hidden="true"></i> <?=__('privileges.perm.manage')?></a>
-				<?php } ?>
-			</div>
-		</div>
-		
 	</div>
 		
 	<!-- BODY -->
