@@ -34,7 +34,13 @@ class Controller_Sessions extends \Controller_Secure {
 		$this->push_js(['jquery.timepicker-1.3.5.min', 'sessions-timepicker', 'sessions-modals']);
 	
 		$session = \Utils::valid_session($date, false);
-		if(empty($session)) {
+		if(empty($session)){
+			$today = (new \DateTime())->format('Y-m-d');
+			if($date < $today) {
+				// Stop creation of ready-closed sessions
+				\Utils::handle_irrecoverable_error();
+			}
+			
 			// Create session if none exists
 			$session = Model_Session::forge([
 				'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,

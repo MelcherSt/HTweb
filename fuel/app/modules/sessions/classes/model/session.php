@@ -189,6 +189,20 @@ class Model_Session extends \Orm\Model
 		return false;
 	}
 	
+	/**
+	 * Determine whether the deadline of this session may changed. Sets both upper and lower bounds
+	 * @return boolean
+	 */
+	private function in_deadline_mod_grace() {
+		if ($this->in_enrollment_period()) { 
+			// Deadline may be changed during enrollment period just alright.
+			return true;
+		} else {
+			// If the deadline already passed
+			return strtotime(date('Y-m-d H:i:s')) < strtotime($this->date . static::DEADLINE_GRACE);
+		}
+	}
+	
 	
 	/**
 	 * Retrieve user model for paying user

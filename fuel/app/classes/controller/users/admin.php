@@ -99,8 +99,8 @@ class Controller_Users_Admin extends Controller_Secure
 				\Security::htmlentities($user)->save();
 				Session::set_flash('success', __('user.alert.success.update'));
 				Response::redirect('users/admin');
-			} catch (Exception $ex) {
-				Session::set_flash('error', __('user.alert.error.update'));
+			} catch (Database_Exception $ex) {
+				Session::set_flash('error', __('user.alert.error.update' . '<br>' . $ex->getMessage()));
 			}
 		} else {
 			if (Input::method() == 'POST') {		
@@ -114,7 +114,13 @@ class Controller_Users_Admin extends Controller_Secure
 	public function action_delete($id = null) {
 		$user = \Model_User::find($id);
 		if (isset($user)) {
-			$user->delete();
+			
+			try {
+				$user->delete();
+			} catch (Database_Exception $ex) {
+				Session::set_flash('error', e('Could not delete user #'.$id . '<br>' . $ex->getMessage()));
+			}
+			
 
 			Session::set_flash('success', e('Deleted user #'.$id));
 		} else {

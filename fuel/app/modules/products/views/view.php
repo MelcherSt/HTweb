@@ -13,7 +13,7 @@ $participants = $product->get_participants_sorted();
 		</div>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading"><?=__('session.name')?></div>			
+			<div class="panel-heading"><?=__('product.name')?></div>			
 			<div class="panel-body">
 				<div class="well">
 					<?=$product->notes?>
