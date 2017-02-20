@@ -4,14 +4,13 @@ foreach(Auth::groups() as $group) {
 } 
 ?>
 
-<?=Form::open(array("class"=>"", "enctype"=>"multipart/form-data"))?>
+<?=Form::open()?>
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group">
-			<?=Form::label('Username', 'username', array('class'=>'control-label'))?>
-			<?=Form::input('username', Input::post('username', isset($user) ? $user->username : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Username'))?>
-
-			</div>		
+				<?=Form::label('Username', 'username', array('class'=>'control-label'))?>
+				<?=Form::input('username', Input::post('username', isset($user) ? $user->username : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Username'))?>
+			</div>			
 			<div class="form-group">
 				<?=Form::label('Name', 'name', array('class'=>'control-label'))?>
 				<?=Form::input('name', Input::post('name', isset($user) ? $user->name : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Name'))?>

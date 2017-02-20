@@ -3,9 +3,12 @@
 return array(
 	'name' => 'Gebruiker',
 	'name_plural' => 'Gebruikers',
+	'empty_list' => 'Er zijn geen gebruikers om hier te tonen',
 	'field' => array(
 		'name' => 'Naam',
 		'username' => 'Gebruikersnaam',
+		'surname' => 'Achternaam',
+		'active' => 'Actief',
 		'iban' => [
 			'' => 'IBAN',
 			'show' => 'Toon IBAN',
@@ -54,4 +57,7 @@ return array(
 		],
 		'btn' => 'Instellingen opslaan',
 	],
+	'create' => [
+		'btn' => 'Gebruiker toevoegen'
+	]
   );

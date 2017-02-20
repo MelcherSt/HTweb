@@ -3,15 +3,13 @@ class Controller_Users_Admin extends Controller_Secure
 {
 
 	public function before() {
-		if(!\Auth::has_access('users.administration')) {
-			throw new \HttpNoAccessException();
-		}
+		$this->permission_required = 'users.administration';
 		parent::before();
 	}
 	
 	public function action_index() {
-		$this->template->title = "Users";
-		$this->template->page_title = "Users";
+		$this->template->title = __('user.name_plural');
+		$this->template->page_title = __('user.name_plural');
 		$this->template->subtitle = __('privileges.perm.manage');	
 		$data['users'] = \Model_User::find('all');	
 		$this->template->content = View::forge('users/admin/index', $data);
@@ -113,8 +111,7 @@ class Controller_Users_Admin extends Controller_Secure
 		}
 	}
 
-	public function action_delete($id = null)
-	{
+	public function action_delete($id = null) {
 		$user = \Model_User::find($id);
 		if (isset($user)) {
 			$user->delete();
