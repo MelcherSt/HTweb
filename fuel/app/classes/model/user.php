@@ -75,7 +75,7 @@ class Model_User extends \Auth\Model\Auth_User {
 	
 	/**
 	 * Get a list of user by their state (default is active)
-	 * @param type $active
+	 * @param boolean $active
 	 * @return type
 	 */
 	public static function get_by_state($active=true) {

@@ -3,8 +3,8 @@
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<div class="panel-heading"><?=__('actions.name')?></div>
-			<div class="panel-body">
-				<em><?=__('actions.no_actions')?></em>
+			<div class="list-group">
+				<a class="list-group-item" href="/products/admin/create" ><span class="fa fa-plus"></span> <?=__('product.index.btn.add_product')?></a>
 			</div>
 		</div>
 	</div>

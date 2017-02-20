@@ -1,3 +1,7 @@
+<?php 
+$active_users = Model_User::get_by_state(); 
+?>
+
 <!-- Modal dialog for session deletion -->
 <div id="delete-product-modal" class="modal fade">
 	<div class="modal-dialog active">
@@ -57,9 +61,7 @@
 						<a class="btn btn-primary" onClick="uncheckAll()"><?=__('actions.deselect_all')?></a>
 					</div>
 					<div class="form-group">
-						<p><?=__('product.modal.create.participants')?></p>
-						
-						
+						<p><?=__('product.modal.create.participants')?></p>						
 						<div class="table-responsive">
 							<table class="table table-hover">
 								<thead>
@@ -69,25 +71,23 @@
 									</tr>
 								</thead>
 								<tbody>
-								<?php 			
-									$active_users = Model_User::get_by_state();
-									foreach($active_users as $user):?>
+									<?php foreach($active_users as $user) {?>
 									<tr>
 										<td>
 											<label class="checkbox-inline">
-												<input type="checkbox" class="user-select" name="users[]" value="<?=$user->id?>"> <?=$user->get_fullname()?>
+												<?=Form::checkbox('users[]', $user->id, ['class' => 'user-select'])?>
+												<?=$user->get_fullname()?>
 											</label>
 										</td>
 										<td>
-											<input type="number" name="<?=$user->id?>" min="0" max="20" placeholder="1">
+											<?=Form::input($user->id, null, ['type' => 'number', 'min' => 0, 'max' => 20, 'placeholder' => 1])?>
 										</td>
 									</tr>
-									<?php endforeach; ?>
+									<?php } ?>
 								</tbody>
 							</table>
 						</div>
 					</div>	
-					<br>
 				</div>
 				<div class="modal-footer">
 					<input type="submit" class="btn btn-primary" value="<?=__('product.modal.create.btn')?>" />

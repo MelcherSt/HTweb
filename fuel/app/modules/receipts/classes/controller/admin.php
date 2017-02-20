@@ -5,31 +5,29 @@ namespace Receipts;
 class Controller_Admin extends \Controller_Secure {
 	
 	public function before() {
-		if(!\Auth::has_access('receipts.administration')) {
-			throw new \HttpNoAccessException();
-		}
+		$this->permission_required = 'receipts.administration';
 		parent::before();
 	}
 	
 	public function action_create() {
-		$this->template->title = 'Receipts';
-		$this->template->subtitle = 'create';
+		$this->template->title =__('receipt.title_admin');
+		$this->template->subtitle = __('actions.create');
 		$data['sessions'] = \Sessions\Model_Session::get_settleable();
 		$data['products'] = \Products\Model_Product::get_settleable();
 		$this->template->content = \View::forge('admin/create', $data);
 	}
 	
 	public function action_index() {
-		$this->template->title = 'Receipts';
-		
-		$data['receipts'] = Model_Receipt::find('all');
-		
+		$this->template->title = __('receipt.title_admin');
+		$this->template->page_title = __('receipt.title_admin');
+		$this->template->subtitle = __('privileges.perm.manage');	
+		$data['receipts'] = Model_Receipt::find('all');		
 		$this->template->content = \View::forge('admin/index', $data);
 	}
 
 	public function post_create() {
-		$session_ids = \Input::post('sessions', []);
-		$product_ids = \Input::post('products', []);
+		$session_ids = \Input::post('sessions');
+		$product_ids = \Input::post('products');
 		
 		if(sizeof($session_ids) == 0 && sizeof($product_ids) == 0) {
 			\Utils::handle_recoverable_error('A receipt should at least settle one or more sessions/products.', '/receipts/admin/create');

@@ -7,6 +7,7 @@ return array(
 	'remove' => 'Remove',
 	'update' => 'Update',
 	'cancel' => 'Cancel',
+	'create' => 'Create',
 	'select_all' => 'Select all',
 	'deselect_all' => 'Deselect all',
 	'no_actions' => 'There are no actions available one this page',

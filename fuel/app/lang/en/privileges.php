@@ -7,5 +7,8 @@ return array(
 		'area' => 'Area',
 		'permission' => 'Permission',
 		'description' => 'Description',
+	],
+	'perm' => [
+		'manage' => 'Manage'
 	]
 );

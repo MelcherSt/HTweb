@@ -32,7 +32,13 @@ final class Context_Products {
 	}
 	
 	public function create() {
-		return $this->_is_active() || $this->_is_administrator();
+		$self = $this->product->paid_by == $this->user->id;
+		
+		if($self) {
+			return $this->_is_active();
+		} else {
+			return $this->_is_administrator();
+		}
 	}
 	
 	public function update() {

@@ -31,13 +31,11 @@ class Controller_Products extends \Controller_Secure {
 		$user_ids = \Input::post('users', []);
 		$val = Model_Product::validate('create');	
 		
-		
-		
 		if($val->run() && sizeof($user_ids) != 0) {
 			$product = Model_Product::forge([
-				'name' => \Input::post('name'),
+				'name' => ($name = \Input::post('name')),
 				'notes' => \Input::post('notes', null),
-				'paid_by' => \Auth::get_user()->id,
+				'paid_by' => \Input::post('payer-id', \Auth::get_user()->id),
 				'cost' => \Input::post('cost'),		
 				'approved' => 1, // Products are approved upon receipt creation
 			]);
@@ -62,7 +60,7 @@ class Controller_Products extends \Controller_Secure {
 				\Security::htmlentities($user_product)->save();
 			}
 			
-			
+			\Session::set_flash('success', __('product.alert.success.create_product', ['name' => $name]));
 		} else {	
 			\Session::set_flash('error', $val->error());
 		}
@@ -75,7 +73,7 @@ class Controller_Products extends \Controller_Secure {
 		$product = Model_Product::find($product_id);
 		
 		if(empty($product)) {
-			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $id]));
+			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $product_id]));
 		}
 		
 		$context = Context_Products::forge($product);	
@@ -88,7 +86,5 @@ class Controller_Products extends \Controller_Secure {
 		} else {
 			\Utils::handle_recoverable_error(__('actions.no_perm'));
 		}
-		
-	
 	}
 }

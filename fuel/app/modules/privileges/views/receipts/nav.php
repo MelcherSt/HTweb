@@ -4,7 +4,7 @@
 	</div>
 	<div class="list-group">
 		<?php if(\Auth::has_access('receipts.administration')) { ?>
-		<a href="/receipts/admin" class="list-group-item"><i class="fa fa-list-alt" aria-hidden="true"></i> Manage receipts</a>
+		<a href="/receipts/admin" class="list-group-item"><i class="fa fa-list-alt" aria-hidden="true"></i> <?=__('privileges.perm.manage')?></a>
 		<?php } ?>
 	</div>
 

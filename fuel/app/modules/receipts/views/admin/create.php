@@ -24,13 +24,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php 	
-
-				if(sizeof($sessions) == 0) {
-					echo '<tr><td>' . __('session.empty_list') . '</td></tr>';
-				}
-				
-				foreach($sessions as $session): ?>
+				<?php foreach($sessions as $session) { ?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td>
 						<label class="checkbox-inline">
@@ -43,8 +37,9 @@
 					<td><?=$session->count_dishwashers()?></td>
 					<td>€ <?=$session->cost?></td>
 				</tr>
-				<?php endforeach; ?>
+				<?php } ?>
 			</tbody>
+			<em><?=sizeof($sessions) == 0 ? __('session.empty_list') : ''?></em>
 		</table>
 	</div>
 	
@@ -66,13 +61,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php 	
-			
-				if(sizeof($products) == 0) {
-					echo '<tr><td>' . __('product.empty_list') . '</td></tr>';
-				}
-			
-				foreach($products as $product): ?>
+			<?php foreach($products as $product) { ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td>
 						<label class="checkbox-inline">
@@ -85,12 +74,13 @@
 					<td><?=$product->get_nicified_participants()?></td>
 					<td>€ <?=$product->cost?></td>
 				</tr>
-				<?php endforeach; ?>
+			<?php } ?>
 			</tbody>
 		</table>
+		<em><?=sizeof($products) == 0 ? __('product.empty_list') : ''?></em>
 	</div>
 	
-	<button class="btn btn-success" type="submit" ><span class="fa fa-pencil-square-o"></span> Create receipt</button>
+	<button class="btn btn-primary" type="submit" ><span class="fa fa-pencil-square-o"></span> Create receipt</button>
 </form>	
 		
 <script>

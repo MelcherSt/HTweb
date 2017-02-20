@@ -7,5 +7,8 @@ return array(
 		'area' => 'Deel',
 		'permission' => 'Permissie',
 		'description' => 'Omschrijving',
+	],
+	'perm' => [
+		'manage' => 'Beheren'
 	]
 );
