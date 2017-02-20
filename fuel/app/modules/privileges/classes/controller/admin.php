@@ -5,14 +5,14 @@ namespace Privileges;
 class Controller_Admin extends \Controller_Secure {
 	
 	function before() {
-		if(!\Auth::has_access('privileges.management')) {
-			throw new \HttpNoAccessException();
-		}
+		$this->permission_required = 'privileges.administration';
 		parent::before();
 	}	
 	
 	public function action_index() {
-		return \Response::forge('Placeholder for privileges admin');
+		$this->template->title = __('privileges.title');
+		$permissions = \Auth\Model\Auth_Permission::find('all');
+		$this->template->content = \View::forge('admin/index', ['permissions' => $permissions]);
 	
 	}
 }
