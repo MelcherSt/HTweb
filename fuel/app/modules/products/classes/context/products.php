@@ -2,10 +2,9 @@
 
 namespace Products;
 
-final class Context_Products {
+final class Context_Products extends \Context_Base {
 		
 	private $product;
-	private $user;
 	
 	/**
 	 * Name of the ORMAuth permission granting complete administration privileges.
@@ -13,9 +12,9 @@ final class Context_Products {
 	 */
 	const MGMT_PERM = 'products.administration';
 	
-	private function __construct(Model_Product $product, \Model_User $user) {
-		$this->product = $product;
-		$this->user = $user;
+	protected function __construct(Model_Product $product, \Model_User $user) {
+		parent::__construct($user);
+		$this->product = $product;	
 	}
 	
 	/**
@@ -79,14 +78,6 @@ final class Context_Products {
 	 */
 	private function _is_administrator(){
 		return \Auth::has_access(static::MGMT_PERM);
-	}
-	
-	/**
-	 * Is the current user active
-	 * @return type
-	 */
-	private function _is_active() {
-		return $this->user->active;
 	}
 	
 	/**

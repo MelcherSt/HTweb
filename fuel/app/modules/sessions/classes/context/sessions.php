@@ -2,10 +2,9 @@
 
 namespace Sessions;
 
-final class Context_Sessions {
+final class Context_Sessions extends \Context_Base {
 	
 	private $session;
-	private $user;
 	private $cur_enrollment;
 	
 	/**
@@ -18,8 +17,8 @@ final class Context_Sessions {
 	const MAX_DISHWASHER = 2;
 	
 	private function __construct(Model_Session $session, \Model_User $user) {
+		parent::__construct($user);
 		$this->session = $session;
-		$this->user = $user;
 		$this->cur_enrollment = $session->get_enrollment($user->id);
 	}
 	
@@ -175,10 +174,7 @@ final class Context_Sessions {
 	public function view_enroll_other() {
 		return $this->_is_cook() && $this->session->in_extended_enrollment_period();
 	}
-	
-	
 
-	
 	/**
 	 * Has the current user administration privileges
 	 * @return boolean
