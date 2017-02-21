@@ -37,19 +37,19 @@ class Controller_Admin extends \Controller_Secure {
 		
 		$user = \Utils::valid_user(\Input::post('user-id'));
 		
-		$userperm = \Auth\Model\Auth_Userpermission::forge([
+		$user_permission = \Auth\Model\Auth_Userpermission::forge([
 			'user_id' => $user->id,
 			'perms_id' => $permission->id,
 			'actions' => [],
 		]);
 		
 		try {
-			$userperm->save();
+			$user_permission->save();
+			\Cache::delete(\Config::get('ormauth.cache_prefix', 'auth').'.permissions.user_' . $user->id);
 			\Session::set_flash('success', __('privileges.alert.success.create_enroll', ['name' => $user->name]));	
 		} catch (\Fuel\Core\Database_Exception $ex) {
 			\Session::set_flash('error', __('privileges.alert.error.create_enroll', ['name' => $user->name]) . '<br>' . $ex->getMessage());	
-		}
-		
+		}		
 		\Response::redirect_back();
 	}
 	
@@ -68,12 +68,23 @@ class Controller_Admin extends \Controller_Secure {
 				->where('user_id', $user->id)
 				->where('perms_id', $permission->id)
 				->get_one();
-				
-				
-		$name = $user->name;
-		$user_permission->delete();
-			
-		\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $name]));
+						
+		$name = $user->name;	
+		try {
+			$user_permission->delete();
+			\Cache::delete(\Config::get('ormauth.cache_prefix', 'auth').'.permissions.user_' . $user->id);
+			\Session::set_flash('success', __('privileges.alert.success.remove_enroll', ['name' => $name]));	
+		} catch (\Fuel\Core\Database_Exception $ex) {
+			\Session::set_flash('error', __('privileges.alert.error.remove_enroll', ['name' => $name]) . '<br>' . $ex->getMessage());	
+		}	
+		\Response::redirect_back();
+	}
+	
+	/**
+	 * Flush all permission by deleting permission cache
+	 */
+	public function action_reload() {
+		\Cache::delete_all(\Config::get('ormauth.cache_prefix', 'auth').'.permissions');
 		\Response::redirect_back();
 	}
 }

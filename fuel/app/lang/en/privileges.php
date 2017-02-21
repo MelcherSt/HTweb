@@ -14,9 +14,11 @@ return array(
 	'alert' => [
 		'success' => [
 			'create_enroll' => '<strong>:name</strong> has been granted this privilege.',
+			'remove_enroll' => 'Prvilige for <strong>:name</strong> has been revoked.',
 		],
 		'error' => [
 			'create_enroll' => 'Cannot grant this privilege to <strong>:name</strong>.',
+			'remove_enroll' => 'Cannot revoke privilege for <strong>:name</strong>.',
 			'no_permission' => 'Cannot find privilege with id <strong>:id</strong>.'
 		],
 	],
