@@ -28,11 +28,11 @@ foreach(Auth::groups() as $group) {
 			</div>
 			<div class="form-group">
 				<?=Form::label('Start year', 'start_year', array('class'=>'control-label'))?>
-				<?=Form::input('start_year', Input::post('start_year', isset($user) ? $user->start_year : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'Start year'))?>
+				<?=Form::input('start_year', Input::post('start_year', isset($user) ? $user->start_year : ''), ['class' => 'col-md-4 form-control', 'type' => 'number', 'placeholder'=>'Start year'])?>
 			</div>
 			<div class="form-group">
 				<?=Form::label('End year', 'end_year', array('class'=>'control-label'))?>
-				<?=Form::input('end_year', Input::post('end_year', isset($user) ? $user->end_year : ''), array('class' => 'col-md-4 form-control', 'placeholder'=>'End year'))?>
+				<?=Form::input('end_year', Input::post('end_year', isset($user) ? $user->end_year : ''), ['class' => 'col-md-4 form-control', 'type' => 'number', 'placeholder'=>(new \DateTime)->format('Y')])?>
 			</div>
 			<div class="form-group">
 				<?=Form::label('Point count', 'points', array('class'=>'control-label'))?>

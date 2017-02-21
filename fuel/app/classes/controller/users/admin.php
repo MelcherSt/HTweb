@@ -29,8 +29,8 @@ class Controller_Users_Admin extends Controller_Secure
 					'phone' => Input::post('phone', ''),
 					'active' => (Input::post('active') == 'on'),
 					'start_year' => Input::post('start_year'),
-					'end_year' => Input::post('end_year'),
-					'points' => Input::post('points', 0),
+					'end_year' => is_numeric(Input::post('end_year')) ? : 0,
+					'points' => is_numeric(Input::post('points')) ? : 0,
 					'iban' => Input::post('iban', ''),
 					'password' => Auth::instance()->hash_password(Input::post('password') . $salt),
 					'salt' => $salt,
@@ -48,7 +48,7 @@ class Controller_Users_Admin extends Controller_Secure
 					Session::set_flash('success', __('user.alert.success.update'));
 					Response::redirect('users/admin');
 				} catch (Exception $ex) {
-					Session::set_flash('error', __('user.alert.error.update'));
+					Session::set_flash('error', __('user.alert.error.update') . '<br>' . $ex->getMessage());
 				}
 			}
 			else

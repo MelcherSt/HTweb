@@ -14,7 +14,7 @@ class Model_User extends \Auth\Model\Auth_User {
 		],
 		'phone' => array(
 			'default'     => '',
-			'null'        => false,
+			'null'        => true,
 		),
 		'active' => array(
 			'default'     => 1,
