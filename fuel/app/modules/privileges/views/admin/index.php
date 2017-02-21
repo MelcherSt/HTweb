@@ -18,17 +18,15 @@
 						<th class="col-md-1"><?=__('privileges.field.area')?></th>
 						<th class="col-md-1"><?=__('privileges.field.permission')?></th>
 						<th class="col-md-2"><?=__('actions.name')?></th>
-						<th class="col-md-3"><?=__('privileges.field.description')?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach($permissions as $permission): ?>
-					<tr id="privilege-<?=$permission->id?>">
+					<tr class="clickable-row" data-href="/privileges/admin/view/<?=$permission->id?>">
 						<td><?=$permission->id?></td>
 						<td><?=$permission->area?></td>
 						<td><?=$permission->permission?></td>
-						<td><?= implode(' | ', $permission->actions)?></td>
-						<td><?=__($permission->description)?></td>
+						<td><?= implode('|', $permission->actions)?></td>
 					</tr>
 					<?php endforeach; ?>
 				</tbody>
