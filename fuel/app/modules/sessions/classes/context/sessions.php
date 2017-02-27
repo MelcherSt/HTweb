@@ -30,7 +30,7 @@ final class Context_Sessions extends \Context_Base {
 	 */
 	public static function forge(Model_Session $session, \Model_User $user=null) {
 		if(empty($user)) {
-			$user = \Model_User::find(\Auth::get_user()->id);
+			$user = \Model_User::get_current();
 		}	
 		return new Context_Sessions($session, $user);
 	}

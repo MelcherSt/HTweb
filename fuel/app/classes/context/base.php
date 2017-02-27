@@ -1,6 +1,8 @@
 <?php
-
-class Context_Base {
+/**
+ * Contextual authentication base class
+ */
+abstract class Context_Base {
 	
 	/**
 	 * User associated with context

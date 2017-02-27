@@ -6,7 +6,7 @@
 class Controller_Nav_Base extends Controller_Secure {
 	
 	public function before() {
-		$this->public_access = true;
+		$this->public_content = true;
 		parent::before();
 	}
 	
@@ -20,12 +20,6 @@ class Controller_Nav_Base extends Controller_Secure {
 					['receipts', __('receipt.title'), 'fa-money'],
 					['wall', __('user.wall.title'), 'fa-id-card'],
 			];
-			
-			if(Auth::get_user()->group->id == 6) {
-				$menu_items = array_merge($menu_items, [
-					//['stats', __('stats.title'), 'fa-line-chart'],
-				] );
-			} 
 		}
 		
 		// Override template (i.e. need to explicitly return view)

@@ -4,7 +4,9 @@
  * Loads localization for all modules, sets global current user variable
  */
 class Controller_Base extends Controller_Template {
-	const DEFAULT_LANGUAGE = 'en';
+	
+	const SYSTEM_LANGS = ['nl', 'en'];
+	const DEFAULT_LANGUAGE = static::SYSTEM_LANGS[1];
 	
 	/**
 	 * List of additional scripts to be loaded

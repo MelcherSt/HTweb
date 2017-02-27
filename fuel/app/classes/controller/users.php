@@ -8,7 +8,7 @@ class Controller_Users extends Controller_Secure
 	}
 	
 	public function action_me() {
-		\Response::redirect('users/view/' . \Auth::get_user_id()[1]);
+		\Response::redirect('users/view/' . Model_User::get_current_id());
 	}
 	
 	public function action_avatar($id=null) {
@@ -21,11 +21,7 @@ class Controller_Users extends Controller_Secure
 	}
 
 	public function action_view($id = null)	{	
-		$user = \Model_User::find($id);
-		
-		if(!isset($user)) {
-			\Utils::handle_irrecoverable_error(__('user.alert.error.no_id', ['id' => $id]));
-		}
+		$user = \Utils::valid_user($id);
 		
 		$data['user'] = $user;	
 		$this->template->title = __('user.name');
@@ -34,14 +30,13 @@ class Controller_Users extends Controller_Secure
 	}
 
 	public function action_edit()	{
-		$user = \Model_User::find(\Auth::get_user_id()[1]);
+		$user = \Model_User::get_current();
 		$val = \Model_User::validate('edit');		
 		$val->add('password', 'new password')->add_rule('min_length', 5);
 		$val->add('password2', 're-type Password')->add_rule('match_field', 'password');
 		
 		if ($val->run()) {		
 			$user->phone = Input::post('phone', '');
-			$user->active = Input::post('active', 1);
 			$user->email = Input::post('email', '');
 			$user->iban = Input::post('iban', null);
 			$user->lang = Input::post('lang', null);
@@ -49,7 +44,7 @@ class Controller_Users extends Controller_Secure
 			$cur_pass = Input::post('old_password');
 			$pass = Input::post('password');
 			
-			if(!empty($pass)) {
+			if(isset($pass)) {
 				// Generate new salt
 				$new_salt = \Utils::rand_str(12);
 				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){

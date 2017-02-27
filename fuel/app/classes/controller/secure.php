@@ -1,7 +1,6 @@
 <?php
 /**
- * Implement secure controller access. 
- * By default all access is denied when not authenticated.
+ * Ensures secure controller access. By default all unauthenticated access is denied.
  */
 class Controller_Secure extends Controller_Base
 {
@@ -9,7 +8,7 @@ class Controller_Secure extends Controller_Base
 	 * Must be set by child whenever it serves public accessible content.
 	 * @var boolean 
 	 */
-	protected $public_access = false; 
+	protected $public_content = false; 
 	
 	/**
 	 * Set by controller to identify an unauthorized (public) request.
@@ -31,15 +30,23 @@ class Controller_Secure extends Controller_Base
 				// No user is logged in, this is a public request
 				$this->public_request = true;
 				
-				if(!$this->public_access) {
-					// If the page is not publicly accessible and we're not logged-in, redirect to login
+				if(!$this->public_content) {
+					// Redirect to login if unauthenticated and content is not public
 					Response::redirect('gate/login');
 				}	
 			} else if(isset($this->permission_required)) {
-				if(!\Auth::has_access($this->permission_required)) {
-					throw new HttpNoAccessException();
-				}
+				$this->evaluate_permission();
 			}
+		}
+	}
+	
+	/**
+	 * Evaluate the required permission 
+	 * @throws HttpNoAccessException
+	 */
+	private function evaluate_permission() {
+		if(!\Auth::has_access($this->permission_required)) {
+			throw new HttpNoAccessException();
 		}
 	}
 }

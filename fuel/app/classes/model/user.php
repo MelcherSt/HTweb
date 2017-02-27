@@ -58,7 +58,7 @@ class Model_User extends \Auth\Model\Auth_User {
 	public static function validate($factory) {
 		$val = Validation::forge($factory);
 		$val->add_callable('CustomRules');
-		$val->add_field('phone', 'Phone', 'max_length[20]');
+		$val->add_field('phone', 'Phone', 'max_length[10]');
 		$val->add_field('email', 'Email', 'valid_email|max_length[255]');
 		$val->add_field('iban', 'IBAN', 'max_length[30]|valid_iban');
 		$val->add_field('lang', 'Language', 'max_length[2]|required|valid_lang');
@@ -66,11 +66,19 @@ class Model_User extends \Auth\Model\Auth_User {
 	}
 	
 	/**
-	 * Retrieve the full formatted name of this user (name + surname)
-	 * @return type
+	 * Get the currently logged-in user
+	 * @return \Model_User
 	 */
-	public function get_fullname() {
-		return $this->name . ' ' . $this->surname;
+	public static function get_current() : Model_User {
+		return Model_User::find(\Auth::get_user_id()[1]);
+	}
+	
+	/**
+	 * Get the user-id of the currently logged-in user
+	 * @return int
+	 */
+	public static function get_current_id() : int {
+		return \Auth::get_user_id()[1];
 	}
 	
 	/**
@@ -84,5 +92,13 @@ class Model_User extends \Auth\Model\Auth_User {
 				array('active', $active)),
 			'sort_by' => array('surname', 'desc')
 		));
+	}
+	
+	/**
+	 * Retrieve the full formatted name of this user (name + surname)
+	 * @return type
+	 */
+	public function get_fullname() {
+		return $this->name . ' ' . $this->surname;
 	}
 }

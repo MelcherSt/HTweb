@@ -63,11 +63,7 @@ class Controller_Users_Admin extends Controller_Secure
 	}
 
 	public function action_edit($id = null)	{
-		$user = \Model_User::find($id);
-		
-		if(!isset($user)) {
-			\Utils::handle_irrecoverable_error(__('user.alert.error.no_id', ['id' => $id]));
-		}
+		$user = \Utils::valid_user($id);
 		
 		$data['user'] = $user;	
 		$this->template->title = "Users";
@@ -75,7 +71,7 @@ class Controller_Users_Admin extends Controller_Secure
 	}
 	
 	public function post_edit($id = null) {
-		$user = \Model_User::find($id);
+		$user = \Utils::valid_user($id);
 		$val = \Model_User::validate('edit');		
 		$val->add('password', 'new password')->add_rule('min_length', 5);
 		$val->add('password2', 're-type Password')->add_rule('match_field', 'password');
@@ -92,8 +88,7 @@ class Controller_Users_Admin extends Controller_Secure
 			$user->points = Input::post('points', 0);
 			$user->email = Input::post('email', '');
 			$user->iban = Input::post('iban', null);
-			$user->lang = Input::post('lang', null);
-			
+			$user->lang = Input::post('lang', null);	
 			
 			try {
 				\Security::htmlentities($user)->save();
@@ -113,19 +108,12 @@ class Controller_Users_Admin extends Controller_Secure
 
 	public function action_delete($id = null) {
 		$user = \Model_User::find($id);
-		if (isset($user)) {
-			
-			try {
-				$user->delete();
-			} catch (Database_Exception $ex) {
-				Session::set_flash('error', e('Could not delete user #'.$id . '<br>' . $ex->getMessage()));
-			}
-			
-
+		try {
+			$user->delete();
 			Session::set_flash('success', e('Deleted user #'.$id));
-		} else {
-			Session::set_flash('error', e('Could not delete user #'.$id));
-		}
+		} catch (Database_Exception $ex) {
+			Session::set_flash('error', e('Could not delete user #'.$id . '<br>' . $ex->getMessage()));
+		}	
 		Response::redirect('users/admin');
 	}
 }

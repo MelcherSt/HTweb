@@ -4,15 +4,13 @@
  */
 class CustomRules {
 	
-	const SYSTEM_LANGS = ['nl', 'en'];
-	
 	/**
 	 * Check if a given two char language identification is a valid system language
 	 * @param type $lang
 	 * @return type
 	 */
 	public static function _validation_valid_lang($lang=null) {	
-		if(!($pass = in_array($lang, CustomRules::SYSTEM_LANGS))) {
+		if(!($pass = in_array($lang, Controller_Base::SYSTEM_LANGS))) {
 			Validation::active()->set_message('valid_lang', __('user.alert.error.invalid_lang', ['label' => ':label']));
 		}
 		return $pass;
