@@ -6,7 +6,8 @@
 class Controller_Base extends Controller_Template {
 	
 	const SYSTEM_LANGS = ['nl', 'en'];
-	const DEFAULT_LANGUAGE = static::SYSTEM_LANGS[1];
+	const DEFAULT_LANG = 'en';
+	const FALLBACK_LANG = 'en';
 	
 	/**
 	 * List of additional scripts to be loaded
@@ -64,7 +65,7 @@ class Controller_Base extends Controller_Template {
 			break;
 		}
 		
-		$lang = Controller_Base::DEFAULT_LANGUAGE;
+		$lang = Controller_Base::DEFAULT_LANG;
 		
 		if(isset($this->current_user)) {
 			if (!empty($lang_temp = $this->current_user->lang)){
@@ -74,7 +75,7 @@ class Controller_Base extends Controller_Template {
 		
 		// Set language based on preferences
 		\Config::set('language', $lang);
-		\Config::set('language_fallback', 'en');
+		\Config::set('language_fallback', static::FALLBACK_LANG);
 		
 		// Set locale
 		$locales = \Config::get('locales');

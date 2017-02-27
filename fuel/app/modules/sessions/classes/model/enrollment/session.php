@@ -66,7 +66,7 @@ class Model_Enrollment_Session extends \Orm\Model {
 	 * Retrieve a list enrollments for all settleable sessions for current user
 	 * @return \Sessions\Model_Enrollment[]
 	 */
-	public static function get_ready_for_settlement($user_id) {
+	public static function get_settleable($user_id) {
 		return Model_Enrollment_Session::query()
 			->related('session')
 			->where('session.settled', false)
@@ -75,13 +75,21 @@ class Model_Enrollment_Session extends \Orm\Model {
 			->get();
 	}
 	
+	public static function get_unsettleable($user_id) {
+		return Model_Enrollment_Session::query()
+			->related('session')
+			->where('session.settled', false)
+			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '>', date('Y-m-d'))
+			->where('user_id', $user_id)
+			->get();
+	}
+	
 	/**
-	 * Get a PREDITICION of points delta for this enrollment. 
-	 * Warning: this function MUST NOT be used for settling receipts
-	 * as it does not take dishwashers into account.
+	 * Get a prediction of points delta for this enrollment. 
+	 * @pram boolean Will perform a precise calculation as during receipt creation.
 	 * @return int
 	 */
-	public function get_point_prediction() {
+	public function get_point_prediction($precise=false) {
 		// Default loss
 		$max_loss = 4;
 		$session = $this->session;
@@ -91,9 +99,18 @@ class Model_Enrollment_Session extends \Orm\Model {
 		$dish_gain = 1;
 
 		$cook_count = $session->count_cooks();
+		$dish_count = $session->count_dishwashers();
 		$total_count = $session->count_total_participants();
 		$guests = $this->guests;
 	
+		if($precise) {
+			if ($dish_count == 0) {
+				$max_loss = 2; // No dishwashers means less loss
+			} else if ($dish_count == 1) {
+				$dish_gain = 2; // Double the multiplier for a single dishwasher
+			}
+		}		
+		
 		if ($cook_count == 2) {
 			$cook_gain = 1; // Two cooks split the multiplier
 		}

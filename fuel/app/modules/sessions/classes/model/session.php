@@ -5,13 +5,13 @@ class Model_Session extends \Orm\Model
 {
 	
 	const DEADLINE_GRACE = '+19hours';
-	const ENROLLMENT_GRACE = '+5days';
+	const ENROLLMENT_GRACE = '+3days';
 	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
 	
 	const DEADLINE_TIME = '16:00';
 	const MAX_GUESTS = 20;
 	
-	const SETTLEABLE_AFTER = '5'; // Used to retrieve settleable sessions in days
+	const SETTLEABLE_AFTER = '3'; // Used to retrieve settleable sessions in days
 	
 	protected static $_properties = array(
 		'id',
