@@ -38,8 +38,14 @@ class Controller_Api extends \Api\Controller_Auth {
 			foreach($settleable_enrollments as $enrollment) {
 				$settleable_points += $enrollment->get_point_prediction(true);
 			}
+			
+			$unsettleable_points = 0;
+			$unsettleable_enrollments = \Sessions\Model_Enrollment_Session::get_settleable($user->id);
+			foreach($unsettleable_enrollments as $enrollment) {
+				$unsettleable_points += $enrollment->get_point_prediction();
+			}
 
-			$total_points = $user->points + $settleable_points;	
+			$total_points = ((int)$user->points + (int)$settleable_points + (int)$unsettleable_enrollments);	
 			if(empty($min_points) || $total_points < $min_points) {
 				$min_points = $total_points;
 				$next_cook = $user->name;
