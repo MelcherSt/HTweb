@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'title' => 'Mijn Afrekeningen',
+	'title' => 'Afrekeningen',
 	'title_admin' => 'Afrekeningen',
 	'empty_list' => '<em>Er zijn geen verrekeningen om hier te tonen</em>',
 	'field' => [

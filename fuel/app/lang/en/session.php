@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'title' => 'My Sessions',
+	'title' => 'Sessions',
 	'title_admin' => 'Sessions',
 	'name' => 'Session',
 	'name_plural' => 'Session',

@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'title' => 'My Receipts',
+	'title' => 'Receipts',
 	'title_admin' => 'Receipts',
 	'empty_list' => '<em>There are no receipts to show here</em>',
 	'field' => [

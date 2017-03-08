@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'title' => 'Mijn Sessies',
+	'title' => 'Sessies',
 	'title_admin' => 'Sessies',
 	'name' => 'Sessie',
 	'name_plural' => 'Sessies',

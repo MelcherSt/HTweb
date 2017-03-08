@@ -1,6 +1,6 @@
 <?php
 
 return [
-	'title' => 'Mijn statistieken',
+	'title' => 'Statistieken',
 	'widget' => 'nog te verrekenen',
 ];

@@ -1,6 +1,6 @@
 <?php
 
 return [
-	'title' => 'My Stats',
+	'title' => 'Stats',
 	'widget' => 'to be settled',
 ];

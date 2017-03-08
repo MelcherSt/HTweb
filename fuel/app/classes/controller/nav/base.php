@@ -19,6 +19,7 @@ class Controller_Nav_Base extends Controller_Secure {
 					['products', __('product.title'), 'fa fa-shopping-bag'],				
 					['receipts', __('receipt.title'), 'fa-money'],
 					['wall', __('user.wall.title'), 'fa-id-card'],
+					['stats', __('stats.title'), 'fa-area-chart'],
 			];
 		}
 		
