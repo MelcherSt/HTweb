@@ -49,7 +49,7 @@ class Controller_Api extends \Api\Controller_Auth {
 			}
 
 			$count = $user->points;
-			$total_points = (int)$count + (int)$settleable_points + (int)$unsettleable_enrollments;	
+			$total_points = $count + $settleable_points + $unsettleable_points;	
 			if(empty($min_points) || $total_points < $min_points) {
 				$min_points = $total_points;
 				$next_cook = $user->name;
