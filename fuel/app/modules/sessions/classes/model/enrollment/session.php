@@ -89,7 +89,7 @@ class Model_Enrollment_Session extends \Orm\Model {
 	 * @pram boolean Will perform a precise calculation as during receipt creation.
 	 * @return int
 	 */
-	public function get_point_prediction($precise=false) {
+	public function get_point_prediction($precise=false) : int {
 		// Default loss
 		$max_loss = 4;
 		$session = $this->session;
