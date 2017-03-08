@@ -8,6 +8,7 @@
 	<div id="distr-bar-chart" style="height: 250px; width: 100%;"></div>
 </div>
 
+
 <script>
 	// Create a Bar Chart with Morris
   var chart = Morris.Bar({
@@ -30,3 +31,5 @@
       chart.setData(data);
     });
 </script>
+
+<h3><?=__('stats.next_cook_msg')?> <?=\Stats\Controller_Api::_request_stats()['next_cook']['name']?></h3>

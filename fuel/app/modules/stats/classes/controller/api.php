@@ -7,26 +7,26 @@ class Controller_Api extends \Api\Controller_Auth {
 	const CACHE_KEY = 'stats';
 	
 	public function action_index() {
-		return $this->_request_stats()['results'];
+		return static::_request_stats()['results'];
 	}
 	
 	public function action_cook() {
-		return $this->_request_stats()['next_cook'];
+		return static::_request_stats()['next_cook'];
 	}
 	
-	private function _request_stats() {
+	public static function _request_stats() {
 		try {
 			$data = \Cache::get(static::CACHE_KEY);
 		} catch (\CacheNotFoundException $ex) {
 			// Data expired or not available, fetch it online
-			$data = $this->_calculage_stats();
+			$data = static::_calculage_stats();
 			// Put data in cache to prevent unneeded requests (expires in 5 hours)
 			\Cache::set(static::CACHE_KEY, $data,  3600 * 5);
 		}
 		return $data;
 	}
 	
-	private function _calculage_stats() {	
+	private static function _calculage_stats() {	
 		$active_users = \Model_User::get_by_state();
 		
 		$min_points;
