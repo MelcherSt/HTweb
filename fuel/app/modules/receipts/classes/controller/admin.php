@@ -38,9 +38,13 @@ class Controller_Admin extends \Controller_Secure {
 		$receipt->date = date('Y-m-d');
 		\Security::htmlentities($receipt)->save();
 
-		$this->handle_sessions($session_ids, $receipt);
-		$this->handle_products($product_ids, $receipt);
+		if(!empty($session_ids)) {
+			$this->handle_sessions($session_ids, $receipt);
+		}
 		
+		if(!empty($product_ids)) {
+			$this->handle_products($product_ids, $receipt);
+		}		
 		\Response::redirect('/receipts/admin');
 	}
 	

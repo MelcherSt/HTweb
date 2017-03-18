@@ -32,7 +32,8 @@ class Controller_Secure extends Controller_Base
 				
 				if(!$this->public_content) {
 					// Redirect to login if unauthenticated and content is not public
-					Response::redirect('gate/login');
+					$redirect = Uri::create('gate/login', [], ['destination' => Uri::string()]);
+					Response::redirect($redirect);
 				}	
 			} else if(isset($this->permission_required)) {
 				$this->evaluate_permission();

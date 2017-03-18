@@ -37,8 +37,6 @@ class Controller_Api extends \Api\Controller_Auth {
 			$user_id = $user->id;
 
 			$settleable_enrollments = \Sessions\Model_Enrollment_Session::get_settleable($user_id);
-			$unsettleable_enrollments = \Sessions\Model_Enrollment_Session::get_unsettleable($user_id);
-
 			foreach($settleable_enrollments as $enrollment) {
 				$settleable_points += $enrollment->get_point_prediction(true);
 			}
