@@ -20,6 +20,8 @@ class Controller_Admin extends \Controller_Secure {
 	}
 	
 	public function action_create() {
+		$this->push_js('products-modals');
+		
 		$this->template->title = __('product.title_admin');
 		$this->template->subtitle = __('actions.create');		
 		$this->template->content = \View::forge('admin/create');
