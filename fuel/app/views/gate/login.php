@@ -1,7 +1,7 @@
 <div class="row">
 	<p><?=__('gate.login.msg')?></p>
 	<div class="col-md-3">
-		<?=Form::open(array())?>
+		<?=Form::open()?>
 			<?php if (Input::get('destination') !== null): ?>
 				<?=Form::hidden('destination', Input::get('destination')); ?>
 			<?php endif; ?>
