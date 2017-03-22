@@ -1,4 +1,5 @@
 <?php
+$unenrolled_options = [];
 foreach($session->get_unenrolled() as $user) {
 	$unenrolled_options[$user->id] = $user->get_fullname();
 }
