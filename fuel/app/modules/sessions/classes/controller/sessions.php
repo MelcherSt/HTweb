@@ -8,7 +8,7 @@ class Controller_Sessions extends \Controller_Secure {
 		Model_Session::scrub();
 		
 		$this->template->title = __('session.title');
-		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id);			
+		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id, true);			
 		$this->template->content = \View::forge('index', $data);
 	}
 	
@@ -35,18 +35,18 @@ class Controller_Sessions extends \Controller_Secure {
 	
 		$session = \Utils::valid_session($date, false);
 		if(empty($session)){
-			$today = new \DateTime();
-			$date = new \DateTime($date);	
+			$nowDateTime = new \DateTime();
+			$dateTime = new \DateTime($date);	
 			
-			if($date < $today) {
+			if($dateTime < $nowDateTime) {
 				// Stop creation of ready-closed sessions
 				\Utils::handle_irrecoverable_error();
 			}
 			
 			// Create session if none exists
 			$session = Model_Session::forge([
-				'deadline' => $date->format('Y-m-d') . ' ' . Model_Session::DEADLINE_TIME,
-				'date' => $date,
+				'deadline' => $dateTime->format('Y-m-d') . ' ' . Model_Session::DEADLINE_TIME,
+				'date' => $dateTime->format('Y-m-d'),
 			]);
 			$session->save();
 		} 

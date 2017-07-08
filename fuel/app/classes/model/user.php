@@ -4,7 +4,7 @@
  * extended properties
  */
 class Model_User extends \Auth\Model\Auth_User {
-	protected static $_properties = array(
+	protected static $_properties = [
 		'id',
 		'username',
 		'surname',
@@ -12,48 +12,48 @@ class Model_User extends \Auth\Model\Auth_User {
 		'lang' => [
 			'default' => 'en',
 		],
-		'phone' => array(
+		'phone' => [
 			'default'     => '',
 			'null'        => true,
-		),
-		'active' => array(
+		],
+		'active' => [
 			'default'     => 1,
 			'null'        => false,
-		),
+		],
 		'start_year',
-		'end_year' => array(
+		'end_year' => [
 			'default'     => 0,
 			'null'        => false,
-		),
-		'points' => array(
+		],
+		'points' => [
 			'default'     => 0,
 			'null'        => false,
-		),
+		],
 		'password',
 		'salt',
 		'group_id',
-		'iban' => array(
+		'iban' => [
 			'default'     => '',
 			'null'        => true,
-		),
-		'email' => array(
+		],
+		'email' => [
 			'default'     => '',
 			'null'        => false,
-		),
-		'avatar' => array(
+		],
+		'avatar' => [
 			'default'     => '',
 			'null'        => false,
-		),
+		],
 		'last_login' => [
 			'default' => 0,
 		],
 		'login_hash' => [
 			'default' => ''],
-	);
+	];
 	
-	protected static $_conditions = array(
-        'order_by' => array('name' => 'asc'),
-    );
+	protected static $_conditions = [
+        'order_by' => ['name' => 'asc'],
+    ];
 
 	public static function validate($factory) {
 		$val = Validation::forge($factory);
@@ -67,38 +67,37 @@ class Model_User extends \Auth\Model\Auth_User {
 	
 	/**
 	 * Get the currently logged-in user
-	 * @return \Model_User
+	 * @return Model_User
 	 */
-	public static function get_current() {
-		return Model_User::find(\Auth::get_user_id()[1]);
+	public static function get_current() : Model_User {
+		return Model_User::find(\Auth::get_user()->id);
 	}
-	
+		
 	/**
-	 * Get the user-id of the currently logged-in user
-	 * @return int
-	 */
-	public static function get_current_id() {
-		return \Auth::get_user_id()[1];
-	}
-	
-	/**
-	 * Get a list of user by their state (default is active)
+	 * Get a list of users by their state (default is active)
 	 * @param boolean $active
-	 * @return type
+	 * @return array Model_User
 	 */
-	public static function get_by_state($active=true) {
-		return Model_User::find('all', array(
-			'where' => array(
-				array('active', $active)),
-			'sort_by' => array('surname', 'desc')
-		));
+	public static function get_by_state(bool $active=true) : array {
+		return Model_User::query()
+			->where('active', $active)
+			->order_by('surname', 'desc')
+			->get();
 	}
 	
 	/**
-	 * Retrieve the full formatted name of this user (name + surname)
-	 * @return type
+	 * Retrieve the full formatted name of this user (name + surname).
+	 * @return string
 	 */
-	public function get_fullname() {
+	public function get_fullname() : string {
 		return $this->name . ' ' . $this->surname;
+	}
+	
+	/**
+	 * Retrive a short copy of this user's name. 
+	 * @return string
+	 */
+	public function get_shortname() : string {
+		return $this->name;
 	}
 }

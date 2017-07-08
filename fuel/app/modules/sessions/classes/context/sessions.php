@@ -50,7 +50,7 @@ final class Context_Sessions extends \Context_Base {
 			return true;
 		} else {
 			// Cook may edit until 4 days after
-			return $this->_is_cook() && ($this->session->is_predeadline() || $this->session->in_extended_enrollment_period());
+			return $this->_is_cook() && ($this->session->is_predeadline() || $this->session->is_postdeadline_audit());
 		}
 	}
 	
@@ -65,7 +65,7 @@ final class Context_Sessions extends \Context_Base {
 	 */
 	public function view_update() {
 		$result = [];
-		array_push($result, $this->_is_cook() && ($this->session->is_predeadline() || $this->session->in_extended_enrollment_period()));	
+		array_push($result, $this->_is_cook() && ($this->session->is_predeadline() || $this->session->is_postdeadline_audit()));	
 		array_push($result, $this->session->is_predeadline());
 		array_push($result, true);
 		array_push($result, true);
@@ -103,13 +103,13 @@ final class Context_Sessions extends \Context_Base {
 		if($self) {
 			// Enroll ourself
 			if($this->_is_cook()) {
-				return $this->session->is_predeadline() || $this->session->in_extended_enrollment_period();
+				return $this->session->is_predeadline() || $this->session->is_postdeadline_audit();
 			} else {
 				return $this->session->is_predeadline();
 			}	
 		} else {
 			// Enrolling other user, cur user must be a cook in ext-period
-			return $this->_is_cook() && $this->session->in_extended_enrollment_period();	
+			return $this->_is_cook() && $this->session->is_postdeadline_audit();	
 		}
 	}
 	
@@ -167,7 +167,7 @@ final class Context_Sessions extends \Context_Base {
 	 * @return boolean
 	 */
 	public function view_enroll_other() {
-		return $this->_is_cook() && $this->session->in_extended_enrollment_period();
+		return $this->_is_cook() && $this->session->is_postdeadline_audit();
 	}
 
 	/**

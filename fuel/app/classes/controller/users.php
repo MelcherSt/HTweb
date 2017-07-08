@@ -8,7 +8,7 @@ class Controller_Users extends Controller_Secure
 	}
 	
 	public function action_me() {
-		\Response::redirect('users/view/' . Model_User::get_current_id());
+		\Response::redirect('users/view/' . \Auth::get_user()->id);
 	}
 	
 	public function action_avatar($id=null) {

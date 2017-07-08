@@ -147,44 +147,30 @@ class Model_Session extends \Orm\Model
 	}
 	
 	/**
-	 * Determine if now is before the deadline
+	 * Determine if now is before the deadline.
 	 * @return boolean
 	 */
 	public function is_predeadline() : bool {
-		// Before deadline
-		$now = new \DateTime();
-		$deadline = new \DateTime($this->deadline);	
-		return $now <= $deadline;
+		return new \DateTime() <=  new \DateTime($this->deadline);
 	}
 	
 	/**
-	 * Determine if now is after deadline, but before 4 days after deadline
+	 * Determine if now is in the ~4 day audit period after the deadline.
 	 * @return boolean
 	 */
-	public function in_extended_enrollment_period() : bool {
-		// After deadline. Before 4 days after.	
-		if(!$this->is_predeadline()) {
-			$now = new \DateTime();
-			$end_extended_period = (new \DateTime($this->date))->modify(static::ENROLLMENT_GRACE);
-			return $now < $end_extended_period;
-		}
-		return false;
+	public function is_postdeadline_audit() : bool {
+		return (!$this->is_predeadline()) 
+		&& new \DateTime() < (new \DateTime($this->date))->modify(static::ENROLLMENT_GRACE);
 	}
 	
 	/**
-	 * Determine if now is after diner time (18:00), but before end of day
+	 * Determine if now is after diner time (18:00:00), but before end of day.
 	 * @return boolean
 	 */
 	public function in_dishwasher_enrollment_period() : bool {
-		// After diner time. Before end of the day.
 		$now = new \DateTime();
-		$diner_time = (new \DateTime($this->date))->setTime(18, 00, 00);
-		
-		if($now > $diner_time) {
-			$end_dishwasher_period = (new \DateTime($this->date))->modify(static::DISHWASHER_ENROLLMENT_GRACE);
-			return $now < $end_dishwasher_period;
-		} 
-		return false;
+		return $now > (new \DateTime($this->date))->setTime(18, 00, 00)
+		&& $now < (new \DateTime($this->date))->modify(static::DISHWASHER_ENROLLMENT_GRACE);
 	}
 	
 	/**
@@ -258,6 +244,19 @@ class Model_Session extends \Orm\Model
 				->where('cook', true)
 				->where('session_id', $this->id)
 				->get();
+	}
+	
+	/**
+	 * Determine whether the given user is a cook for this session.
+	 * @param int $user_id The user id or id of current user by default.
+	 * @return bool
+	 */
+	public function is_cook(int $user_id=null) : bool {
+		return Model_Enrollment_Session::query()
+				->where('cook', true)
+				->where('user_id', empty($user_id) ? \Auth::get_user()->id : $user_id)
+				->where('session_id', $this->id)
+				->count() > 0;
 	}
 	
 	/**
