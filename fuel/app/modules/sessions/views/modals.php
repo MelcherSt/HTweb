@@ -43,7 +43,7 @@ foreach($session->get_unenrolled() as $user) {
 					<div class="form-group">
 						<?=Form::hidden('user-id', null, ['id' => 'edit-user-id'])?>
 						<?=Form::label(__('session.field.guest_plural'), 'edit-guests')?>
-						<?=Form::input('guests', null, ['id' => 'edit-guests', 'class' => 'form-control', 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
+						<?=Form::input('guests', 0, ['id' => 'edit-guests', 'class' => 'form-control', 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
 					</div>			
 					<div class="form-group">
 						<label><?=__('session.role.name_plural')?></label>
@@ -90,7 +90,7 @@ foreach($session->get_unenrolled() as $user) {
 					<br>
 					<div class="form-group">
 						<?=Form::label(__('session.field.guest_plural'), 'add-guests')?>
-						<?=Form::input('guests', null, ['id' => 'add-guests', 'class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
+						<?=Form::input('guests', 0, ['id' => 'add-guests', 'class' => 'form-control', 'placeholder' => 0, 'type' => 'number', 'max' => Sessions\Model_Session::MAX_GUESTS, 'min' => 0])?>
 					</div>
 					
 					<div class="form-group">
