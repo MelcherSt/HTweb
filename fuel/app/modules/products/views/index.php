@@ -25,6 +25,7 @@
 						<th class="col-md-2"><?=__('product.field.paid_by')?></th>
 						<th class="col-md-2"><?=__('product.field.participant_plural')?></th>
 						<th class="col-md-1"><?=__('product.field.cost')?></th>
+						<th class="col-md-2"><?=__('actions.name')?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -35,6 +36,11 @@
 						<td><?=$product->get_payer()->get_shortname()?>
 						<td><?=$product->get_nicified_participants()?></td>
 						<td><?='€ ' . $product->cost?></td>
+						<td>
+							<?php if($product->is_paid_by()) { ?>
+							<a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$product->id?>, '<?=e($product->name)?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
+							<?php } ?>
+						</td>
 					</tr>
 					<?php } ?>
 				</tbody>

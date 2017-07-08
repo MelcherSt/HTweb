@@ -7,7 +7,7 @@ class Controller_Products extends \Controller_Secure {
 	public function action_index() {
 		$this->push_js('products-modals');
 		
-		$data['products'] = Model_Product::get_by_user(\Auth::get_user()->id, true);			
+		$data['products'] = Model_Product::get_by_user(\Auth::get_user()->id);			
 		$this->template->title = __('product.title');
 		$this->template->content = \View::forge('index', $data);
 	}

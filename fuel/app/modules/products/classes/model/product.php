@@ -65,17 +65,21 @@ class Model_Product extends \Orm\Model
 	}
 	
 	/**
-	 * Retrieve all products that were bought for the given user
+	 * Retrieve all products that were bought for or by the given user.
 	 * @param int $user_id
 	 * @param boolean $include_self Include products user has bought
 	 * @param boolean $settled Settled products only
 	 * @return array \Products\Model_Product
 	 */
-	public static function get_by_user(int $user_id, bool $include_self=false, bool $settled=false) : array {
-		$query = Model_Product::query()
-				->related('users')
-				->where('users.user_id', $user_id)
-				->where('settled', $settled);
+	public static function get_by_user(int $user_id, bool $include_self=true, bool $settled=false) : array {
+		$query = Model_Product::query()		
+				->where('paid_by', $user_id)
+				->where('settled', $settled)
+				->or_where_open()
+					->related('users')
+					->where('users.user_id', $user_id)
+					->where('settled', $settled)	
+				->or_where_close();
 		
 		if (!$include_self) {
 			$query = $query->where('paid_by', '!=', $user_id);

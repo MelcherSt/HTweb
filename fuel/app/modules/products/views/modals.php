@@ -66,7 +66,7 @@ $active_users = Model_User::get_by_state();
 						<div class="col-sm-10">
 							<div class="input-group">
 								<div class="input-group-addon">€</div>
-								<?=Form::input('cost', null, ['class' => 'form-control', 'type' => 'number', 'max' => 1000, 'min' => 0, 'step' => '0.01', 'required'])?>
+								<?=Form::input('cost', null, ['class' => 'form-control', 'type' => 'number', 'max' => 1000, 'min' => -1000, 'step' => '0.01', 'required'])?>
 							</div>
 						</div>
 					</div>
