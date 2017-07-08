@@ -161,7 +161,7 @@ class Controller_Enrollments extends \Controller_Secure {
 			}
 		} else {	
 			\Session::set_flash('error', $val->error('guests')->get_message());
-		}		
+		}			
 		\Response::redirect_back();
 	}
 	
