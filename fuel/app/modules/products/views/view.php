@@ -37,7 +37,7 @@ $participants = $product->get_participants_sorted();
 					<tr>
 						<th><?=__('user.field.name')?></th>
 						<th><?=__('product.field.amount')?></th>
-						<th><?=__('product.field.cost')?></th>
+						<th><?=__('receipt.field.balance')?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -45,7 +45,7 @@ $participants = $product->get_participants_sorted();
 					<tr>
 						<td><?=$participant->user->get_fullname()?></td>
 						<td><?=$participant->amount?></td>
-						<td>€ <?=round(($product->cost / $product->count_total_participants()) * $participant->amount, 2)?></td>
+						<td>€ <?=round(-1 * ($product->cost / $product->count_total_participants()) * $participant->amount, 2)?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
