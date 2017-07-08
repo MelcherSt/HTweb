@@ -29,7 +29,7 @@ $active_users = Model_User::get_by_state();
 <div id="add-product-modal" class="modal fade">
 	<div class="modal-dialog active">
 		<div class="modal-content">
-			<?=Form::open('/products/create')?>
+			<?=Form::open(['action' => '/products/create', 'class' => 'form-horizontal'])?>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -39,20 +39,35 @@ $active_users = Model_User::get_by_state();
 					<p><?=__('product.modal.create.msg')?></p>					
 					
 					<div class="form-group">
-						<?=Form::label(__('product.field.name'), 'name')?>
-						<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'required'])?>
+						<?=Form::label(__('product.field.name').'*', 'name', ['class' => 'col-sm-2'])?>
+						<div class="col-sm-10">
+							<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'required'])?>
+						</div>
+					</div>
+								
+					<div class="form-group">
+						<?=Form::label(__('product.field.notes'), 'notes', ['class' => 'col-sm-2'])?>
+						<div class="col-sm-10">
+							<?=Form::textarea('notes', '', ['rows' => '1', 'class' => 'form-control'])?>
+						</div>
 					</div>
 					
 					<div class="form-group">
-						<?=Form::label(__('product.field.notes'), 'notes')?>
-						<?=Form::textarea('notes', '', ['class' => 'form-control'])?>
-					</div>
+						<?=Form::label(__('product.field.date').'*', 'date', ['class' => 'col-sm-2'])?>
+						
+						<div class="col-sm-10">
+							<?=Form::input('date', null, ['class' => 'form-control', 'type' => 'date', 'placeholder' => date('Y-m-d'), 'required'])?>
+						</div>
+					</div>			
 					
 					<div class="form-group">
-						<?=Form::label(__('product.field.cost'), 'cost')?>
-						<div class="input-group">
-							<div class="input-group-addon">€</div>
-							<?=Form::input('cost', null, ['class' => 'form-control', 'type' => 'number', 'max' => 1000, 'min' => 0, 'step' => '0.01'])?>
+						<?=Form::label(__('product.field.cost').'*', 'cost', ['class' => 'col-sm-2'])?>
+						
+						<div class="col-sm-10">
+							<div class="input-group">
+								<div class="input-group-addon">€</div>
+								<?=Form::input('cost', null, ['class' => 'form-control', 'type' => 'number', 'max' => 1000, 'min' => 0, 'step' => '0.01', 'required'])?>
+							</div>
 						</div>
 					</div>
 					
@@ -60,8 +75,8 @@ $active_users = Model_User::get_by_state();
 						<a class="btn btn-primary" onClick="checkAll()"><?=__('actions.select_all')?></a>
 						<a class="btn btn-primary" onClick="uncheckAll()"><?=__('actions.deselect_all')?></a>
 					</div>
-					<div class="form-group">
-						<p><?=__('product.modal.create.participants')?></p>						
+					<p><?=__('product.modal.create.participants').'*'?></p>
+					<div class="form-group">						
 						<div class="table-responsive">
 							<table class="table table-hover">
 								<thead>
@@ -74,13 +89,13 @@ $active_users = Model_User::get_by_state();
 									<?php foreach($active_users as $user) {?>
 									<tr>
 										<td>
-											<label class="checkbox-inline">
+											<label class="checkbox-inline" style="padding-top: 0px !important;">
 												<?=Form::checkbox('users[]', $user->id, ['class' => 'user-select'])?>
 												<?=$user->get_fullname()?>
 											</label>
 										</td>
 										<td>
-											<?=Form::input($user->id, null, ['type' => 'number', 'min' => 0, 'max' => 20, 'placeholder' => 1])?>
+											<?=Form::input($user->id, null, ['type' => 'number', 'min' => 0, 'max' => \Sessions\Model_Session::MAX_GUESTS, 'placeholder' => 1])?>
 										</td>
 									</tr>
 									<?php } ?>

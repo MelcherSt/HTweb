@@ -43,11 +43,11 @@ class Model_Product extends \Orm\Model
 	
 	public static function validate($factory) {
 		$val = \Validation::forge($factory);
-		$val->add_field('date', 'Date', 'required|valid_date');
-		$val->add_field('name', 'Name', 'required|max_length[50]');
-		$val->add_field('notes', 'Notes', 'max_length[255]');
-		$val->add_field('cost', 'Cost', 'required|is_numeric');
-		$val->add_field('users', 'Selected users', 'required');
+		$val->add_field('date', __('product.field.date'), 'required|valid_date');
+		$val->add_field('name', __('product.field.name'), 'required|max_length[50]');
+		$val->add_field('notes',  __('product.field.notes'), 'max_length[255]');
+		$val->add_field('cost',  __('product.field.cost'), 'required|is_numeric');
+		$val->add_field('users',  __('product.field.participant_plural'), 'required');
 		return $val;
 	}
 	

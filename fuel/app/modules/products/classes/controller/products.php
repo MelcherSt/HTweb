@@ -30,34 +30,40 @@ class Controller_Products extends \Controller_Secure {
 		$user_ids = \Input::post('users', []);
 		$val = Model_Product::validate('create');
 		
-		if($val->run(null, true) && sizeof($user_ids) != 0) {
+		if($val->run() && sizeof($user_ids) > 0) {
 			$product = Model_Product::forge([
-				'name' => ($name = \Input::post('name')),
+				'name' => $name = $val->validated('name'),
 				'date' => $val->validated('date'),
 				'notes' => $val->validated('notes'),
 				'paid_by' => \Input::post('payer-id', \Auth::get_user()->id),
-				'cost' => \Input::post('cost'),		
+				'cost' => $val->validated('cost'),		
 				'approved' => 1, // Products are approved upon receipt creation
 			]);
 			
 			if(!Context_Products::forge($product)->create()) {
 				throw new \HttpNoAccessException();
-			}
+			}		
 			
-			\Security::htmlentities($product)->save();
-			
-			foreach($user_ids as $user_id) {
-				$amount = \Input::post($user_id, 1);	
-				if (!($amount > 1 && $amount < 20)) {
-					$amount = 1;
+			try {
+				\DB::start_transaction();
+				e($product)->save();	
+				foreach($user_ids as $user_id) {
+					$amount = \Input::post($user_id, 1);	
+					if (!($amount > 1 && $amount < 20)) {
+						$amount = 1;
+					}
+
+					$user_product = Model_User_Product::forge([
+						'user_id' => $user_id,
+						'product_id' => $product->id,
+						'amount' => $amount,
+					]);
+					\Security::htmlentities($user_product)->save();
 				}
-				
-				$user_product = Model_User_Product::forge([
-					'user_id' => $user_id,
-					'product_id' => $product->id,
-					'amount' => $amount,
-				]);
-				\Security::htmlentities($user_product)->save();
+				\DB::commit_transaction();
+			} catch (Exception $ex) {
+				\DB::rollback_transaction();
+				throw $ex;
 			}
 			
 			\Session::set_flash('success', __('product.alert.success.create_product', ['name' => $name]));
