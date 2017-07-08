@@ -46,7 +46,7 @@ class Controller_Users extends Controller_Secure
 			
 			if(isset($pass)) {
 				// Generate new salt
-				$new_salt = \Utils::rand_str(12);
+				$new_salt = \Str::random();
 				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){
 					$user->salt = $new_salt;
 				} else {

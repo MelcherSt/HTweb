@@ -1,8 +1,30 @@
 <?php
 
 class Utils {
+	/**
+	 * The format in which MySQL stores datetime values
+	 */
+	const MYSQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
 	
-	const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_?!-0123456789';
+	/**
+	 * The format in which MySQL stores and HTML transfers date values
+	 */
+	const MYSQL_DATE_FORMAT = 'Y-m-d';
+	
+	/**
+	 * Typical date format
+	 */
+	const DATE_FORMAT = 'd/m/Y';
+	
+	/**
+	 * Typical 24-hour time format
+	 */
+	const TIME_FORMAT = 'H:i';
+	
+	/**
+	 * Typical combined
+	 */
+	const DATETIME_FORMAT = 'd/m/Y H:i';
 	
 	/**
 	 * Redirect to 404 and show given error message
@@ -46,16 +68,6 @@ class Utils {
 		return $d && $d->format('Y-m-d') === $date;
 	}
 	
-	public static function rand_str($len){
-		$result = '';
-		$charArray = str_split(\Utils::CHARS);
-		for($i = 0; $i < $len; $i++){
-			$randItem = array_rand($charArray);
-			$result .= "".$charArray[$randItem];
-		}
-		return $result;
-	}
-	
 	/**
 	 * Check if the given date string is valid and has a session associated
 	 * @param string $date String with session's date
@@ -89,6 +101,61 @@ class Utils {
 		}
 		return $user;
 	}	
+	
+	/**
+	 * Create a \DateTime object from a date and time .
+	 * @param string $date Formatted date string d/M/Y
+	 * @param string $time Formatted time string H:i
+	 * @return \DateTime
+	 */
+	public static function to_date_time(string $date, string $time) : \DateTime {
+		$date_arr = explode('/', $date);
+		$date_time = (new \DateTime())->setDate($date_arr[2], $date_arr[1], $date_arr[0]);
+		
+		$time_arr = explode(':', $time);
+		$date_time->setTime($time_arr[0], $time_arr[1], 0);
+		
+		return $date_time;	
+	}
+	
+	/**
+	 * Format a string as a date.
+	 * @param string $date The date string to format
+	 * @param string $format A valid DateTime format string, defaults to DATETIME_FORMAT
+	 */
+	public static function format_date(string $date, string $format = null) : string {
+		if(empty($format)) {
+			$format = static::DATETIME_FORMAT;
+		}	
+		return (new DateTime($date))->format($format);
+	}
 
+	/**
+	 * Retrieve the name of the current GIT branch.
+	 * @return string
+	 */
+	public static function current_branch() { 
+		try {
+			$gitFile = file('../.git/HEAD', FILE_USE_INCLUDE_PATH);
+			$branchName = explode("/", $gitFile[0], 3)[2];	
+		} catch (Exception $ex) {
+			$branchName = 'unknown branch';
+		}	
+		return trim($branchName);
+	}
+	
+	/**
+	 * Retrieve the current head checksum.
+	 * @return string
+	 */
+	public static function current_head() { 
+		try {
+			$gitFile = file('../.git/refs/heads/' .static::current_branch(), FILE_USE_INCLUDE_PATH);
+			$branchHead = $gitFile[0];	
+		} catch (Exception $ex) {
+			$branchHead = 'unknown commit';
+		}	
+		return trim($branchHead);
+	}
 }
 	

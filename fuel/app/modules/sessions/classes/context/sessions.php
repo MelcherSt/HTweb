@@ -50,7 +50,7 @@ final class Context_Sessions extends \Context_Base {
 			return true;
 		} else {
 			// Cook may edit until 4 days after
-			return $this->_is_cook() && ($this->session->in_enrollment_period() || $this->session->in_extended_enrollment_period());
+			return $this->_is_cook() && ($this->session->is_predeadline() || $this->session->in_extended_enrollment_period());
 		}
 	}
 	
@@ -65,8 +65,8 @@ final class Context_Sessions extends \Context_Base {
 	 */
 	public function view_update() {
 		$result = [];
-		array_push($result, $this->_is_cook() && ($this->session->in_enrollment_period() || $this->session->in_extended_enrollment_period()));	
-		array_push($result, $this->session->in_enrollment_period());
+		array_push($result, $this->_is_cook() && ($this->session->is_predeadline() || $this->session->in_extended_enrollment_period()));	
+		array_push($result, $this->session->is_predeadline());
 		array_push($result, true);
 		array_push($result, true);
 		array_push($result, true);
@@ -103,9 +103,9 @@ final class Context_Sessions extends \Context_Base {
 		if($self) {
 			// Enroll ourself
 			if($this->_is_cook()) {
-				return $this->session->in_enrollment_period() || $this->session->in_extended_enrollment_period();
+				return $this->session->is_predeadline() || $this->session->in_extended_enrollment_period();
 			} else {
-				return $this->session->in_enrollment_period();
+				return $this->session->is_predeadline();
 			}	
 		} else {
 			// Enrolling other user, cur user must be a cook in ext-period
@@ -131,7 +131,7 @@ final class Context_Sessions extends \Context_Base {
 	 */
 	public function view_enroll_create() {
 		$result = [];					
-		array_push($result, $this->session->in_enrollment_period() && ($this->session->current_enrollment()) == null);	
+		array_push($result, $this->session->is_predeadline() && ($this->session->current_enrollment()) == null);	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS);
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER);			
 		return $result;
@@ -155,7 +155,7 @@ final class Context_Sessions extends \Context_Base {
 		}
 		
 		$result = [];					
-		array_push($result, $this->session->in_enrollment_period() && isset($enrollment));	
+		array_push($result, $this->session->is_predeadline() && isset($enrollment));	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS || (isset($enrollment) ? $enrollment->cook : false));
 		array_push($result, $this->session->count_dishwashers() != static::MAX_DISHWASHER || (isset($enrollment) ? $enrollment->dishwasher : false));
 		array_push($result, $this->session->in_dishwasher_enrollment_period() && isset($enrollment) && $result[2]);	

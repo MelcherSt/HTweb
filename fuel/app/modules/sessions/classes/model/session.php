@@ -13,47 +13,45 @@ class Model_Session extends \Orm\Model
 	
 	const SETTLEABLE_AFTER = '3'; // Used to retrieve settleable sessions in days
 	
-	protected static $_properties = array(
+	protected static $_properties = [
 		'id',
-		'date' => array(
-			'validation' => array('required', 'valid_date'),
-		),
-		'notes' => array(
-			'default'     => ''
-		), 
-		'cost' => array(
-			'default'     => 0.0
-		), 
-		'paid_by' => array(
-			'default'     => 0
-		), 
+		'date',
+		'notes' => ['default' => ''],
+		'cost' => ['default' => 0.0], 
+		'paid_by' => ['default' => 0], 
 		'deadline',
-		'settled' => array (
-			'default' => false,
-		),
+		'settled' => ['default' => false],
 		'created_at',
 		'updated_at',
-	);
+	];
 
-	protected static $_observers = array(
-		'Orm\Observer_CreatedAt' => array(
-			'events' => array('before_insert'),
+	protected static $_observers = [
+		'Orm\Observer_CreatedAt' => [
+			'events' => ['before_insert'],
 			'mysql_timestamp' => false,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_update'),
+		],
+		'Orm\Observer_UpdatedAt' => [
+			'events' => ['before_update'],
 			'mysql_timestamp' => false,
-		),
-	);
+		]
+	];
 
 	protected static $_table_name = 'sessions';	
 	
-	protected static $_has_many = array(
-		'enrollments' => array(
+	protected static $_has_many = [
+		'enrollments' => [
 			'model_to' => 'Sessions\Model_Enrollment_Session',
 			'cascade_delete' => true,
-		),
-	);
+		],
+	];
+	
+	public static function validate($factory) {
+		$val = \Validation::forge($factory);
+		$val->add_field('date', __('product.field.date'), 'required|valid_date[Y-m-d]');
+		$val->add_field('notes', __('session.field.notes'), 'max_length[255]');
+		$val->add_field('costs', __('session.field.cost'), 'is_numeric');
+		return $val;
+	}
 	
 	/**
 	 * Delete all orphaned sessions
@@ -80,7 +78,7 @@ class Model_Session extends \Orm\Model
 	 * @param string $date
 	 * @return Model_Session
 	 */
-	public static function get_by_date($date) {
+	public static function get_by_date(string $date) :?Model_Session {
 		return Model_Session::query()
 				->where('date', $date)
 				->get_one();
@@ -93,7 +91,7 @@ class Model_Session extends \Orm\Model
 	 * @param boolean $settled Query settled session only
 	 * @return array \Sessions\Model_Session
 	 */
-	public static function get_by_user($user_id, $include_self=false, $settled=false) {
+	public static function get_by_user(int $user_id, bool $include_self=false, bool $settled=false) : array {
 		$query = Model_Session::query()
 			->related('enrollments')
 			->where('enrollments.user_id', $user_id)
@@ -106,7 +104,7 @@ class Model_Session extends \Orm\Model
 		return $query->get();
 	}
 	
-	public static function get_by_cook($user_id, $settled=false) {
+	public static function get_by_cook(int $user_id, bool $settled=false) : array {
 		return Model_Session::query()
 			->related('enrollments')
 			->where('enrollments.user_id', $user_id)
@@ -120,7 +118,7 @@ class Model_Session extends \Orm\Model
 	 * Retrieve all session older than 5 days that have not been settled yet
 	 * @return array \Sessions\Model_Session
 	 */
-	public static function get_settleable() {
+	public static function get_settleable() : array {
 		return Model_Session::find('all', array(
 			'where' => array(
 				array(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<', date('Y-m-d')),
@@ -128,18 +126,19 @@ class Model_Session extends \Orm\Model
 			)
 		));
 	}
-	
+
 	/* Below this line you will find instance methods */
 	
 	/**
-	 * Determines if the session can be delayed.
-	 * For a delay to be possible, there should be at least 1 participant and no cook.
+	 * Determines if the session is eligable for deadline postponement.
+	 * To be eligable for postponement the session should be past due, have no
+	 * cooks and at least 1 participant.
 	 * @return boolean
 	 */
-	public function can_delay() {
+	public function should_postpone() : bool {
 		// The deadline must be past-due and there should be 0 cooks
 		if ($this->count_participants() > 0) {
-			return !$this->in_enrollment_period() && 
+			return !$this->is_predeadline() && 
 				($this->count_cooks() == 0) && 
 				$this->in_deadline_mod_grace();
 		} else {
@@ -151,7 +150,7 @@ class Model_Session extends \Orm\Model
 	 * Determine if now is before the deadline
 	 * @return boolean
 	 */
-	public function in_enrollment_period() {
+	public function is_predeadline() : bool {
 		// Before deadline
 		$now = new \DateTime();
 		$deadline = new \DateTime($this->deadline);	
@@ -162,11 +161,10 @@ class Model_Session extends \Orm\Model
 	 * Determine if now is after deadline, but before 4 days after deadline
 	 * @return boolean
 	 */
-	public function in_extended_enrollment_period() {
-		// After deadline. Before 4 days after.
-		$now = new \DateTime();
-		$deadline = new \DateTime($this->deadline);		
-		if($now > $deadline) {
+	public function in_extended_enrollment_period() : bool {
+		// After deadline. Before 4 days after.	
+		if(!$this->is_predeadline()) {
+			$now = new \DateTime();
 			$end_extended_period = (new \DateTime($this->date))->modify(static::ENROLLMENT_GRACE);
 			return $now < $end_extended_period;
 		}
@@ -177,7 +175,7 @@ class Model_Session extends \Orm\Model
 	 * Determine if now is after diner time (18:00), but before end of day
 	 * @return boolean
 	 */
-	public function in_dishwasher_enrollment_period() {
+	public function in_dishwasher_enrollment_period() : bool {
 		// After diner time. Before end of the day.
 		$now = new \DateTime();
 		$diner_time = (new \DateTime($this->date))->setTime(18, 00, 00);
@@ -193,8 +191,8 @@ class Model_Session extends \Orm\Model
 	 * Determine whether the deadline of this session may changed. Sets both upper and lower bounds
 	 * @return boolean
 	 */
-	private function in_deadline_mod_grace() {
-		if ($this->in_enrollment_period()) { 
+	private function in_deadline_mod_grace() : bool {
+		if ($this->is_predeadline()) { 
 			// Deadline may be changed during enrollment period just alright.
 			return true;
 		} else {
@@ -205,10 +203,10 @@ class Model_Session extends \Orm\Model
 	
 	
 	/**
-	 * Retrieve user model for paying user
+	 * Retrieve user model for paying user. Returns guest user when no payer.
 	 * @return \Model_User
 	 */
-	public function get_payer() {
+	public function get_payer() : \Model_User {
 		return \Model_User::find($this->paid_by);
 	}
 	
@@ -216,7 +214,7 @@ class Model_Session extends \Orm\Model
 	 * Retrieve a list of user enrollments in this session
 	 * @return array \Sessions\Model_Enrollment_Session
 	 */
-	public function get_enrollments() {
+	public function get_enrollments() : array {
 		return Model_Enrollment_Session::query()
 			->related('user')
 			->where('session_id', $this->id)
@@ -229,7 +227,7 @@ class Model_Session extends \Orm\Model
 	 * Guest user (id 0) is excluded from the list.
 	 * @return array \Model_User
 	 */
-	public function get_unenrolled() {
+	public function get_unenrolled() : array {
 		//select u.id, u.name from users u where u.id not in (select es.user_id from enrollment_sessions es, sessions s where es.session_id = 2 and s.id = 2);
 		return \Model_User::query()
 				->where('id', 'not in', \DB::query('select es.user_id from enrollment_sessions es, sessions s where es.session_id = ' . $this->id . ' and s.id = ' . $this->id))
@@ -243,7 +241,7 @@ class Model_Session extends \Orm\Model
 	 * @param int $user_id
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
-	public function get_enrollment($user_id) {		
+	public function get_enrollment(int $user_id) : ?Model_Enrollment_Session {		
 		return Model_Enrollment_Session::query()
 				->where('user_id', $user_id)
 				->where('session_id', $this->id)
@@ -255,7 +253,7 @@ class Model_Session extends \Orm\Model
 	 * Get the enrollments for all cooks enrolled in this session
 	 * @return array \Sessions\Model_Enrollment_Session
 	 */
-	public function get_cook_enrollments() {
+	public function get_cook_enrollments() : array {
 		return Model_Enrollment_Session::query()
 				->where('cook', true)
 				->where('session_id', $this->id)
@@ -266,7 +264,7 @@ class Model_Session extends \Orm\Model
 	 * Get the enrollments for all cooks enrolled in this session
 	 * @return array \Sessions\Model_Enrollment_Session
 	 */
-	public function get_dishwasher_enrollments() {
+	public function get_dishwasher_enrollments() : array {
 		return Model_Enrollment_Session::query()
 				->where('dishwasher', true)
 				->where('session_id', $this->id)
@@ -277,7 +275,7 @@ class Model_Session extends \Orm\Model
 	 * Retrieve the enrollment (if any) for the current user
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
-	public function current_enrollment() {
+	public function current_enrollment() : ?Model_Enrollment_Session {
 		return $this->get_enrollment(\Auth::get_user_id()[1]);
 	}
 	
@@ -285,7 +283,7 @@ class Model_Session extends \Orm\Model
 	 * Get the number of cooks enrolled in this session
 	 * @return int
 	 */
-	public function count_cooks() {
+	public function count_cooks() : int {
 		return Model_Session::query()
 				->where('id', $this->id)
 				->related('enrollments')
@@ -297,7 +295,7 @@ class Model_Session extends \Orm\Model
 	 * Get the number of dishwashers enrolled in this session
 	 * @return int
 	 */
-	public function count_dishwashers() {
+	public function count_dishwashers() : int {
 		return Model_Session::query()
 				->related('enrollments')
 				->where('id', $this->id)
@@ -309,7 +307,7 @@ class Model_Session extends \Orm\Model
 	 * Get the total amount of guests for this session
 	 * @return int
 	 */
-	public function count_guests() {		
+	public function count_guests() : int {		
 		$guest_count = array_values(\DB::select(\DB::expr('SUM(guests)'))
 				->from('enrollment_sessions')
 				->where('session_id', $this->id)
@@ -326,7 +324,7 @@ class Model_Session extends \Orm\Model
 	 * including cooks and dishwashers, but excluding guests
 	 * @return int
 	 */
-	public function count_participants() {
+	public function count_participants() : int {
 		return Model_Session::query()
 				->related('enrollments')
 				->where('id', $this->id)
@@ -337,7 +335,7 @@ class Model_Session extends \Orm\Model
 	 * Get the total amount of participants (all enrollments and their guests)
 	 * @return int
 	 */
-	public function count_total_participants() {
+	public function count_total_participants() : int {
 		return $this->count_participants() + $this->count_guests();
 	}
 }

@@ -56,9 +56,11 @@
 			
 			<?=$content?>
 		</div>
+
 		<hr/>
 		<footer>
-			<p><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>by Melcher © 2016-2017</small></p>		
+			<p class="pull-left"><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>by Melcher © 2016-<?=date('Y')?></small></p>		
+			<strong class="pull-right"><?=\Utils::current_branch() . '/' . \Utils::current_head()?></strong>
 		</footer>
 	</div>
 </body>

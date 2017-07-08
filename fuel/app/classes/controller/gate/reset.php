@@ -74,7 +74,7 @@ class Controller_Gate_Reset extends Controller_Secure {
 				$reset_token->delete();
 			}
 			
-			$salt = \Utils::rand_str(12);
+			$salt = \Str::random();
 			$user->salt = $salt;
 			$user->password = Auth::instance()->hash_password($password . $salt);
 			$user->save();

@@ -34,7 +34,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 				$link_text = __('session.widget.link.no_cook');
 			}	
 
-			 if(!$context->create_enroll() && !$session->can_delay()) {
+			 if(!$context->create_enroll() && !$session->should_postpone()) {
 				$style = 'panel-grey';
 				$message = __('session.widget.msg.deadline_passed');
 				$link_text = __('session.widget.link.deadline_passed');

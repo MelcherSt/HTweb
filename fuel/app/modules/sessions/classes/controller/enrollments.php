@@ -11,7 +11,6 @@ class Controller_Enrollments extends \Controller_Secure {
 		$dates = \Input::post('dates', []);
 		foreach($dates as $date) {
 			if(!\Utils::valid_date($date)) { continue;	}
-			
 			$session = \Utils::valid_session($date, false);
 			if(empty($session)) {
 				$session = Model_Session::forge([
@@ -24,7 +23,6 @@ class Controller_Enrollments extends \Controller_Secure {
 				} catch (\Database_Exception $ex) {
 					\Session::set_flash('error', __('session.alert.error.update_session') . '<br>' . $ex->getMessage());	
 				}
-				
 			}
 			
 			$enrollment = $session->current_enrollment();
@@ -49,9 +47,9 @@ class Controller_Enrollments extends \Controller_Secure {
 	
 	/**
 	 * Handle enrollment creation
-	 * @param type $date
+	 * @param string $date
 	 */
-	public function post_create($date=null) {		
+	public function post_create(string $date) {		
 		$session = \Utils::valid_session($date);
 	
 		// Run validation to validate amount of guests
@@ -64,7 +62,7 @@ class Controller_Enrollments extends \Controller_Secure {
 			$dishwasher = \Input::post('dishwasher') == 'on' ? true : false;
 			$later = \Input::post('later') == 'on' ? true : false;
 
-			if(empty($user_id)) {
+			if(empty($user_id)) {			
 				$user_id = \Auth::get_user()->id;
 			}
 			
@@ -107,9 +105,9 @@ class Controller_Enrollments extends \Controller_Secure {
 	
 	/**
 	 * Handle enrollment updates
-	 * @param type $date
+	 * @param string $date
 	 */
-	public function post_update($date=null) {	
+	public function post_update(string $date) {	
 		$session = \Utils::valid_session($date);
 		
 		// Run validation to validate amount of guests
@@ -169,7 +167,7 @@ class Controller_Enrollments extends \Controller_Secure {
 	 * Handle enrollment deletion
 	 * @param string $date
 	 */
-	public function post_delete($date=null) {		
+	public function post_delete(string $date) {		
 		$session = \Utils::valid_session($date);
 		$context = Context_Sessions::forge($session);	
 		$user_id = \Input::post('user-id', \Auth::get_user()->id);	

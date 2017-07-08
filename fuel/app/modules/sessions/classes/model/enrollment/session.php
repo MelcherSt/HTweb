@@ -18,7 +18,7 @@ class Model_Enrollment_Session extends \Orm\Model {
 	
 	public static function validate($factory) {
 		$val = \Validation::forge($factory);
-		$val->add_field('guests', 'Guests', 'numeric_between[0,' . Model_Session::MAX_GUESTS . ']');
+		$val->add_field('guests', __('session.field.guest_plural'), 'numeric_between[0,' . Model_Session::MAX_GUESTS . ']');
 		$val->set_message('numeric_between', __('session.alert.error.guests', ['max_guests' => Model_Session::MAX_GUESTS]));
 		return $val;
 	}

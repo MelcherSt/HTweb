@@ -22,10 +22,11 @@ class Controller_Auth extends \Controller_Rest {
 	
 	/**
 	 * Authenticator function. 
-	 * Override this function to change individual controller behavior.
+	 * Override this function to change individual controller behavior. <br>
+	 * Overriding can be used to create an 'insecure' Api controller if needed.
 	 * @return boolean
 	 */
-	protected function _authenticate() {
+	protected function _authenticate() : bool {
 		return \Auth::check();
 	}
 	

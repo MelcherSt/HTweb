@@ -279,6 +279,7 @@ return array(
 		'packages'  => array(
 			'orm',
 			'auth',
+			'api',
 			'email',
 			),
 
@@ -291,13 +292,12 @@ return array(
 		 * A path must be set in module_paths for this to work.
 		 */
 		'modules'  => array( 
-			'api',
 			'dashboard', 
 			'sessions', 
 			'products',
 			'receipts', 
-			'stats', 
-			'privileges'),
+			'privileges',
+			'stats'),
 
 		/**
 		 * Classes to autoload & initialize even when not used

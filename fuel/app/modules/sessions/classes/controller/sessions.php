@@ -26,16 +26,18 @@ class Controller_Sessions extends \Controller_Secure {
 	}
 		
 	/**
-	 * View a session with given date
-	 * @param type $date
+	 * View a session with given date.
+	 * @param string $date
 	 */
-	public function action_view($date=null) {	
+	public function action_view(string $date) {	
 		$this->push_css('jquery.timepicker-1.3.5.min');
 		$this->push_js(['jquery.timepicker-1.3.5.min', 'sessions-timepicker', 'sessions-modals']);
 	
 		$session = \Utils::valid_session($date, false);
 		if(empty($session)){
-			$today = (new \DateTime())->format('Y-m-d');
+			$today = new \DateTime();
+			$date = new \DateTime($date);	
+			
 			if($date < $today) {
 				// Stop creation of ready-closed sessions
 				\Utils::handle_irrecoverable_error();
@@ -43,15 +45,15 @@ class Controller_Sessions extends \Controller_Secure {
 			
 			// Create session if none exists
 			$session = Model_Session::forge([
-				'deadline' => $date. ' ' . Model_Session::DEADLINE_TIME,
+				'deadline' => $date->format('Y-m-d') . ' ' . Model_Session::DEADLINE_TIME,
 				'date' => $date,
 			]);
 			$session->save();
 		} 
 		
-		if ($session->can_delay()) {
-			// Automatically delay existing session
-			$session->deadline = date('Y-m-d H:i:s', strtotime($session->deadline . '+1hour'));
+		if ($session->should_postpone()) {
+			// Automatically postpone deadline
+			$session->deadline = (new \DateTime($session->deadline))->modify('+1hour')->format('Y-m-d H:i:s');
 			$session->save();
 		}
 

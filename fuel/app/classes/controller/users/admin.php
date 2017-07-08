@@ -21,7 +21,7 @@ class Controller_Users_Admin extends Controller_Secure
 
 			if ($val->run())
 			{
-				$salt = \Utils::rand_str(12);
+				$salt = \Str::random();
 				$user = \Model_User::forge(array(
 					'username' => Input::post('username'),
 					'surname' => Input::post('surname'),

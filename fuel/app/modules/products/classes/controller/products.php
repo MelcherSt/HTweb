@@ -28,12 +28,13 @@ class Controller_Products extends \Controller_Secure {
 	
 	public function post_create() {
 		$user_ids = \Input::post('users', []);
-		$val = Model_Product::validate('create');	
+		$val = Model_Product::validate('create');
 		
-		if($val->run() && sizeof($user_ids) != 0) {
+		if($val->run(null, true) && sizeof($user_ids) != 0) {
 			$product = Model_Product::forge([
 				'name' => ($name = \Input::post('name')),
-				'notes' => \Input::post('notes', null),
+				'date' => $val->validated('date'),
+				'notes' => $val->validated('notes'),
 				'paid_by' => \Input::post('payer-id', \Auth::get_user()->id),
 				'cost' => \Input::post('cost'),		
 				'approved' => 1, // Products are approved upon receipt creation
@@ -64,7 +65,7 @@ class Controller_Products extends \Controller_Secure {
 			\Session::set_flash('error', $val->error());
 		}
 		
-		\Response::redirect('products');
+		\Response::redirect_back();
 	}
 	
 	public function post_delete() {
