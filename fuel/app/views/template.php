@@ -25,9 +25,7 @@
 	foreach ($add_js as $script) { 
 		echo Asset::js($script . '.js');
 	} 
-	
-	?>
-		
+	?>	
 </head>
 <body>
 	
