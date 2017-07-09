@@ -80,6 +80,13 @@ return [
 			'title' => 'Remove session',
 			'msg' => 'Are you sure you want to remove this session',
 			'btn' => 'Remove session',
+		],
+		'convert' => [
+			'title' => 'Convert session to product',
+			'msg' => 'Converting this session to a product will delete this '
+			. 'session and instead create a product. This means no points will be distributed. '
+			. 'This action cannot be undone. Are you sure you want to convert this session to a product?',
+			'btn' => 'Convert session',
 		]
 	],
 	'index' => [

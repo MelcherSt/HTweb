@@ -6,4 +6,5 @@ return array(
 	
 	// Fix params on index (put_index($id) etc.)
 	'sessions/admin/(:segment)' => 'sessions/admin/index/$1',	// Fixes HTTP verb routes on _index
+	'sessions/convert/(:segment)' => 'sessions/convert/index/$1',
 );

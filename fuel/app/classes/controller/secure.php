@@ -35,9 +35,19 @@ class Controller_Secure extends Controller_Base
 					$redirect = Uri::create('gate/login', [], ['destination' => Uri::string()]);
 					Response::redirect($redirect);
 				}	
-			} else if(isset($this->permission_required)) {
-				$this->evaluate_permission();
-			}
+			} else {
+				$this->preauthorize();
+			}	
+		}
+	}
+	
+	/**
+	 * Check required permissions to visit this page. 
+	 * Override this method to change behavior.
+	 */
+	protected function preauthorize() {
+		if(isset($this->permission_required)) {
+			$this->evaluate_permission();
 		}
 	}
 	

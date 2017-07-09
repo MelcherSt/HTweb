@@ -5,6 +5,28 @@ foreach($session->get_unenrolled() as $user) {
 }
 ?>
 
+<!-- Modal dialog for session to product conversion -->
+<div id="convert-session-modal" class="modal fade">
+	<div class="modal-dialog active">
+		<div class="modal-content">
+			<?=Form::open('/sessions/convert/' . $session->date)?>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><?=__('session.modal.convert.title')?></h4>
+				</div>
+				<div class="modal-body">
+					<?=__('session.modal.convert.msg')?>
+				</div>
+				<div class="modal-footer">	
+					<?=Form::submit(['value'=> __('session.modal.convert.btn'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
+				</div>
+			<?=Form::close()?>
+		</div>
+	</div>
+</div>
+
 <!-- Modal dialog for enrollment deletion -->
 <div id="delete-enrollment-modal" class="modal fade">
 	<div class="modal-dialog active">

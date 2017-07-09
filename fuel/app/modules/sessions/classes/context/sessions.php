@@ -28,7 +28,7 @@ final class Context_Sessions extends \Context_Base {
 	 * @param \Model_User $user
 	 * @return \Sessions\Context_Sessions
 	 */
-	public static function forge(Model_Session $session, \Model_User $user=null) {
+	public static function forge(Model_Session $session, \Model_User $user=null) : Context_Sessions {
 		if(empty($user)) {
 			$user = \Model_User::get_current();
 		}	
@@ -39,7 +39,7 @@ final class Context_Sessions extends \Context_Base {
 	 * Determine if session can be updated/edited
 	 * @return boolean
 	 */
-	public function update() {	
+	public function update() : bool {	
 		if ($this->_is_settled()) {
 			// A settled session may never be edited
 			return false;
@@ -54,7 +54,7 @@ final class Context_Sessions extends \Context_Base {
 		}
 	}
 	
-	public function view() {
+	public function view() : bool {
 		// Everyone may view
 		return true;
 	}
@@ -63,7 +63,7 @@ final class Context_Sessions extends \Context_Base {
 	 * Is session edit UI visible? 
 	 * @return array panel, notes, deadline, cost, payer
 	 */
-	public function view_update() {
+	public function view_update() : array {
 		$result = [];
 		array_push($result, $this->_is_cook() && ($this->session->is_predeadline() || $this->session->is_postdeadline_audit()));	
 		array_push($result, $this->session->is_predeadline());
@@ -73,7 +73,7 @@ final class Context_Sessions extends \Context_Base {
 		return $result;
 	}
 	
-	public function delete() {
+	public function delete() : bool {
 		if ($this->_is_settled()) {
 			// A settled session may never be deleted
 			return false;
@@ -82,8 +82,13 @@ final class Context_Sessions extends \Context_Base {
 		// Only admin can delete a session
 		return $this->_is_administrator();
 	}
+	
+	public function convert() : bool {
+		return $this->_is_administrator() || 
+				($this->_is_cook() && $this->session->is_postdeadline_audit());
+	}
 		
-	public function create_enroll($user_id=null) {
+	public function create_enroll(int $user_id=null) : bool {
 		if(empty($user_id)) {
 			$self = true;
 		} else {
@@ -113,15 +118,15 @@ final class Context_Sessions extends \Context_Base {
 		}
 	}
 	
-	public function update_enroll($user_id=null) {
+	public function update_enroll(int $user_id=null) : bool {
 		return $this->create_enroll($user_id) || $this->session->in_dishwasher_enrollment_period();
 	}
 	
-	public function view_enroll() {
+	public function view_enroll() : bool {
 		return true;
 	}
 	
-	public function delete_enroll($user_id=null) {
+	public function delete_enroll(int $user_id=null) : bool {
 		return $this->create_enroll($user_id);
 	}
 	
@@ -129,7 +134,7 @@ final class Context_Sessions extends \Context_Base {
 	 * Is create enroll UI visible? 
 	 * @return array panel, cook, dishwasher, 
 	 */
-	public function view_enroll_create() {
+	public function view_enroll_create() : array {
 		$result = [];					
 		array_push($result, $this->session->is_predeadline() && ($this->session->current_enrollment()) == null);	
 		array_push($result, $this->session->count_cooks() != static::MAX_COOKS);
@@ -141,7 +146,7 @@ final class Context_Sessions extends \Context_Base {
 	 * Is update enroll UI visible?
 	 * @return array panel, cook, dishwasher, dishwasher-panel
 	 */
-	public function view_enroll_update($user_id=null) {
+	public function view_enroll_update(int $user_id=null) : array {
 		if(empty($user_id)) {
 			$self = true;
 		} else {
@@ -166,7 +171,7 @@ final class Context_Sessions extends \Context_Base {
 	 * Is the enroll other UI visible?
 	 * @return boolean
 	 */
-	public function view_enroll_other() {
+	public function view_enroll_other() : bool {
 		return $this->_is_cook() && $this->session->is_postdeadline_audit();
 	}
 
@@ -174,14 +179,22 @@ final class Context_Sessions extends \Context_Base {
 	 * Has the current user administration privileges
 	 * @return boolean
 	 */
-	private function _is_administrator(){
+	private function _is_administrator() : bool {
+		if($this->_is_settled()) {
+			return false;
+		}
+		
 		return \Auth::has_access(static::MGMT_PERM);
 	}
 	
 	/**
 	 * Has the current user role cook
 	 */
-	private function _is_cook() {
+	private function _is_cook() : bool { 
+		if($this->_is_settled()) {
+			return false;
+		}
+			
 		if(isset($this->cur_enrollment)) {
 			return $this->cur_enrollment->cook;
 		}
@@ -191,7 +204,7 @@ final class Context_Sessions extends \Context_Base {
 	/**
 	 * Has the session been settled
 	 */
-	private function _is_settled() {
+	private function _is_settled() : bool {
 		return $this->session->settled;
 	}
 }

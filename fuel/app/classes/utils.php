@@ -31,7 +31,7 @@ class Utils {
 	 * @param string $message Error message
 	 * @throws \HttpNotFoundException
 	 */
-	public static function handle_irrecoverable_error($message=null) {
+	public static function handle_irrecoverable_error(string $message=null) {
 		if(isset($message)) {
 			\Session::set_flash('error', ($message));
 		}		
@@ -44,7 +44,7 @@ class Utils {
 	 * @param string $redirect If empty, redirect back to last page
 	 * @return \Response
 	 */
-	public static function handle_recoverable_error($message, $redirect=null) {
+	public static function handle_recoverable_error(string $message, string $redirect=null) {
 		\Session::set_flash('error', ($message));
 		
 		if(empty($redirect)) {
@@ -59,11 +59,10 @@ class Utils {
 	 * @param string $date
 	 * @return boolean
 	 */
-	public static function valid_date($date) {
+	public static function valid_date(string $date) : bool {
 		if (empty($date)) {
 			return false;
-		}
-		
+		}	
 		$d = DateTime::createFromFormat('Y-m-d', $date);
 		return $d && $d->format('Y-m-d') === $date;
 	}
@@ -74,7 +73,7 @@ class Utils {
 	 * @param boolean $enforce_existance If true, when no session is associated report error
 	 * @return mixed
 	 */
-	public static function valid_session($date, $enforce_existance=true) {
+	public static function valid_session(string $date, bool $enforce_existance=true) : ?\Sessions\Model_Session {
 		if(!\Utils::valid_date($date)) {
 			// Invalid date string
 			\Utils::handle_irrecoverable_error(__('session.alert.error.no_session', ['date' => $date]));
@@ -94,7 +93,7 @@ class Utils {
 	 * @param boolean $enforce_existance If true, when no user report error
 	 * @return mixed
 	 */
-	public static function valid_user($user_id, $enforce_existance=true) {
+	public static function valid_user(int $user_id, bool $enforce_existance=true) : ?\Model_User {
 		$user = \Model_User::find($user_id);
 		if($enforce_existance && empty($user)) {
 			\Utils::handle_irrecoverable_error(__('user.alert.error.no_id', ['id' => $user_id]));
@@ -134,7 +133,7 @@ class Utils {
 	 * Retrieve the name of the current GIT branch.
 	 * @return string
 	 */
-	public static function current_branch() { 
+	public static function current_branch() : string { 
 		try {
 			$gitFile = file('../.git/HEAD', FILE_USE_INCLUDE_PATH);
 			$branchName = explode("/", $gitFile[0], 3)[2];	
@@ -148,7 +147,7 @@ class Utils {
 	 * Retrieve the current head checksum.
 	 * @return string
 	 */
-	public static function current_head() { 
+	public static function current_head() : string { 
 		try {
 			$gitFile = file('../.git/refs/heads/' .static::current_branch(), FILE_USE_INCLUDE_PATH);
 			$branchHead = $gitFile[0];	
