@@ -29,8 +29,7 @@ class Controller_Products extends \Controller_Secure {
 	
 	public function post_create() {
 		$user_ids = \Input::post('users', []);
-		$val = Model_Product::validate('create');
-		
+		$val = Model_Product::validate('create');		
 		if($val->run() && sizeof($user_ids) > 0) {
 			$product = Model_Product::forge([
 				'name' => $name = $val->validated('name'),
@@ -68,6 +67,8 @@ class Controller_Products extends \Controller_Secure {
 			}
 			
 			\Session::set_flash('success', __('product.alert.success.create_product', ['name' => $name]));
+		} else if (sizeof($user_ids == 0)) {
+			\Session::set_flash('error', 'You did not select any users!');
 		} else {	
 			\Session::set_flash('error', $val->error());
 		}

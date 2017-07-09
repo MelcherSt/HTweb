@@ -1,7 +1,3 @@
-<?php 
-$active_users = Model_User::get_by_state(); 
-?>
-
 <!-- Modal dialog for session deletion -->
 <div id="delete-product-modal" class="modal fade">
 	<div class="modal-dialog active">
@@ -56,7 +52,7 @@ $active_users = Model_User::get_by_state();
 						<?=Form::label(__('product.field.date').'*', 'date', ['class' => 'col-sm-2'])?>
 						
 						<div class="col-sm-10">
-							<?=Form::input('date', null, ['class' => 'form-control', 'type' => 'date', 'placeholder' => date('Y-m-d'), 'required'])?>
+							<?=Form::input('date', date('Y-m-d'), ['class' => 'form-control', 'type' => 'date', 'required'])?>
 						</div>
 					</div>			
 					
@@ -86,7 +82,7 @@ $active_users = Model_User::get_by_state();
 									</tr>
 								</thead>
 								<tbody>
-									<?php foreach($active_users as $user) {?>
+									<?php foreach(Model_User::get_by_state() as $user) {?>
 									<tr>
 										<td>
 											<label class="checkbox-inline" style="padding-top: 0px !important;">
