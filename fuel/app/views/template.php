@@ -49,16 +49,15 @@
 					<?php echo implode('</p><p>', (array) Session::get_flash('error')); ?>
 					</p>
 				</div>
-
 			</div>
 			
 			<?=$content?>
+			
 		</div>
-
 		<hr/>
 		<footer>
-			<p class="pull-left"><span class="fa fa-bank"></span> <?=__('site_sub')?> <small>by Melcher © 2016-<?=date('Y')?></small></p>		
-			<strong class="pull-right"><?=\Utils::current_branch() . '/' . \Utils::current_head()?></strong>
+			<p class="pull-left"><span class="fa fa-bank"></span> <?=__('product_name')?> <small><?=__('dev')?> Melcher © 2016-<?=date('Y')?></small></p>		
+			<strong class="pull-right"><a href="https://github.com/MelcherSt/HTweb"><i class="fa fa-github"></i> <?=__('github')?> GitHub</a> | <?=\Utils::current_branch() . '/' . \Utils::current_head()?></strong>
 		</footer>
 	</div>
 </body>
