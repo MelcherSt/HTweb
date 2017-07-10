@@ -1,5 +1,5 @@
 # HTweb
-FuelPHP based web application for dorm administration.
+FuelPHP based web application for dorm administration. Developed and maintained by Melcher.
 
 ## Dependencies
 ### PHP 7.1
@@ -11,8 +11,8 @@ To *upgrade* your existing php installation, take the steps below:
 4. `$ apt install php7.1` 
 
 ### FuelPHP
-* Install oil standalone (optional) `$ curl get.fuelphp.com/oil | sh`
-* Run composer `$ php composer.phar update`
+(Optional) Install oil standalone `$ curl get.fuelphp.com/oil | sh`.
+Next, download and install FuelPHP itself using composer `$ php composer.phar update`.
 
 ## Configuration
 Configuration files reside in the `fuel\app\config` directory.
@@ -22,8 +22,7 @@ For production environments please be sure to configure both `auth.php` and `orm
 ## Migrations
 Run all migrations. Please note there's a strict order in which to run migrations:
 1. auth tables and others `$ oil r migrate --packages=auth` 
-2. default tables `$ oil r migrate --default`
-3. session tables `$ oil r migrate --modules=sessions`
+3. session tables `$ oil r migrate --modules=sessions` (some other modules depend on sessions' functionality)
 4. all others `$ oil r migrate --all`
 
 ## Run it

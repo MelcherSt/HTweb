@@ -19,10 +19,21 @@ return [
 	'index' => [
 		'btn' => [
 			'add_product' => 'Add product',
+			'gen_product' => 'Generated products',
 		],
 		'msg' => 'This list only shows unsettled products that you have bought or have been bought by others for you. For a list of settled product see',
 		'paid_by_me' => 'Products I bought',
 		'paid_for_me' => 'Products others bought for me',
+	],
+	'gen' => [
+		'create' => [
+			'msg' => 'Add a product definition for a monthly repeatable product.',
+			'btn' => 'Create product defintion',
+		],
+		'btn' => [
+			'add_definition' => 'Add product definition',
+			'execute_all' => 'Execute all definitions',
+		],
 	],
 	'view' => [
 		'btn' => [

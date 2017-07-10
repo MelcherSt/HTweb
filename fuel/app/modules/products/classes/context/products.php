@@ -33,8 +33,8 @@ final class Context_Products extends \Context_Base {
 	public function create() {
 		$self = $this->product->paid_by == $this->user->id;
 		
-		if($self) {
-			return $this->_is_active();
+		if(!$self) {
+			return $this->_is_active() || $this->_is_administrator();
 		} else {
 			return $this->_is_administrator();
 		}
@@ -61,7 +61,7 @@ final class Context_Products extends \Context_Base {
 	 * @return type
 	 */
 	private function _is_owner() {
-		return $this->product->paid_by == $this->user->id;
+		return $this->product->paid_by == $this->user->id && !$this->product->generated;
 	}
 	
 	/**

@@ -15,6 +15,7 @@ class Model_Product extends \Orm\Model {
 		'paid_by',
 		'name',
 		'date',
+		'generated' => ['default' => false],
 		'notes' => ['default' => ''],
 		'approved' => ['default' => false],
 		'settled' => ['default' => false],
