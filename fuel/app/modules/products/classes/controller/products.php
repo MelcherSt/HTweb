@@ -5,16 +5,14 @@ namespace Products;
 class Controller_Products extends \Controller_Secure {
 	
 	public function action_index() {
-		$this->push_js('products-modals');
-		
-		$this->template->title = __('product.title');
+		$this->push_js('products-modals');		
+		$this->template->page_title = __('product.title');
 		$this->template->content = \View::forge('index');
 	}
 	
-	public function action_view($id=null) {
-		if(empty($product = Model_Product::find($id))) {
-			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $id]));
-		}
+	public function action_view(int $product_id) {		
+		$product = \Utils::check_non_null(Model_Product::find($product_id), 
+				__('product.alert.error.not_found', ['id' => $product_id]));
 		
 		if(!Context_Products::forge($product)->view()) {
 			throw new \HttpNoAccessException();
@@ -28,7 +26,8 @@ class Controller_Products extends \Controller_Secure {
 	
 	public function post_create() {
 		$user_ids = \Input::post('users', []);
-		$val = Model_Product::validate('create');		
+		$val = Model_Product::validate('create');	
+		
 		if($val->run() && sizeof($user_ids) > 0) {
 			$product = Model_Product::forge([
 				'name' => $name = $val->validated('name'),
@@ -36,15 +35,15 @@ class Controller_Products extends \Controller_Secure {
 				'notes' => $val->validated('notes'),
 				'paid_by' => \Input::post('payer-id', \Auth::get_user()->id),
 				'cost' => $val->validated('cost'),		
-				'approved' => 1, // Products are approved upon receipt creation
 			]);
 			
 			if(!Context_Products::forge($product)->create()) {
 				throw new \HttpNoAccessException();
-			}		
-			
+			}	
+
 			try {
 				\DB::start_transaction();
+				
 				e($product)->save();	
 				foreach($user_ids as $user_id) {
 					$amount = \Input::post($user_id, 1);	
@@ -57,8 +56,9 @@ class Controller_Products extends \Controller_Secure {
 						'product_id' => $product->id,
 						'amount' => $amount,
 					]);
-					\Security::htmlentities($user_product)->save();
+					$user_product->save();
 				}
+				
 				\DB::commit_transaction();
 			} catch (Exception $ex) {
 				\DB::rollback_transaction();
@@ -67,55 +67,45 @@ class Controller_Products extends \Controller_Secure {
 			
 			\Session::set_flash('success', __('product.alert.success.create_product', ['name' => $name]));
 		} else if (sizeof($user_ids == 0)) {
-			\Session::set_flash('error', 'You did not select any users!');
+			\Session::set_flash('error', __('product.alert.error.no_users_selected'));
 		} else {	
 			\Session::set_flash('error', $val->error_message());
-		}
-		
+		}		
 		\Response::redirect_back();
 	}
 	
 	public function post_update(int $product_id=null) {
-		$product = Model_Product::find($product_id);
+		$product = \Utils::check_non_null(Model_Product::find($product_id), 
+				__('product.alert.error.not_found', ['id' => $product_id]));
 		
-		if(empty($product)) {
-			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $product_id]));
+		if(!Context_Products::forge($product)->update()) {
+			throw new \HttpNoAccessException();
 		}
 		
-		$context = Context_Products::forge($product);	
-		if($context->update()) {
-			$val = Model_Product::validate('update');
-			if($val->run([], true)) {
-				$product->cost = $val->validated('cost');
-				$product->notes = $val->validated('notes');
-				$product->save();
-				\Session::set_flash('success', __('product.alert.success.update_product'));
-			} else {
-				\Session::set_flash('error', $val->error_message());
-			}
-			\Response::redirect_back();
+		$val = Model_Product::validate('update');
+		if($val->run([], true)) {
+			$product->cost = $val->validated('cost');
+			$product->notes = $val->validated('notes');
+			$product->save();
+			\Session::set_flash('success', __('product.alert.success.update_product'));
 		} else {
-			\Utils::handle_recoverable_error(__('actions.no_perm'));
+			\Session::set_flash('error', $val->error_message());
 		}
+		\Response::redirect_back();	
 	}
 	
 	public function post_delete() {
 		$product_id = \Input::post('product-id', null);
-		$product = Model_Product::find($product_id);
+		$product = \Utils::check_non_null(Model_Product::find($product_id), 
+				__('product.alert.error.not_found', ['id' => $product_id]));
 		
-		if(empty($product)) {
-			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $product_id]));
+		if(!Context_Products::forge($product)) {
+			throw new \HttpNoAccessException();
 		}
+
+		$name = $product->name;
+		$product->delete();
+		\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $name]));
 		
-		$context = Context_Products::forge($product);	
-		if($context->delete()) {
-			$name = $product->name;
-			$product->delete();
-			
-			\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $name]));
-			\Response::redirect_back();
-		} else {
-			\Utils::handle_recoverable_error(__('actions.no_perm'));
-		}
 	}
 }

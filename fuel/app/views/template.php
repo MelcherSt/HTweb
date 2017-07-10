@@ -3,7 +3,7 @@
 <head>	
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?=$title?> | <?=__('site_title') . ' ' . __('site_sub')?></title>
+	<title><?= isset($page_title) && empty($title) ? $page_title : $title?> | <?=__('site_title') . ' ' . __('site_sub')?></title>
 	
 	<?php 
 	echo Asset::css(array(

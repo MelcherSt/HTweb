@@ -2,21 +2,11 @@
 
 namespace Products;
 
-class Controller_Admin_Gen extends \Controller_Secure {
+class Controller_Admin_Macro extends \Controller_Secure {
 	
 	public function before() {
-		$this->permission_required = Context_Products::MGMT_PERM;
+		$this->permission = Context_Products::MGMT_PERM;
 		parent::before();
-	}
-	
-	public function action_index() {
-		$this->push_js('products-modals');
-		
-		$this->template->title = __('product.title_admin');
-		$this->template->page_title = 'Gen '.__('product.title_admin');
-		$this->template->subtitle = __('privileges.perm.manage');
-		$data['products'] = Model_ProductDefinition::find('all');
-		$this->template->content = \View::forge('admin/gen/index', $data);
 	}
 	
 	public function action_create() {
@@ -29,9 +19,9 @@ class Controller_Admin_Gen extends \Controller_Secure {
 		}
 		
 		$data['active_user_options'] = $options;
-		$this->template->title = __('product.title_admin');
-		$this->template->subtitle = __('product.modal.create.title');		
-		$this->template->content = \View::forge('admin/gen/create', $data);
+		$this->template->page_title = __('product.admin.create_macro.title');
+		$this->template->subtitle = __('actions.create');		
+		$this->template->content = \View::forge('admin/macro/create', $data);
 	}
 	
 	public function post_create() {
@@ -43,26 +33,20 @@ class Controller_Admin_Gen extends \Controller_Secure {
 				'cost' => $val->validated('cost'),		
 			]);
 			$product->save();
-			\Session::set_flash('success', __('product.alert.success.create_product', ['name' => $name]));
+			\Session::set_flash('success', __('product.alert.success.create_macro', ['name' => $name]));
 		} else {	
 			\Session::set_flash('error', $val->error_message());
 		}
-		
-		\Response::redirect_back('/products/admin/gen');
+		\Response::redirect_back('/products/admin');
 	}
 	
 	public function post_delete() {
 		$product_id = \Input::post('product-id', null);
-		$product = Model_ProductDefinition::find($product_id);
-		
-		if(empty($product)) {
-			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $product_id]));
-		}
+		$product = \Utils::check_non_null(Model_ProductDefinition::find($product_id));
 			
 		$name = $product->name;
 		$product->delete();
-
-		\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $name]));
+		\Session::set_flash('success', __('product.alert.success.remove_macro', ['name' => $name]));
 		\Response::redirect_back();	
 	}
 	
@@ -73,6 +57,7 @@ class Controller_Admin_Gen extends \Controller_Secure {
 			$defs = [$productdef_id];
 		}
 		
+		$errors = 0;
 		$now = new \DateTime('first day of this month');
 		foreach($defs as $def) {	
 			if(empty($def->last_execution)) {
@@ -93,7 +78,6 @@ class Controller_Admin_Gen extends \Controller_Secure {
 					'paid_by' => $def->paid_by,
 					'cost' => $def->cost,	
 					'generated' => 1,
-					'approved' => 1,
 				]);
 
 				try {
@@ -112,13 +96,20 @@ class Controller_Admin_Gen extends \Controller_Secure {
 						]);
 						$user_product->save();
 					}
+					
 					\DB::commit_transaction();
 				} catch (Exception $ex) {
 					\DB::rollback_transaction();
-					throw $ex;
+					$errors++;
 				}
-				
 			}
 		}
+		
+		if($errors > 0) {
+			\Session::set_flash('success', __('product.alert.error.macros_executed', ['num' => $errors]));
+		} else {
+			\Session::set_flash('success', __('product.alert.success.macros_executed'));
+		}	
+		\Response::redirect_back();
 	}
 }

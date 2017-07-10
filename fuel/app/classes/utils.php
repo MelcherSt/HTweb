@@ -128,6 +128,22 @@ class Utils {
 		}	
 		return (new DateTime($date))->format($format);
 	}
+	
+	/**
+	 * Check if the given model is not empty. If the model is empty, a 404 
+	 * will be created, otherwise the model will be returned normally.
+	 * @param \Orm\Model|null $model The model in question.
+	 * @param string $message A message to show when the model is empty.
+	 * @return \Orm\Model The model in case it is not empty.
+	 * @throws HttpNotFoundException
+	 */
+	public static function check_non_null(?\Orm\Model $model, string $message=null) : \Orm\Model {
+		if(empty($model)) {
+			throw new HttpNotFoundException($message);
+		} else {
+			return $model;
+		}
+	}
 
 	/**
 	 * Retrieve the name of the current GIT branch.

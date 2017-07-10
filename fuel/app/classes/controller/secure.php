@@ -5,7 +5,7 @@
 class Controller_Secure extends Controller_Base
 {
 	/**
-	 * Must be set by child whenever it serves public accessible content.
+	 * Must be set by child whenever it serves publicly accessible content.
 	 * @var boolean 
 	 */
 	protected $public_content = false; 
@@ -20,7 +20,7 @@ class Controller_Secure extends Controller_Base
 	 * Must be set by child when a specific permission is required for accessing content.
 	 * @var string 
 	 */
-	protected $permission_required = null;
+	protected $permission = null;
 	
 	public function before() {		
 		parent::before();
@@ -36,27 +36,28 @@ class Controller_Secure extends Controller_Base
 					Response::redirect($redirect);
 				}	
 			} else {
-				$this->preauthorize();
+				$this->pre_authorize();
 			}	
 		}
 	}
 	
 	/**
-	 * Check required permissions to visit this page. 
-	 * Override this method to change behavior.
+	 * Pre-authorize this page by checking the required permission set. 
+	 * Override this function to change authorization behavior.
 	 */
-	protected function preauthorize() {
-		if(isset($this->permission_required)) {
-			$this->evaluate_permission();
+	protected function pre_authorize() {
+		if(isset($this->permission)) {
+			$this->evaluate_permission($this->permission);
 		}
 	}
 	
 	/**
-	 * Evaluate the required permission 
+	 * Evaluate a permission. If current user does not have the required
+	 * permission level, a 403 is returned. 
 	 * @throws HttpNoAccessException
 	 */
-	private function evaluate_permission() {
-		if(!\Auth::has_access($this->permission_required)) {
+	private function evaluate_permission(string $permission) {
+		if(!\Auth::has_access($permission)) {
 			throw new HttpNoAccessException();
 		}
 	}

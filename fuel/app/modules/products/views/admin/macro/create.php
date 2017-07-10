@@ -1,5 +1,5 @@
 <div class="container">
-	<p><?=__('product.gen.create.msg')?></p>
+	<p><?=__('product.admin.create_macro.msg')?></p>
 	<?=Form::open(['action' => '/products/admin/gen/create', 'class' => 'form-horizontal'])?>
 	<div class="form-group">
 		<?=Form::label(__('product.field.name').'*', 'name', ['class' => 'col-sm-2'])?>
@@ -25,7 +25,7 @@
 		</div>
 	</div>
 
-	<input type="submit" class="btn btn-primary btn-block" value="<?=__('product.gen.create.btn')?>" />			
+	<input type="submit" class="btn btn-primary btn-block" value="<?=__('product.admin.create_macro.btn')?>" />			
 	<?=Form::close()?>
 </div>
 

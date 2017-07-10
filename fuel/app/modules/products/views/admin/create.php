@@ -1,6 +1,5 @@
 <div class="container">
 	<div class="col-md-6">
-		<p><?=__('product.modal.create.msg')?></p>
 		<?=Form::open(['action' => '/products/create', 'class' => 'form-horizontal'])?>
 		<div class="form-group">
 			<?=Form::label(__('product.field.name').'*', 'name', ['class' => 'col-sm-2'])?>
@@ -46,7 +45,7 @@
 			<a class="btn btn-primary" onClick="uncheckAll()"><?=__('actions.deselect_all')?></a>
 		</div>
 		<div class="form-group">
-			<p><?=__('product.modal.create.participants')?></p>						
+			<p><?=__('product.admin.create.participants')?></p>						
 			<div class="table-responsive">
 				<table class="table table-striped table-hover">
 					<thead>

@@ -6,8 +6,6 @@ return array(
 	'login' => 'Log-in',
 	'logout' => 'Log-out',
 	'settings' => 'Settings',
-	'not_found' => 'Not Found',
-	'no_access' => 'Forbidden',
 	'me' => 'View profile',
 	'render' => 'Page rendered in {exec_time}s using {mem_usage}mb of memory.',
 	'fuel' => 'Build using FuelPHP ',
@@ -15,4 +13,13 @@ return array(
 	'product_name' => 'HTweb',
 	'dev' => 'developed by',
 	'state' => 'beta',
+	'403' => [
+		'title' => 'Forbidden',
+		'msg' => 'You do not have permission to perform the requested action on this server.'
+	],
+	'404' => [
+		'title' => 'Not found',
+		'msg' => 'The requested page could not be found on the server.',
+		'msg_exception' => 'The server reported the following: :msg',
+	]
   );

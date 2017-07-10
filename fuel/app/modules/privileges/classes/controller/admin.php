@@ -5,7 +5,7 @@ namespace Privileges;
 class Controller_Admin extends \Controller_Secure {
 	
 	function before() {
-		$this->permission_required = 'privileges.administration';
+		$this->permission = 'privileges.administration';
 		parent::before();
 	}	
 	

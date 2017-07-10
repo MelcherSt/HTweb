@@ -5,7 +5,7 @@ namespace Receipts;
 class Controller_Admin extends \Controller_Secure {
 	
 	public function before() {
-		$this->permission_required = 'receipts.administration';
+		$this->permission = 'receipts.administration';
 		parent::before();
 	}
 	

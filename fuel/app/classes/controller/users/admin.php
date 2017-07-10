@@ -3,7 +3,7 @@ class Controller_Users_Admin extends Controller_Secure
 {
 
 	public function before() {
-		$this->permission_required = 'users.administration';
+		$this->permission = 'users.administration';
 		parent::before();
 	}
 	

@@ -9,7 +9,7 @@ return array(
 		'description' => 'Description',
 	],
 	'perm' => [
-		'manage' => 'Manage'
+		'manage' => 'Management'
 	],
 	'alert' => [
 		'success' => [

@@ -1,6 +1,6 @@
 <?php
 return array(
 	'_root_'  => 'dashboard/index',  // The default route
-	'_404_'   => 'errorhandler/404',    // The main 404 route
-	'_403_'	  => 'errorhandler/403',
+	'_404_'   => 'httpexceptionhandler/404',
+	'_403_'	  => 'httpexceptionhandler/403',
 );
