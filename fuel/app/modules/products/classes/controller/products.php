@@ -70,10 +70,34 @@ class Controller_Products extends \Controller_Secure {
 		} else if (sizeof($user_ids == 0)) {
 			\Session::set_flash('error', 'You did not select any users!');
 		} else {	
-			\Session::set_flash('error', $val->error());
+			\Session::set_flash('error', $val->error_message());
 		}
 		
 		\Response::redirect_back();
+	}
+	
+	public function post_update(int $product_id=null) {
+		$product = Model_Product::find($product_id);
+		
+		if(empty($product)) {
+			\Utils::handle_irrecoverable_error(__('product.alert.error.no_product', ['id' => $product_id]));
+		}
+		
+		$context = Context_Products::forge($product);	
+		if($context->update()) {
+			$val = Model_Product::validate('update');
+			if($val->run([], true)) {
+				$product->cost = $val->validated('cost');
+				$product->notes = $val->validated('notes');
+				$product->save();
+				\Session::set_flash('success', __('product.alert.success.update_product'));
+			} else {
+				\Session::set_flash('error', $val->error_message());
+			}
+			\Response::redirect_back();
+		} else {
+			\Utils::handle_recoverable_error(__('actions.no_perm'));
+		}
 	}
 	
 	public function post_delete() {

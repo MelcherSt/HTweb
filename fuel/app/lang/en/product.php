@@ -1,5 +1,4 @@
 <?php
-
 return [
 	'title' => 'Products',
 	'title_admin' => 'Products',
@@ -25,6 +24,11 @@ return [
 		'paid_by_me' => 'Products I bought',
 		'paid_for_me' => 'Products others bought for me',
 	],
+	'view' => [
+		'btn' => [
+			'update_product' => 'Update product',
+		],
+	],
 	'modal' => [
 		'create' => [
 			'title' => 'Create new product',
@@ -42,6 +46,7 @@ return [
 		'success' => [
 			'create_product' => 'Product <strong>:name</strong> has been created.',
 			'remove_product' => 'Product <strong>:name</strong> has been removed.',
+			'update_product' => 'Product has been updated.',
 		],
 		'error' => [
 			'no_product' => 'Cannot find product with id <strong>:id</strong>.',

@@ -4,8 +4,11 @@ namespace Products;
 /**
  * Product
  */
-class Model_Product extends \Orm\Model
-{
+class Model_Product extends \Orm\Model {
+	
+	const MIN_PRICE = -200;
+	const MAX_PRICE = 200;
+	
 	protected static $_properties = array(
 		'id',
 		'cost' => ['default' => 0.0],
@@ -46,7 +49,7 @@ class Model_Product extends \Orm\Model
 		$val->add_field('date', __('product.field.date'), 'required|valid_date');
 		$val->add_field('name', __('product.field.name'), 'required|max_length[50]');
 		$val->add_field('notes',  __('product.field.notes'), 'max_length[255]');
-		$val->add_field('cost',  __('product.field.cost'), 'required|is_numeric');
+		$val->add_field('cost',  __('product.field.cost'), 'required|numeric_between['.static::MIN_PRICE.','.static::MAX_PRICE.']');
 		$val->add_field('users',  __('product.field.participant_plural'), 'required');
 		return $val;
 	}

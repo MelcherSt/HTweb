@@ -25,6 +25,11 @@ return [
 		'paid_for_me' => 'Producten die anderen voor mij kochten',
 		'msg' => 'Deze lijst laat onverrekende producten zien die jij kochten of anderen voor jou kochten. Voor een lijst met verrekende producten, kijk op de pagina ',
 	],
+		'view' => [
+		'btn' => [
+			'update_product' => 'Product bijwerken',
+		],
+	],
 	'modal' => [
 		'create' => [
 			'title' => 'Nieuw product toevoegen',

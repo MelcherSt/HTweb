@@ -29,7 +29,7 @@
 </head>
 <body>
 	
-	<?= Request::forge('/nav/base')->execute([Uri::segment(1)]); ?>
+	<?=Request::forge('/nav/base')->execute([Uri::segment(1)]); ?>
 	
 	<div class="container">
 		<div class="row">
@@ -57,7 +57,7 @@
 		<hr/>
 		<footer>
 			<p class="pull-left"><span class="fa fa-bank"></span> <?=__('product_name')?> <small><?=__('dev')?> Melcher © 2016-<?=date('Y')?></small></p>		
-			<strong class="pull-right"><a href="https://github.com/MelcherSt/HTweb"><i class="fa fa-github"></i> <?=__('github')?> GitHub</a> | <?=\Utils::current_branch() . '/' . \Utils::current_head()?></strong>
+			<strong class="pull-right"><a href="https://github.com/MelcherSt/HTweb"><i class="fa fa-github"></i> <?=__('github')?> GitHub</a> | <?=\FUEL::$env.'/'.\Utils::current_branch() . '/' . \Utils::current_head()?></strong>
 		</footer>
 	</div>
 </body>

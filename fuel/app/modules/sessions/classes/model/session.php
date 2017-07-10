@@ -1,8 +1,7 @@
 <?php
 namespace Sessions;
 
-class Model_Session extends \Orm\Model
-{
+class Model_Session extends \Orm\Model {
 	
 	const DEADLINE_GRACE = '+19hours';
 	const ENROLLMENT_GRACE = '+3days';
