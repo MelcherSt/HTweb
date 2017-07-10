@@ -73,15 +73,19 @@ class Controller_Admin_Gen extends \Controller_Secure {
 			$defs = [$productdef_id];
 		}
 		
-		$now = new \DateTime();
+		$now = new \DateTime('first day of this month');
 		foreach($defs as $def) {	
 			if(empty($def->last_execution)) {
-				$date = new \DateTime('first day of this month');
+				$date = new \DateTime('first day of last month');
 			} else {
 				$date = new \DateTime($def->last_execution);
+				if($date->modify('+1month') == $now) {
+					continue;
+				}
 			}
 			
 			while($date < $now) {
+				$date->modify('+1month');
 				$product = Model_Product::forge([
 					'name' => $def->name,
 					'date' => $date->format(\Utils::MYSQL_DATE_FORMAT),
@@ -113,7 +117,7 @@ class Controller_Admin_Gen extends \Controller_Secure {
 					\DB::rollback_transaction();
 					throw $ex;
 				}
-				$date->modify('+1month');
+				
 			}
 		}
 	}
