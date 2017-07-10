@@ -1,9 +1,10 @@
 # HTweb
-FuelPHP based web application for dorm administration. Requires PHP 7.1.
+FuelPHP based web application for dorm administration.
 
 ## Dependencies
 ### PHP 7.1
-There is no php7.1 package in the ubuntu archive ATM. Installing is as simple as:
+Unfortunately there is no php7.1 package in the official ubuntu xenial archive.
+To *upgrade* your existing php installation, take the steps below: 
 1. `$ add-apt-repository ppa:ondrej/php`
 2. `$ apt update`
 3. `$ apt purge php7.0 php7.0-common`
@@ -26,4 +27,4 @@ Run all migrations. Please note there's a strict order in which to run migration
 4. all others `$ oil r migrate --all`
 
 ## Run it
-Oil has a build-in web server. Run the server using `$ oil s`
+Oil has a built-in web server. Run the server using `$ oil s`

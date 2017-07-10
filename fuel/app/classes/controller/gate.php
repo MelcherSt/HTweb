@@ -7,7 +7,7 @@ class Controller_Gate extends Controller_Secure
 {
 	public function action_login() {
 		// Already logged in
-		Auth::check() and Response::redirect('gate');
+		Auth::check() and Response::redirect('/');
 		
 		$val = Validation::forge();
 
