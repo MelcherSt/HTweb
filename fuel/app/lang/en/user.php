@@ -31,8 +31,8 @@ return array(
 		],
 		'error' => array(
 			'no_id' => 'Cannot not find user with id <strong>:id</strong>.',
-			'cur_pass' => 'Incorrect password.',
-			'update' => 'Cannot update user settings',
+			'cur_pass' => 'Current password is incorrect.',
+			'update' => 'Cannot update user settings.',
 			'invalid_iban' => 'The entered <strong>:label</strong> is not a valid International Bank Acoount Number (IBAN)',
 			'invalid_lang' => 'The selected </strong>:label</strong> is invalid.',
 		),

@@ -31,9 +31,9 @@ class Controller_Users extends Controller_Secure
 
 	public function action_edit()	{
 		$user = \Model_User::get_current();
-		$val = \Model_User::validate('edit');		
-		$val->add('password', 'new password')->add_rule('min_length', 5);
-		$val->add('password2', 're-type Password')->add_rule('match_field', 'password');
+		$val = \Model_User::validate('edit');			
+		$val->add_field('password', 'Wachtwoord', 'min_length[5]');
+		$val->add_field('password2', 'Wachtwoord', 'required_with[password]|match_field[password]');
 		
 		if ($val->run()) {		
 			$user->phone = Input::post('phone', '');
@@ -41,10 +41,9 @@ class Controller_Users extends Controller_Secure
 			$user->iban = Input::post('iban', null);
 			$user->lang = Input::post('lang', null);
 
-			$cur_pass = Input::post('old_password');
-			$pass = Input::post('password');
-			
-			if(isset($pass)) {
+			$cur_pass = $val->validated('old_password');
+			$pass = $val->validated('password');
+			if(!empty($pass)) {
 				// Generate new salt
 				$new_salt = \Str::random();
 				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){

@@ -1,6 +1,6 @@
 <div class="container">
 	<p><?=__('product.admin.create_macro.msg')?></p>
-	<?=Form::open(['action' => '/products/admin/gen/create', 'class' => 'form-horizontal'])?>
+	<?=Form::open(['action' => '/products/admin/macro/create', 'class' => 'form-horizontal'])?>
 	<div class="form-group">
 		<?=Form::label(__('product.field.name').'*', 'name', ['class' => 'col-sm-2'])?>
 		<div class="col-sm-6">

@@ -31,7 +31,7 @@ return array(
 		],
 		'error' => array(
 			'no_id' => 'Kan gebruiker met id <strong>:id</strong> niet vinden.',
-			'cur_pass' => 'Verkeerd wachtwoord.',
+			'cur_pass' => 'Huidig wachtwoord incorrect.',
 			'update' => 'Kan gebruiker niet bijwerken',
 			'invalid_iban' => 'De ingevulde <strong>:label</strong> is niet een correct International Bank Acoount Number (IBAN)',
 			'invalid_lang' => 'De geselecteerde <strong>:label</strong> is niet geldig.',
