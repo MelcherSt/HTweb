@@ -1,7 +1,8 @@
 <?php
 /**
- * Base controller
- * Loads localization for all modules, sets global current user variable
+ * Provides basic functionalities for classes generating views.
+ * Detects and loads language files and provides a means of injecting additional
+ * CSS and JS files into pages as well as menu item injection.
  */
 class Controller_Core_Base extends Controller_Core_Secure {
 	
@@ -68,13 +69,13 @@ class Controller_Core_Base extends Controller_Core_Secure {
 	}
 	
 	public function after($reponse) {
-		// Theme independant 
-		$theme = \Theme::instance();
-		$template = $theme->get_template();
-		$template->set('add_js', $this->add_js);
-		$template->set('add_css', $this->add_css);
+		// Inject CSS and JS files into template
+		\Theme::instance()->get_template()
+			->set('add_js', $this->add_js)
+			->set('add_css', $this->add_css);
 		
-		// Set menu items	
+		// Inject menu items into template navbar partial when present
+		//TODO: move this to a more suitable place
 		if($theme->has_partials('navbar')) {
 			$menu_items = []; 		
 			if(Auth::check()) {
