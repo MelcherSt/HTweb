@@ -69,8 +69,10 @@ class Controller_Core_Base extends Controller_Core_Secure {
 	}
 	
 	public function after($reponse) {
+		$theme = \Theme::instance();
+
 		// Inject CSS and JS files into template
-		\Theme::instance()->get_template()
+		$theme->get_template()
 			->set('add_js', $this->add_js)
 			->set('add_css', $this->add_css);
 		
