@@ -2,7 +2,7 @@
 
 namespace Products;
 
-class Controller_Admin_Macro extends \Controller_Core_Secure {
+class Controller_Admin_Macro extends \Controller_Core_Theme {
 	
 	public function before() {
 		$this->permission = Context_Products::MGMT_PERM;
@@ -19,9 +19,9 @@ class Controller_Admin_Macro extends \Controller_Core_Secure {
 		}
 		
 		$data['active_user_options'] = $options;
-		$this->template->page_title = __('product.admin.create_macro.title');
-		$this->template->subtitle = __('actions.create');		
-		$this->template->content = \View::forge('admin/macro/create', $data);
+		$this->page_title = __('product.admin.create_macro.title');
+		$this->sub_title = __('actions.create');		
+		$this->content = \View::forge('admin/macro/create', $data);
 	}
 	
 	public function post_create() {
