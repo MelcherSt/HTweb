@@ -19,7 +19,8 @@ class Controller_Admin extends \Controller_Secure {
 		$this->template->content = \View::forge('admin/index', $data);
 	}
 	
-	public function action_create() {	
+	public function action_create() {
+		$this->push_js('products-modals');
 		$this->template->title = __('product.title');
 		$this->template->page_title = __('product.name');
 		$this->template->subtitle = __('actions.create');		

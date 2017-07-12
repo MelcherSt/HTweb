@@ -25,6 +25,7 @@ class Controller_Products extends \Controller_Secure {
 	}
 	
 	public function action_create() {
+		$this->push_js('products-modals');
 		$this->template->title = __('product.title');
 		$this->template->page_title = __('product.name');
 		$this->template->subtitle = __('actions.create');		
@@ -78,7 +79,7 @@ class Controller_Products extends \Controller_Secure {
 		} else {	
 			\Session::set_flash('error', $val->error_message());
 		}		
-		\Response::redirect_back();
+		\Response::redirect(\Input::referrer());
 	}
 	
 	public function post_update(int $product_id=null) {
