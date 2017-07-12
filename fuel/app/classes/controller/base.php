@@ -13,16 +13,16 @@ class Controller_Base extends Controller_Template {
 	 * List of additional scripts to be loaded
 	 * @var array
 	 */
-	protected $add_js = [];
+	private $add_js = [];
 	
 	/**
 	 * List of additional stylesheets to be loaded
 	 * @var array
 	 */
-	protected $add_css = [];
+	private $add_css = [];
 	
 	/**
-	 * Add additional css
+	 * Add additional stylesheet(s).
 	 * @param mixed $sheet Either stylesheet name (excluding extension) or array of stylesheets.
 	 */
 	public function push_css($sheet) {
@@ -38,7 +38,7 @@ class Controller_Base extends Controller_Template {
 	}
 	
 	/**
-	 * Add additional script
+	 * Add additional script(s).
 	 * @param mixed $script Either scriptname (excluding extension) or array of scriptnames.
 	 */
 	public function push_js($script) {
@@ -55,16 +55,28 @@ class Controller_Base extends Controller_Template {
 	
 	public function before() {		
 		$this->current_user = null;
-
-		foreach (\Auth::verified() as $driver)
-		{
-			if (($id = $driver->get_user_id()) !== false)
-			{
-				$this->current_user = \Model_User::find($id[1]);
-			}
-			break;
+		if (($id = \Auth::instance()->get_user_id()) !== false) 	{
+			$this->current_user = \Model_User::find($id[1]);
 		}
 		
+		// Set global current_user for view
+		View::set_global('current_user', $this->current_user);
+		$this->load_localization();	
+		parent::before();
+	}
+	
+	public function after($reponse) {
+		$this->template->add_js = $this->add_js;
+		$this->template->add_css = $this->add_css;	
+		$this->template->footer = View::forge('footer');
+		$this->template->header = View::forge('header', $this->template);;
+		return parent::after($reponse);
+	}
+	
+	/**
+	 * Determine and pre-load localization.
+	 */
+	private function load_localization() {
 		$lang = Controller_Base::DEFAULT_LANG;
 		
 		if(isset($this->current_user)) {
@@ -95,18 +107,7 @@ class Controller_Base extends Controller_Template {
 		\Lang::load('stats', 'stats'); 	
 		\Lang::load('privileges', 'privileges');
 
-		// Set a global variable so views can use it
-		View::set_global('current_user', $this->current_user);
+		// Set global language for view
 		View::set_global('language', $lang);
-		
-		parent::before();
 	}
-	
-	public function after($reponse) {
-		$this->template->add_js = $this->add_js;
-		$this->template->add_css = $this->add_css;
-		
-		return parent::after($reponse);
-	}
-
 }

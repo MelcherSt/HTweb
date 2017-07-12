@@ -36,6 +36,7 @@ class Controller_Secure extends Controller_Base
 					Response::redirect($redirect);
 				}	
 			} else {
+				// Perform page specific authorization steps
 				$this->pre_authorize();
 			}	
 		}

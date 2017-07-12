@@ -33,10 +33,10 @@
 	
 	<div class="container">
 		<div class="row">
-			<?=View::forge('header', $this->data)?>	
+			<?=$header?>
 			<?=$content?>
 		</div>
-		<?=View::forge('footer')?>		
+		<?=$footer?>		
 	</div>
 </body>
 </html>
