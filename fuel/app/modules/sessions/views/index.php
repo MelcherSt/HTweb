@@ -60,7 +60,7 @@
 		<p><?=__('session.index.msg')?> <a href="/receipts"><?=__('receipt.title')?></a>.</p>
 
 		<div class="table-responsive">
-			<table class="table table-striped table-hover">
+			<table class="table table-striped table-hover table-condensed">
 				<thead>
 					<tr>
 						<th class="col-md-2"><?=__('session.field.date')?></th>

@@ -175,7 +175,7 @@ class Model_Product extends \Orm\Model {
 	 * @return string
 	 */
 	public function get_nicified_participants() : string {	
-		if ($this->count_participants() < 4) {	
+		if ($this->count_participants() < 5) {	
 			return implode(', ', array_map(function(Model_User_Product $x) { return $x->user->get_shortname(); }, $this->get_participants_sorted()));
 		} else {
 			return $this->count_participants();

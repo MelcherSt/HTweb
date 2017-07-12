@@ -24,6 +24,13 @@ class Controller_Products extends \Controller_Secure {
 		$this->template->content = \View::forge('view', ['product' => $product]);
 	}
 	
+	public function action_create() {
+		$this->template->title = __('product.title');
+		$this->template->page_title = __('product.name');
+		$this->template->subtitle = __('actions.create');		
+		$this->template->content = \Presenter::forge('create');
+	}
+	
 	public function post_create() {
 		$user_ids = \Input::post('users', []);
 		$val = Model_Product::validate('create');	
@@ -106,6 +113,6 @@ class Controller_Products extends \Controller_Secure {
 		$name = $product->name;
 		$product->delete();
 		\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $name]));
-		
+		\Response::redirect_back();
 	}
 }

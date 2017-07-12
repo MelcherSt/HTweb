@@ -6,21 +6,17 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> <?=__('site_title')?> <small><?=__('site_sub')?></small>   <sup><span class="badge"><?=__('state')?></span></sup></a>
-			
+			<a class="navbar-brand" href="/"><span class="fa fa-bank"></span> <?=__('site_title')?> <small><?=__('site_sub')?></small>  
+				<sup><span class="badge"><?=__('state')?></span></sup>
+			</a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<?php if(!isset($menu_items)) {
-					$menu_items = [];
-				} 
-				
-				foreach($menu_items as $item) {
+				<?php foreach($menu_items as $item) {
 					$section_segment = $item[0];
 					$section_title = $item[1];
 					$section_icon = $item[2];
-
-					?>
+				?>
 					<li class="<?php echo $active_item == $section_segment ? 'active' : '' ?>">
 						<a href="/<?=$section_segment?>"><span class="fa <?=$section_icon?>"></span> <?=$section_title?> </a>
 					</li>

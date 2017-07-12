@@ -19,27 +19,11 @@ class Controller_Admin extends \Controller_Secure {
 		$this->template->content = \View::forge('admin/index', $data);
 	}
 	
-	public function action_create() {
-		$this->push_js('products-modals');
-		
-		// Option assoc. array [user_id => user_name]
-		$options = [];
-		foreach(\Model_User::get_by_state() as $user) {
-			$options[$user->id] = $user->get_fullname();
-		}
-		
-		// Users sorted on active state
-		$users_sorted = \Model_User::query()
-			->where('id', '!=', 0)
-			->order_by('active', 'desc')
-			->get();
-		
-		$data['active_user_options'] = $options;
-		$data['users'] = $users_sorted;	
+	public function action_create() {	
 		$this->template->title = __('product.title');
 		$this->template->page_title = __('product.name');
 		$this->template->subtitle = __('actions.create');		
-		$this->template->content = \View::forge('admin/create', $data);
+		$this->template->content = \Presenter::forge('create', 'admin');
 	}
 }
 

@@ -47,13 +47,11 @@ return [
 			'btn' => 'Create product macro',
 		]
 	],
+	'create' => [
+		'participants' => 'Select the people you bought this product for.',
+		'btn' => 'Create product'	
+	],
 	'modal' => [
-		'create' => [
-			'title' => 'Create new product',
-			'msg' => 'Add a product that you bought for someone else.',
-			'participants' => 'Select the people you bought the product for',
-			'btn' => 'Create product'	
-		],
 		'remove' => [
 			'title' => 'Delete product',
 			'msg' => 'Are you sure you want to remove the product',

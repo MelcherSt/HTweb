@@ -7,7 +7,7 @@ class Controller_Sessions extends \Controller_Secure {
 	public function action_index() {		
 		Model_Session::scrub();
 		
-		$this->template->title = __('session.title');
+		$this->template->page_title = __('session.title');
 		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id, true);			
 		$this->template->content = \View::forge('index', $data);
 	}

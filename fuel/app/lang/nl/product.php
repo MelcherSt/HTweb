@@ -48,13 +48,11 @@ return [
 			'btn' => 'Product macro aanmaken',
 		]
 	],
+	'create' => [
+		'participants' => 'Selecteer de gebruikers voor wie je dit product kocht.',
+		'btn' => 'Product toevoegen'
+	],
 	'modal' => [
-		'create' => [
-			'title' => 'Nieuw product toevoegen',
-			'msg' => 'Voeg hier een product toe dat je voor een ander hebt aangeschaft.',
-			'participants' => 'Selecteer de gebruikers voor wie je dit product kocht.',
-			'btn' => 'Product toevoegen'
-		],
 		'remove' => [
 			'title' => 'Product verwijderen',
 			'msg' => 'Weet je zeker dat je dit product wilt verwijderen',

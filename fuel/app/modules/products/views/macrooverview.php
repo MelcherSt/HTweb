@@ -1,5 +1,5 @@
 <div class="table-responsive">
-	<table class="table table-striped table-hover">
+	<table class="table table-striped table-hover table-condensed">
 		<thead>
 			<tr>
 				<th class="col-md-2"><?=__('product.field.name')?></th>
@@ -25,6 +25,7 @@
 	</table>
 	<em><?=sizeof($products) == 0 ? __('product.empty_list') : ''?></em>
 </div>
+
 
 
 <!-- Modal dialog for macro deletion -->

@@ -8,6 +8,7 @@ return array(
 	'update' => 'Update',
 	'cancel' => 'Cancel',
 	'create' => 'Create',
+	'advanced' => 'Advanced',
 	'select_all' => 'Select all',
 	'deselect_all' => 'Deselect all',
 	'no_actions' => 'There are no actions available one this page',

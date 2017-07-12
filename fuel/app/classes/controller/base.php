@@ -74,7 +74,7 @@ class Controller_Base extends Controller_Template {
 		if(Auth::check()) {
 			$menu_items = [
 					['sessions', __('session.title'), 'fa-cutlery'],
-					['products', __('product.title'), 'fa fa-shopping-bag'],				
+					['products', __('product.title'), 'fa fa-shopping-basket'],				
 					['receipts', __('receipt.title'), 'fa-money'],
 					['wall', __('user.wall.title'), 'fa-id-card'],
 					['stats', __('stats.title'), 'fa-area-chart'],

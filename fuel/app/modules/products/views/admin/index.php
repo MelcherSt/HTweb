@@ -3,7 +3,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><?=__('actions.name')?></div>
 			<div class="list-group">
-				<a class="list-group-item" href="/products/admin/create" ><span class="fa fa-plus"></span> <?=__('product.admin.index.btn.add_product')?></a>
+				<a class="list-group-item" href="/products/admin/create" ><span class="fa fa-plus"></span> <?=__('product.admin.index.btn.add_product').' ('.__('actions.advanced').')'?></a>
 				<a class="list-group-item" href="/products/admin/macro/create" ><span class="fa fa-repeat"></span> <?=__('product.admin.index.btn.add_macro')?></a>
 				<a class="list-group-item" href="/products/admin/macro/execute" ><span class="fa fa-play"></span> <?=__('product.admin.index.btn.execute_macros')?></a>
 			</div>
