@@ -2,7 +2,7 @@
 /**
  * Applies theme to pages.
  */
-class Controller_Core_Theme extends Controller_Core_Secure {
+class Controller_Core_Theme extends Controller_Core_Base {
 	
 	/**
 	 * The content that will be displayed in the page template.
