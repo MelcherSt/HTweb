@@ -28,9 +28,7 @@
 	?>	
 </head>
 <body>
-	
-	<?=Request::forge('/nav/base')->execute([Uri::segment(1)]); ?>
-	
+	<?=$navigation?>
 	<div class="container">
 		<div class="row">
 			<?=$header?>

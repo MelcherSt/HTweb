@@ -53,7 +53,7 @@ class Controller_Base extends Controller_Template {
 		}
 	}
 	
-	public function before() {		
+	public function before() {	
 		$this->current_user = null;
 		if (($id = \Auth::instance()->get_user_id()) !== false) 	{
 			$this->current_user = \Model_User::find($id[1]);
@@ -68,8 +68,25 @@ class Controller_Base extends Controller_Template {
 	public function after($reponse) {
 		$this->template->add_js = $this->add_js;
 		$this->template->add_css = $this->add_css;	
+		
+		// Initialize template segments
+		$menu_items = []; 		
+		if(Auth::check()) {
+			$menu_items = [
+					['sessions', __('session.title'), 'fa-cutlery'],
+					['products', __('product.title'), 'fa fa-shopping-bag'],				
+					['receipts', __('receipt.title'), 'fa-money'],
+					['wall', __('user.wall.title'), 'fa-id-card'],
+					['stats', __('stats.title'), 'fa-area-chart'],
+			];
+		}
+		$this->template->menu_items = $menu_items;
+		$this->template->active_item = Uri::segment(1);
+		$this->template->navigation = View::forge('navigation', $this->template);
+		
 		$this->template->footer = View::forge('footer');
 		$this->template->header = View::forge('header', $this->template);;
+		
 		return parent::after($reponse);
 	}
 	

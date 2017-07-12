@@ -1,6 +1,12 @@
 # HTweb
 FuelPHP based web application for dorm administration. Developed and maintained by Melcher.
 
+## Features
+* Complete point based diner tracking module including enrollments of guests, cooks and dishwashers. 
+* Product module for easy cost logging
+* Receipt module including cost distribution tools
+* Bilingual user interface (Dutch and English)
+
 ## Dependencies
 ### PHP 7.1
 Unfortunately there is no php7.1 package in the official ubuntu xenial archive.
