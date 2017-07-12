@@ -35,7 +35,7 @@ class Controller_Sessions extends \Controller_Secure {
 	
 		$session = \Utils::valid_session($date, false);
 		if(empty($session)){
-			$nowDateTime = new \DateTime();
+			$nowDateTime = (new \DateTime())->modify("-1day");
 			$dateTime = new \DateTime($date);	
 			
 			if($dateTime < $nowDateTime) {
