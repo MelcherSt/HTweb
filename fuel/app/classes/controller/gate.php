@@ -3,7 +3,7 @@
  * Controller regulating access to protected pages. 
  * Implement this controller when a page needs logging in. 
  */
-class Controller_Gate extends Controller_Secure
+class Controller_Gate extends Controller_Core_Secure
 {
 	public function action_login() {
 		// Already logged in

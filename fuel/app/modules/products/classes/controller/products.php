@@ -2,7 +2,7 @@
 
 namespace Products;
 
-class Controller_Products extends \Controller_Secure {
+class Controller_Products extends \Controller_Core_Secure {
 	
 	public function action_index() {
 		$this->push_js('products-modals');		

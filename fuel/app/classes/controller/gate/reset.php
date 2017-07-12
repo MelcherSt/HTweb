@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Gate_Reset extends Controller_Secure {
+class Controller_Gate_Reset extends Controller_Core_Secure {
 	
 	public function before() {
 		$this->public_content = true;

@@ -1,5 +1,5 @@
 <?php
-class Controller_Users_Admin extends Controller_Secure
+class Controller_Users_Admin extends Controller_Core_Secure
 {
 
 	public function before() {

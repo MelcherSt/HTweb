@@ -2,7 +2,7 @@
 
 namespace Wall;
 
-class Controller_wall extends \Controller_Secure {
+class Controller_wall extends \Controller_Core_Secure {
 	
 	public function action_index() {
 		$data['users'] = \Model_User::get_by_state();

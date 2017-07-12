@@ -2,7 +2,7 @@
 
 namespace Dashboard;
 
-class Controller_Dashboard extends \Controller_Secure {
+class Controller_Dashboard extends \Controller_Core_Secure {
 	
 	public function before() {
 		$this->public_content = true;

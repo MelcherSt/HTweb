@@ -2,7 +2,7 @@
 /**
  * Routed to by the router configuration.
  */
-class Controller_HttpExceptionHandler extends \Controller_Base {
+class Controller_HttpExceptionHandler extends \Controller_Core_Base {
 	
 	public function action_404(\FuelException $e) {	
 		$this->response_status = 404;

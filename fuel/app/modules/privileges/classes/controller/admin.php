@@ -2,7 +2,7 @@
 
 namespace Privileges;
 
-class Controller_Admin extends \Controller_Secure {
+class Controller_Admin extends \Controller_Core_Secure {
 	
 	function before() {
 		$this->permission = 'privileges.administration';

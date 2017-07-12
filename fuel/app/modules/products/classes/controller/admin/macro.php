@@ -2,7 +2,7 @@
 
 namespace Products;
 
-class Controller_Admin_Macro extends \Controller_Secure {
+class Controller_Admin_Macro extends \Controller_Core_Secure {
 	
 	public function before() {
 		$this->permission = Context_Products::MGMT_PERM;

@@ -3,7 +3,7 @@
  * Base controller
  * Loads localization for all modules, sets global current user variable
  */
-class Controller_Base extends Controller_Template {
+class Controller_Core_Base extends Controller_Template {
 	
 	const SYSTEM_LANGS = ['nl', 'en'];
 	const DEFAULT_LANG = 'en';
@@ -66,7 +66,7 @@ class Controller_Base extends Controller_Template {
 	}
 	
 	public function after($reponse) {
-		$this->template->add_js = $this->add_js;
+		/*$this->template->add_js = $this->add_js;
 		$this->template->add_css = $this->add_css;	
 		
 		// Initialize template segments
@@ -85,7 +85,7 @@ class Controller_Base extends Controller_Template {
 		$this->template->navigation = View::forge('navigation', $this->template);
 		
 		$this->template->footer = View::forge('footer');
-		$this->template->header = View::forge('header', $this->template);;
+		$this->template->header = View::forge('header', $this->template);*/
 		
 		return parent::after($reponse);
 	}
@@ -94,7 +94,7 @@ class Controller_Base extends Controller_Template {
 	 * Determine and pre-load localization.
 	 */
 	private function load_localization() {
-		$lang = Controller_Base::DEFAULT_LANG;
+		$lang = Controller_Core_Base::DEFAULT_LANG;
 		
 		if(isset($this->current_user)) {
 			if (!empty($lang_temp = $this->current_user->lang)){

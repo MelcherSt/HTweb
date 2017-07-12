@@ -2,7 +2,7 @@
 
 namespace Sessions;
 
-class Controller_Admin extends \Controller_Secure {
+class Controller_Admin extends \Controller_Core_Secure {
 	
 	function before() {
 		$this->permission = Context_Sessions::MGMT_PERM;

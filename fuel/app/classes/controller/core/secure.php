@@ -2,7 +2,7 @@
 /**
  * Ensures secure controller access. By default all unauthenticated access is denied.
  */
-class Controller_Secure extends Controller_Base
+class Controller_Core_Secure extends Controller_Core_Base
 {
 	/**
 	 * Must be set by child whenever it serves publicly accessible content.

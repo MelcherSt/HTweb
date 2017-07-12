@@ -5,7 +5,7 @@ namespace Sessions;
 /**
  * Handles session to product conversion.
  */
-class Controller_Convert extends \Controller_Secure {
+class Controller_Convert extends \Controller_Core_Secure {
 	public function action_index(string $date) {
 		$session = \Utils::valid_session($date);
 		$context = Context_Sessions::forge($session);
