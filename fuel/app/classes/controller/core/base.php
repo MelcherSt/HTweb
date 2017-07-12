@@ -66,7 +66,7 @@ class Controller_Core_Base extends Controller_Template {
 	}
 	
 	public function after($reponse) {
-		/*$this->template->add_js = $this->add_js;
+		$this->template->add_js = $this->add_js;
 		$this->template->add_css = $this->add_css;	
 		
 		// Initialize template segments
@@ -85,7 +85,7 @@ class Controller_Core_Base extends Controller_Template {
 		$this->template->navigation = View::forge('navigation', $this->template);
 		
 		$this->template->footer = View::forge('footer');
-		$this->template->header = View::forge('header', $this->template);*/
+		$this->template->header = View::forge('header', $this->template);
 		
 		return parent::after($reponse);
 	}
