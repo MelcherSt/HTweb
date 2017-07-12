@@ -163,7 +163,7 @@ class Utils {
 	 * Retrieve the current head checksum.
 	 * @return string
 	 */
-	public static function current_head() : string { 
+	public static function get_current_head() : string { 
 		try {
 			$gitFile = file('../.git/refs/heads/' .static::current_branch(), FILE_USE_INCLUDE_PATH);
 			$branchHead = $gitFile[0];	
@@ -171,6 +171,14 @@ class Utils {
 			$branchHead = 'unknown commit';
 		}	
 		return trim($branchHead);
+	}
+	
+	/**
+	 * Get a short representation of the current head commit checksum.
+	 * @return string
+	 */
+	public static function get_short_head(int $lenght=6) : string {
+		return substr(static::get_current_head(), 0, $lenght);
 	}
 }
 	

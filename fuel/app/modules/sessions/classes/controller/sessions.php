@@ -76,8 +76,7 @@ class Controller_Sessions extends \Controller_Secure {
 			\Utils::handle_recoverable_error(__('actions.no_perm'));
 		}
 		
-		$payer_id = \Input::post('payer-id', null);
-		if(empty($payer_id)) {				
+		if(empty($payer_id = \Input::post('payer-id', null))) {				
 			$payer_id = \Auth::get_user()->id;
 		} 
 		
@@ -111,9 +110,7 @@ class Controller_Sessions extends \Controller_Secure {
 			\Utils::handle_recoverable_error(__('session.alert.error.remove_session'));
 		}
 		
-		$context = Context_Sessions::forge($session);	
-		
-		if(!$context->delete()) {
+		if(!Context_Sessions::forge($session)->delete()) {
 			\Utils::handle_recoverable_error(__('actions.no_perm'));
 		}
 		
