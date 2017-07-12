@@ -2,7 +2,7 @@
 
 namespace Sessions;
 
-class Controller_Admin extends \Controller_Core_Secure {
+class Controller_Admin extends \Controller_Core_Theme {
 	
 	function before() {
 		$this->permission = Context_Sessions::MGMT_PERM;
@@ -14,11 +14,11 @@ class Controller_Admin extends \Controller_Core_Secure {
 		
 		$this->push_js('admin/sessions-delete');
 		
-		$this->template->title = __('session.title_admin');
-		$this->template->page_title = __('session.title_admin');
-		$this->template->subtitle = __('privileges.perm.manage');
+		$this->title = __('session.title_admin');
+		$this->page_title = __('session.title_admin');
+		$this->sub_title = __('privileges.perm.manage');
 		$data['sessions'] = Model_Session::query()->where('settled', 0)->get();			
-		$this->template->content = \View::forge('admin/index', $data);
+		$this->content = \View::forge('admin/index', $data);
 	}
 	
 	
@@ -29,9 +29,9 @@ class Controller_Admin extends \Controller_Core_Secure {
 		$session = \Utils::valid_session($date);	
 		
 		$formatted_date = strftime('%A %d %B %Y', strtotime($date));
-		$this->template->page_title = __('session.name');
-		$this->template->title = $formatted_date . ' - ' . __('session.title_admin');
-		$this->template->subtitle = $formatted_date;		
-		$this->template->content = \View::forge('admin/view', ['session' => $session]);	
+		$this->page_title = __('session.name');
+		$this->title = $formatted_date . ' - ' . __('session.title_admin');
+		$this->sub_title = $formatted_date;		
+		$this->content = \View::forge('admin/view', ['session' => $session]);	
 	}
 }

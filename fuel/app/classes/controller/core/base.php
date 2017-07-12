@@ -3,7 +3,7 @@
  * Base controller
  * Loads localization for all modules, sets global current user variable
  */
-class Controller_Core_Base extends Controller_Template {
+class Controller_Core_Base extends Controller {
 	
 	const SYSTEM_LANGS = ['nl', 'en'];
 	const DEFAULT_LANG = 'en';

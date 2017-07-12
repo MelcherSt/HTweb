@@ -3,7 +3,7 @@
  * Controller regulating access to protected pages. 
  * Implement this controller when a page needs logging in. 
  */
-class Controller_Gate extends Controller_Core_Secure
+class Controller_Gate extends Controller_Core_Theme
 {
 	public function action_login() {
 		// Already logged in
@@ -34,16 +34,16 @@ class Controller_Gate extends Controller_Core_Secure
 							Response::redirect($dest);
 						}
 					} else {
-						$this->template->set_global('login_error', 'Login failed!');
+						\View::set_global('login_error', 'Login failed!');
 					}
 				} else {
-					$this->template->set_global('login_error', 'Already logged in!');
+					\View::set_global('login_error', 'Already logged in!');
 				}
 			}
 		}
 
-		$this->template->title = 'Login';
-		$this->template->content = View::forge('gate/login', array('val' => $val), false);
+		$this->title = 'Login';
+		$this->content = View::forge('gate/login', array('val' => $val), false);
 	}
 
 	public function action_logout() {

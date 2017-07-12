@@ -1,16 +1,45 @@
 <?php
-
+/**
+ * Applies theme to pages.
+ */
 class Controller_Core_Theme extends Controller_Core_Secure {
 	
+	/**
+	 * The content that will be displayed in the page template.
+	 * @var string
+	 */
 	protected $content;
-	public $page_title;
-	public $title;
-	public $sub_title;
 	
-	public function after($response) {		
+	/**
+	 * The title that will be displayed on the page.
+	 * If $title is not set, this will be used as title.
+	 * @var string 
+	 */
+	protected $page_title;
+	
+	/**
+	 * The HTML title of the page shown by the browser.
+	 * If $page_title is not set, no title will be shown on the page.
+	 * @var string 
+	 */
+	protected $title;
+	
+	/**
+	 * The sub title shown on the page.
+	 * @var string 
+	 */
+	protected $sub_title;
+	
+	public function before() {
+		// Set the default template
 		$this->theme = \Theme::instance();
-		
-		$this->theme->set_template('template/default')
+		$this->theme->set_template('template/default');
+		parent::before();
+	}
+	
+	public function after($response) {	
+		// Start filling in template and its partials
+		$this->theme->get_template()
 				->set('content', $this->content)
 				->set('title', $this->title);
 		
@@ -18,8 +47,8 @@ class Controller_Core_Theme extends Controller_Core_Secure {
 		$this->theme->set_partial('footer', 'partials/footer');	
 		$this->theme->set_partial('header', 'partials/header')
 				->set([
-					'page_title' => $this->page_title,
 					'title' => $this->title,
+					'page_title' => $this->page_title,
 					'sub_title' => $this->sub_title
 				]);
 		

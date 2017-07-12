@@ -2,14 +2,14 @@
 
 namespace Sessions;
 
-class Controller_Sessions extends \Controller_Core_Secure {
+class Controller_Sessions extends \Controller_Core_Theme {
 	
 	public function action_index() {		
 		Model_Session::scrub();
 		
-		$this->template->page_title = __('session.title');
+		$this->page_title = __('session.title');
 		$data['sessions'] = Model_Session::get_by_user(\Auth::get_user()->id, true);			
-		$this->template->content = \View::forge('index', $data);
+		$this->content = \View::forge('index', $data);
 	}
 	
 	/* Some shortcuts */
@@ -58,10 +58,10 @@ class Controller_Sessions extends \Controller_Core_Secure {
 		}
 
 		$formatted_date = strftime('%A %d %B %Y', strtotime($date));
-		$this->template->page_title = __('session.name');
-		$this->template->title = $formatted_date . ' - ' . __('session.title');
-		$this->template->subtitle = $formatted_date;		
-		$this->template->content = \View::forge('view', ['session' => $session]);
+		$this->page_title = __('session.name');
+		$this->title = $formatted_date . ' - ' . __('session.title');
+		$this->sub_title = $formatted_date;		
+		$this->content = \View::forge('view', ['session' => $session]);
 	}
 	
 	/**
