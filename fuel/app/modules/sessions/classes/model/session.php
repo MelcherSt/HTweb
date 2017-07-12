@@ -3,14 +3,14 @@ namespace Sessions;
 
 class Model_Session extends \Orm\Model {
 	
-	const DEADLINE_GRACE = '+19hours';
-	const ENROLLMENT_GRACE = '+3days';
-	const DISHWASHER_ENROLLMENT_GRACE = '+1day';
+	const DEADLINE_GRACE = '+19hours'; // Deadlines can be postponed until 7pm
+	const ENROLLMENT_GRACE = '+4days'; // Audit period until 3 days after session
+	const DISHWASHER_ENROLLMENT_GRACE = '+3day'; // Dishwasher enrollment period until 2 days after session
 	
-	const DEADLINE_TIME = '16:00';
-	const MAX_GUESTS = 20;
+	const DEADLINE_TIME = '16:00'; // Default deadline
+	const MAX_GUESTS = 20; // Max amount of guests per enrollment
 	
-	const SETTLEABLE_AFTER = '3'; // Used to retrieve settleable sessions in days
+	const SETTLEABLE_AFTER = '3'; // Session becomes settleable after x days
 	
 	protected static $_properties = [
 		'id',
