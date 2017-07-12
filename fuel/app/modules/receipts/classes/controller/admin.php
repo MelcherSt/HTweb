@@ -2,7 +2,7 @@
 
 namespace Receipts;
 
-class Controller_Admin extends \Controller_Core_Secure {
+class Controller_Admin extends \Controller_Core_Theme {
 	
 	public function before() {
 		$this->permission = 'receipts.administration';
@@ -10,19 +10,19 @@ class Controller_Admin extends \Controller_Core_Secure {
 	}
 	
 	public function action_create() {
-		$this->template->title =__('receipt.title_admin');
-		$this->template->subtitle = __('actions.create');
+		$this->title =__('receipt.title_admin');
+		$this->sub_title = __('actions.create');
 		$data['sessions'] = \Sessions\Model_Session::get_settleable();
 		$data['products'] = \Products\Model_Product::get_settleable();
-		$this->template->content = \View::forge('admin/create', $data);
+		$this->content = \View::forge('admin/create', $data);
 	}
 	
 	public function action_index() {
-		$this->template->title = __('receipt.title_admin');
-		$this->template->page_title = __('receipt.title_admin');
-		$this->template->subtitle = __('privileges.perm.manage');	
+		$this->title = __('receipt.title_admin');
+		$this->page_title = __('receipt.title_admin');
+		$this->sub_title = __('privileges.perm.manage');	
 		$data['receipts'] = Model_Receipt::find('all');		
-		$this->template->content = \View::forge('admin/index', $data);
+		$this->content = \View::forge('admin/index', $data);
 	}
 
 	public function post_create() {

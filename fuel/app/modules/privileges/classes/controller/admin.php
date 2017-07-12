@@ -2,7 +2,7 @@
 
 namespace Privileges;
 
-class Controller_Admin extends \Controller_Core_Secure {
+class Controller_Admin extends \Controller_Core_Theme {
 	
 	function before() {
 		$this->permission = 'privileges.administration';
@@ -10,9 +10,9 @@ class Controller_Admin extends \Controller_Core_Secure {
 	}	
 	
 	public function action_index() {
-		$this->template->title = __('privileges.title');
+		$this->title = __('privileges.title');
 		$permissions = \Auth\Model\Auth_Permission::find('all');
-		$this->template->content = \View::forge('admin/index', ['permissions' => $permissions]);
+		$this->content = \View::forge('admin/index', ['permissions' => $permissions]);
 	}
 	
 	public function action_view($id=null) {
@@ -22,8 +22,8 @@ class Controller_Admin extends \Controller_Core_Secure {
 			\Utils::handle_irrecoverable_error(__('privileges.alert.error.no_permission', ['id' => $id]));
 		}
 		
-		$this->template->title = __('privileges.title');
-		$this->template->content = \View::forge('admin/view', ['permission' => $permission]);		
+		$this->title = __('privileges.title');
+		$this->content = \View::forge('admin/view', ['permission' => $permission]);		
 	}
 	
 	/**

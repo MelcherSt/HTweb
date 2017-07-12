@@ -2,14 +2,14 @@
  
 namespace Receipts;
 
-class Controller_Receipts extends \Controller_Core_Secure {
+class Controller_Receipts extends \Controller_Core_Theme {
 	
 	public function action_index() {
-		$this->template->title = __('receipt.title');
+		$this->title = __('receipt.title');
 		
 		$data['receipts'] = Model_Receipt::get_by_user(\Auth::get_user_id()[1]);
 		
-		$this->template->content = \View::forge('index', $data);
+		$this->content = \View::forge('index', $data);
 	}
 	
 	public function action_view($id) {
@@ -20,9 +20,9 @@ class Controller_Receipts extends \Controller_Core_Secure {
 			}
 			
 			$data['receipt'] = $receipt;
-			$this->template->title = __('receipt.title_admin');
-			$this->template->subtitle = date('l j F Y', strtotime($receipt->date));
-			$this->template->content = \View::forge('view', $data);
+			$this->title = __('receipt.title_admin');
+			$this->sub_title = date('l j F Y', strtotime($receipt->date));
+			$this->content = \View::forge('view', $data);
 		} 
 	}
 	
