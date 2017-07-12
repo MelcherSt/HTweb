@@ -9,10 +9,10 @@ return array(
 	'me' => 'View profile',
 	'render' => 'Page rendered in {exec_time}s using {mem_usage}mb of memory.',
 	'fuel' => 'Build using FuelPHP ',
-	'github' => 'Contribute on',
+	'github' => 'Contribute on GitHub',
 	'product_name' => 'HTweb',
 	'dev' => 'developed by',
-	'state' => 'beta',
+	'state' => 'v1 beta',
 	'403' => [
 		'title' => 'Forbidden',
 		'msg' => 'You do not have permission to perform the requested action on this server.'

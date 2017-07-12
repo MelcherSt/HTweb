@@ -34,9 +34,13 @@
 	<div class="container">
 		<div class="row">
 			<?=$header?>
+		</div>
+		<div class="row">
 			<?=$content?>
 		</div>
-		<?=$footer?>		
+		<div class="row">
+			<?=$footer?>		
+		</div>
 	</div>
 </body>
 </html>
