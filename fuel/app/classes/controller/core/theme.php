@@ -34,6 +34,9 @@ class Controller_Core_Theme extends Controller_Core_Base {
 		// Set the default template
 		$this->theme = \Theme::instance();
 		$this->theme->set_template('template/default');
+		$this->theme->set_partial('navbar', 'partials/navbar');	
+		$this->theme->set_partial('footer', 'partials/footer');	
+		$this->theme->set_partial('header', 'partials/header');
 		parent::before();
 	}
 	
@@ -41,16 +44,20 @@ class Controller_Core_Theme extends Controller_Core_Base {
 		// Start filling in template and its partials
 		$this->theme->get_template()
 				->set('content', $this->content)
+				->set('page_title', $this->page_title)
 				->set('title', $this->title);
+				
+				
 		
-		$this->theme->set_partial('navbar', 'partials/navbar');	
-		$this->theme->set_partial('footer', 'partials/footer');	
-		$this->theme->set_partial('header', 'partials/header')
+		if($this->theme->has_partials('header')) {
+			$this->theme->set_partial('header', 'partials/header')
 				->set([
 					'title' => $this->title,
 					'page_title' => $this->page_title,
 					'sub_title' => $this->sub_title
 				]);
+		}
+		
 		
 		if(empty($response) || !$response instanceof \Fuel\Core\Response) {
 			$response = \Fuel\Core\Response::forge(\Theme::instance());
