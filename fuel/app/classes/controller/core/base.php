@@ -59,34 +59,38 @@ class Controller_Core_Base extends Controller_Template {
 			$this->current_user = \Model_User::find($id[1]);
 		}
 		
+		// Set localizations before rendering
+		$this->load_localization();	
+		
 		// Set global current_user for view
 		View::set_global('current_user', $this->current_user);
-		$this->load_localization();	
 		parent::before();
 	}
 	
 	public function after($reponse) {
-		$this->template->add_js = $this->add_js;
-		$this->template->add_css = $this->add_css;	
+		// Theme independant 
+		$theme = \Theme::instance();
+		$template = $theme->get_template();
+		$template->set('add_js', $this->add_js);
+		$template->set('add_css', $this->add_css);
 		
-		// Initialize template segments
-		$menu_items = []; 		
-		if(Auth::check()) {
-			$menu_items = [
-					['sessions', __('session.title'), 'fa-cutlery'],
-					['products', __('product.title'), 'fa fa-shopping-basket'],				
-					['receipts', __('receipt.title'), 'fa-money'],
-					['wall', __('user.wall.title'), 'fa-id-card'],
-					['stats', __('stats.title'), 'fa-area-chart'],
-			];
+		// Set menu items	
+		if($theme->has_partials('navbar')) {
+			$menu_items = []; 		
+			if(Auth::check()) {
+				$menu_items = [
+						['sessions', __('session.title'), 'fa-cutlery'],
+						['products', __('product.title'), 'fa fa-shopping-basket'],				
+						['receipts', __('receipt.title'), 'fa-money'],
+						['wall', __('user.wall.title'), 'fa-id-card'],
+						['stats', __('stats.title'), 'fa-area-chart'],
+				];
+			}
+			
+			$theme->set_partial('navbar', 'partials/navbar')
+					->set('menu_items', $menu_items)
+					->set('active_item', \Uri::segment(1));
 		}
-		$this->template->menu_items = $menu_items;
-		$this->template->active_item = Uri::segment(1);
-		$this->template->navigation = View::forge('navigation', $this->template);
-		
-		$this->template->footer = View::forge('footer');
-		$this->template->header = View::forge('header', $this->template);
-		
 		return parent::after($reponse);
 	}
 	
