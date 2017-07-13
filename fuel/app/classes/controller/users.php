@@ -1,10 +1,10 @@
 <?php
-class Controller_Users extends Controller_Core_Secure
+class Controller_Users extends Controller_Core_Theme
 {
 	public function action_index() {
 		$data['users'] = Model_User::get_by_state();
-		$this->template->title = __('user.name_plural');
-		$this->template->content = View::forge('users/index', $data);
+		$this->title = __('user.name_plural');
+		$this->content = View::forge('users/index', $data);
 	}
 	
 	public function action_me() {
@@ -24,9 +24,9 @@ class Controller_Users extends Controller_Core_Secure
 		$user = \Utils::valid_user($id);
 		
 		$data['user'] = $user;	
-		$this->template->title = __('user.name');
-		$this->template->subtitle = $user->get_fullname();
-		$this->template->content = View::forge('users/view', $data);
+		$this->title = __('user.name');
+		$this->sub_title = $user->get_fullname();
+		$this->content = View::forge('users/view', $data);
 	}
 
 	public function action_edit()	{
@@ -65,11 +65,11 @@ class Controller_Users extends Controller_Core_Secure
 				\Session::set_flash('error', $val->error());
 			}
 
-			$this->template->set_global('user', $user, false);
+			\View::set_global('user', $user, false);
 		}
 
-		$this->template->title = __('user.edit.title');
-		$this->template->subtitle = $user->get_fullname();
-		$this->template->content = View::forge('users/edit');
+		$this->title = __('user.edit.title');
+		$this->sub_title = $user->get_fullname();
+		$this->content = View::forge('users/edit');
 	}
 }

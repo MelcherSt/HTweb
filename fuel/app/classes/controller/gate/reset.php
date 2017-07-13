@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Gate_Reset extends Controller_Core_Secure {
+class Controller_Gate_Reset extends Controller_Core_Theme {
 	
 	public function before() {
 		$this->public_content = true;
@@ -10,10 +10,10 @@ class Controller_Gate_Reset extends Controller_Core_Secure {
 	public function action_index() {	
 		if($this->public_request) {		
 			$token = Input::get('token');
-			$this->template->title = __('gate.reset.title');
+			$this->title = __('gate.reset.title');
 			
 			if(empty($token)) {
-				$this->template->content = View::forge('gate/reset');
+				$this->content = View::forge('gate/reset');
 			} else {
 				// Check token
 				$reset_token = Model_ResetToken::query()
@@ -34,7 +34,7 @@ class Controller_Gate_Reset extends Controller_Core_Secure {
 					$reset_token->delete();
 				}
 				
-				$this->template->content = View::forge('gate/reset_pass', ['token' => $token]);
+				$this->content = View::forge('gate/reset_pass', ['token' => $token]);
 			}
 		} else {
 			throw new HttpNotFoundException();

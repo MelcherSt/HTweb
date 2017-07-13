@@ -1,5 +1,5 @@
 <?php
-class Controller_Users_Admin extends Controller_Core_Secure
+class Controller_Users_Admin extends Controller_Core_Theme
 {
 
 	public function before() {
@@ -8,11 +8,11 @@ class Controller_Users_Admin extends Controller_Core_Secure
 	}
 	
 	public function action_index() {
-		$this->template->title = __('user.name_plural');
-		$this->template->page_title = __('user.name_plural');
-		$this->template->subtitle = __('privileges.perm.manage');	
+		$this->title = __('user.name_plural');
+		$this->page_title = __('user.name_plural');
+		$this->sub_title = __('privileges.perm.manage');	
 		$data['users'] = \Model_User::find('all');	
-		$this->template->content = View::forge('users/admin/index', $data);
+		$this->content = View::forge('users/admin/index', $data);
 	}
 
 	public function action_create() {
@@ -57,8 +57,8 @@ class Controller_Users_Admin extends Controller_Core_Secure
 			}
 		}
 
-		$this->template->title = "Users";
-		$this->template->content = View::forge('users/admin/create');
+		$this->title = "Users";
+		$this->content = View::forge('users/admin/create');
 
 	}
 
@@ -66,8 +66,8 @@ class Controller_Users_Admin extends Controller_Core_Secure
 		$user = \Utils::valid_user($id);
 		
 		$data['user'] = $user;	
-		$this->template->title = "Users";
-		$this->template->content = View::forge('users/admin/edit', $data);			
+		$this->title = "Users";
+		$this->content = View::forge('users/admin/edit', $data);			
 	}
 	
 	public function post_edit($id = null) {
@@ -101,9 +101,9 @@ class Controller_Users_Admin extends Controller_Core_Secure
 			if (Input::method() == 'POST') {		
 				\Session::set_flash('error', $val->error());
 			}
-
-			$this->template->set_global('user', $user, false);
 		}
+		
+		\View::set_global('user', $user, false);
 	}
 
 	public function action_delete($id = null) {

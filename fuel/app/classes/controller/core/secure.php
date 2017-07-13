@@ -1,8 +1,8 @@
 <?php
 /**
- * Ensures secure controller access. By default all unauthenticated access is denied.
+ * Manages access to controllers. By default all unauthenticated access is denied.
  */
-class Controller_Core_Secure extends Controller_Core_Base
+class Controller_Core_Secure extends Controller
 {
 	/**
 	 * Must be set by child whenever it serves publicly accessible content.

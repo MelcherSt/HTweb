@@ -2,7 +2,7 @@
 
 namespace Dashboard;
 
-class Controller_Dashboard extends \Controller_Core_Secure {
+class Controller_Dashboard extends \Controller_Core_Theme {
 	
 	public function before() {
 		$this->public_content = true;
@@ -19,8 +19,8 @@ class Controller_Dashboard extends \Controller_Core_Secure {
 			\Event::trigger('gather_widgets', $widgets);
 			$data = array();
 			$data['widgets'] = $widgets->get_items();
-			$this->template->title = __('dashboard.title');
-			$this->template->content = \View::forge('index', $data);
+			$this->title = __('dashboard.title');
+			$this->content = \View::forge('index', $data);
 		}
 	}
 }

@@ -2,12 +2,12 @@
 
 namespace Products;
 
-class Controller_Products extends \Controller_Core_Secure {
+class Controller_Products extends \Controller_Core_Theme {
 	
 	public function action_index() {
 		$this->push_js('products-modals');		
-		$this->template->page_title = __('product.title');
-		$this->template->content = \View::forge('index');
+		$this->page_title = __('product.title');
+		$this->content = \View::forge('index');
 	}
 	
 	public function action_view(int $product_id) {		
@@ -18,18 +18,18 @@ class Controller_Products extends \Controller_Core_Secure {
 			throw new \HttpNoAccessException();
 		}
 		
-		$this->template->page_title = __('product.name');
-		$this->template->title = $product->name . ' - ' . __('product.title');
-		$this->template->subtitle = $product->name;		
-		$this->template->content = \View::forge('view', ['product' => $product]);
+		$this->page_title = __('product.name');
+		$this->title = $product->name . ' - ' . __('product.title');
+		$this->sub_title = $product->name;		
+		$this->content = \View::forge('view', ['product' => $product]);
 	}
 	
 	public function action_create() {
 		$this->push_js('products-modals');
-		$this->template->title = __('product.title');
-		$this->template->page_title = __('product.name');
-		$this->template->subtitle = __('actions.create');		
-		$this->template->content = \Presenter::forge('create');
+		$this->title = __('product.title');
+		$this->page_title = __('product.name');
+		$this->sub_title = __('actions.create');		
+		$this->content = \Presenter::forge('create');
 	}
 	
 	public function post_create() {
