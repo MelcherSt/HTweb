@@ -32,7 +32,7 @@ if(isset($is_admin)) {
 					<?=implode(', ', array_map(function(\Sessions\Model_Enrollment_Session $x) { return $x->user->get_shortname(); }, $session->get_dishwasher_enrollments()));?>						</td>
 				<td><?='€ ' . $session->cost?></td>
 				<?php if(isset($is_admin)) { ?>
-				<td><a href="#" data-href="#" class="clickable-row" onclick="showDeleteModal(<?=$session->id?>, '<?=$session->date?>')"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
+				<td><a href="#" data-href="#" class="clickable-row" data-toggle="modal" data-target="#delete-session-modal" data-session-id="<?=$session->id?>" data-session-date="<?=$session->date?>"><span class="fa fa-close"></span> <?=__('actions.remove')?></a></td>
 				<?php } ?>
 			</tr>
 			<?php } ?>

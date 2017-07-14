@@ -23,11 +23,13 @@ $('document').ready(function() {
 		  });
 		  $("#delete-session-modal").modal('hide');
 	});
+	
+	$('document').ready(function () {
+		$('#delete-session-modal').on('show.bs.modal', function(e) {
+			var sessionId = $(e.relatedTarget).data('session-id');
+			var sessionDate = $(e.relatedTarget).data('session-date');
+			$('#delete-session-id').val(sessionId);
+			$('#delete-session-date').html(sessionDate);
+		});	
+	});
 });
-		
-
-function showDeleteModal(sessionId, sessionDate) {
-	$("#delete-session-date").html(sessionDate);
-	$("#delete-session-id").val(sessionId);
-	$("#delete-session-modal").modal();	
-}
