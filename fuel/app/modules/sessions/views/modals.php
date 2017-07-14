@@ -19,7 +19,7 @@ foreach($session->get_unenrolled() as $user) {
 					<?=__('session.modal.convert.msg')?>
 				</div>
 				<div class="modal-footer">	
-					<?=Form::submit(['value'=> __('session.modal.convert.btn'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
+					<?=Form::submit(['value'=> __('session.modal.convert.btn'), 'name'=>'submit', 'class' => 'btn btn-danger'])?>
 					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
 				</div>
 			<?=Form::close()?>

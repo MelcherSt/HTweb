@@ -45,6 +45,7 @@ return [
 			'update_enroll' => 'Inschrijving voor </strong>:name</strong> is bijgewerkt.',
 			'remove_enroll' => 'Inschrijving voor <strong>:name</strong> is verwijderd.',
 			'update_session' => 'Sessie is bijgewerkt.',
+			'remove_session' => 'Session is verwijderd.',
 		],
 		'error' => [
 			'create_enroll' => 'Kan <strong>:name</strong> niet inschrijven.',
@@ -54,7 +55,9 @@ return [
 			'no_enrollment' => 'Er is geen inschrijving bekend voor <strong>:name</strong>',
 			'deadline_passed' => 'Kan niet in- of uitschrijven na de deadline.',
 			'update_session' => 'Kan sessie niet bijwerken.',
+			'remove_session' => 'Kan sessie niet verwijderen.',
 			'guests' => 'Je kan niet minder dan 0 of meer dan :max_guests gasten meebrengen.',
+			'no_perm' => 'Je hebt niet voldoende rechten om deze actie uit te voeren <strong>:action</strong>',
 		],
 	],
 	'modal' => [
@@ -73,6 +76,18 @@ return [
 			'msg' => 'Je wijzigt de inscrhijving van',
 			'btn' => 'Inschrijving bijwerken',
 		],
+		'remove' => [
+			'title' => 'Verwijder sessie',
+			'msg' => 'Je staat op het punt deze sessie te verwijderen',
+			'btn' => 'Verwijder sessie',
+		],
+		'convert' => [
+			'title' => 'Converteer sessie naar product',
+			'msg' => 'Wanneer de sessie naar een product wordt geconverteerd zal deze sessie '
+			. 'verwijderd worden en in plaats daarvan een product worden aangemaakt. Dit betekend dat er geen punten zullen worden verdeeld. <br><br>'
+			. '<strong>Deze actie kan niet ongedaan worden gemaakt. Weet je zeker dat je deze sessie naar een product wilt converteren?</strong>',
+			'btn' => 'Verwijder sessie en maak product',
+		]
 	],
 	'index' => [
 		'msg' => 'Deze lijst laat onverrekende sessies zijn. Voor een lijst met verrekende sessies, zie de pagina',
@@ -80,6 +95,7 @@ return [
 		'cooked_by_me' => 'Maaltijden die ik kookte',
 		'quick_enroll' => 'Snel inschrijven',
 		'quick_btn' => 'Inschrijven voor geselecteerde dagen',
+		'convert_btn' => 'Converteer naar product',
 	],
 	'view' => [
 		'msg' => 'Er zijn :p_count deelnemers waaronder :g_count gast(en).',

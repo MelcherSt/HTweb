@@ -6,7 +6,7 @@ class Controller_Sessions extends \Controller_Core_Theme {
 	
 	public function action_index() {		
 		Model_Session::scrub();
-		$this->page_title = __('session.title');			
+		$this->title = __('session.title');			
 		$this->content = \View::forge('index');
 	}
 	

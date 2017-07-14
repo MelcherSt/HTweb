@@ -44,8 +44,8 @@ return [
 			'create_enroll' => '<strong>:name</strong> has been enrolled.',
 			'update_enroll' => 'Enrollment for </strong>:name</strong> has been updated.',
 			'remove_enroll' => 'Enrollment for <strong>:name</strong> has been removed.',
-			'update_session' => 'Session has been updated',
-			'remove_session' => 'Session has been removed',
+			'update_session' => 'Session has been updated.',
+			'remove_session' => 'Session has been removed.',
 		],
 		'error' => [
 			'create_enroll' => 'Cannot enroll <strong>:name</strong>.',
@@ -84,9 +84,9 @@ return [
 		'convert' => [
 			'title' => 'Convert session to product',
 			'msg' => 'Converting this session to a product will delete this '
-			. 'session and instead create a product. This means no points will be distributed. '
-			. 'This action cannot be undone. Are you sure you want to convert this session to a product?',
-			'btn' => 'Convert session',
+			. 'session and instead create a product. This means no points will be distributed. <br><br>'
+			. '<strong>This action cannot be undone. Are you sure you want to convert this session to a product?</strong>',
+			'btn' => 'Delete session and create product',
 		]
 	],
 	'index' => [
@@ -95,6 +95,7 @@ return [
 		'cooked_by_me' => 'Meals I cooked',
 		'quick_enroll' => 'Quick enrollment',
 		'quick_btn' => 'Enroll for selected',
+		'convert_btn' => 'Convert to product',
 	],
 	'view' => [
 		'msg' => 'There are :p_count participants of whom :g_count are guests.',

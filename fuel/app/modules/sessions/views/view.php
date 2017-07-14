@@ -36,7 +36,7 @@ foreach($enrollments as $enrollment) {
 						<?=__('session.view.btn.add_enroll')?>
 					</a>
 					<a class="list-group-item" href="#" data-toggle="modal" data-target="#convert-session-modal">
-						<i class="fa fa-refresh"></i> Convert to product
+						<i class="fa fa-refresh"></i> <?=__('session.index.convert_btn')?>
 					</a>
 				<?php } ?>	
 			</div>
