@@ -22,7 +22,7 @@ foreach(Auth::groups() as $group) {
 			<div class="form-group">
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="active" checked> Active
+						<?=Form::checkbox('active', 'on', $user->active == 1)?> Active
 					</label>
 				</div>
 			</div>
