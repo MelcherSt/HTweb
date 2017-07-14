@@ -24,12 +24,12 @@ class Controller_HttpExceptionHandler extends \Controller_Core_Theme {
 		} else {
 			$message = __('404.msg');
 		}	
-		$this->content = $message;
+		$this->content = View::forge('errorpage', ['message' => $message], false);
 	}
 	
 	public function action_403() {	
 		$this->response_status = 403;
 		$this->page_title = __('403.title');
-		$this->content = __('403.msg');
+		$this->content = View::forge('errorpage', ['message' => __('403.msg')], false);
 	}
 }
