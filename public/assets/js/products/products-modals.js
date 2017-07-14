@@ -13,18 +13,24 @@ function uncheckAll() {
 
 $('document').ready(function () {
 	$('#delete-macro-modal').on('show.bs.modal', function(e) {
-	var productId = $(e.relatedTarget).data('macro-id');
-	var productName = $(e.relatedTarget).data('macro-name');
-	$('#delete-macro-id').val(productId);
-	$('#delete-macro-name').html(productName);
-});	
+		var productId = $(e.relatedTarget).data('macro-id');
+		var productName = $(e.relatedTarget).data('macro-name');
+		$('#delete-macro-id').val(productId);
+		$('#delete-macro-name').html(productName);
+	});	
 
-$('#delete-product-modal').on('show.bs.modal', function(e) {
-	var productId = $(e.relatedTarget).data('product-id');
-	var productName = $(e.relatedTarget).data('product-name');
-	$('#delete-product-id').val(productId);
-	$('#delete-product-name').html(productName);
-});	
+	$('#delete-product-modal').on('show.bs.modal', function(e) {
+		var productId = $(e.relatedTarget).data('product-id');
+		var productName = $(e.relatedTarget).data('product-name');
+		$('#delete-product-id').val(productId);
+		$('#delete-product-name').html(productName);
+	});	
 
+	$('#delete-enrollment-modal').on('show.bs.modal', function(e) {
+		var userId = $(e.relatedTarget).data('user-id');
+		var userName = $(e.relatedTarget).data('user-name');
+		$('#delete-user-id').val(userId);
+		$('#delete-user-name').html(userName);
+	});	
 });
 

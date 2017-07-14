@@ -5,7 +5,7 @@ namespace Products;
 class Controller_Products extends \Controller_Core_Theme {
 	
 	public function action_index() {
-		$this->push_js('products-modals');		
+		$this->push_js('products-modals');
 		$this->page_title = __('product.title');
 		$this->content = \View::forge('index',['is_admin' => \Auth::has_access('products.administration')]);
 	}
@@ -18,6 +18,7 @@ class Controller_Products extends \Controller_Core_Theme {
 			throw new \HttpNoAccessException();
 		}
 		
+		$this->push_js('products-modals');
 		$this->page_title = __('product.name');
 		$this->title = $product->name . ' - ' . __('product.title');
 		$this->sub_title = $product->name;		

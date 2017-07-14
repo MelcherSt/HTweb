@@ -61,6 +61,7 @@ $context = Products\Context_Products::forge($product);
 						<th><?=__('user.field.name')?></th>
 						<th><?=__('product.field.amount')?></th>
 						<th><?=__('receipt.field.balance')?></th>
+						<td><?=__('actions.name')?>
 					</tr>
 				</thead>
 				<tbody>
@@ -69,6 +70,11 @@ $context = Products\Context_Products::forge($product);
 						<td><?=$participant->user->get_fullname()?></td>
 						<td><?=$participant->amount?></td>
 						<td>€ <?=round(-1 * ($product->cost / $product->count_total_participants()) * $participant->amount, 2)?></td>
+						<td>
+							<?php if($context->update()) { ?>
+							<a href="#" data-href="#" class="clickable-row" data-toggle="modal" data-target="#delete-enrollment-modal" data-user-id="<?=$participant->user->id?>" data-user-name="<?=$participant->user->name?>"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
+							<?php } ?>
+						</td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
@@ -76,3 +82,27 @@ $context = Products\Context_Products::forge($product);
 		</div>
 	</div>
 </div>	
+
+<!-- Modal dialog for enrollment deletion -->
+<div id="delete-enrollment-modal" class="modal fade">
+	<div class="modal-dialog active">
+		<div class="modal-content">
+			<?=Form::open('/products/enrollments/delete/' . $product->id)?>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><?=__('session.modal.remove_enroll.title')?></h4>
+				</div>
+				<div class="modal-body">
+					<p><?=__('session.modal.remove_enroll.msg')?> <strong><span id="delete-user-name"></span></strong>?</p>
+					<?=Form::hidden('user-id', null, ['id' => 'delete-user-id'])?>
+				</div>
+				<div class="modal-footer">	
+					<?=Form::submit(['value'=> __('session.modal.remove_enroll.btn'), 'name'=>'submit', 'class' => 'btn btn-primary'])?>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><?=__('actions.cancel')?></button>
+				</div>
+			<?=Form::close()?>
+		</div>
+	</div>
+</div>
+
