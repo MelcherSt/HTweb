@@ -44,6 +44,10 @@ class Model_Session extends \Orm\Model {
 		],
 	];
 	
+	protected static $_conditions = [
+        'order_by' => ['date' => 'desc'],
+    ];
+	
 	public static function validate($factory) {
 		$val = \Validation::forge($factory);
 		$val->add_field('date', __('product.field.date'), 'required|valid_date[Y-m-d]');

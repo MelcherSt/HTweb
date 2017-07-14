@@ -16,9 +16,8 @@ class Controller_Admin extends \Controller_Core_Theme {
 		
 		$this->title = __('session.title_admin');
 		$this->page_title = __('session.title_admin');
-		$this->sub_title = __('privileges.perm.manage');
-		$data['sessions'] = Model_Session::query()->where('settled', 0)->get();			
-		$this->content = \View::forge('admin/index', $data);
+		$this->sub_title = __('privileges.perm.manage');		
+		$this->content = \View::forge('admin/index');
 	}
 	
 	

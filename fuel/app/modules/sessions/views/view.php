@@ -105,7 +105,7 @@ foreach($enrollments as $enrollment) {
 					
 					<!-- Unroll -->
 					<?=Form::open('/sessions/enrollments/delete/' . $session->date)?>	
-					<?=Form::submit(['value'=> __('session.view.btn.unenroll'), 'name'=>'submit', 'class' => 'btn btn-sm btn-block btn-danger'])?>	
+					<?=Form::submit(['value'=> __('session.view.btn.unenroll'), 'name'=>'submit', 'class' => 'btn btn-sm btn-block btn-danger'])?>
 					<?=Form::close()?>
 					
 				<?php } else if($view_enroll_update[3]) { ?>
