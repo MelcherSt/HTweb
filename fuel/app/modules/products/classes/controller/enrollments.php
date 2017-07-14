@@ -6,9 +6,9 @@ class Controller_Enrollments extends \Controller_Core_Theme {
 	
 	/**
 	 * Handle enrollment deletion
-	 * @param string $date
+	 * @param int $product_id
 	 */
-	public function post_delete(string $product_id) {		
+	public function post_delete(int $product_id) {		
 		$product = \Utils::check_non_null(Model_Product::find($product_id), 
 				__('product.alert.error.not_found', ['id' => $product_id]));
 		
@@ -26,10 +26,12 @@ class Controller_Enrollments extends \Controller_Core_Theme {
 					
 					if ($product->count_participants() == 0) {
 						$product->delete();
+						\Session::set_flash('success', __('product.alert.success.remove_product', ['name' => $product->name]));
+						\Response::redirect('products');
 					}
 					
 					\Session::set_flash('success', __('session.alert.success.remove_enroll', ['name' => $name]));
-					\Response::redirect('products');
+					\Response::redirect_back();
 				} catch (\Database_Exception $ex) {
 					\Session::set_flash('error', __('session.alert.error.remove_enroll', ['name' => $name]) . '<br>' . $ex->getMessage());	
 				}	
