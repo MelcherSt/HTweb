@@ -95,6 +95,11 @@ class Controller_Products extends \Controller_Core_Theme {
 		if($val->run([], true)) {
 			$product->cost = $val->validated('cost');
 			$product->notes = $val->validated('notes');
+			
+			if(!$product->generated) {
+				$product->date = $val->validated('date');
+			}
+			
 			$product->save();
 			\Session::set_flash('success', __('product.alert.success.update_product'));
 		} else {

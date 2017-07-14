@@ -45,7 +45,7 @@ final class Context_Products extends \Context_Base {
 			return false;
 		}
 		
-		return $this->_is_owner() || $this->_is_administrator();
+		return ($this->_is_owner() && !$this->product->generated) || $this->_is_administrator();
 	}
 	
 	public function view() {

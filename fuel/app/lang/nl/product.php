@@ -22,7 +22,7 @@ return [
 			'add_product' => 'Product toevoegen',
 		],
 		'msg' => 'Deze lijst laat onverrekende producten zien die jij hebt gekocht of anderen voor jou kochten. Voor een lijst met verrekende producten, kijk op de pagina ',
-		'tooltip_macro' => 'Dit product werd automatisch gegenereerd d.m.v. een macro',
+		'tooltip_macro' => 'Dit product werd automatisch gegenereerd ',
 	],
 	'view' => [
 		'btn' => [

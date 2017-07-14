@@ -21,7 +21,7 @@ return [
 			'add_product' => 'Add product',
 		],
 		'msg' => 'This list only shows unsettled products that you have bought or have been bought by others for you. For a list of settled product see',
-		'tooltip_macro' => 'This product was automatically generated from a macro',
+		'tooltip_macro' => 'This product was automatically generated',
 	],
 	'view' => [
 		'btn' => [

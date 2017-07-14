@@ -22,7 +22,8 @@ class Controller_Convert extends \Controller_Core_Secure {
 				'cost' => $session->cost,
 				'date' => $session->date,
 				'name' => 'Session '.$dateStr,
-				'notes' => 'This product was automatically created from the sesion at '.$dateStr
+				'notes' => 'This product was automatically created from the sesion at '.$dateStr,
+				'generated' => true,
 			]);
 			$product->save();
 

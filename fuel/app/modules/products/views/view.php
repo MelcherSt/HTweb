@@ -33,6 +33,13 @@ $context = Products\Context_Products::forge($product);
 					</div>
 				</div>	
 				
+				<?php if(!$product->generated) { ?>
+				<div class="form-group">
+					<?=Form::label(__('product.field.date'), 'date')?>
+					<?=Form::input('date', $product->date, ['class' => 'form-control', 'type' => 'date', 'required'])?>
+				</div>
+				<?php } ?>
+				
 				<?=Form::submit(['value'=> __('product.view.btn.update_product'), 'name'=>'submit', 'class' => 'btn btn-sm btn-primary btn-block'])?>
 				<?=Form::close()?>
 				<?php } else { ?>
