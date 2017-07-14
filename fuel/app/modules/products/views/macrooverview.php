@@ -40,7 +40,7 @@
 				</div>
 				<div class="modal-body">
 					<p><?=__('product.modal.remove_macro.msg')?> <strong><span id="delete-macro-name"></span></strong>?</p>
-					<?=Form::hidden('macro-id', null, ['id' => 'delete-product-id'])?>
+					<?=Form::hidden('macro-id', null, ['id' => 'delete-macro-id'])?>
 				</div>
 				<div class="modal-footer">					
 					<?=Form::submit(['value'=> __('product.modal.remove_macro.btn'), 'name'=>'submit', 'class' => 'btn btn-danger'])?>	

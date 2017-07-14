@@ -7,7 +7,7 @@ class Controller_Products extends \Controller_Core_Theme {
 	public function action_index() {
 		$this->push_js('products-modals');		
 		$this->page_title = __('product.title');
-		$this->content = \View::forge('index');
+		$this->content = \View::forge('index',['is_admin' => \Auth::has_access('products.administration')]);
 	}
 	
 	public function action_view(int $product_id) {		

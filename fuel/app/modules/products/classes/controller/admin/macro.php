@@ -41,7 +41,7 @@ class Controller_Admin_Macro extends \Controller_Core_Theme {
 	}
 	
 	public function post_delete() {
-		$product_id = \Input::post('product-id', null);
+		$product_id = \Input::post('macro-id', null);
 		$product = \Utils::check_non_null(Model_ProductDefinition::find($product_id));
 			
 		$name = $product->name;

@@ -18,5 +18,3 @@
 		<?=Presenter::forge('overview', 'admin')?>
 	</div>
 </div>
-
-<?=View::forge('modals')?>
