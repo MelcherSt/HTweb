@@ -2,7 +2,7 @@
 /**
  * Applies theme to pages.
  */
-class Controller_Core_Theme extends Controller_Core_Lang {
+class Controller_Core_Theme extends Controller_Core_View {
 	
 	/**
 	 * The content that will be displayed in the page template.

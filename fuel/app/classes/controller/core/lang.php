@@ -4,7 +4,7 @@
  * Makes sure localization is setup and loaded. Extend this class
  * for localization support.
  */
-class Controller_Core_Lang extends Controller_Core_Base {
+class Controller_Core_Lang extends Controller_Core_Secure {
 	
 	const SYSTEM_LANGS = ['nl', 'en'];
 	const DEFAULT_LANG = 'en';

@@ -1,10 +1,10 @@
 <?php
 /**
- * Provides basic functionalities for classes generating views.
- * Detects and loads language files and provides a means of injecting additional
- * CSS and JS files into pages as well as menu item injection.
+ * Provides basic utilities for view generating controllers such as
+ * additional stylesheet and script injection as well as setting a current_user
+ * variable available to all views.
  */
-class Controller_Core_Base extends Controller_Core_Secure {
+class Controller_Core_View extends Controller_Core_Lang {
 	
 	
 	

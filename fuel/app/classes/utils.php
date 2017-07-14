@@ -177,7 +177,7 @@ class Utils {
 	 * Get a short representation of the current head commit checksum.
 	 * @return string
 	 */
-	public static function get_short_head(int $lenght=6) : string {
+	public static function get_short_head(int $lenght=7) : string {
 		return substr(static::get_current_head(), 0, $lenght);
 	}
 }
