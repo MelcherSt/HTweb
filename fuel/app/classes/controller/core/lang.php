@@ -19,7 +19,7 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 	private static $current_lang = null;
 	
 	public function before() {
-		static::load_localization();
+		Controller_Core_Lang::load_localization();
 		parent::before();
 	}
 	
@@ -30,8 +30,8 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 	 * automatically in the before method of this controller.
 	 * @return string The identifier for the currently active language.
 	 */
-	public static function load_localization() : string {
-		if(Controller_Core_Lang::$initialized) {
+	public static function load_localization(bool $override=false) : string {
+		if(Controller_Core_Lang::$initialized && !$override) {
 			return Controller_Core_Lang::$current_lang;
 		}
 		
