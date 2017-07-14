@@ -273,12 +273,30 @@ class Model_Session extends \Orm\Model {
 				->get();
 	}
 	
+	
+	
 	/**
 	 * Retrieve the enrollment (if any) for the current user
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
 	public function current_enrollment() : ?Model_Enrollment_Session {
 		return $this->get_enrollment(\Auth::get_user_id()[1]);
+	}
+	
+	/**
+	 * Get a string representation of the cooks for this session.
+	 * @return string
+	 */
+	public function get_nicified_cooks() : string {
+		return implode(', ', array_map(function($x) { return $x->user->get_shortname(); }, $this->get_cook_enrollments()));		
+	}
+	
+	/**
+	 * Get a string representation of the dishwashers for this session.
+	 * @return string
+	 */
+	public function get_nicified_dishwashers() : string {
+		return implode(', ', array_map(function($x) { return $x->user->get_shortname(); }, $this->get_dishwasher_enrollments()));	
 	}
 	
 	/**
