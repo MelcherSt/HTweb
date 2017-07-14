@@ -2,7 +2,7 @@
 /**
  * Applies theme to pages.
  */
-class Controller_Core_Theme extends Controller_Core_Base {
+class Controller_Core_Theme extends Controller_Core_Lang {
 	
 	/**
 	 * The content that will be displayed in the page template.
@@ -31,13 +31,15 @@ class Controller_Core_Theme extends Controller_Core_Base {
 	protected $sub_title;
 	
 	public function before() {
+		parent::before();
+		
 		// Set the default template
 		$this->theme = \Theme::instance();
 		$this->theme->set_template('template/default');
 		$this->theme->set_partial('navbar', 'partials/navbar');	
 		$this->theme->set_partial('footer', 'partials/footer');	
 		$this->theme->set_partial('header', 'partials/header');
-		parent::before();
+		
 	}
 	
 	public function after($response) {	

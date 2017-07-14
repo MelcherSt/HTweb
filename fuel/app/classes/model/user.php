@@ -69,8 +69,13 @@ class Model_User extends \Auth\Model\Auth_User {
 	 * Get the currently logged-in user
 	 * @return Model_User
 	 */
-	public static function get_current() : Model_User {
-		return Model_User::find(\Auth::get_user()->id);
+	public static function get_current() : ?Model_User {
+		$user = \Auth::get_user();
+		if (!empty($user)) {
+			return static::find($user->id);
+		} else {
+			return null;
+		}
 	}
 		
 	/**

@@ -6,9 +6,7 @@
  */
 class Controller_Core_Base extends Controller_Core_Secure {
 	
-	const SYSTEM_LANGS = ['nl', 'en'];
-	const DEFAULT_LANG = 'en';
-	const FALLBACK_LANG = 'en';
+	
 	
 	/**
 	 * List of additional scripts to be loaded
@@ -60,9 +58,6 @@ class Controller_Core_Base extends Controller_Core_Secure {
 			$this->current_user = \Model_User::find($id[1]);
 		}
 		
-		// Set localizations before rendering
-		$this->load_localization();	
-		
 		// Set global current_user for view
 		View::set_global('current_user', $this->current_user);
 		parent::before();
@@ -95,43 +90,5 @@ class Controller_Core_Base extends Controller_Core_Secure {
 					->set('active_item', \Uri::segment(1));
 		}
 		return parent::after($reponse);
-	}
-	
-	/**
-	 * Determine and pre-load localization.
-	 */
-	private function load_localization() {
-		$lang = Controller_Core_Base::DEFAULT_LANG;
-		
-		if(isset($this->current_user)) {
-			if (!empty($lang_temp = $this->current_user->lang)){
-				$lang = $lang_temp;
-			}
-		} 
-		
-		// Set language based on preferences
-		\Config::set('language', $lang);
-		\Config::set('language_fallback', static::FALLBACK_LANG);
-		
-		// Set locale
-		$locales = \Config::get('locales');
-		setlocale(LC_ALL, $locales[$lang]);
-		
-		// Pre-load all localization files
-		\Lang::load('template'); 
-		\Lang::load('gate', 'gate');
-		\Lang::load('session', 'session');
-		\Lang::load('product', 'product');
-		\Lang::load('receipt', 'receipt');
-		\Lang::load('user', 'user');
-		\Lang::load('actions', 'actions');	
-		\Lang::load('alert', 'alert');
-		\Lang::load('content', 'content');
-		\Lang::load('dashboard', 'dashboard');
-		\Lang::load('stats', 'stats'); 	
-		\Lang::load('privileges', 'privileges');
-
-		// Set global language for view
-		View::set_global('language', $lang);
 	}
 }
