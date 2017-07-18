@@ -56,6 +56,16 @@ class Model_Session extends \Orm\Model {
 		return $val;
 	}
 	
+	public static function cheapest_cook() {
+		return \DB::select('username', \DB::expr('avg(cost) as avg_cost'), \DB::expr('count(cost) as cook_count'))
+				->from('users', 'sessions')
+				->where('paid_by', \DB::expr('users.id'))
+				->group_by('username')
+				->order_by('avg_cost')
+				->execute()
+				->as_array();
+	}
+	
 	/**
 	 * Delete all orphaned sessions
 	 */

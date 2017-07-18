@@ -12,7 +12,7 @@ return array(
 	'github' => 'Contribute on GitHub',
 	'product_name' => 'HTweb',
 	'dev' => 'developed by',
-	'state' => 'v1 beta',
+	'state' => 'v1 βeta',
 	'403' => [
 		'title' => 'Forbidden',
 		'msg' => 'You do not have permission to perform the requested action on this server.'
