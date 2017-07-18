@@ -113,6 +113,11 @@ return [
 			'unenroll_dish' => 'Eigenlijk heb ik niet afgewassen',
 		],
 	],
+	'stats' => [
+		'title' => 'Statistieken',
+		'widget' => 'nog te verrekenen',
+		'next_cook_msg' => 'Waarschijnlijk de volgende kok',
+	],
 	'widget' => ['msg' => [
 			'enrolled_single' => 'En dat ben jij!',
 			'enrolled_many' => 'En jij bent een van hen!',

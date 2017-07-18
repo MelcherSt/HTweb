@@ -8,4 +8,4 @@
 	<div id="distr-bar-chart" style="height: 250px; width: 100%;"></div>
 </div>
 
-<h3><?=__('stats.next_cook_msg')?> <?=\Sessions\Controller_Stats_Api::_request_stats()['next_cook']['name']?></h3>
+<h3><?=__('session.stats.next_cook_msg').': '.$next_cook?></h3>

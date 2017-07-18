@@ -113,6 +113,11 @@ return [
 			'unenroll_dish' => 'Actually, I did not do the dishes',
 		],
 	],
+	'stats' => [
+		'title' => 'Statistics',
+		'widget' => 'to be settled',
+		'next_cook_msg' => 'Most likely the next cook',
+	],
 	'widget' => [
 		'msg' => [
 			'enrolled_single' => 'And that\'s you!',
