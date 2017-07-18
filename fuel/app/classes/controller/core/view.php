@@ -81,7 +81,7 @@ class Controller_Core_View extends Controller_Core_Lang {
 						['products', __('product.title'), 'fa fa-shopping-basket'],				
 						['receipts', __('receipt.title'), 'fa-money'],
 						['wall', __('user.wall.title'), 'fa-id-card'],
-						['stats', __('stats.title'), 'fa-area-chart'],
+						['sessions/stats', __('stats.title'), 'fa-area-chart'],
 				];
 			}
 			

@@ -26,10 +26,10 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 	 * Determine current localization settings and load the corresponding 
 	 * language files. Can be called by any controller whenever early <br>
 	 * initialization of localization files is needed. Normally, files will be loaded 
-	 * automatically in the before method of this controller.
+	 * automatically in the before method of the language controller.
 	 * @return string The identifier for the currently active language.
 	 */
-	public static function load_localization(bool $override=false) : string {
+	public static function load_localization() : string {
 		$lang = Controller_Core_Lang::DEFAULT_LANG;
 		$user = Model_User::get_current();	
 		if(!empty($user) && !empty($lang_temp = $user->lang)){

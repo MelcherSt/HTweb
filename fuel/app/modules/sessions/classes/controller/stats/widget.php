@@ -1,10 +1,10 @@
 <?php
 
-namespace Stats;
+namespace Sessions;
 
-class Controller_Widget extends \Controller_Widget_Base {
+class Controller_Stats_Widget extends \Controller_Widget_Base {
 	
-	public function action_points() {	
+	public function action_index() {	
 		$settleable_points = 0;
 		$unsettleable_points = 0;
 		

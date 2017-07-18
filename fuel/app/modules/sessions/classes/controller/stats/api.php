@@ -1,8 +1,8 @@
 <?php
 
-namespace Stats;
+namespace Sessions;
 
-class Controller_Api extends \Api\Controller_Auth {
+class Controller_Stats_Api extends \Api\Controller_Auth {
 	
 	const CACHE_KEY = 'stats';
 	
