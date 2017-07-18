@@ -5,12 +5,6 @@
 class Controller_HttpExceptionHandler extends \Controller_Core_Theme {
 	
 	public function before() {
-		/* 
-		 * After an exception is thrown localization might be messed up.
-		 * This forces the localization files to be reloaded to prevent problems.
-		 */
-		static::load_localization(true);
-		
 		$this->public_content = true;
 		parent::before();
 	}

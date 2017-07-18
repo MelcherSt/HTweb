@@ -15,7 +15,6 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 	 * re-loading the files.
 	 * @var boolean
 	 */
-	private static $initialized = false;
 	private static $current_lang = null;
 	
 	public function before() {
@@ -31,11 +30,6 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 	 * @return string The identifier for the currently active language.
 	 */
 	public static function load_localization(bool $override=false) : string {
-		if(Controller_Core_Lang::$initialized && !$override) {
-			return Controller_Core_Lang::$current_lang;
-		}
-		
-		
 		$lang = Controller_Core_Lang::DEFAULT_LANG;
 		$user = Model_User::get_current();	
 		if(!empty($user) && !empty($lang_temp = $user->lang)){
@@ -67,7 +61,6 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 		// Set global language for view
 		View::set_global('language', $lang);
 		Controller_Core_Lang::$current_lang = $lang;
-		Controller_Core_Lang::$initialized= true;
 		return $lang;
 	}
 }
