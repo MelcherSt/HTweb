@@ -20,6 +20,13 @@ $context = Products\Context_Products::forge($product);
 				<!-- Editable session properties -->
 				<?=Form::open('/products/update/'. $product->id)?>	
 				
+				<?php if(!$product->generated) { ?>
+				<div class="form-group form-group-sm">
+					<?=Form::label(__('product.field.name'), 'name')?>
+					<?=Form::input('name', $product->name, ['class' => 'form-control'])?>
+				</div>	
+				<?php } ?>
+				
 				<div class="form-group form-group-sm">
 					<?=Form::label(__('product.field.notes'), 'notes')?>
 					<?=Form::textarea('notes', $product->notes, ['class' => 'form-control'])?>

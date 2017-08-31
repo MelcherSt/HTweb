@@ -97,6 +97,7 @@ class Controller_Products extends \Controller_Core_Theme {
 			$product->notes = $val->validated('notes');
 			
 			if(!$product->generated) {
+				$product->name = $val->validated('name');
 				$product->date = $val->validated('date');
 			}
 			
