@@ -34,7 +34,7 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 		$lang = Controller_Core_Lang::DEFAULT_LANG;
 		
 		// Override using URI lang parameter
-		if (!in_array($lang_param = Uri::param('lang'), Controller_Core_Lang::SYSTEM_LANGS)) {
+		if (!in_array($lang_param = Input::param('lang'), Controller_Core_Lang::SYSTEM_LANGS)) {
 			$lang = $lang_param;
 		}
 		
