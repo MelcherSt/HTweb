@@ -14,7 +14,7 @@ return [
 	],
 	'reset' => [
 		'title' => 'Reset your password',
-		'msg' => 'Enter your mail address to send a mail with instructions to reset your password.',
+		'msg' => 'Enter your mail address to receive a mail with instructions to reset your password.',
 		'btn' => 'Request password reset',
 		'label' => [
 			'mail' => 'Email',
@@ -28,7 +28,7 @@ return [
 	],
 	'alert' => [
 		'success' => [
-			'reset_mail' => 'If the given mail address is associated with an account, you will receive a mail containing instructions to reset your password.',
+			'reset_mail' => 'If the given mail address is associated with an account, you will receive a mail shortly.',
 			'pass_changed' => 'Your password has been changed',
 		],
 		'error' => [

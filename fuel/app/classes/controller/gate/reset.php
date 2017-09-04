@@ -7,7 +7,7 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 		parent::before();
 	}
 
-	public function action_index() {	
+	public function action_index() {			
 		if($this->public_request) {		
 			$token = Input::get('token');
 			$this->title = __('gate.reset.title');
@@ -85,7 +85,7 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 			Utils::handle_recoverable_error(__('gate.alert.error.pass_mismatch'), $redirect);
 		}
 		
-		\Session::set_flash('success',__('gate.alert.success.pass_changed'));
+		\Session::set_flash('success', __('gate.alert.success.pass_changed'));
 		Response::redirect('/gate/login');
 	}
 	
@@ -110,23 +110,24 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 			
 			if(isset($reset_token)) {
 				// Already a reset in-progess. Stop it.
-			} else {
-				// Save token to db
-				Model_ResetToken::forge([
-					'user_id' => $user->id,
-					'token' => $token,
-				])->save();
+				$reset_token->delete();
+			} 
+			
+			// Save token to db
+			Model_ResetToken::forge([
+				'user_id' => $user->id,
+				'token' => $token,
+			])->save();
 
-				// Send mail - or don't
-				$email = Email::forge();
-				$email->to($mail, $user->get_fullname());
-				$email->subject(__('gate.reset.mail.subject'));
-				$email->body(__('gate.reset.mail.body', ['link' => 'www.hettribunaal.nl/gate/reset?token=' . $token]));
-				$email->send();
-			}
+			// Send mail - or don't
+			$email = Email::forge();
+			$email->to($mail, $user->get_fullname());
+			$email->subject(__('gate.reset.mail.subject'));
+			$email->body(__('gate.reset.mail.body', ['link' => 'hettribunaal.nl/gate/reset?token=' . $token]));
+			$email->send();	
 		}
 			
-		\Session::set_flash('success',__('gate.alert.success.reset_mail'));
+		\Session::set_flash('success', __('gate.alert.success.reset_mail'));
 		Response::redirect('/');
 	}
 }
