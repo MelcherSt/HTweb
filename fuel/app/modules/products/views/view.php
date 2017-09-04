@@ -20,12 +20,10 @@ $context = Products\Context_Products::forge($product);
 				<!-- Editable session properties -->
 				<?=Form::open('/products/update/'. $product->id)?>	
 				
-				<?php if(!$product->generated) { ?>
 				<div class="form-group form-group-sm">
 					<?=Form::label(__('product.field.name'), 'name')?>
-					<?=Form::input('name', $product->name, ['class' => 'form-control'])?>
+					<?=Form::input('name', $product->name, ['class' => 'form-control', 'required', $product->generated ? 'disabled' : ''])?>
 				</div>	
-				<?php } ?>
 				
 				<div class="form-group form-group-sm">
 					<?=Form::label(__('product.field.notes'), 'notes')?>
@@ -40,12 +38,10 @@ $context = Products\Context_Products::forge($product);
 					</div>
 				</div>	
 				
-				<?php if(!$product->generated) { ?>
 				<div class="form-group">
 					<?=Form::label(__('product.field.date'), 'date')?>
-					<?=Form::input('date', $product->date, ['class' => 'form-control', 'type' => 'date', 'required'])?>
+					<?=Form::input('date', $product->date, ['class' => 'form-control', 'type' => 'date', 'required', $product->generated ? 'disabled' : ''])?>
 				</div>
-				<?php } ?>
 				
 				<?=Form::submit(['value'=> __('product.view.btn.update_product'), 'name'=>'submit', 'class' => 'btn btn-sm btn-primary btn-block'])?>
 				<?=Form::close()?>

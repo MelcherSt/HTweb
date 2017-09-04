@@ -21,6 +21,15 @@ class Model_ResetToken extends \Orm\Model  {
 			'mysql_timestamp' => false,
 		),
 	);
+	
+	protected static $_belongs_to = array(
+		'user' => array(
+			'key_from' => 'user_id',
+			'key_to' => 'id',
+			'model_to' => '\Model_User',
+			'cascade_delete' => false,
+		)
+	);
 
 	protected static $_table_name = 'reset_tokens';	
 }
