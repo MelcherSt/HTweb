@@ -10,7 +10,7 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 	public function action_index() {			
 		if($this->public_request) {		
 			$token = Input::get('token');
-			$this->title = __('gate.reset.title');
+			$this->page_title = __('gate.reset.title');
 			
 			if(empty($token)) {
 				$this->content = View::forge('gate/reset');
@@ -120,14 +120,18 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 			])->save();
 
 			// Send mail - or don't
-			$email = Email::forge();
-			$email->to($mail, $user->get_fullname());
-			$email->subject(__('gate.reset.mail.subject'));
-			$email->body(__('gate.reset.mail.body', ['link' => 'hettribunaal.nl/gate/reset?token=' . $token]));
-			$email->send();	
+			try {			
+				$email = \Email::forge();
+				$email->to($mail, $user->get_fullname());
+				$email->subject(__('gate.reset.mail.subject'));
+				$email->body(__('gate.reset.mail.body', ['link' => 'hettribunaal.nl/gate/reset?token=' . $token]));
+				$email->send();	
+			} catch (\Email\EmailSendingFailedException $ex) {
+				// Caught
+			}
 		}
 			
 		\Session::set_flash('success', __('gate.alert.success.reset_mail'));
-		Response::redirect('/');
+		Response::redirect('/gate/login');
 	}
 }
