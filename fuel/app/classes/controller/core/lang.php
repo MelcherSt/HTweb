@@ -30,10 +30,18 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 	 * @return string The identifier for the currently active language.
 	 */
 	public static function load_localization() : string {
+		// Set default language
 		$lang = Controller_Core_Lang::DEFAULT_LANG;
+		
+		// Override using URI lang parameter
+		if (!in_array($lang_param = Uri::param('lang'), Controller_Core_Lang::SYSTEM_LANGS)) {
+			$lang = $lang_param;
+		}
+		
+		// Override if user is logged-in and has valid lang set
 		$user = Model_User::get_current();	
-		if(!empty($user) && !empty($lang_temp = $user->lang)){
-				$lang = $lang_temp;
+		if (!empty($user) && !empty($lang_temp = $user->lang)){
+			$lang = $lang_temp;
 		} 
 		
 		// Set language based on preferences

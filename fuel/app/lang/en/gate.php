@@ -12,6 +12,7 @@ return [
 			'remember_me' => 'Remember me',
 		],
 	],
+	'empty_list' => 'There are no outstanding tokens',
 	'reset' => [
 		'title' => 'Reset your password',
 		'msg' => 'Enter your mail address to receive a mail with instructions to reset your password.',

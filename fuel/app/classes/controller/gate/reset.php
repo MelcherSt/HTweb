@@ -21,7 +21,7 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 						->get_one();
 				
 				if(empty($reset_token)) {
-					Utils::handle_irrecoverable_error('Invalid token');
+					Utils::handle_irrecoverable_error(__('gate.alert.error.invalid_token'));
 				}
 				
 				// Check token expiry
@@ -30,7 +30,7 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 
 				if(!($now < $expiry)) {
 					// Token was issued more than an hour ago.. delete it
-					Utils::handle_recoverable_error('Token expired', '/');
+					Utils::handle_recoverable_error(__('gate.alert.error.expired_token'), '/');
 					$reset_token->delete();
 				}
 				

@@ -13,9 +13,9 @@
 			<tr>						
 				<td><?=$token->user->name?></td>
 				<td><?=$token->token?>
-				<td><?=strftime('%d/%m/%Y (%A)', strtotime($token->created_at))?></td>
+				<td><?=Date::forge($token->created_at)->format('%d/%m/%Y (%A)')?></td>
 				<td>
-					<a href="#" class="clickable-row" data-toggle="modal" data-target="#delete-token-modal" data-macro-id="<?=$token->id?>"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
+					<a href="delete/<?=$token->id?>" class="clickable-row"><span class="fa fa-close"></span> <?=__('actions.remove')?></a>
 				</td>
 			</tr>
 			<?php } ?>

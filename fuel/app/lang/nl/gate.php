@@ -12,6 +12,7 @@ return [
 			'remember_me' => 'Onthoud mij',
 		],
 	],
+	'empty_list' => 'Er zijn geen uitstaande tokens',
 	'reset' => [
 		'title' => 'Wachtwoord resetten',
 		'msg' => 'Voer je email adres in om een mail met wachtwoord reset instructies te ontvangen.',
