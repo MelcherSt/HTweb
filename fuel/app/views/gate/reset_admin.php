@@ -21,5 +21,5 @@
 			<?php } ?>
 		</tbody>
 	</table>
-	<em><?=sizeof($products) == 0 ? __('product.empty_list') : ''?></em>
+	<em><?=sizeof($tokens) == 0 ? __('product.empty_list') : ''?></em>
 </div>
