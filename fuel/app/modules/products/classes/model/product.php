@@ -97,7 +97,7 @@ class Model_Product extends \Orm\Model {
 	 */
 	public static function get_settleable() : array {
 		return Model_Product::query()
-				->where('approved', true)
+				//->where('approved', true)
 				->where('settled', false)
 				->get();
 	}

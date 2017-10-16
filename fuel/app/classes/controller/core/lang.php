@@ -36,7 +36,7 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 		// Override using URI lang parameter
 		if (in_array($lang_param = Input::param('lang'), Controller_Core_Lang::SYSTEM_LANGS)) {
 			$lang = $lang_param;
-		}
+		} 
 		
 		// Override if user is logged-in and has valid lang set
 		$user = Model_User::get_current();	
