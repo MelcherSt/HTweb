@@ -56,7 +56,7 @@ final class Context_Sessions extends \Context_Base {
 	
 	public function view() : bool {
 		// Everyone may view
-		return true;
+		return $this->_is_active();
 	}
 	
 	/**
@@ -89,6 +89,10 @@ final class Context_Sessions extends \Context_Base {
 	}
 		
 	public function create_enroll(int $user_id=null) : bool {
+		if (!$this->_is_active()) { 
+			return false;
+		}
+		
 		if(empty($user_id)) {
 			$self = true;
 		} else {

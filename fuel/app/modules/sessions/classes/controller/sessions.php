@@ -49,6 +49,10 @@ class Controller_Sessions extends \Controller_Core_Theme {
 			$session->save();
 		} 
 		
+		if (!Context_Sessions::forge($session)->view()) {
+			throw new \HttpNoAccessException();
+		}
+		
 		if ($session->should_postpone()) {
 			// Automatically postpone deadline
 			$session->deadline = (new \DateTime($session->deadline))->modify('+1hour')->format('Y-m-d H:i:s');
@@ -67,7 +71,7 @@ class Controller_Sessions extends \Controller_Core_Theme {
 	 * @param type $date
 	 */
 	public function post_update($date=null) {
-		$session = \Utils::valid_session($date);
+		$session = \Utils::valid_session($date);		
 		$context = Context_Sessions::forge($session);	
 		
 		if(!$context->update()) {
