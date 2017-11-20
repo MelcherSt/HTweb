@@ -29,6 +29,13 @@ class Controller_Stats_Api extends \Api\Controller_Auth {
 	private static function _calculate_stats() {	
 		$active_users = \Model_User::get_by_state();
 		
+		$checksum = 0;
+		$server_checksum = \DB::select(\DB::expr('SUM(points) as checksum'))
+				->from('users')
+				->where('active', true)
+				->execute()
+				->as_array()[0]['checksum'];
+		
 		$min_points;
 		$next_cook = '';
 		$result = [];
@@ -48,11 +55,13 @@ class Controller_Stats_Api extends \Api\Controller_Auth {
 				$next_cook = $user->name;
 			}
 			
+			$checksum += $total_points;
+			
 			$result[] = [
 				'name' => $user->name, 
 				'points' => $total_points,
 			];
 		}		
-		return ['results' => $result, 'next_cook' => ['name' => $next_cook, 'points' => $min_points]];
+		return ['results' => $result, 'checksum' => ['server' => $server_checksum, 'local' => $checksum], 'next_cook' => ['name' => $next_cook, 'points' => $min_points]];
 	}
 }
