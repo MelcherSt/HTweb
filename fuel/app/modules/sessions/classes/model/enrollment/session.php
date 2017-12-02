@@ -70,7 +70,7 @@ class Model_Enrollment_Session extends \Orm\Model {
 		return Model_Enrollment_Session::query()
 			->related('session')
 			->where('session.settled', false)
-			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '=<', date('Y-m-d'))
+			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<=', date('Y-m-d'))
 			->where('user_id', $user_id)
 			->get();
 	}
