@@ -100,6 +100,7 @@ class Model_Session extends \Orm\Model {
 				FROM sessions AS s
 				LEFT JOIN enrollment_sessions AS es on s.id = es.session_id group by s.id) AS temp_table 
 			LEFT JOIN users on users.id = temp_table.paid_by
+			WHERE users.id > 1 AND users.active
 			GROUP BY temp_table.paid_by;
 		')->execute()->as_array();
 	}
