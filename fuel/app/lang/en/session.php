@@ -117,6 +117,12 @@ return [
 		'title' => 'Statistics',
 		'widget' => 'to be settled',
 		'next_cook_msg' => 'Most likely the next cook',
+		'widget' => [
+			'msg' => [
+				'tentative' => 'of which :points are tentative'
+			],
+			'link' => 'See all statistics',
+		]
 	],
 	'widget' => [
 		'msg' => [

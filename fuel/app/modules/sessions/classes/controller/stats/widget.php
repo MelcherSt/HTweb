@@ -21,13 +21,19 @@ class Controller_Stats_Widget extends \Controller_Widget_Base {
 		}
 		
 		$count = \Model_User::find($user_id)->points;
+		$total = $count + $settleable_points + $unsettleable_points;
 		
-		$this->template->style = '';
+		$total_point_label = strtolower($total == 1 ? __('session.field.point') : __('session.field.point_plural'));
+		$tentative_point_label = strtolower($unsettleable_points == 1 ? __('session.field.point') : __('session.field.point_plural'));
+		
+		
+		$this->template->style = 'panel-primary ';
 		$this->template->icon = 'fa-balance-scale';
 		$this->template->notice = '';
-		$this->template->message = $unsettleable_points . ' ' . strtolower(__('session.field.point_plural')) . ' ' . __('stats.widget');
-		$this->template->kind = strtolower($count == 1 ? __('session.field.point') : __('session.field.point_plural'));
-		$this->template->count = $count + $settleable_points;
-		$this->template->details = false;
+		$this->template->message = __('session.stats.widget.msg.tentative', ['points' => $unsettleable_points.' '.$tentative_point_label]);
+		$this->template->kind = $total_point_label;
+		$this->template->count = $total;
+		$this->template->link = '/sessions/stats';
+		$this->template->detail = __('session.stats.widget.link');
 	}
 }

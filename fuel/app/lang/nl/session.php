@@ -115,8 +115,13 @@ return [
 	],
 	'stats' => [
 		'title' => 'Statistieken',
-		'widget' => 'nog te verrekenen',
-		'next_cook_msg' => 'Waarschijnlijk de volgende kok',
+		'next_cook_msg' => 'Hoogstwaarschijnlijk de volgende kok',
+		'widget' => [
+			'msg' => [
+				'tentative' => 'waarvan :points onder voorbehoud'
+			],
+			'link' => 'Bekijk alle statistieken',
+		]
 	],
 	'widget' => ['msg' => [
 			'enrolled_single' => 'En dat ben jij!',

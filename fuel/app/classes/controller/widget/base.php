@@ -30,6 +30,6 @@ class Controller_Widget_Base extends \Controller {
 	
 	public function after($response) {		
 		if($response) return $response;
-		return \Response::forge(\View::forge($this->base_template, get_object_vars($this->template))->render());
+		return \Response::forge(\View::forge($this->base_template, get_object_vars($this->template), false)->render());
 	}
 }
