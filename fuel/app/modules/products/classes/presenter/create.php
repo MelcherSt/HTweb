@@ -16,7 +16,7 @@ class Presenter_Create extends \Presenter {
 		
 		// Users sorted on active state
 		$users_sorted = \Model_User::query()
-			->where('id', '!=', 0)
+			->where('id', '>', 1)
 			->order_by('active', 'desc')
 			->get();
 		
