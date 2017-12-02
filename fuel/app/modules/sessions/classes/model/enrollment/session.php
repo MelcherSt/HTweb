@@ -75,12 +75,24 @@ class Model_Enrollment_Session extends \Orm\Model {
 			->get();
 	}
 	
-	public static function get_unsettleable($user_id) {
-		return Model_Enrollment_Session::query()
+	/**
+	 * 
+	 * @param type $user_id
+	 * @param bool $future Get enrollments for session in the future.
+	 * @return type
+	 */
+	public static function get_unsettleable($user_id, $future=true) {
+		$query = Model_Enrollment_Session::query()
 			->related('session')
 			->where('session.settled', false)
-			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '>', date('Y-m-d'))
-			->where('user_id', $user_id)
+			->where(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '>', date('Y-m-d'));
+		
+		if (!$future) {
+			$query->where('date', '<=', date('Y-m-d'));
+		}
+				
+				
+		return $query->where('user_id', $user_id)
 			->get();
 	}
 	
