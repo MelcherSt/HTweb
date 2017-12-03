@@ -116,7 +116,8 @@ return [
 	'stats' => [
 		'title' => 'Statistics',
 		'next_cook_msg' => 'Most likely the next cook',
-		'all_time_avg' => 'All time average cook costs',
+		'all_time' => 'All-time',
+		'average' => 'Average',
 		'widget' => [
 			'msg' => [
 				'tentative' => 'of which :points are tentative'

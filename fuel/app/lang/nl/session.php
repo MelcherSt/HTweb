@@ -116,7 +116,8 @@ return [
 	'stats' => [
 		'title' => 'Statistieken',
 		'next_cook_msg' => 'Hoogstwaarschijnlijk de volgende kok',
-		'all_time_avg' => 'Gemiddelde kookkosten',
+		'all_time' => 'Langlopende',
+		'average' => 'Gemiddelde',
 		'widget' => [
 			'msg' => [
 				'tentative' => 'waarvan :points onder voorbehoud'

@@ -24,14 +24,15 @@ $local = $checksum['local'];
 </div>
 </div>
 
-<h3><?= __('session.stats.all_time_avg') ?></h3>
+<h3><?= __('session.stats.all_time').' '. strtolower(__('session.stats.title')) ?></h3>
 <div class="table-responsive">
 	<table class="table table-striped table-hover table-condensed">
 		<thead>
 			<tr>
 				<th class="col-md-2"><?= __('session.role.cook_plural') ?></th>
-				<th class="col-md-1"><?= __('product.field.cost') ?></th>
+				<th class="col-md-1"><?= __('session.stats.average').' '.__('product.field.cost') ?></th>
 				<th class="col-md-1">#</th>
+				<th class="col-md-1"><?= __('session.stats.average').' '.__('session.role.participant_plural')?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -40,6 +41,7 @@ $local = $checksum['local'];
 					<td><?= $entry['name']?></td>
 					<td><?= '€ ' . round($entry['avg_cost'], 2) ?></td>
 					<td><?= $entry['count'] ?></td>
+					<td><?= $entry['avg_enrollments'] ?></td>
 				</tr>
 			<?php } ?>
 		</tbody>	
