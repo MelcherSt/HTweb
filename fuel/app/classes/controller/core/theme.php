@@ -47,9 +47,7 @@ class Controller_Core_Theme extends Controller_Core_View {
 		$this->theme->get_template()
 				->set('content', $this->content)
 				->set('page_title', $this->page_title)
-				->set('title', $this->title);
-				
-				
+				->set('title', $this->title);		
 		
 		if($this->theme->has_partials('header')) {
 			$this->theme->set_partial('header', 'partials/header')
@@ -58,6 +56,13 @@ class Controller_Core_Theme extends Controller_Core_View {
 					'page_title' => $this->page_title,
 					'sub_title' => $this->sub_title
 				]);
+		}
+		
+		// Inject menu items into template navbar partial when present
+		if ($this->theme->has_partials('navbar')) {
+			$menu_root_name = \Auth::check() ? 'main' : 'main-public';
+			$this->theme->set_partial('navbar', 'partials/navbar')
+					->set('menu_root_name', $menu_root_name);
 		}
 		
 		

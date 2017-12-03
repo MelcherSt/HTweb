@@ -12,15 +12,7 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<?php foreach($menu_items as $item) {
-					$section_segment = $item[0];
-					$section_title = $item[1];
-					$section_icon = $item[2];
-				?>
-					<li class="<?php echo $active_item == $section_segment ? 'active' : '' ?>">
-						<a href="/<?=$section_segment?>"><span class="fa <?=$section_icon?>"></span> <?=$section_title?> </a>
-					</li>
-				<?php } ?>
+				<?= MenuFactory::forge($menu_root_name) ?> 
 			</ul>
 			<ul class="nav navbar-nav pull-right">
 				<?php if (isset($current_user)){ ?>

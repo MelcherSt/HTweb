@@ -73,22 +73,7 @@ class Controller_Core_View extends Controller_Core_Lang {
 		
 		// Inject menu items into template navbar partial when present
 		//TODO: move this to a more suitable place
-		if($theme->has_partials('navbar')) {
-			$menu_items = []; 		
-			if(Auth::check()) {
-				$menu_items = [
-						['sessions', __('session.title'), 'fa-cutlery'],
-						['products', __('product.title'), 'fa fa-shopping-basket'],				
-						['receipts', __('receipt.title'), 'fa-money'],
-						['wall', __('user.wall.title'), 'fa-id-card'],
-						['sessions/stats', __('session.stats.title'), 'fa-area-chart'],
-				];
-			}
-			
-			$theme->set_partial('navbar', 'partials/navbar')
-					->set('menu_items', $menu_items)
-					->set('active_item', \Uri::segment(1));
-		}
+		
 		return parent::after($reponse);
 	}
 }
