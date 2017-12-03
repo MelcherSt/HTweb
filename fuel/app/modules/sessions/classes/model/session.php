@@ -100,7 +100,7 @@ class Model_Session extends \Orm\Model {
 				avg(temp_table.avg_cost_session) AS avg_cost, 
 				count(temp_table.paid_by) AS count
 			FROM (
-				SELECT s.paid_by, count(es.id) AS enrollments, s.cost / count(es.id) AS avg_cost_session
+				SELECT s.paid_by, count(es.id) AS enrollments, s.cost / (count(es.id) + sum(es.guests)) AS avg_cost_session
 				FROM sessions AS s		
 				LEFT JOIN enrollment_sessions AS es on s.id = es.session_id 
 				WHERE DATE_ADD(s.date, INTERVAL '. static::SETTLEABLE_AFTER .' DAY) < CURDATE()
