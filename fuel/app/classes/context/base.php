@@ -28,7 +28,7 @@ abstract class Context_Base {
 		$this->user = $user;
 	}
 	
-	public static function create() : bool { return false; }
+	public function create() : bool { return false; }
 	
 	public function update() : bool { return false; }
 	

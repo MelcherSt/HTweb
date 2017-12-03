@@ -30,16 +30,7 @@ final class Context_Privileges extends \Context_Base {
 		return new Context_Privileges($permission, $user);
 	}
 	
-	public function view() {
-		return $this->_is_administrator();
-	}
-	
-		
-	/**
-	 * Has the current user administration privileges
-	 * @return boolean
-	 */
-	private function _is_administrator(){
-		return \Auth::has_access(static::MGMT_PERM);
+	public function view() : bool {
+		return static::_is_administrator();
 	}
 }

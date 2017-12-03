@@ -45,7 +45,7 @@ final class Context_Sessions extends \Context_Base {
 			return false;
 		}
 		
-		if($this->_is_administrator()) {
+		if($this->is_administrator()) {
 			// Admin may always edit
 			return true;
 		} else {
@@ -80,11 +80,11 @@ final class Context_Sessions extends \Context_Base {
 		}
 		
 		// Only admin can delete a session
-		return $this->_is_administrator();
+		return $this->is_administrator();
 	}
 	
 	public function convert() : bool {
-		return $this->_is_administrator() || 
+		return $this->is_administrator() || 
 				($this->_is_cook() && $this->session->is_postdeadline_audit());
 	}
 		
@@ -104,7 +104,7 @@ final class Context_Sessions extends \Context_Base {
 			return false;
 		}
 		
-		if($this->_is_administrator()) {
+		if($this->is_administrator()) {
 			// Admin may always create enroll
 			return true;
 		}
@@ -183,7 +183,7 @@ final class Context_Sessions extends \Context_Base {
 	 * Has the current user administration privileges
 	 * @return boolean
 	 */
-	private function _is_administrator() : bool {
+	private function is_administrator() : bool {
 		if($this->_is_settled()) {
 			return false;
 		}

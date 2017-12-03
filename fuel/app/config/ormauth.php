@@ -50,7 +50,7 @@ return array(
 	/**
 	 * This will allow you to use the group & acl driver for non-logged in users
 	 */
-	'guest_login' => false,
+	'guest_login' => true,
 
 	/**
 	 * Remember-me functionality

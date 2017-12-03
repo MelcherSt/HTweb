@@ -30,29 +30,29 @@ final class Context_Products extends \Context_Base {
 		return new Context_Products($product, $user);
 	}
 	
-	public function create() {
+	public function create() : bool {
 		$self = $this->product->paid_by == $this->user->id;
 		
 		if($self) {
-			return $this->_is_active() || $this->_is_administrator();
+			return self::_is_active() || self::_is_administrator();
 		} else {
-			return $this->_is_administrator();
+			return self::_is_administrator();
 		}
 	}
 	
-	public function update() {
+	public function update() : bool {
 		if($this->_is_settled()) {
 			return false;
 		}
 		
-		return ($this->_is_owner() && !$this->product->generated) || $this->_is_administrator();
+		return ($this->_is_owner() && !$this->product->generated) ||self::_is_administrator();
 	}
 	
-	public function view() {
-		return $this->_is_owner() || $this->_is_administrator() || $this->_is_participant();
+	public function view() : bool {
+		return $this->_is_owner() || self::_is_administrator() || $this->_is_participant();
 	}
 	
-	public function delete() {
+	public function delete() : bool {
 		return $this->update();
 	}
 	
@@ -60,7 +60,7 @@ final class Context_Products extends \Context_Base {
 	 * Is product created by user
 	 * @return type
 	 */
-	private function _is_owner() {
+	private function _is_owner() : bool {
 		return $this->product->paid_by == $this->user->id && !$this->product->generated;
 	}
 	
@@ -68,22 +68,14 @@ final class Context_Products extends \Context_Base {
 	 * Is user enrolled for this product
 	 * @return type
 	 */
-	private function _is_participant() {
+	private function _is_participant() : bool {
 		return ($this->product->get_enrollment($this->user->id) !== null);
 	}
-	
-	/**
-	 * Has the current user administration privileges
-	 * @return boolean
-	 */
-	private function _is_administrator(){
-		return \Auth::has_access(static::MGMT_PERM);
-	}
-	
+		
 	/**
 	 * Has the product been settled
 	 */
-	private function _is_settled() {
+	private function _is_settled() : bool {
 		return $this->product->settled;
 	}
 }
