@@ -31,6 +31,7 @@ $local = $checksum['local'];
 			<tr>
 				<th class="col-md-2"><?= __('session.role.cook_plural') ?></th>
 				<th class="col-md-1"><?= __('product.field.cost') ?></th>
+				<th class="col-md-1">#</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,6 +39,7 @@ $local = $checksum['local'];
 				<tr class="clickable-row" data-href="#">
 					<td><?= $entry['name']?></td>
 					<td><?= '€ ' . round($entry['avg_cost'], 2) ?></td>
+					<td><?= $entry['count'] ?></td>
 				</tr>
 			<?php } ?>
 		</tbody>	

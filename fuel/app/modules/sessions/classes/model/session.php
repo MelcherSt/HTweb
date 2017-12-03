@@ -94,11 +94,14 @@ class Model_Session extends \Orm\Model {
 
 	public static function get_avg_cook_costs() : array {
 		return \DB::query('
-			SELECT users.id, users.name, avg(temp_table.avg_cost_session) AS avg_cost 
+			SELECT users.id, users.name, avg(temp_table.avg_cost_session) AS avg_cost, count(temp_table.paid_by) AS count
 			FROM (
 				SELECT s.paid_by, s.cost / count(es.id) AS avg_cost_session
-				FROM sessions AS s
-				LEFT JOIN enrollment_sessions AS es on s.id = es.session_id group by s.id) AS temp_table 
+				FROM sessions AS s		
+				LEFT JOIN enrollment_sessions AS es on s.id = es.session_id 
+				WHERE DATE_ADD(s.date, INTERVAL '. static::SETTLEABLE_AFTER .' DAY) < CURDATE()
+				GROUP BY s.id
+				) AS temp_table 
 			LEFT JOIN users on users.id = temp_table.paid_by
 			WHERE users.id > 1 AND users.active
 			GROUP BY temp_table.paid_by
