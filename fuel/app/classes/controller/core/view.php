@@ -3,10 +3,9 @@
  * Provides basic utilities for view generating controllers such as
  * additional stylesheet and script injection as well as setting a current_user
  * variable available to all views.
+ * @author Melcher
  */
 class Controller_Core_View extends Controller_Core_Lang {
-	
-	
 	
 	/**
 	 * List of additional scripts to be loaded
@@ -52,15 +51,11 @@ class Controller_Core_View extends Controller_Core_Lang {
 		}
 	}
 	
-	public function before() {	
-		$this->current_user = null;
-		if (($id = \Auth::instance()->get_user_id()) !== false) 	{
-			$this->current_user = \Model_User::find($id[1]);
-		}
+	public function before() {
+		parent::before();
 		
 		// Set global current_user for view
-		View::set_global('current_user', $this->current_user);
-		parent::before();
+		\View::set_global('current_user', $this->current_user);
 	}
 	
 	public function after($reponse) {
@@ -70,9 +65,6 @@ class Controller_Core_View extends Controller_Core_Lang {
 		$theme->get_template()
 			->set('add_js', $this->add_js)
 			->set('add_css', $this->add_css);
-		
-		// Inject menu items into template navbar partial when present
-		//TODO: move this to a more suitable place
 		
 		return parent::after($reponse);
 	}

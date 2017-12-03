@@ -1,8 +1,9 @@
 <?php
 /**
  * Manages access to controllers. By default all unauthenticated access is denied.
+ * @author Melcher
  */
-class Controller_Core_Secure extends Controller
+class Controller_Core_Secure extends Controller_Template
 {
 	/**
 	 * Must be set by child whenever it serves publicly accessible content.
@@ -22,23 +23,36 @@ class Controller_Core_Secure extends Controller
 	 */
 	protected $permission = null;
 	
-	public function before() {		
+	/**
+	 * Currently logged-in user model. 
+	 * May either be empty or contains guest user when no user was logged-in.
+	 * @var Model_User 
+	 */
+	protected $current_user;
+	
+	public function before() {			
 		parent::before();
 
-		if (Request::active()->controller !== 'Controller_Gate' or ! in_array(Request::active()->action, array('login', 'logout'))) {
+		if (\Request::active()->controller !== 'Controller_Gate' or ! in_array(\Request::active()->action, array('login', 'logout'))) {
 			if (!Auth::check()) {
 				// No user is logged in, this is a public request
 				$this->public_request = true;
 				
 				if(!$this->public_content) {
 					// Redirect to login if unauthenticated and content is not public
-					$redirect = Uri::create('gate/login', [], ['destination' => Uri::string()]);
-					Response::redirect($redirect);
+					$redirect = \Uri::create('gate/login', [], ['destination' => Uri::string()]);
+					\Response::redirect($redirect);
 				}	
 			} else {
 				// Perform page specific authorization steps
 				$this->pre_authorize();
 			}	
+		}
+		
+		// Set current user variable
+		$this->current_user = null;
+		if (($id = \Auth::instance()->get_user_id()) !== false) 	{
+			$this->current_user = \Model_User::find($id[1]);
 		}
 	}
 	
@@ -59,7 +73,7 @@ class Controller_Core_Secure extends Controller
 	 */
 	private function evaluate_permission(string $permission) {
 		if(!\Auth::has_access($permission)) {
-			throw new HttpNoAccessException();
+			throw new \HttpNoAccessException();
 		}
 	}
 }

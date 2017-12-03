@@ -1,6 +1,7 @@
 <?php
 /**
  * Applies theme to pages.
+ * @author Melcher
  */
 class Controller_Core_Theme extends Controller_Core_View {
 	
@@ -9,17 +10,9 @@ class Controller_Core_Theme extends Controller_Core_View {
 	 * @var string
 	 */
 	protected $content;
-	
+		
 	/**
-	 * The title that will be displayed on the page.
-	 * If $title is not set, this will be used as title.
-	 * @var string 
-	 */
-	protected $page_title;
-	
-	/**
-	 * The HTML title of the page shown by the browser.
-	 * If $page_title is not set, no title will be shown on the page.
+	 * The title that will be displayed on the page and in the browser bar.
 	 * @var string 
 	 */
 	protected $title;
@@ -28,7 +21,7 @@ class Controller_Core_Theme extends Controller_Core_View {
 	 * The sub title shown on the page.
 	 * @var string 
 	 */
-	protected $sub_title;
+	protected $title_sub;
 	
 	public function before() {
 		parent::before();
@@ -46,15 +39,13 @@ class Controller_Core_Theme extends Controller_Core_View {
 		// Start filling in template and its partials
 		$this->theme->get_template()
 				->set('content', $this->content)
-				->set('page_title', $this->page_title)
-				->set('title', $this->title);		
-		
+				->set('title', $this->title);
+				
 		if($this->theme->has_partials('header')) {
 			$this->theme->set_partial('header', 'partials/header')
 				->set([
 					'title' => $this->title,
-					'page_title' => $this->page_title,
-					'sub_title' => $this->sub_title
+					'title_sub' => $this->title_sub
 				]);
 		}
 		
@@ -65,9 +56,8 @@ class Controller_Core_Theme extends Controller_Core_View {
 					->set('menu_root_name', $menu_root_name);
 		}
 		
-		
-		if(empty($response) || !$response instanceof \Fuel\Core\Response) {
-			$response = \Fuel\Core\Response::forge(\Theme::instance());
+		if(empty($response) || !$response instanceof \Response) {
+			$response = \Theme::instance();
 		}
 		return parent::after($response);
 	}
