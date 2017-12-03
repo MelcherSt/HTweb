@@ -97,7 +97,7 @@ class Model_Session extends \Orm\Model {
 						)->from(
 								[\DB::select('s.paid_by',
 											[\DB::expr('COUNT(es.id)'), 'enrollments'],
-											[\DB::expr('s.cost / COUNT(es.id)'), 'avg_cost_session'])
+											[\DB::expr('s.cost / COUNT(es.id) + SUM(es.guests)'), 'avg_cost_session'])
 									->from(['sessions', 's'])
 									->join(['enrollment_sessions', 'es'])->on('s.id', '=', 'es.session_id')
 									->where(\DB::expr('DATE_ADD(s.date, INTERVAL ' . static::SETTLEABLE_AFTER . ' DAY)'), '<', \DB::expr('CURDATE()'))
