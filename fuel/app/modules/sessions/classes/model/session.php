@@ -51,33 +51,25 @@ class Model_Session extends \Orm\Model {
 		return $val;
 	}
 
-	public static function cheapest_cook() {
-		return \DB::select('username', \DB::expr('avg(cost) as avg_cost'), \DB::expr('count(cost) as cook_count'))
-						->from('users', 'sessions')
-						->where('paid_by', \DB::expr('users.id'))
-						->group_by('username')
-						->order_by('avg_cost')
-						->execute()
-						->as_array();
-	}
-
 	/**
-	 * Delete all orphaned sessions
+	 * Remove any sessions without cook or any enrollments from the database. <br>
+	 * Only sessions created before the current day are affected.
 	 */
 	public static function scrub() {
-		$today = (new \DateTime())->format('Y-m-d');
-
 		// Remove all orphaned sessions
 		\DB::delete('sessions')
-				->where('id', 'not in', \DB::query('select distinct session_id from enrollment_sessions'))
-				->where('date', '<', $today)
+				->where('id', 'NOT IN',
+						\DB::select('session_id')->distinct()->from('enrollment_sessions')
+				)->where('date', '<', \DB::expr('CURDATE()'))
 				->execute();
 
 		// Remove all sessions without cook
 		\DB::delete('sessions')
-				->where('id', 'in', \DB::query('select distinct session_id from '
-								. 'enrollment_sessions where session_id = sessions.id group by sessions.id having sum(cook) = 0'))
-				->where('date', '<', $today)
+				->where('id', 'IN',
+						\DB::select('session_id')->distinct()->from('enrollment_sessions')
+						->where('session_id', 'sessions.id')
+						->group_by('sessions.id')->having(\DB::expr('SUM(cook)'), 0)
+				)->where('date', '<', \DB::expr('CURDATE()'))
 				->execute();
 	}
 
@@ -92,25 +84,31 @@ class Model_Session extends \Orm\Model {
 						->get_one();
 	}
 
-	public static function get_avg_cook_costs() : array {
-		return \DB::query('
-			SELECT users.id, 
-				users.name, 
-				avg(temp_table.participants) AS avg_participants, 
-				avg(temp_table.avg_cost_session) AS avg_cost, 
-				count(temp_table.paid_by) AS count
-			FROM (
-				SELECT s.paid_by, count(es.id) + sum(es.guests) AS participants, s.cost / (count(es.id) + sum(es.guests)) AS avg_cost_session
-				FROM sessions AS s		
-				LEFT JOIN enrollment_sessions AS es on s.id = es.session_id 
-				WHERE DATE_ADD(s.date, INTERVAL '. static::SETTLEABLE_AFTER .' DAY) < CURDATE()
-				GROUP BY s.id
-				) AS temp_table 
-			LEFT JOIN users on users.id = temp_table.paid_by
-			WHERE users.id > 1 AND users.active
-			GROUP BY temp_table.paid_by
-			ORDER BY avg_cost DESC;
-		')->execute()->as_array();
+	/**
+	 * Get an array by user id for each active cook containing <br> 
+	 * average session cost as well as average participants (enrollments + guests) and all user info.
+	 * @return array Result rows indexed by user id.
+	 */
+	public static function get_session_statistics(): array {
+		return \DB::select('users.id', 'users.name',
+								[\DB::expr('AVG(temp_table.enrollments)'), 'avg_enrollments'],
+								[\DB::expr('AVG(temp_table.avg_cost_session)'), 'avg_cost'],
+								[\DB::expr('COUNT(temp_table.paid_by)'), 'count']
+						)->from(
+								[\DB::select('s.paid_by',
+											[\DB::expr('COUNT(es.id)'), 'enrollments'],
+											[\DB::expr('s.cost / (COUNT(es.id) + SUM(es.guests))'), 'avg_cost_session'])
+									->from(['sessions', 's'])
+									->join(['enrollment_sessions', 'es'])->on('s.id', '=', 'es.session_id')
+									->where(\DB::expr('DATE_ADD(s.date, INTERVAL ' . static::SETTLEABLE_AFTER . ' DAY)'), '<', \DB::expr('CURDATE()'))
+									->group_by('s.id')
+									, 'temp_table']
+						)->join('users')->on('users.id', '=', 'temp_table.paid_by')
+						->where('users.id', '>', 1)
+						->where('users.active', true)
+						->group_by('temp_table.paid_by')
+						->order_by('avg_cost', 'desc')
+						->execute()->as_array();
 	}
 
 	/**
@@ -133,7 +131,13 @@ class Model_Session extends \Orm\Model {
 		return $query->get();
 	}
 
-	public static function get_by_cook(int $user_id, bool $settled = false): array {
+	/**
+	 * Fetch sessions for which given user has been cook.
+	 * @param int $user_id User id of cook.
+	 * @param bool $settled Session's settled state. 
+	 * @return array
+	 */
+	public static function fetch_by_cook(int $user_id, bool $settled = false): array {
 		return Model_Session::query()
 						->related('enrollments')
 						->where('enrollments.user_id', $user_id)
@@ -147,13 +151,12 @@ class Model_Session extends \Orm\Model {
 	 * Retrieve all session older than 5 days that have not been settled yet
 	 * @return array \Sessions\Model_Session
 	 */
-	public static function get_settleable(): array {
-		return Model_Session::find('all', array(
-					'where' => array(
-						array(\DB::expr('DATE_ADD(date, INTERVAL ' . Model_Session::SETTLEABLE_AFTER . ' DAY)'), '<', date('Y-m-d')),
-						array('settled', 0)
-					)
-		));
+	public static function fetch_setteable(): array {
+		return Model_Session::query()
+						->where('settled', false)
+						->where(\DB::expr('DATE_ADD(date, INTERVAL ' . static::SETTLEABLE_AFTER . ' DAY)'),
+								'<', \DB::expr('CURDATE()'))
+						->get();
 	}
 
 	/* Below this line you will find instance methods */
@@ -249,11 +252,11 @@ class Model_Session extends \Orm\Model {
 	}
 
 	/**
-	 * Retrieve the enrollment (if any) for the given user
-	 * @param int $user_id
-	 * @return \Sessions\Model_Enrollment_Session
+	 * Find the enrollment for the given user on current session.
+	 * @param int $user_id User id.
+	 * @return ?Model_Enrollment_Session
 	 */
-	public function get_enrollment(int $user_id): ?Model_Enrollment_Session {
+	public function find_enrollment_by_user(int $user_id): ?Model_Enrollment_Session {
 		return Model_Enrollment_Session::query()
 						->where('user_id', $user_id)
 						->where('session_id', $this->id)
@@ -300,7 +303,7 @@ class Model_Session extends \Orm\Model {
 	 * @return \Sessions\Model_Enrollment_Session
 	 */
 	public function current_enrollment(): ?Model_Enrollment_Session {
-		return $this->get_enrollment(\Auth::get_user_id()[1]);
+		return $this->find_enrollment_by_user(\Auth::get_user_id()[1]);
 	}
 
 	/**
@@ -379,7 +382,7 @@ class Model_Session extends \Orm\Model {
 	 * Get the total amount of participants (all enrollments and their guests)
 	 * @return int
 	 */
-	public function count_total_participants(): int {
+	public function count_total_participants(): int {	
 		return $this->count_participants() + $this->count_guests();
 	}
 
