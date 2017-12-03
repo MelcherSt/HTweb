@@ -35,7 +35,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach (\Sessions\Model_Session::get_avg_cook_costs() as $entry) { ?>
+			<?php foreach (\Sessions\Model_Session::get_session_statistics() as $entry) { ?>
 				<tr class="clickable-row" data-href="#">
 					<td><?= $entry['name'] ?></td>
 					<td><?= $entry['count'] ?></td>

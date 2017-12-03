@@ -12,7 +12,7 @@ class Controller_Admin extends \Controller_Core_Theme {
 	public function action_create() {
 		$this->title =__('receipt.title_admin');
 		$this->sub_title = __('actions.create');
-		$data['sessions'] = \Sessions\Model_Session::get_settleable();
+		$data['sessions'] = \Sessions\Model_Session::fetch_setteable();
 		$data['products'] = \Products\Model_Product::get_settleable();
 		$this->content = \View::forge('admin/create', $data);
 	}

@@ -19,7 +19,7 @@ final class Context_Sessions extends \Context_Base {
 	protected function __construct(Model_Session $session, \Model_User $user) {
 		parent::__construct($user);
 		$this->session = $session;
-		$this->cur_enrollment = $session->get_enrollment($user->id);
+		$this->cur_enrollment = $session->find_enrollment_by_user($user->id);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ final class Context_Sessions extends \Context_Base {
 	
 	public function view() : bool {
 		// Everyone may view
-		return $this->_is_active();
+		return $this->_is_active() || $this->_is_administrator();
 	}
 	
 	/**

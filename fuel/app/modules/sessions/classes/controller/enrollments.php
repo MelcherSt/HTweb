@@ -136,7 +136,7 @@ class Controller_Enrollments extends \Controller_Core_View {
 				\Utils::handle_recoverable_error(__('actions.no_perm'));
 			}
 					
-			$enrollment = $session->get_enrollment($user_id);	
+			$enrollment = $session->find_enrollment_by_user($user_id);	
 			if(empty($enrollment)) {
 				\Utils::handle_recoverable_error(__('sesion.alert.error.no_enrollment', ['name' => $user_id=0]));
 			}
@@ -172,7 +172,7 @@ class Controller_Enrollments extends \Controller_Core_View {
 		$user_id = \Input::post('user-id', \Auth::get_user()->id);	
 		
 		if ($context->delete_enroll($user_id)) {
-			$enrollment = $session->get_enrollment($user_id);
+			$enrollment = $session->find_enrollment_by_user($user_id);
 			
 			if(isset($enrollment)) {
 				$name = $enrollment->user->name;
