@@ -1,12 +1,12 @@
-<li class="<?= $active ? 'active' : '' ?> <?= $children ? 'dropdown' : '' ?>">
+<li class="nav-item <?= $active ? 'active' : '' ?> <?= $children ? 'dropdown' : '' ?>">
 	
 	<?php if (!$children) : ?>
-	<a href="<?= $menu_item->href ?>"
+	<a class="nav-link" href="<?= $menu_item->href ?>"
 		target="<?= $menu_item->target ?>"
 		title="<?= $menu_item->title ?>"	
 	>
 	<?php else: ?>
-	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+	<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
 	<?php endif; ?>
 		<?= $icon ?>
 		<?= __($menu_item->text) ?>

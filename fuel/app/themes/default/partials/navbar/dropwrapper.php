@@ -1,3 +1,3 @@
-<ul class="dropdown-menu" >
+<div class="dropdown-menu" >
 	<?= $children ?>
-</ul>
+</div>

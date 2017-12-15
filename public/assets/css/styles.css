@@ -2,9 +2,35 @@
     Created on : Nov 30, 2016, 6:00:57 PM
     Author     : Melcher
 */
-body { 
-	margin: 60px; 
+html {
+	position: relative;
+	min-height: 100%;
 }
+
+
+.footer {
+	position: absolute;
+	bottom: 20px;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	line-height: 60px; /* Vertically center the text there */
+	background-color: #f5f5f5;
+}
+
+body > .container {
+	padding: 50px 15px 0;
+}
+
+.footer > .container {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+code {
+	font-size: 80%;
+}
+
 
 .modal-open[style] {		
 	padding-right: 0px !important;		
@@ -38,74 +64,74 @@ td a {
 
 /* Additional non-bootstrap panel colors */
 .panel-grey {
-  border-color: #dedede;
+	border-color: #dedede;
 }
 .panel-grey > .panel-heading {
-  border-color: #dedede;
-  background-color: #dedede;
+	border-color: #dedede;
+	background-color: #dedede;
 }
 .panel-grey > a {
-  color: #888888;
+	color: #888888;
 }
 .panel-grey > a:hover {
-  color: #9e9d9d;
+	color: #9e9d9d;
 }
 
 .panel-green {
-  border-color: #5cb85c;
+	border-color: #5cb85c;
 }
 .panel-green > .panel-heading {
-  border-color: #5cb85c;
-  color: white;
-  background-color: #5cb85c;
+	border-color: #5cb85c;
+	color: white;
+	background-color: #5cb85c;
 }
 .panel-green > a {
-  color: #5cb85c;
+	color: #5cb85c;
 }
 .panel-green > a:hover {
-  color: #3d8b3d;
+	color: #3d8b3d;
 }
 .panel-red {
-  border-color: #d9534f;
+	border-color: #d9534f;
 }
 .panel-red > .panel-heading {
-  border-color: #d9534f;
-  color: white;
-  background-color: #d9534f;
+	border-color: #d9534f;
+	color: white;
+	background-color: #d9534f;
 }
 .panel-red > a {
-  color: #d9534f;
+	color: #d9534f;
 }
 .panel-red > a:hover {
-  color: #b52b27;
+	color: #b52b27;
 }
 .panel-yellow {
-  border-color: #f0ad4e;
+	border-color: #f0ad4e;
 }
 .panel-yellow > .panel-heading {
-  border-color: #f0ad4e;
-  color: white;
-  background-color: #f0ad4e;
+	border-color: #f0ad4e;
+	color: white;
+	background-color: #f0ad4e;
 }
 .panel-yellow > a {
-  color: #f0ad4e;
+	color: #f0ad4e;
 }
 .panel-yellow > a:hover {
-  color: #df8a13;
+	color: #df8a13;
 }
 .panel-purple {
-  border-color: #6a0b94;
+	border-color: #6a0b94;
 }
 .panel-purple > .panel-heading {
-  border-color: #6a0b94;
-  color: white;
-  background-color: #6a0b94;
+	border-color: #6a0b94;
+	color: white;
+	background-color: #6a0b94;
 }
 .panel-purple > a {
-  color: #6a0b94;
+	color: #6a0b94;
 }
 .panel-purple > a:hover {
-  color: #a430d8;
+	color: #a430d8;
 }
 
 
