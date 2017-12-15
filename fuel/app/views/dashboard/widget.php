@@ -1,26 +1,22 @@
 <?php \Lang::load('session'); ?>
 
-<div class="col-md-4">
-	<div class="panel <?=$style?>">
-		<div class="panel-heading">
-			<div class="row">
-				<div class="col-xs-3">
-					<i class="fa <?=$icon?> fa-5x"></i>
-				</div>
-				<div class="col-xs-9 text-right">
-					<div class="huge"><?=$count?> <small><?=$kind?></small></div>
-					<div><?=$message?></div>
-				</div>
-			</div>
-		</div>	
-		<?php if ($details) : ?>
-		<a href="<?=$link?>">
-			<div class="panel-footer">
-				<span class="pull-left"><?=$detail?></span>
-				<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-				<div class="clearfix"></div>
-			</div>
-		</a>
-		<?php endif; ?>
+<div class="col-sm-6">
+	<div class="card <?= $style ?>">
+		<div class="card-header">
+			<span class="fa <?= $icon ?>"></span>
+		</div>
+		<div class="card-body">
+			<h4 class="card-title"><?= $count ?> <small><?= $kind ?></small></h4>
+			<p class="card-text"><?= $message ?></p>
+
+		</div>
+
+		<div class="card-footer">
+			<?php if ($details) : ?>
+				<a href="<?= $link ?>" class="btn btn-primary">
+					<?= $detail ?>		
+				</a>
+			<?php endif; ?>
+		</div>
 	</div>
 </div>

@@ -7,7 +7,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 	public function action_index() {	
 		$session = Model_Session::get_by_date(date('Y-m-d'));
 		
-		$style = 'panel-green';
+		$style = 'bg-success text-white';
 		$icon = 'fa-cutlery';
 		$message = '';
 		$link_text = __('session.widget.link.enroll_many');
@@ -29,13 +29,13 @@ class Controller_Widget extends \Controller_Widget_Base {
 			}
 			
 			if($session->count_cooks() == 0 && ((int)date('Hi') > 1300)) {
-				$style = 'panel-yellow';
+				$style = 'bg-warning text-white';
 				$message = __('session.widget.msg.no_cook');
 				$link_text = __('session.widget.link.no_cook');
 			}	
 
 			 if(!$context->create_enroll() && !$session->should_postpone()) {
-				$style = 'panel-grey';
+				$style = 'bg-secondary text-white';
 				$message = __('session.widget.msg.deadline_passed');
 				$link_text = __('session.widget.link.deadline_passed');
 				$link = '/sessions/tomorrow';
