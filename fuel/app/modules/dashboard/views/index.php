@@ -1,5 +1,5 @@
 <!-- Widget row -->
-<div class="row">
+<div class="card-deck">
 <?php foreach($widgets as $widget) {
 	echo Request::forge($widget)->execute();
 } ?>

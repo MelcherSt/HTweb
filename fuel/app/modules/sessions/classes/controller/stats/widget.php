@@ -27,7 +27,7 @@ class Controller_Stats_Widget extends \Controller_Widget_Base {
 		$tentative_point_label = strtolower($unsettleable_points == 1 ? __('session.field.point') : __('session.field.point_plural'));
 		
 		
-		$this->template->style = 'panel-primary ';
+		$this->template->style = 'bg-light';
 		$this->template->icon = 'fa-balance-scale';
 		$this->template->notice = '';
 		$this->template->message = __('session.stats.widget.msg.tentative', ['points' => $unsettleable_points.' '.$tentative_point_label]);
