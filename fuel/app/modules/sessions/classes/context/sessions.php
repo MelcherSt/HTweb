@@ -13,7 +13,7 @@ final class Context_Sessions extends \Context_Base {
 	 */
 	const MGMT_PERM = 'sessions.administration';
 
-	const MAX_COOKS = 1;
+	const MAX_COOKS = 2;
 	const MAX_DISHWASHER = 2;
 	
 	protected function __construct(Model_Session $session, \Model_User $user) {
