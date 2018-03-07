@@ -2,6 +2,14 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
+<?php if (Auth::has_access('sessions.administration')) : ?>
+<div style="position: relative">
+	<div style="position: absolute; right: 0px; z-index: 3">
+		<a href="<?=Uri::create('sessions/stats/reset')?>"  class="btn btn-default"><span class="fa fa-refresh"></span> <?=__('actions.refresh') ?></a>
+	</div>
+</div>
+<?php endif; ?>
+
 <div class="row">
 	<div id="distr-bar-chart" style="height: 250px; width: 100%;"></div>
 </div>

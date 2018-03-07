@@ -6,6 +6,7 @@ return array(
 	'delete' => 'Delete',
 	'remove' => 'Remove',
 	'update' => 'Update',
+	'refresh' => 'Refresh',
 	'cancel' => 'Cancel',
 	'create' => 'Create',
 	'advanced' => 'Advanced',

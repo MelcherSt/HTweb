@@ -6,6 +6,7 @@ return array(
 	'delete' => 'Verwijderen',
 	'remove' => 'Verwijderen',
 	'update' => 'Updaten',
+	'refresh' => 'Vernieuwen',
 	'cancel' => 'Annuleren',
 	'create' => 'Aanmaken',
 	'advanced' => 'Geavanceerd',
