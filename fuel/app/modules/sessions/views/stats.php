@@ -3,10 +3,8 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
 <?php if (Auth::has_access('sessions.administration')) : ?>
-<div style="position: relative">
-	<div style="position: absolute; right: 0px; z-index: 3">
-		<a href="<?=Uri::create('sessions/stats/reset')?>"  class="btn btn-default"><span class="fa fa-refresh"></span> <?=__('actions.refresh') ?></a>
-	</div>
+<div class="button-float-container">
+	<a href="<?=Uri::create('sessions/stats/reset')?>"  class="btn btn-default"><span class="fa fa-refresh"></span> <?=__('actions.refresh') ?></a>
 </div>
 <?php endif; ?>
 
