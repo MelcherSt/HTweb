@@ -131,7 +131,7 @@
 			<tbody>
 				<?php foreach($receipt->sessions as $session_receipt): 
 					$session = $session_receipt->session; 
-				if (Context_Sessions::forge($session)->view()) :?>
+				if (Sessions\Context_Sessions::forge($session)->view()) :?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td><?=$session->date?></td>
 					<td><?=$session->count_total_participants()?></td>
@@ -167,7 +167,7 @@
 			<tbody>
 				<?php foreach($receipt->products as $product_receipt): 
 					$product = $product_receipt->product;
-				if (Context_Products::forge($product)->view()) : ?>
+				if (Products\Context_Products::forge($product)->view()) : ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->get_payer()->get_fullname()?>
