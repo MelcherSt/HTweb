@@ -29,7 +29,7 @@
 				<tbody>
 					<?php foreach($receipts as $receipt): ?>
 					<tr class="clickable-row" data-href="/receipts/view/<?=$receipt->id?>">
-						<td><?=$receipt->date?></td>
+						<td><?=\Utils::format_date($receipt->date)?></td>
 						<td><?=$receipt->notes?></td>
 					</tr>
 					<?php endforeach; ?>
