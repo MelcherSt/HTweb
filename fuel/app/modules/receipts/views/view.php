@@ -130,7 +130,8 @@
 			</thead>
 			<tbody>
 				<?php foreach($receipt->sessions as $session_receipt): 
-					$session = $session_receipt->session;?>
+					$session = $session_receipt->session; 
+				if (!empty($session->find_enrollment_by_user($current_user->id)) || Auth::has_permission('products.adminstration')) :?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td><?=$session->date?></td>
 					<td><?=$session->count_total_participants()?></td>
@@ -146,7 +147,7 @@
 					</td>
 					<td><?='€ ' . $session->cost?></td>
 				</tr>
-				<?php endforeach; ?>
+				<?php endif; endforeach; ?>
 			</tbody>
 		</table>
 	</div>
@@ -165,7 +166,8 @@
 			</thead>
 			<tbody>
 				<?php foreach($receipt->products as $product_receipt): 
-					$product = $product_receipt->product;?>
+					$product = $product_receipt->product;
+				if (!empty($product->get_enrollment($current_user->id)) || Auth::has_permission('products.adminstration')) :?>?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
@@ -173,7 +175,7 @@
 					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
-				<?php endforeach; ?>
+				<?php endif; endforeach; ?>
 			</tbody>
 		</table>
 	</div>
