@@ -43,7 +43,7 @@ return [
 		],
 		'create_macro' => [
 			'title' => 'Macro',
-			'msg' => 'Add a product macro. A product macro can be used to repeat recurring monthly expenses.',
+			'msg' => 'Add a product macro. A product macro can be used to repeat recurring monthly expenses. Note that the cost of a macro are always charged to all active users.',
 			'btn' => 'Create product macro',
 		]
 	],

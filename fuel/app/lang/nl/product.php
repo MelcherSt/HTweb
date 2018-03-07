@@ -40,7 +40,7 @@ return [
 			]
 		],
 		'create' => [
-			'participants' => 'Selecteer de gebruikers voor wie je dit product kocht. Inactieve gebruikers zijn oranje gekleurd en moeten met de hand geselecteerd worden.'
+			'participants' => 'Selecteer de gebruikers voor wie je dit product kocht. Inactieve gebruikers zijn oranje gekleurd en moeten met de hand geselecteerd worden. Merk op dat de kosten in rekening worden gebracht bij alle actieve gebruikers.'
 		],
 		'create_macro' => [
 			'title' => 'Macro',
