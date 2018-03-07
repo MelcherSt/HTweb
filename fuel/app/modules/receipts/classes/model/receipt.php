@@ -50,8 +50,9 @@ class Model_Receipt extends \Orm\Model
 		return Model_Receipt::query()->related('users', array(
 			'where' => array(
 				array('user_id', $user_id),
-			)
-		))->get();
+			)))
+		->order_by('date', 'desc')
+		->get();
 	}
 	
 	/**
