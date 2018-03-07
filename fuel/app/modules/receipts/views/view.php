@@ -118,7 +118,7 @@
 <div class="row">
 	<h2><?=__('session.name_plural')?></h2>
 	<div class="table-responsive">
-		<table class="table table-hover">
+		<table class="table table-hover table-condensed">
 			<thead>
 				<tr>
 					<th><?=__('session.field.date')?></th>
@@ -154,12 +154,12 @@
 	
 	<h2><?=__('product.name_plural')?></h2>
 	<div class="table-responsive">
-		<table class="table table-hover">
+		<table class="table table-hover table-condensed">
 			<thead>
 				<tr>
-					<th><?=__('product.field.name')?></th>
 					<th><?=__('product.field.date')?></th>		
 					<th><?=__('product.field.paid_by')?></th>
+					<th><?=__('product.field.name')?></th>	
 					<th><?=__('product.field.participant_plural')?></th>
 					<th><?=__('product.field.cost')?></th>
 				</tr>
@@ -167,11 +167,11 @@
 			<tbody>
 				<?php foreach($receipt->products as $product_receipt): 
 					$product = $product_receipt->product;
-				if (!empty($product->get_enrollment($current_user->id)) || \Auth::has_access('products.administration')) :?>?>
+				if (!empty($product->get_enrollment($current_user->id)) || !empty($product->get_payer($current_user->id)) || \Auth::has_access('products.administration')) : ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
-					<td><?=$product->name?></td>
 					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->get_payer()->get_fullname()?>
+					<td><?=$product->name?></td>		
 					<td><?=$product->get_nicified_participants()?></td>
 					<td><?='€ ' . $product->cost?></td>
 				</tr>
