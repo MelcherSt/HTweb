@@ -124,7 +124,7 @@ class Utils {
 	 */
 	public static function format_date(string $date, string $format = null) : string {
 		if(empty($format)) {
-			$format = static::DATETIME_FORMAT;
+			$format = static::DATE_FORMAT;
 		}	
 		return (new DateTime($date))->format($format);
 	}

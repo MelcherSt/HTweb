@@ -7,7 +7,7 @@ class Controller_Receipts extends \Controller_Core_Theme {
 	public function action_index() {
 		$this->title = __('receipt.title');
 		
-		$data['receipts'] = Model_Receipt::get_by_user(\Auth::get_user_id()[1]);
+		$data['receipts'] = Model_Receipt::get_by_user($current_user->id)->order('date', 'desc');
 		
 		$this->content = \View::forge('index', $data);
 	}
