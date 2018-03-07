@@ -131,7 +131,7 @@
 			<tbody>
 				<?php foreach($receipt->sessions as $session_receipt): 
 					$session = $session_receipt->session; 
-				if (!empty($session->find_enrollment_by_user($current_user->id)) || \Auth::has_access('products.adminstration')) :?>
+				if (Context_Sessions::forge($session)->view()) :?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
 					<td><?=$session->date?></td>
 					<td><?=$session->count_total_participants()?></td>
@@ -167,7 +167,7 @@
 			<tbody>
 				<?php foreach($receipt->products as $product_receipt): 
 					$product = $product_receipt->product;
-				if (!empty($product->get_enrollment($current_user->id)) || !empty($product->get_payer($current_user->id)) || \Auth::has_access('products.administration')) : ?>
+				if (Context_Products::forge($product)->view()) : ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
 					<td><?=date('Y-m-d', $product->created_at)?></td>
 					<td><?=$product->get_payer()->get_fullname()?>
