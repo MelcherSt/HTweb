@@ -69,8 +69,7 @@ class Controller_Admin_Macro extends \Controller_Core_Theme {
 				}
 			}
 			
-			while($date < $now) {
-				$date->modify('+1month');
+			while($date < $now) {		
 				$product = Model_Product::forge([
 					'name' => $def->name,
 					'date' => $date->format(\Utils::MYSQL_DATE_FORMAT),
@@ -102,6 +101,7 @@ class Controller_Admin_Macro extends \Controller_Core_Theme {
 					\DB::rollback_transaction();
 					$errors++;
 				}
+				$date->modify('+1month');
 			}
 		}
 		
