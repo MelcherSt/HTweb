@@ -73,8 +73,7 @@
 				</thead>
 				<tbody>
 					<?php foreach($schema as $key => $items): 
-						$to_user = \Model_User::find($items[1]);
-						
+						$to_user = \Model_User::find($items[1]);		
 					?>
 					<tr>
 						<td><?=\Model_User::find($items[0])->get_fullname()?></td>
@@ -121,10 +120,10 @@
 		<table class="table table-hover table-condensed">
 			<thead>
 				<tr>
-					<th><?=__('session.field.date')?></th>
-					<th><?=__('session.role.participant_plural')?></th>
+					<th><?=__('session.field.date')?></th>			
 					<th><?=__('session.role.cook_plural')?></th>
 					<th><?=__('session.role.dishwasher_plural')?></th>
+					<th><?=__('session.role.participant_plural')?></th>
 					<th><?=__('product.field.cost')?></th>
 				</tr>
 			</thead>
@@ -133,18 +132,10 @@
 					$session = $session_receipt->session; 
 				if (Sessions\Context_Sessions::forge($session)->view()) :?>
 				<tr class="clickable-row" data-href="/sessions/view/<?=$session->date?>">
-					<td><?=$session->date?></td>
+					<td><?=Utils::format_date($session->date)?></td>
+					<td><?=$session->get_nicified_cooks()?></td>
+					<td><?=$session->get_nicified_dishwashers()?></td>
 					<td><?=$session->count_total_participants()?></td>
-					<td>
-						<?php foreach($session->get_cook_enrollments() as $enrollment):?>
-							<?=$enrollment->user->get_fullname();?>			
-						<?php endforeach; ?>	
-					</td>
-					<td>
-						<?php foreach($session->get_dishwasher_enrollments() as $enrollment):?>
-							<?=$enrollment->user->get_fullname();?>			
-						<?php endforeach; ?>
-					</td>
 					<td><?='€ ' . $session->cost?></td>
 				</tr>
 				<?php endif; endforeach; ?>
@@ -169,7 +160,7 @@
 					$product = $product_receipt->product;
 				if (Products\Context_Products::forge($product)->view()) : ?>
 				<tr class="clickable-row" data-href="/products/view/<?=$product->id?>">
-					<td><?=date('Y-m-d', $product->created_at)?></td>
+					<td><?=Utils::format_date($product->date)?></td>
 					<td><?=$product->get_payer()->get_fullname()?>
 					<td><?=$product->name?></td>		
 					<td><?=$product->get_nicified_participants()?></td>
