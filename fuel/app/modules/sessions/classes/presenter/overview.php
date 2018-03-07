@@ -8,7 +8,7 @@ class Presenter_Overview extends \Presenter {
 	}
 	
 	public function admin() {
-		$this->set('sessions', Model_Session::query()->where('settled', 0)->get());
+		$this->set('sessions', Model_Session::get_unsettled());
 		$this->set('hide_colors', true);
 		$this->set('is_admin', true);
 	}

@@ -158,12 +158,16 @@ class Model_Session extends \Orm\Model {
 								'<', \DB::expr('CURDATE()'))
 						->get();
 	}
+	
+	public static function get_unsettled() : array {
+		return Model_Session::query()->where('settled', 0)->order_by('date', 'desc')->get();
+	}
 
 	/* Below this line you will find instance methods */
 
 	/**
-	 * Determines if the session is eligable for deadline postponement.
-	 * To be eligable for postponement the session should be past due, have no
+	 * Determines if the session is eligible for deadline postponement.
+	 * To be eligible for postponement the session should be past due, have no
 	 * cooks and at least 1 participant.
 	 * @return boolean
 	 */

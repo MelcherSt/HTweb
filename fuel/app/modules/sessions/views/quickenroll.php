@@ -8,5 +8,5 @@
 		</li>
 		<?php } ?>
 	</ul>
-	<?=Form::submit(['value'=> __('session.index.quick_btn'), 'name'=>'submit', 'class' => 'btn btn-sm btn-primary'])?>	
+	<?=Form::submit(['value'=> __('session.index.quick_btn'), 'name'=>'submit', 'class' => 'btn btn-sm btn-primary btn-block'])?>	
 <?=Form::close()?>
