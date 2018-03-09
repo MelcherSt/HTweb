@@ -10,7 +10,8 @@ class Model_Notification extends \Orm\Model {
 		'title',
 		'icon',
 		'href',
-		'read'
+		'read',
+		'date_time',
 	);
 	protected static $_has_one = array(
 		'user' => array(
@@ -22,16 +23,6 @@ class Model_Notification extends \Orm\Model {
 		)
 	);
 
-	public static function validate($factory) {
-		$val = Validation::forge($factory);
-		$val->add_field('text', 'Tekst', 'required|max_length[100]');
-		$val->add_field('title', 'Titel', 'max_length[100]');
-		$val->add_field('icon', 'Icoon', 'max_length[100]');
-		$val->add_field('href', 'Link', 'max_length[255]');
-		$val->add_field('target', 'Doel', 'max_length[20]');
-		return $val;
-	}
-
 	public static function get_unread_count($user_id) : int {
 		return static::query()->where('user_id', $user_id)
 				->where('read', false)
@@ -42,6 +33,17 @@ class Model_Notification extends \Orm\Model {
 		return static::query()->where('user_id', $user_id)
 				->where('read', false)
 				->get();
+	}
+	
+	public static function get_all($user_id) : array {
+		return static::query()->where('user_id', $user_id)
+				->get();
+	}
+	
+	public static function set_all_read($user_id) {
+		\DB::update('notifications')->set(['read' => true])
+				->where('user_id', $user_id)
+				->execute();
 	}
 
 }

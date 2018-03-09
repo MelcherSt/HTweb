@@ -5,6 +5,6 @@ return array(
 	'title_admin' => 'Notification',
 	'name' => 'Notification',
 	'name_plural' => 'Notifications',
-	'empty_list' => 'No new notifications',
+	'empty_list' => 'No unread notifications',
 	'all_notifications' => 'All notifications',
   );

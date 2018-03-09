@@ -11,11 +11,13 @@ class Controller_Notifications_Dropdown extends Controller_Core_View {
 	
 	public function get_index() {
 		$user_id = $this->current_user->id;
-		$count = \Model_Notification::get_unread_count($user_id) > 0 ? : '';
+		$count = \Model_Notification::get_unread_count($user_id);
 		$notifications = \Model_Notification::get_unread($user_id) ? : [];
 		
+		\Model_Notification::set_all_read($user_id);
+		
 		return \View::forge('notifications/dropdown', 
-				['unread_count' => $count, 'notifications' => $notifications]);
+				['unread_count' => $count > 0 ? $count : '', 'notifications' => $notifications]);
 	}
 	
 	
