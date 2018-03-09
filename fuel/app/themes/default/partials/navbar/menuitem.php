@@ -9,7 +9,7 @@
 	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 	<?php endif; ?>
 		<?= $icon ?>
-		<?= __($menu_item->text) ?>
+		<span class="hidden-sm"><?= __($menu_item->text) ?></span>
 		<?= $children ? '<span class="caret"></span></a>' . $dropdownwrapper_view : '' ?>
 	</a>
 </li>
