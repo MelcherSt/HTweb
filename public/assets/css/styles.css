@@ -118,5 +118,15 @@ td a {
 	z-index: 3;
 }
 
+.dropdown-menu.notification-menu {
+	left: auto !important;
+	right: 0 !important;
+	min-width: 360px;
+}
+
+.dropdown-menu.notification-menu > li > a {
+	white-space: normal !important;
+}
+
 
 

@@ -65,6 +65,7 @@ class Controller_Core_Lang extends Controller_Core_Secure {
 		\Lang::load('dashboard', 'dashboard');
 		\Lang::load('stats', 'stats'); 	
 		\Lang::load('privileges', 'privileges');
+		\Lang::load('notifications', 'notifications');
 
 		// Set global language for view
 		View::set_global('language', $lang);

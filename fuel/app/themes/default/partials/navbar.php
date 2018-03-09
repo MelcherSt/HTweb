@@ -16,8 +16,9 @@
 			</ul>
 			<ul class="nav navbar-nav pull-right">
 				<?php if (!\Context_Base::_is_guest()){ ?>
+				<?= Request::forge('notifications/dropdown')->execute() ?>
 				<li class="dropdown">
-					<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?php echo $current_user->name . ' ' . $current_user->surname; ?> <b class="caret"></b></a>
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="fa fa-user"></span> <?= $current_user->name ?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="/users/edit"><span class="fa fa-cogs"></span> <?=__('settings')?></a></li>
 						<li><a href="/privileges"><span class="fa fa-shield"></span> <?=__('privileges.title')?></a></li>
