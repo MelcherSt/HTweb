@@ -4,7 +4,7 @@
 	<div class="form-group">
 		<?=Form::label(__('product.field.name').'*', 'name', ['class' => 'col-sm-2'])?>
 		<div class="col-sm-6">
-			<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'required'])?>
+			<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'maxlength' => 50, 'required'])?>
 		</div>
 	</div>	
 

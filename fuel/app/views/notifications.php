@@ -6,7 +6,7 @@
 			<h4 class="list-group-item-heading">
 				<span class="<?= $notification->icon ?>"></span>
 				<?= $notification->title ?>
-				<small class="pull-right"><?= Utils::format_date($notification->date_time, Utils::DATETIME_FORMAT)?></small>
+				<small class="pull-right"><?= Utils::format_date($notification->created, Utils::DATETIME_FORMAT)?></small>
 			</h4>
 			<p class="list-group-item-text"><?= $notification->text ?></p>
 		</a>

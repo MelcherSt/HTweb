@@ -7,6 +7,7 @@ class Controller_Admin extends \Controller_Core_Theme {
 	function before() {
 		$this->permission = 'privileges.administration';
 		parent::before();
+		$this->add_js = ['bla'];
 	}	
 	
 	public function action_index() {

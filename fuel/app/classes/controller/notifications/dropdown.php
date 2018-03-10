@@ -14,7 +14,8 @@ class Controller_Notifications_Dropdown extends Controller_Core_View {
 		$count = \Model_Notification::get_unread_count($user_id);
 		$notifications = \Model_Notification::get_unread($user_id) ? : [];
 		
-		\Model_Notification::set_all_read($user_id);
+		//\Event::trigger('gather_notifications');		
+		
 		
 		return \View::forge('notifications/dropdown', 
 				['unread_count' => $count > 0 ? $count : '', 'notifications' => $notifications]);
