@@ -4,14 +4,14 @@
 		<div class="form-group">
 			<?=Form::label(__('product.field.name').'*', 'name', ['class' => 'col-sm-2'])?>
 			<div class="col-sm-10">
-				<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'required'])?>
+				<?=Form::input('name', '', ['class' => 'form-control', 'type' => 'text', 'maxlength' => 50, 'required'])?>
 			</div>
 		</div>
 
 		<div class="form-group">
 			<?=Form::label(__('product.field.notes'), 'notes', ['class' => 'col-sm-2'])?>
 			<div class="col-sm-10">
-				<?=Form::textarea('notes', '', ['rows' => '3', 'class' => 'form-control'])?>
+				<?=Form::textarea('notes', '', ['rows' => '3', 'maxlenght' => 255, 'class' => 'form-control'])?>
 			</div>
 		</div>
 

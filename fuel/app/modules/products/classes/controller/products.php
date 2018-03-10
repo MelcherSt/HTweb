@@ -75,7 +75,7 @@ class Controller_Products extends \Controller_Core_Theme {
 			}
 			
 			\Session::set_flash('success', __('product.alert.success.create_product', ['name' => $name]));
-		} else if (sizeof($user_ids == 0)) {
+		} else if (sizeof($user_ids) == 0) {
 			\Session::set_flash('error', __('product.alert.error.no_users_selected'));
 		} else {	
 			\Session::set_flash('error', $val->error_message());
