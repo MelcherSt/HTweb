@@ -38,7 +38,7 @@ class Controller_Sessions extends \Controller_Core_Theme {
 			
 			if($dateTime < $nowDateTime) {
 				// Stop creation of ready-closed sessions
-				//\Utils::handle_irrecoverable_error();
+				\Utils::handle_irrecoverable_error();
 			}
 			
 			// Create session if none exists
