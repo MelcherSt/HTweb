@@ -3,10 +3,7 @@
 namespace Receipts;
 
 \Event::register('gather_notifications', function() {
-
-	\Model_Notification::scrub();
 	$type = 'RECEIPT_REMINDER';
-
 	$users = \Auth\Model\Auth_Permission::query()
 					->where('area', 'products')
 					->where('permission', 'administration')
@@ -20,14 +17,14 @@ namespace Receipts;
 				->count();
 
 		// No receipts last 70 days
-		if ($count == 0 && \Model_Notification::has_notifications($type, $user_id)) {
+		if ($count == 0 && !\Model_Notification::has_notifications($type, $user_id)) {
 			\Model_Notification::fire_notification('Tijd voor een nieuwe afrekening',
 					'Er is de laatste 3 maanden geen afrekening gedaan!',
 					'fa fa-money',
 					'receipts/admin', $user_id, $type);
 		}
 
-		if ($count > 0 && !\Model_Notification::has_notifications($type, $user_id)) {
+		if ($count > 0 && \Model_Notification::has_notifications($type, $user_id)) {
 			\Model_Notification::scrub_notifications($type, $user_id);
 		}
 	};

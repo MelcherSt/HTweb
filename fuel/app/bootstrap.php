@@ -31,6 +31,8 @@ foreach(Module::loaded() as $module => $path) {
 	}
 }
 
+\Model_Notification::scrub();
+
 // Set time-zone
 date_default_timezone_set('Europe/Amsterdam');
 

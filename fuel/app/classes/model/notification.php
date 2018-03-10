@@ -89,7 +89,7 @@ class Model_Notification extends \Orm\Model {
 				->where('user_id', $user_id)
 				->where('type', $type)
 				->count();		
-		return $count == 0;
+		return $count > 0;
 	}
 	
 	/**
