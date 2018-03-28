@@ -11,6 +11,9 @@ class Controller_Admin extends \Controller_Core_Theme {
 	
 	public function action_index() {
 		$this->title = __('privileges.title');
+		$this->title_page = __('privileges.title');
+		$this->title_sub = __('privileges.perm.manage');
+		
 		$permissions = \Auth\Model\Auth_Permission::find('all');
 		$this->content = \View::forge('admin/index', ['permissions' => $permissions]);
 	}

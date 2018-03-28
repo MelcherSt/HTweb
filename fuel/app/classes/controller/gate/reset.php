@@ -10,7 +10,7 @@ class Controller_Gate_Reset extends Controller_Core_Theme {
 	public function action_index() {			
 		if($this->public_request) {		
 			$token = Input::get('token');
-			$this->page_title = __('gate.reset.title');
+			$this->title_page = __('gate.reset.title');
 			
 			if(empty($token)) {
 				$this->content = View::forge('gate/reset');

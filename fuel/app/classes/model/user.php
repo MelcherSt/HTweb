@@ -59,6 +59,7 @@ class Model_User extends \Auth\Model\Auth_User {
 		$val = Validation::forge($factory);
 		$val->add_callable('CustomRules');
 		$val->add_field('phone', 'Phone', 'max_length[10]');
+		$val->add_field('points', __('sessions.point_plural'), 'numeric');
 		$val->add_field('email', 'Email', 'valid_email|max_length[255]');
 		$val->add_field('iban', 'IBAN', 'max_length[30]|valid_iban');
 		$val->add_field('lang', 'Language', 'max_length[2]|required|valid_lang');

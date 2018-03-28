@@ -60,9 +60,9 @@ class Controller_Sessions extends \Controller_Core_Theme {
 		}
 
 		$formatted_date = strftime('%A %d %B %Y', strtotime($date));
-		$this->page_title = __('session.name');
+		$this->title_page = __('session.name');
 		$this->title = $formatted_date . ' - ' . __('session.title');
-		$this->sub_title = $formatted_date;		
+		$this->title_sub = $formatted_date;		
 		$this->content = \View::forge('view', ['session' => $session]);
 	}
 	

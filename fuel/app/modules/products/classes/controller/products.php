@@ -19,17 +19,17 @@ class Controller_Products extends \Controller_Core_Theme {
 		}
 		
 		$this->push_js('products-modals');
-		$this->page_title = __('product.name');
+		$this->title_page = __('product.name');
 		$this->title = $product->name . ' - ' . __('product.title');
-		$this->sub_title = $product->name;		
+		$this->title_sub = $product->name;		
 		$this->content = \View::forge('view', ['product' => $product]);
 	}
 	
 	public function action_create() {
 		$this->push_js('products-modals');
 		$this->title = __('product.title');
-		$this->page_title = __('product.name');
-		$this->sub_title = __('actions.create');		
+		$this->title_page = __('product.name');
+		$this->title_sub = __('actions.create');		
 		$this->content = \Presenter::forge('create');
 	}
 	

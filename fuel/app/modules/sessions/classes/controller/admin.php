@@ -15,8 +15,8 @@ class Controller_Admin extends \Controller_Core_Theme {
 		$this->push_js('admin/sessions-delete');
 		
 		$this->title = __('session.title_admin');
-		$this->page_title = __('session.title_admin');
-		$this->sub_title = __('privileges.perm.manage');		
+		$this->title_page = __('session.title_admin');
+		$this->title_sub = __('privileges.perm.manage');		
 		$this->content = \View::forge('admin/index');
 	}
 	
@@ -28,9 +28,9 @@ class Controller_Admin extends \Controller_Core_Theme {
 		$session = \Utils::valid_session($date);	
 		
 		$formatted_date = strftime('%A %d %B %Y', strtotime($date));
-		$this->page_title = __('session.name');
+		$this->title_page = __('session.name');
 		$this->title = $formatted_date . ' - ' . __('session.title_admin');
-		$this->sub_title = $formatted_date;		
+		$this->title_sub = $formatted_date;		
 		$this->content = \View::forge('admin/view', ['session' => $session]);	
 	}
 }

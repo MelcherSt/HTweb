@@ -11,6 +11,8 @@ class Controller_Core_Theme extends Controller_Core_View {
 	 */
 	protected $content;
 		
+	protected $title_page;
+	
 	/**
 	 * The title that will be displayed on the page and in the browser bar.
 	 * @var string 
@@ -39,13 +41,15 @@ class Controller_Core_Theme extends Controller_Core_View {
 		// Start filling in template and its partials
 		$this->theme->get_template()
 				->set('content', $this->content)
-				->set('title', $this->title);
+				->set('title', $this->title)
+				->set('page_title', $this->title_page);
 				
 		if($this->theme->has_partials('header')) {
 			$this->theme->set_partial('header', 'partials/header')
 				->set([
 					'title' => $this->title,
-					'title_sub' => $this->title_sub
+					'sub_title' => $this->title_sub,
+					'page_title' => $this->title_page,
 				]);
 		}
 		

@@ -19,8 +19,8 @@ class Controller_Admin_Macro extends \Controller_Core_Theme {
 		}
 		
 		$data['active_user_options'] = $options;
-		$this->page_title = __('product.admin.create_macro.title');
-		$this->sub_title = __('actions.create');		
+		$this->title_page = __('product.admin.create_macro.title');
+		$this->title_sub = __('actions.create');		
 		$this->content = \View::forge('admin/macro/create', $data);
 	}
 	

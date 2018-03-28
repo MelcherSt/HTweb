@@ -1,6 +1,10 @@
 <?php
-class Controller_Users_Admin extends Controller_Core_Theme
-{
+class Controller_Users_Admin extends Controller_Core_Theme {
+	
+	/**
+	 * Default group for new users is the 'Users' group with id 3
+	 */
+	const DEFAULT_GROUP = 3;
 
 	public function before() {
 		$this->permission = 'users.administration';
@@ -9,7 +13,6 @@ class Controller_Users_Admin extends Controller_Core_Theme
 	
 	public function action_index() {
 		$this->title = __('user.name_plural');
-		$this->page_title = __('user.name_plural');
 		$this->sub_title = __('privileges.perm.manage');	
 		$data['users'] = \Model_User::find('all');	
 		$this->content = View::forge('users/admin/index', $data);
@@ -29,18 +32,16 @@ class Controller_Users_Admin extends Controller_Core_Theme
 					'phone' => Input::post('phone', ''),
 					'active' => (Input::post('active') == 'on'),
 					'start_year' => Input::post('start_year'),
-					'end_year' => is_numeric(Input::post('end_year')) ? : 0,
-					'points' => is_numeric(Input::post('points')) ? : 0,
+					'end_year' => Input::post('end_year'),
+					'points' => Input::post('points'),
 					'iban' => Input::post('iban', ''),
 					'password' => Auth::instance()->hash_password(Input::post('password') . $salt),
 					'salt' => $salt,
-					'group_id' => Input::post('group_id', 3),
+					'group_id' => Input::post('group_id', self::DEFAULT_GROUP),
 					'email' => Input::post('email'),
 					'last_login'      => 0,
 					'previous_login'  => 0,
 					'login_hash'      => '',
-					'created_at'	  => \Date::forge()->get_timestamp(),
-					'updated_at'      => 0,
 				));
 
 				try {
@@ -57,7 +58,8 @@ class Controller_Users_Admin extends Controller_Core_Theme
 			}
 		}
 
-		$this->title = "Users";
+		$this->title_page = __('user.name');
+		$this->title_sub = __('actions.create');
 		$this->content = View::forge('users/admin/create');
 
 	}
@@ -66,7 +68,7 @@ class Controller_Users_Admin extends Controller_Core_Theme
 		$user = \Utils::valid_user($id);
 		
 		$data['user'] = $user;	
-		$this->title = "Users";
+		$this->title = __('user.name_plural');
 		$this->content = View::forge('users/admin/edit', $data);			
 	}
 	
@@ -87,8 +89,8 @@ class Controller_Users_Admin extends Controller_Core_Theme
 			$user->end_year = Input::post('end_year', 0);
 			$user->points = Input::post('points', 0);
 			$user->email = Input::post('email', '');
-			$user->iban = Input::post('iban', null);
-			$user->lang = Input::post('lang', null);	
+			$user->iban = Input::post('iban');
+			$user->lang = Input::post('lang');	
 			
 			try {
 				\Security::htmlentities($user)->save();
