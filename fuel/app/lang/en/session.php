@@ -135,7 +135,7 @@ return [
 		'link' => [
 			'enroll_first' => 'Be the first!',
 			'enroll_many' => 'Why don\'t you join them?',
-			'deadline_passed' => 'Enroll tomorrow?',
+			'deadline_passed' => 'Did you do the dishes?',
 			'no_cook' => 'Save the day, be a cook!',
 			'today' => 'View today\'s session',
 		]
