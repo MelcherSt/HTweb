@@ -134,7 +134,7 @@ return [
 		'link' => [
 			'enroll_first' => 'Wees de eerste!',
 			'enroll_many' => 'Eet je mee?',
-			'deadline_passed' => 'Morgen inschrijven?',
+			'deadline_passed' => 'Heb jij afgewassen?',
 			'no_cook' => 'Red de dag, wees een kok!',
 			'today' => 'Laat de sessie zien',
 		]
