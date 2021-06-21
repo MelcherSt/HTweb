@@ -9,7 +9,6 @@
 	$count = 0;
 	
 	foreach($users as $user) {
-		$rand = rand(1,4);
 		$end_year = $user->end_year;
 		$start_year = $user->start_year;
 		$count += 1;
