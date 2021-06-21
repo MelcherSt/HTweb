@@ -38,7 +38,7 @@ class Controller_Widget extends \Controller_Widget_Base {
 				$style = 'panel-grey';
 				$message = __('session.widget.msg.deadline_passed');
 				$link_text = __('session.widget.link.deadline_passed');
-				$link = '/sessions/tomorrow';
+				$link = '/sessions/today';
 			} 
 			
 		} else {
