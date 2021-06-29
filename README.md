@@ -13,8 +13,7 @@ Unfortunately there is no php7.1 package in the official ubuntu xenial archive.
 To *upgrade* your existing php installation, take the steps below: 
 1. `$ add-apt-repository ppa:ondrej/php`
 2. `$ apt update`
-3. `$ apt purge php7.0 php7.0-common`
-4. `$ apt install php7.1` 
+4. `$ apt install php7.1 php7.1-mysql` 
 
 ### FuelPHP
 (Optional) Install oil standalone `$ curl get.fuelphp.com/oil | sh`.

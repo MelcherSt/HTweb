@@ -46,8 +46,9 @@ class Controller_Users extends Controller_Core_Theme
 			if(!empty($pass)) {
 				// Generate new salt
 				$new_salt = \Str::random();
-				if (Auth::change_password($cur_pass . $user->salt, $pass . $new_salt)){
+				if ($hashed_pass = Auth::instance()->hash_password($pass . $new_salt)) {
 					$user->salt = $new_salt;
+					$user->password = $hashed_pass;
 				} else {
 					Session::set_flash('error', __('user.alert.error.cur_pass'));
 				}
